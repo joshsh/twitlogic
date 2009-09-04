@@ -32,6 +32,10 @@ public class TwitLogic {
         return "TwitLogic";
     }
 
+    public static String getVersion() {
+        return "0.1";
+    }
+
     public static Properties getConfiguration() {
         return configuration;
     }

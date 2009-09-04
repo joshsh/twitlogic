@@ -1,21 +1,35 @@
-package net.fortytwo.twitlogic;
+package net.fortytwo.twitlogic.twittertools;
 
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
-import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import oauth.signpost.signature.SignatureMethod;
+import org.apache.http.Header;
+import org.apache.http.HeaderIterator;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.ArrayList;
+
+import net.fortytwo.twitlogic.TwitLogic;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +43,9 @@ public class TwitterSecurity {
             REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
             ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
             AUTHORIZE_URL = "http://twitter.com/oauth/authorize";
+    private static final String
+            ACCEPT = "Accept",
+            USER_AGENT = "User-Agent";
 
     private final OAuthConsumer consumer;
     private final OAuthProvider provider;
@@ -37,7 +54,7 @@ public class TwitterSecurity {
         String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY).trim();
         String consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET).trim();
 
-        consumer = new DefaultOAuthConsumer(
+        consumer = new CommonsHttpOAuthConsumer(
                 consumerKey,
                 consumerSecret,
                 SignatureMethod.HMAC_SHA1);
@@ -61,12 +78,12 @@ public class TwitterSecurity {
     public static void main(final String[] args) throws Exception {
         TwitterSecurity t = new TwitterSecurity();
 
-        //t.deriveCredentials();
-        t.loadCredentials();
-        
-//        t.showInfo();
+//        t.deriveCredentials();
 
-        t.makeRequest();
+        t.loadCredentials();
+
+        t.createTwitterStreamingConnection();
+//        t.makeRequest();
     }
 
     /**
@@ -135,18 +152,91 @@ public class TwitterSecurity {
     // send a request accessing a resource on Twitter
     private void makeRequest() throws OAuthCommunicationException, OAuthExpectationFailedException, OAuthNotAuthorizedException, OAuthMessageSignerException, IOException {
         // create a request that requires authentication
-        URL url = new URL("http://twitter.com/statuses/mentions.xml");
-        HttpURLConnection request = (HttpURLConnection) url.openConnection();
+        HttpGet request = new HttpGet("http://twitter.com/statuses/mentions.xml");
+        //URL url = new URL("http://twitter.com/statuses/mentions.xml");
+        //HttpURLConnection request = (HttpURLConnection) url.openConnection();
 
         // sign the request
         consumer.sign(request);
 
         // send the request
-        request.connect();
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response = client.execute(request);
+        //request.connect();
 
         // response status should be 200 OK
-        int statusCode = request.getResponseCode();
+        //int statusCode = request.getResponseCode();
+        int statusCode = response.getStatusLine().getStatusCode();
 
         System.out.println("got status code: " + statusCode);
+    }
+
+    private void createTwitterStreamingConnection() throws IOException, OAuthExpectationFailedException, OAuthMessageSignerException {
+//        HttpGet request = new HttpGet("http://stream.twitter.com/1/statuses/sample.json");
+        HttpPost request = new HttpPost("http://stream.twitter.com/1/statuses/filter.json");
+        //request.setEntity(new StringEntity("track=logic,octopi"));
+//        request.setEntity(new StringEntity("follow=12,13,15,16,20,87"));
+
+        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+        formparams.add(new BasicNameValuePair("track", "logic,parkour,semantic,rpi"));
+
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+        request.setEntity(entity);
+
+        setAcceptHeader(request, new String[]{"application/json"});
+        setAgent(request);
+
+        consumer.sign(request);
+        //request.setHeader("Authorization", new String(Base64.encodeBase64("user:password".getBytes())));
+
+        HttpClient client = createClient();
+        HttpResponse r = client.execute(request);
+
+        System.out.println("response code: " + r.getStatusLine().getStatusCode());
+
+        HeaderIterator iter = r.headerIterator();
+        while (iter.hasNext()) {
+            Header h = iter.nextHeader();
+            System.out.println(h.getName() + ": " + h.getValue());
+        }
+
+        HttpEntity responseEntity = r.getEntity();
+        responseEntity.writeTo(System.out);
+
+        /*
+        InputStream is = entity.getContent();
+        while (0 < is.available()) {
+            System.out.print(is.read());
+        }
+        is.close();*/
+    }
+
+    private void setAgent(final HttpRequest request) {
+        request.setHeader(USER_AGENT, TwitLogic.getName() + "/" + TwitLogic.getVersion());
+    }
+
+    private HttpClient createClient() {
+        HttpClient client = new DefaultHttpClient();
+        //client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+        //        new DefaultHttpMethodRetryHandler());
+
+        // Twitter streaming API requires infinite timeout
+        client.getParams().setParameter("http.connection.timeout", 0);
+        client.getParams().setParameter("http.socket.timeout", 0);
+
+        return client;
+    }
+
+    private static void setAcceptHeader(final HttpRequest request, final String[] mimeTypes) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mimeTypes.length; i++) {
+            if (i > 0) {
+                sb.append(", ");
+            }
+
+            sb.append(mimeTypes[i]);
+        }
+
+        request.setHeader(ACCEPT, sb.toString());
     }
 }
