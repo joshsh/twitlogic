@@ -5,12 +5,11 @@ package net.fortytwo.twitlogic;
 
 import java.util.List;
 import java.util.LinkedList;
-import net.fortytwo.twitlogic.model.TwitResource;
+import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.TwitterUser;
-import net.fortytwo.twitlogic.model.LiteralResource;
-import net.fortytwo.twitlogic.model.URIBasedResource;
-import net.fortytwo.twitlogic.model.TwitStatement;
+import net.fortytwo.twitlogic.model.PlainLiteral;
+import net.fortytwo.twitlogic.model.URILiteral;
 }
 
 @lexer::header{
@@ -20,58 +19,23 @@ package net.fortytwo.twitlogic;
 @members {
 }
 
-tweet returns [List<List<TwitResource>> value]
+tweet returns [List<List<Resource>> value]
 	:	(CRUFT)* a=allSequences {$value = $a.value;} (CRUFT)*
 	;
 	
-allSequences returns [List<List<TwitResource>> value]
+allSequences returns [List<List<Resource>> value]
 	:	c=sequence
 		((CRUFT)+ s=allSequences {$value = $s.value;})?
-		{if (null == $value) $value = new LinkedList<List<TwitResource>>(); $value.add(0, $c.value);}
+		{if (null == $value) $value = new LinkedList<List<Resource>>(); $value.add(0, $c.value);}
 	;
 
-sequence returns [List<TwitResource> value]
+sequence returns [List<Resource> value]
 	:	r=resource
 		(s=sequence {$value = $s.value;})?
-		{if (null == $value) $value = new LinkedList<TwitResource>(); $value.add(0, $r.value);}
-	;
-	
-/*
-sequence returns [List<TwitResource> value]
-	:	({$value = new LinkedList<TwitResource>();}| s=sequence {$value = $s.value;})
-		r=resource {$value.add($r.value);}
-	;
-	*/
-	
-/*
-tweet returns [List<TwitStatement> value]
-	:	{$value = new LinkedList<TwitStatement>();}
-		(CRUFT)* (t=twiple {$value.add($t.value);} (CRUFT)*)*
+		{if (null == $value) $value = new LinkedList<Resource>(); $value.add(0, $r.value);}
 	;
 
-twiple returns [TwitStatement value]
-	:	s=subject p=predicate o=object {value = new TwitStatement($s.value, $p.value, $o.value);}
-	;	 
-
-subject returns [TwitResource value]
-	:	h=hashtag {$value = $h.value;}
-	|	s=screenName {$value = $s.value;}
-	|	u=url {$value = $u.value;}
-	;
-
-predicate returns [TwitResource value]
-	:	h=hashtag {$value = $h.value;}
-	;
-	
-object returns [TwitResource value]
-	:	h=hashtag {$value = $h.value;}
-	|	s=screenName {$value = $s.value;}
-	|	u=url {$value = $u.value;}
-	|	q=quotedString {$value = $q.value;}
-	;
-*/
-
-resource returns [TwitResource value]
+resource returns [Resource value]
 	:	h=hashtag {$value = $h.value;}
 	|	s=screenName {$value = $s.value;}
 	|	u=url {$value = $u.value;}
@@ -86,12 +50,12 @@ screenName returns [TwitterUser value]
 	:	SCREEN_NAME {$value = new TwitterUser($SCREEN_NAME.text.substring(1));}
 	;
 	
-url returns [URIBasedResource value]
-	:	URL {$value = new URIBasedResource($URL.text);}
+url returns [URILiteral value]
+	:	URL {$value = new URILiteral($URL.text);}
 	;
 	
-quotedString returns [TwitResource value]
-	:	QUOTED_STRING {$value = new URIBasedResource($QUOTED_STRING.text.substring(1, $QUOTED_STRING.text.length() - 1));}
+quotedString returns [PlainLiteral value]
+	:	QUOTED_STRING {$value = new PlainLiteral($QUOTED_STRING.text.substring(1, $QUOTED_STRING.text.length() - 1));}
 	;
 	
 WS  :   (' '|'\t'|'\n'|'\r')+ {skip();} ;

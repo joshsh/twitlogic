@@ -1,5 +1,8 @@
 package net.fortytwo.twitlogic;
 
+import net.fortytwo.twitlogic.twitter.TwitterSecurity;
+import net.fortytwo.twitlogic.model.TwitterUser;
+
 import java.util.Properties;
 import java.io.IOException;
 
@@ -39,4 +42,51 @@ public class TwitLogic {
     public static Properties getConfiguration() {
         return configuration;
     }
+
+    public static void main(final String[] args) throws Exception {
+        TwitterSecurity t = new TwitterSecurity();
+
+//        deriveCredentials();
+
+        t.loadCredentials();
+
+        //processSampleStream(new ExampleStatusHandler());
+        //processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
+        //processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
+        t.processFollowFilterStream(aFewGoodUserIds(), new ExampleStatusHandler(), 0);
+        //processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
+
+//        t.makeRequest();
+    }
+
+    private static final TwitterUser[] aFewGoodUsers = new TwitterUser[]{
+            new TwitterUser(71631722, "antijosh"),      // TwitLogic test account
+
+            // Some TWC-Twitterers (note: I think there are more...)
+            new TwitterUser(14731308, "baojie"),        // Jie Bao
+            new TwitterUser(15336340, "jahendler"),     // James Hendler
+            new TwitterUser(15477931, "taswegian"),     // Peter Fox
+            new TwitterUser(17346783, "ankesh_k"),      // Ankesh Khandelwal
+            new TwitterUser(18003181, "difrad"),        // Dominic DiFranzo
+            new TwitterUser(19122108, "dlmcguinness"),  // Deborah McGuinness
+            new TwitterUser(19274805, "shangz"),        // Zhenning Shangguan
+            new TwitterUser(20830884, "jrweave"),       // Jesse Weaver
+            new TwitterUser(26823198, "lidingpku"),     // Li Ding
+            new TwitterUser(33308444, "xixiluo"),       // Xixi Luo
+            new TwitterUser(34309130, "ewpatton"),      // Evan Patton
+            new TwitterUser(39816942, "alvarograves"),  // Alvaro Graves
+            new TwitterUser(643563, "kasei"),           // Gregory Williams
+            new TwitterUser(7083182, "joshsh"),         // Joshua Shinavier
+
+            // Others
+            new TwitterUser(71089109, "twarko")};       // Marko Rodriguez
+
+    private static String[] aFewGoodUserIds() {
+        String[] ids = new String[aFewGoodUsers.length];
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = "" + aFewGoodUsers[i].getId();
+        }
+        return ids;
+    }
+
 }

@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic;
 
 import net.fortytwo.twitlogic.twitter.TwitterStatus;
 import net.fortytwo.twitlogic.model.Triple;
+import net.fortytwo.twitlogic.syntax.TweetParser;
 
 import java.util.List;
 

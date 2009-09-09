@@ -33,9 +33,6 @@ import java.util.ArrayList;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.Handler;
-import net.fortytwo.twitlogic.TweetParser;
-import net.fortytwo.twitlogic.model.TwitterUser;
-import net.fortytwo.twitlogic.model.Triple;
 
 /**
  * Created by IntelliJ IDEA.
