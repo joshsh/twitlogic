@@ -235,7 +235,7 @@ public class TwitterSecurity {
         setAgent(request);
 
         consumer.sign(request);
-        request.setHeader("Authorization", new String(Base64.encodeBase64("joshsh:escher".getBytes())));
+        request.setHeader("Authorization", new String(Base64.encodeBase64("username:password".getBytes())));
 
         HttpClient client = createClient();
         HttpResponse response = client.execute(request);
