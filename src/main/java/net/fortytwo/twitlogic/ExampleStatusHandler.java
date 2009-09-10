@@ -20,7 +20,6 @@ class ExampleStatusHandler implements Handler<TwitterStatus, Exception> {
         System.out.println("" + status.getUser().getScreenName() + ": " + status.getText());
 
         List<Triple> twiples = parser.parse(status.getText());
-        //System.out.println("\t#twiples: " + twiples.size());
         if (0 < twiples.size()) {
             for (Triple t : twiples) {
                 System.out.println("\t" + t);
