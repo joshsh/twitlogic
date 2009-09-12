@@ -4,7 +4,12 @@ import net.fortytwo.twitlogic.twitter.TwitterSecurity;
 import net.fortytwo.twitlogic.model.TwitterUser;
 
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.IOException;
+
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 
 /**
  * Author: josh
@@ -12,12 +17,27 @@ import java.io.IOException;
  * Time: 1:55:26 PM
  */
 public class TwitLogic {
+    private static final Pattern
+            WHITESPACE = Pattern.compile("\\s+"),
+            NORMAL_TERM = Pattern.compile("[a-z]+([ ][a-z]+)*");
+
     // Configuration property keys
     public static final String
             TWITTER_CONSUMER_KEY = "net.fortytwo.twitlogic.twitterConsumerKey",
             TWITTER_CONSUMER_SECRET = "net.fortytwo.twitlogic.twitterConsumerSecret",
             TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitterAccessToken",
             TWITTER_ACCESS_TOKEN_SECRET = "net.fortytwo.twitlogic.twitterAccessTokenSecret";
+
+    public static final String
+            NAMESPACE = "http://fortytwo.net/2009/10/twitlogic#",
+            RESOURCES_NAMESPACE = "http://twitlogic.fortytwo.net/resources/";
+
+    public static final URI
+            ASSOCIATION = new URIImpl(NAMESPACE + "Association"),
+            SOURCE = new URIImpl(NAMESPACE + "source"),
+            TARGET = new URIImpl(NAMESPACE + "target"),
+            TERM = new URIImpl(NAMESPACE + "term"),
+            WEIGHT = new URIImpl(NAMESPACE + "weight");
 
     private static final Properties configuration;
 
@@ -41,6 +61,24 @@ public class TwitLogic {
 
     public static Properties getConfiguration() {
         return configuration;
+    }
+
+    // TODO: move me
+    public static String normalizeTerm(final String term) {
+        String s = term.trim().toLowerCase();
+
+        Matcher m = WHITESPACE.matcher(s);
+        s = m.replaceAll(" ");
+
+        if (!TwitLogic.isNormalTerm(s)) {
+            throw new IllegalArgumentException("term could not be normalized: " + term);
+        }
+
+        return s;
+    }
+
+    public static boolean isNormalTerm(final String term) {
+        return NORMAL_TERM.matcher(term).matches();
     }
 
     public static void main(final String[] args) throws Exception {
