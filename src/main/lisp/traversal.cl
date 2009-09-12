@@ -34,6 +34,12 @@
             (funcall visitor r)
             (funcall mapping r visitor))))
 
+;; apply each mapping in turn -- UNTESTED
+(defun each (&rest mappings)
+    (lambda (r visitor)
+        (loop for m in mappings do
+            (funcall m r visitor))))
+
 (defun distinct ()
     (let ((ht (make-upi-hash-table)))
         (lambda (r visitor)
