@@ -27,4 +27,13 @@ public class Hashtag implements Resource {
     public Type getType() {
         return Type.HASHTAG;
     }
+
+    public boolean equals(final Object other) {
+        return other instanceof Hashtag
+                && name.equals(((Hashtag) other).name);
+    }
+
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

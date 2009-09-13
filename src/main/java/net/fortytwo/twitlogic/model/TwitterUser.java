@@ -53,7 +53,7 @@ public class TwitterUser implements Resource {
         url = null;
     }
 
-    public TwitterUser(final int id, final String screenName) {
+    public TwitterUser(final String screenName, final int id) {
         this.id = id;
         this.screenName = screenName;
 
@@ -126,6 +126,29 @@ public class TwitterUser implements Resource {
 
     public Type getType() {
         return Type.USER;
+    }
+
+    public boolean equals(final Object other) {
+        if (other instanceof TwitterUser) {
+            TwitterUser otherUser = (TwitterUser) other;
+            if (null != screenName && null != otherUser.screenName) {
+                return screenName.equals(otherUser.screenName);
+            } else if (null != id && null != otherUser.id) {
+                return id.equals(otherUser.id);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public int hashCode() {
+        return null != screenName
+                ? screenName.hashCode()
+                : null != id
+                ? id.hashCode()
+                : 0;
     }
 }
 

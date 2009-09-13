@@ -94,26 +94,27 @@ public class TwitLogic {
     }
 
     private static final TwitterUser[] aFewGoodUsers = new TwitterUser[]{
-            new TwitterUser(71631722, "antijosh"),      // TwitLogic test account
+            new TwitterUser("antijosh", 71631722),      // test account
+            new TwitterUser("alvitest", 73477629),      // test account
 
             // Some TWC-Twitterers (note: I think there are more...)
-            new TwitterUser(14731308, "baojie"),        // Jie Bao
-            new TwitterUser(15336340, "jahendler"),     // James Hendler
-            new TwitterUser(15477931, "taswegian"),     // Peter Fox
-            new TwitterUser(17346783, "ankesh_k"),      // Ankesh Khandelwal
-            new TwitterUser(18003181, "difrad"),        // Dominic DiFranzo
-            new TwitterUser(19122108, "dlmcguinness"),  // Deborah McGuinness
-            new TwitterUser(19274805, "shangz"),        // Zhenning Shangguan
-            new TwitterUser(20830884, "jrweave"),       // Jesse Weaver
-            new TwitterUser(26823198, "lidingpku"),     // Li Ding
-            new TwitterUser(33308444, "xixiluo"),       // Xixi Luo
-            new TwitterUser(34309130, "ewpatton"),      // Evan Patton
-            new TwitterUser(39816942, "alvarograves"),  // Alvaro Graves
-            new TwitterUser(643563, "kasei"),           // Gregory Williams
-            new TwitterUser(7083182, "joshsh"),         // Joshua Shinavier
+            new TwitterUser("alvarograves", 39816942),  // Alvaro Graves
+            new TwitterUser("ankesh_k", 17346783),      // Ankesh Khandelwal
+            new TwitterUser("baojie", 14731308),        // Jie Bao
+            new TwitterUser("difrad", 18003181),        // Dominic DiFranzo
+            new TwitterUser("dlmcguinness", 19122108),  // Deborah McGuinness
+            new TwitterUser("ewpatton", 34309130),      // Evan Patton
+            new TwitterUser("jahendler", 15336340),     // James Hendler
+            new TwitterUser("joshsh", 7083182),         // Joshua Shinavier
+            new TwitterUser("jrweave", 20830884),       // Jesse Weaver
+            new TwitterUser("kasei", 643563),           // Gregory Williams
+            new TwitterUser("lidingpku", 26823198),     // Li Ding
+            new TwitterUser("shangz", 19274805),        // Zhenning Shangguan
+            new TwitterUser("taswegian", 15477931),     // Peter Fox
+            new TwitterUser("xixiluo", 33308444),       // Xixi Luo
 
             // Others
-            new TwitterUser(71089109, "twarko")};       // Marko Rodriguez
+            new TwitterUser("twarko", 71089109)};       // Marko Rodriguez
 
     private static String[] aFewGoodUserIds() {
         String[] ids = new String[aFewGoodUsers.length];

@@ -27,4 +27,13 @@ public class PlainLiteral implements Resource {
     public Type getType() {
         return Type.LITERAL;
     }
+
+    public boolean equals(final Object other) {
+        return other instanceof PlainLiteral
+                && label.equals(((PlainLiteral) other).label);
+    }
+
+    public int hashCode() {
+        return label.hashCode();
+    }
 }

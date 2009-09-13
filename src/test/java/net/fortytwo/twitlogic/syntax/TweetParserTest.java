@@ -3,6 +3,9 @@ package net.fortytwo.twitlogic.syntax;
 import junit.framework.TestCase;
 
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 import net.fortytwo.twitlogic.model.TwitterUser;
 import net.fortytwo.twitlogic.model.Hashtag;
@@ -18,7 +21,6 @@ import net.fortytwo.twitlogic.syntax.TweetParser;
  */
 public class TweetParserTest extends TestCase {
     private TweetParser parser;
-    private List<Triple> results;
 
     public void setUp() {
         parser = new TweetParser();
@@ -28,38 +30,71 @@ public class TweetParserTest extends TestCase {
     }
 
     public void testPartsOfSpeech() throws Exception {
-        results = parser.parse("@joshsh #knows @xixiluo");
-        assertEquals(1, results.size());
-        Triple t = results.get(0);
-        assertEquals("@joshsh #knows @xixiluo", t.toString());
-        assertTrue(t.getSubject() instanceof TwitterUser);
-        assertTrue(t.getPredicate() instanceof Hashtag);
-        assertTrue(t.getObject() instanceof TwitterUser);
-    }
+        assertYields("@joshsh #knows @xixiluo", "@joshsh #knows @xixiluo");
+        assertYields("#joshsh #knows @xixiluo", "#joshsh #knows @xixiluo");
+        assertYields("\"josh\" #knows @xixiluo");
+        assertYields("http://example.org/joshsh #knows @xixiluo");
 
-    public void testWrongTypeForPartOfSpeech() throws Exception {
-        assertEquals(0, parser.parse("@joshsh @knows @xixiluo").size());    
+        assertYields("@joshsh #knows @xixiluo", "@joshsh #knows @xixiluo");
+        assertYields("@joshsh @knows @xixiluo");
+        assertYields("@joshsh \"knows\" @xixiluo");
+        assertYields("@joshsh http://example.org/knows @xixiluo");
+        
+        assertYields("@joshsh #knows @xixiluo", "@joshsh #knows @xixiluo");
+        assertYields("@joshsh #knows #xixiluo", "@joshsh #knows #xixiluo");
+        assertYields("@joshsh #knows \"xixiluo\"", "@joshsh #knows \"xixiluo\"");
+        assertYields("@joshsh #knows http://example.org/xixiluo", "@joshsh #knows http://example.org/xixiluo");
     }
 
     public void testWhitespace() throws Exception {
-        results = parser.parse("@joshsh #knows @xixiluo");
+        assertYields("@joshsh #knows @xixiluo", "@joshsh #knows @xixiluo");
+        assertYields(" and   \t\n@joshsh\t#knows \n\n@xixiluo  (I think...)  ", "@joshsh #knows @xixiluo");
+    }
 
-        showTwiples(parser.parse("@joshsh #knows @xixiluo"));
+    public void testPlainLiterals() throws Exception {
+        //...
+    }
 
-        showTwiples(parser.parse("foo #twipleparser #status #readyToTest ."));
+    public void testURILiterals() throws Exception {
+        assertYields("@joshsh #knows http://example.org/xixiluo", "@joshsh #knows http://example.org/xixiluo");
+        //assertYields("@joshsh #knows http://example.org/xixiluo.", "@joshsh #knows http://example.org/xixiluo");
     }
 
     public void testCruft() throws Exception {
-//        assertEquals(1, parser.parse("@joshsh #knows @xixiluo.").size());
+        assertYields("%@joshsh #knows @xixiluo", "@joshsh #knows @xixiluo");
+        assertYields("@joshsh #knows @xixiluo...", "@joshsh #knows @xixiluo");
+        assertYields("foo #twipleparser #status #readyToTest .", "#twipleparser #status #readyToTest");
+
+        //assertYields("@joshsh #knows @xixiluo");
+        assertYields("@joshsh (#knows) @xixiluo");
+    }
+
+    public void testMultipleMatches() throws Exception {
+        assertYields("A #one, a #two, a #one #two #three #four!", "#one #two #three", "#two #three #four");
     }
 
     public void testNothingToMatch() throws Exception {
-        assertEquals(0, parser.parse("There is no twiple in this tweet.").size());            
+        assertYields("There is no twiple in this tweet.");
+        assertYields("");
     }
 
-    private void showTwiples(final List<Triple> twiples) {
-        for (Triple t : twiples) {
-            System.out.println("" + t);
+    private void assertYields(final String text,
+                              final String... exp) throws Exception {
+        Set<String> expected = new HashSet<String>();
+        expected.addAll(Arrays.asList(exp));
+
+        Set<String> actual = new HashSet<String>();
+        List<Triple> results = parser.parse(text);
+        for (Triple t : results) {
+            actual.add(t.toString());
+        }
+
+        for (String t : expected) {
+            assertTrue("expected triple not found: " + t, actual.contains(t));
+        }
+
+        for (String t : actual) {
+            assertTrue("unexpected triple found: " + t, expected.contains(t));
         }
     }
 }

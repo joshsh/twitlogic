@@ -25,7 +25,9 @@ import java.util.HashSet;
 import net.fortytwo.twitlogic.TwitLogic;
 
 /**
- * Created by IntelliJ IDEA.
+ * Program to convert the USF Free Association Norms into the N-Triples format.
+ * See also: http://w3.usf.edu/FreeAssociation/
+ * 
  * User: josh
  * Date: Sep 12, 2009
  * Time: 5:51:08 PM

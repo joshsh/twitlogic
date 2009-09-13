@@ -16,15 +16,15 @@ public class Triple {
     private final float weight;
 
     public Triple(final Resource subject,
-                         final Resource predicate,
-                         final Resource object) {
+                  final Resource predicate,
+                  final Resource object) {
         this(subject, predicate, object, 1f);
     }
 
     public Triple(final Resource subject,
-                         final Resource predicate,
-                         final Resource object,
-                         final float weight) {
+                  final Resource predicate,
+                  final Resource object,
+                  final float weight) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;
@@ -54,5 +54,20 @@ public class Triple {
 
     public float getWeight() {
         return weight;
+    }
+
+    public boolean equals(final Object other) {
+        if (other instanceof Triple) {
+            Triple t = (Triple) other;
+            return (subject.equals(t.subject)
+                    && predicate.equals(t.predicate)
+                    && object.equals(t.object));
+        } else {
+            return false;
+        }
+    }
+
+    public int hashCode() {
+        return subject.hashCode() + predicate.hashCode() + object.hashCode();
     }
 }

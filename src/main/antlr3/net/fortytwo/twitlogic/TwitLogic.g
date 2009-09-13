@@ -58,11 +58,11 @@ quotedString returns [PlainLiteral value]
 	:	QUOTED_STRING {$value = new PlainLiteral($QUOTED_STRING.text.substring(1, $QUOTED_STRING.text.length() - 1));}
 	;
 	
-WS  :   (' '|'\t'|'\n'|'\r')+ {skip();} ;
+WS  :		(' '|'\t'|'\n'|'\r')+ {skip();} ;
 
-HASHTAG :'#'('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'_')+ ;
+HASHTAG :	'#'('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'_')+ ;
 
-SCREEN_NAME :'@'('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'_')+ ;
+SCREEN_NAME :	'@'('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'_')+ ;
 
 // Note: no provision for escaped quotes
 // Currently does not match single-quoted strings (e.g. 'this and that')
@@ -70,13 +70,14 @@ QUOTED_STRING :	'\"' .* '\"' ;
 
 // Note: this is a somewhat restrictive URL regex.
 // Characters not currently allowed: !$%'()*,:;<>@[\]^`{|}"
+//    http://example.org/xixiluo
 URL 	:	('a'..'z')+ '://'  // protocol
-        ('A'..'Z'|'a'..'z'|'0'..'9'|'-')+ ('.' ('A'..'Z'|'a'..'z'|'0'..'9'|'-'))*  // domain name. Internationalized Domain Names are not taken into account.
+        ('A'..'Z'|'a'..'z'|'0'..'9'|'-')+ ('.' ('A'..'Z'|'a'..'z'|'0'..'9'|'-')+)*  // domain name. Internationalized Domain Names are not taken into account.
         ('/' (
             ('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'_'|'#'|'&'|'+'|'.'|'/'|'='|'?'|'~')*
-            ('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'/') )?)? ;  // rest (must end in a "normal" character
+            ('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'/'))?)? ;  // rest (must end in a "normal" character
             
-CRUFT 	:	('!'..'~')+ ;
+CRUFT 	:	'!'..'~' ;
 
 
 

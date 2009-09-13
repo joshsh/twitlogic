@@ -27,4 +27,13 @@ public class URILiteral implements Resource {
     public Type getType() {
         return Type.URL;
     }
+
+    public boolean equals(final Object other) {
+        return other instanceof URILiteral
+                && uri.equals(((URILiteral) other).uri);
+    }
+
+    public int hashCode() {
+        return uri.hashCode();
+    }
 }
