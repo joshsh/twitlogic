@@ -19,6 +19,8 @@ import java.io.FilenameFilter;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
 
 import net.fortytwo.twitlogic.TwitLogic;
 
@@ -34,7 +36,14 @@ public class USFFreeAssociationNorm {
 
     private static final ValueFactory VALUE_FACTORY = new ValueFactoryImpl();
 
+    // A Set to help eliminate duplicate statements.
+    private static Set<String> DEFINED_TERMS;
+
     public static void main(final String[] args) throws Exception {
+        System.out.println("args:");
+        for (String s : args) {
+            System.out.println("\t*) " + s);
+        }
         if (2 != args.length) {
             showUsage();
         } else {
@@ -46,6 +55,7 @@ public class USFFreeAssociationNorm {
         System.out.println("Usage: <USF input directory> <ntriples output file>");
     }
 
+    // Note: creates many duplicate rdf:type and rdfs:label statements for terms
     private static void convertAppendixAToNTriples(final File appendixADirectory,
                                                    final File ntriplesFile) throws IOException, RDFHandlerException {
         FilenameFilter filter = new FilenameFilter() {
@@ -54,6 +64,8 @@ public class USFFreeAssociationNorm {
                 return name.startsWith("Cue_Target_Pairs.");
             }
         };
+
+        DEFINED_TERMS = new HashSet<String>();
 
         int lineCount = 0;
         int fileCount = 0;
@@ -66,8 +78,18 @@ public class USFFreeAssociationNorm {
                     fileCount++;
                     BufferedReader b = new BufferedReader(new FileReader(f));
                     try {
+                        // Skip the four header lines
+                        for (int i = 0; i < 4; i++) {
+                            b.readLine();
+                        }
+
                         String line;
                         while (null != (line = b.readLine())) {
+                            // If we've reached the footer, we're done with this file.
+                            if (line.startsWith("<")) {
+                                break;
+                            }
+
                             String[] cells = line.split(", ");
                             String sourceTerm = cells[0];
                             String targetTerm = cells[1];
@@ -97,26 +119,45 @@ public class USFFreeAssociationNorm {
                                   final RDFWriter writer) throws RDFHandlerException {
         String normSourceTerm = TwitLogic.normalizeTerm(sourceTerm);
         String normTargetTerm = TwitLogic.normalizeTerm(targetTerm);
+        if (!TwitLogic.isNormalTerm(normSourceTerm) || !TwitLogic.isNormalTerm(normTargetTerm)) {
+            System.err.println("One of {" + sourceTerm + ", " + targetTerm + "} could not be normalized. No association created.");
+            return;
+        }
 
         String encodedSourceTerm = encodeTerm(normSourceTerm);
         String encodedTargetTerm = encodeTerm(normTargetTerm);
 
         URI source = createResourceURI(encodedSourceTerm);
         URI target = createResourceURI(encodedTargetTerm);
-        URI association = createResourceURI(encodedSourceTerm + "-" + encodedTargetTerm + "-" + RANDOM.nextLong());
+        URI association = createResourceURI(encodedSourceTerm + "-" + encodedTargetTerm + "-" + RANDOM.nextInt(Integer.MAX_VALUE));
 
         Literal sourceLabel = VALUE_FACTORY.createLiteral(normSourceTerm);
         Literal targetLabel = VALUE_FACTORY.createLiteral(normTargetTerm);
         Literal w = VALUE_FACTORY.createLiteral(weight);
 
-        writer.handleStatement(VALUE_FACTORY.createStatement(source, RDF.TYPE, TwitLogic.TERM));
-        writer.handleStatement(VALUE_FACTORY.createStatement(source, RDFS.LABEL, sourceLabel));
-        writer.handleStatement(VALUE_FACTORY.createStatement(target, RDF.TYPE, TwitLogic.TERM));
-        writer.handleStatement(VALUE_FACTORY.createStatement(target, RDFS.LABEL, targetLabel));
+        if (!termAlreadyDefined(normSourceTerm)) {
+            writer.handleStatement(VALUE_FACTORY.createStatement(source, RDF.TYPE, TwitLogic.TERM));
+            writer.handleStatement(VALUE_FACTORY.createStatement(source, RDFS.LABEL, sourceLabel));
+        }
+
+        if (!termAlreadyDefined(normTargetTerm)) {
+            writer.handleStatement(VALUE_FACTORY.createStatement(target, RDF.TYPE, TwitLogic.TERM));
+            writer.handleStatement(VALUE_FACTORY.createStatement(target, RDFS.LABEL, targetLabel));
+        }
+
         writer.handleStatement(VALUE_FACTORY.createStatement(association, RDF.TYPE, TwitLogic.ASSOCIATION));
         writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.SOURCE, source));
         writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.TARGET, target));
         writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.WEIGHT, w));
+    }
+
+    private static boolean termAlreadyDefined(final String normalTerm) {
+        boolean b = DEFINED_TERMS.contains(normalTerm);
+        if (!b) {
+            DEFINED_TERMS.add(normalTerm);
+        }
+
+        return b;
     }
 
     private static String encodeTerm(final String normalTerm) {

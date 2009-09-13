@@ -36,7 +36,7 @@ public class TwitLogic {
             ASSOCIATION = new URIImpl(NAMESPACE + "Association"),
             SOURCE = new URIImpl(NAMESPACE + "source"),
             TARGET = new URIImpl(NAMESPACE + "target"),
-            TERM = new URIImpl(NAMESPACE + "term"),
+            TERM = new URIImpl(NAMESPACE + "Term"),
             WEIGHT = new URIImpl(NAMESPACE + "weight");
 
     private static final Properties configuration;
@@ -69,10 +69,6 @@ public class TwitLogic {
 
         Matcher m = WHITESPACE.matcher(s);
         s = m.replaceAll(" ");
-
-        if (!TwitLogic.isNormalTerm(s)) {
-            throw new IllegalArgumentException("term could not be normalized: " + term);
-        }
 
         return s;
     }
