@@ -17,9 +17,6 @@ import org.openrdf.model.impl.URIImpl;
  * Time: 1:55:26 PM
  */
 public class TwitLogic {
-    private static final Pattern
-            WHITESPACE = Pattern.compile("\\s+"),
-            NORMAL_TERM = Pattern.compile("[a-z]+([ ][a-z]+)*");
 
     // Configuration property keys
     public static final String
@@ -63,20 +60,6 @@ public class TwitLogic {
         return configuration;
     }
 
-    // TODO: move me
-    public static String normalizeTerm(final String term) {
-        String s = term.trim().toLowerCase();
-
-        Matcher m = WHITESPACE.matcher(s);
-        s = m.replaceAll(" ");
-
-        return s;
-    }
-
-    public static boolean isNormalTerm(final String term) {
-        return NORMAL_TERM.matcher(term).matches();
-    }
-
     public static void main(final String[] args) throws Exception {
         TwitterSecurity t = new TwitterSecurity();
 
@@ -93,7 +76,7 @@ public class TwitLogic {
 //        t.makeRequest();
     }
 
-    private static final TwitterUser[] aFewGoodUsers = new TwitterUser[]{
+    private static final TwitterUser[] A_FEW_GOOD_USERS = new TwitterUser[]{
             new TwitterUser("antijosh", 71631722),      // test account
             new TwitterUser("alvitest", 73477629),      // test account
 
@@ -113,13 +96,18 @@ public class TwitLogic {
             new TwitterUser("taswegian", 15477931),     // Peter Fox
             new TwitterUser("xixiluo", 33308444),       // Xixi Luo
 
-            // Others
-            new TwitterUser("twarko", 71089109)};       // Marko Rodriguez
+            // Other friends of the Cause
+            new TwitterUser("twarko", 71089109),       // Marko Rodriguez
+
+            // Miscellaneous people who use a lot of hashtags (not necessarily
+            // with TwitLogic in mind).  Adds some healthy "noise" to test the
+            // app against inevitable false positives.
+            new TwitterUser("thecoventgarden", 33206959)};
 
     private static String[] aFewGoodUserIds() {
-        String[] ids = new String[aFewGoodUsers.length];
+        String[] ids = new String[A_FEW_GOOD_USERS.length];
         for (int i = 0; i < ids.length; i++) {
-            ids[i] = "" + aFewGoodUsers[i].getId();
+            ids[i] = "" + A_FEW_GOOD_USERS[i].getId();
         }
         return ids;
     }
