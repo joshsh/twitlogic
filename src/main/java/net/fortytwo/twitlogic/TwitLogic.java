@@ -31,9 +31,9 @@ public class TwitLogic {
 
     public static final URI
             ASSOCIATION = new URIImpl(NAMESPACE + "Association"),
-            SOURCE = new URIImpl(NAMESPACE + "source"),
-            TARGET = new URIImpl(NAMESPACE + "target"),
-            TERM = new URIImpl(NAMESPACE + "Term"),
+            SUBJECT = new URIImpl(NAMESPACE + "subject"),
+            OBJECT = new URIImpl(NAMESPACE + "object"),
+            WORD = new URIImpl(NAMESPACE + "Word"),
             WEIGHT = new URIImpl(NAMESPACE + "weight");
 
     private static final Properties configuration;
@@ -102,6 +102,7 @@ public class TwitLogic {
             // Miscellaneous people who use a lot of hashtags (not necessarily
             // with TwitLogic in mind).  Adds some healthy "noise" to test the
             // app against inevitable false positives.
+            new TwitterUser("tommyh", 5439642),
             new TwitterUser("thecoventgarden", 33206959)};
 
     private static String[] aFewGoodUserIds() {

@@ -1,7 +1,6 @@
 package net.fortytwo.twitlogic.data;
 
 import junit.framework.TestCase;
-import net.fortytwo.twitlogic.TwitLogic;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,23 +11,23 @@ import net.fortytwo.twitlogic.TwitLogic;
  */
 public class FreeAssociationGeneratorTest extends TestCase {
     public void testNormalizeTerm() throws Exception {
-        assertEquals("foo", FreeAssociationGenerator.normalizeTerm("foo"));
-        assertEquals("foo", FreeAssociationGenerator.normalizeTerm("  foo"));
-        assertEquals("foo bar", FreeAssociationGenerator.normalizeTerm(" \t foo\n\n  BAR"));
-        assertEquals("foo bar quux", FreeAssociationGenerator.normalizeTerm(" \t foo\n\n  BAR\nqUux  \t"));
+        assertEquals("foo", FreeAssociationGenerator.normalizeWord("foo"));
+        assertEquals("foo", FreeAssociationGenerator.normalizeWord("  foo"));
+        assertEquals("foo bar", FreeAssociationGenerator.normalizeWord(" \t foo\n\n  BAR"));
+        assertEquals("foo bar quux", FreeAssociationGenerator.normalizeWord(" \t foo\n\n  BAR\nqUux  \t"));
     }
 
     public void testIsNormalTerm() throws Exception {
-        assertTrue(FreeAssociationGenerator.isNormalTerm("foo"));
-        assertTrue(FreeAssociationGenerator.isNormalTerm("foo bar"));
-        assertTrue(FreeAssociationGenerator.isNormalTerm("a b cee"));
+        assertTrue(FreeAssociationGenerator.isNormalWord("foo"));
+        assertTrue(FreeAssociationGenerator.isNormalWord("foo bar"));
+        assertTrue(FreeAssociationGenerator.isNormalWord("a b cee"));
 
-        assertFalse(FreeAssociationGenerator.isNormalTerm(""));
-        assertFalse(FreeAssociationGenerator.isNormalTerm(" ab"));
-        assertFalse(FreeAssociationGenerator.isNormalTerm("ab "));
-        assertFalse(FreeAssociationGenerator.isNormalTerm("Abc"));
-        assertFalse(FreeAssociationGenerator.isNormalTerm("foo23"));
-        assertFalse(FreeAssociationGenerator.isNormalTerm("foo  bar"));
-        assertFalse(FreeAssociationGenerator.isNormalTerm("foo\tbar"));
+        assertFalse(FreeAssociationGenerator.isNormalWord(""));
+        assertFalse(FreeAssociationGenerator.isNormalWord(" ab"));
+        assertFalse(FreeAssociationGenerator.isNormalWord("ab "));
+        assertFalse(FreeAssociationGenerator.isNormalWord("Abc"));
+        assertFalse(FreeAssociationGenerator.isNormalWord("foo23"));
+        assertFalse(FreeAssociationGenerator.isNormalWord("foo  bar"));
+        assertFalse(FreeAssociationGenerator.isNormalWord("foo\tbar"));
     }
 }

@@ -25,16 +25,16 @@ import java.util.regex.Pattern;
 public abstract class FreeAssociationGenerator {
     private static final Pattern
             WHITESPACE = Pattern.compile("\\s+"),
-            NORMAL_TERM = Pattern.compile("[a-z]+([ ][a-z]+)*");
+            NORMAL_WORD = Pattern.compile("[a-z]+([ ][a-z]+)*");
 
     private static final ValueFactory VALUE_FACTORY = new ValueFactoryImpl();
 
     private static final Random RANDOM = new Random();
 
     // A Set to help eliminate duplicate statements.
-    protected static Set<String> DEFINED_TERMS;
+    protected static Set<String> DEFINED_WORDS;
 
-    public static String normalizeTerm(final String term) {
+    public static String normalizeWord(final String term) {
         String s = term.trim().toLowerCase();
 
         Matcher m = WHITESPACE.matcher(s);
@@ -43,51 +43,51 @@ public abstract class FreeAssociationGenerator {
         return s;
     }
 
-    public static boolean isNormalTerm(final String term) {
-        return NORMAL_TERM.matcher(term).matches();
+    public static boolean isNormalWord(final String term) {
+        return NORMAL_WORD.matcher(term).matches();
     }
 
-    protected static void associate(final String sourceTerm,
-                                    final String targetTerm,
+    protected static void associate(final String subjectWord,
+                                    final String objectWord,
                                     final float weight,
                                     final RDFWriter writer) throws RDFHandlerException {
-        String normSourceTerm = normalizeTerm(sourceTerm);
-        String normTargetTerm = normalizeTerm(targetTerm);
-        if (!isNormalTerm(normSourceTerm) || !isNormalTerm(normTargetTerm)) {
-            System.err.println("One of {" + sourceTerm + ", " + targetTerm + "} could not be normalized. No association created.");
+        String normSubjectWord = normalizeWord(subjectWord);
+        String normObjectWord = normalizeWord(objectWord);
+        if (!isNormalWord(normSubjectWord) || !isNormalWord(normObjectWord)) {
+            System.err.println("One of {" + subjectWord + ", " + objectWord + "} could not be normalized. No association created.");
             return;
         }
 
-        String encodedSourceTerm = encodeTerm(normSourceTerm);
-        String encodedTargetTerm = encodeTerm(normTargetTerm);
+        String encodedSubjectWord = encodeWord(normSubjectWord);
+        String encodedObjectWord = encodeWord(normObjectWord);
 
-        URI source = createResourceURI(encodedSourceTerm);
-        URI target = createResourceURI(encodedTargetTerm);
-        URI association = createResourceURI(encodedSourceTerm + "-" + encodedTargetTerm + "-" + RANDOM.nextInt(Integer.MAX_VALUE));
+        URI subject = createResourceURI(encodedSubjectWord);
+        URI object = createResourceURI(encodedObjectWord);
+        URI association = createResourceURI(encodedSubjectWord + "-" + encodedObjectWord + "-" + RANDOM.nextInt(Integer.MAX_VALUE));
 
-        Literal sourceLabel = VALUE_FACTORY.createLiteral(normSourceTerm);
-        Literal targetLabel = VALUE_FACTORY.createLiteral(normTargetTerm);
+        Literal subjectLabel = VALUE_FACTORY.createLiteral(normSubjectWord);
+        Literal objectLabel = VALUE_FACTORY.createLiteral(normObjectWord);
         Literal w = VALUE_FACTORY.createLiteral(weight);
 
-        if (!termAlreadyDefined(normSourceTerm)) {
-            writer.handleStatement(VALUE_FACTORY.createStatement(source, RDF.TYPE, TwitLogic.TERM));
-            writer.handleStatement(VALUE_FACTORY.createStatement(source, RDFS.LABEL, sourceLabel));
+        if (!wordAlreadyDefined(normSubjectWord)) {
+            writer.handleStatement(VALUE_FACTORY.createStatement(subject, RDF.TYPE, TwitLogic.WORD));
+            writer.handleStatement(VALUE_FACTORY.createStatement(subject, RDFS.LABEL, subjectLabel));
         }
 
-        if (!termAlreadyDefined(normTargetTerm)) {
-            writer.handleStatement(VALUE_FACTORY.createStatement(target, RDF.TYPE, TwitLogic.TERM));
-            writer.handleStatement(VALUE_FACTORY.createStatement(target, RDFS.LABEL, targetLabel));
+        if (!wordAlreadyDefined(normObjectWord)) {
+            writer.handleStatement(VALUE_FACTORY.createStatement(object, RDF.TYPE, TwitLogic.WORD));
+            writer.handleStatement(VALUE_FACTORY.createStatement(object, RDFS.LABEL, objectLabel));
         }
 
         writer.handleStatement(VALUE_FACTORY.createStatement(association, RDF.TYPE, TwitLogic.ASSOCIATION));
-        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.SOURCE, source));
-        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.TARGET, target));
+        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.SUBJECT, subject));
+        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.OBJECT, object));
         writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.WEIGHT, w));
     }
 
 
-    private static String encodeTerm(final String normalTerm) {
-        return normalTerm.replaceAll(" ", "_");
+    private static String encodeWord(final String normalWord) {
+        return normalWord.replaceAll(" ", "_");
     }
 
     private static URI createResourceURI(final String resourceID) {
@@ -95,10 +95,10 @@ public abstract class FreeAssociationGenerator {
     }
 
 
-    private static boolean termAlreadyDefined(final String normalTerm) {
-        boolean b = DEFINED_TERMS.contains(normalTerm);
+    private static boolean wordAlreadyDefined(final String normalWord) {
+        boolean b = DEFINED_WORDS.contains(normalWord);
         if (!b) {
-            DEFINED_TERMS.add(normalTerm);
+            DEFINED_WORDS.add(normalWord);
         }
 
         return b;

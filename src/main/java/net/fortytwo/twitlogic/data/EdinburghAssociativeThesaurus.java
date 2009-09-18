@@ -20,7 +20,6 @@ import java.util.HashSet;
  * User: josh
  * Date: Sep 13, 2009
  * Time: 9:39:51 PM
- * To change this template use File | Settings | File Templates.
  */
 public class EdinburghAssociativeThesaurus extends FreeAssociationGenerator {
     public static void main(final String[] args) throws Exception {
@@ -41,7 +40,7 @@ public class EdinburghAssociativeThesaurus extends FreeAssociationGenerator {
 
     private static void convertSRConciseFileToNTriples(final File srConciseFile,
                                                        final File ntriplesFile) throws IOException, RDFHandlerException {
-        DEFINED_TERMS = new HashSet<String>();
+        DEFINED_WORDS = new HashSet<String>();
 
         int associationCount = 0;
         OutputStream out = new FileOutputStream(ntriplesFile);
@@ -57,12 +56,12 @@ public class EdinburghAssociativeThesaurus extends FreeAssociationGenerator {
                             break;
                         }
 
-                        String sourceTerm = normalizeTerm(line);
+                        String subjectWord = normalizeWord(line);
 
                         // There should be an even number of lines in this file.
                         line = b.readLine();
 
-                        if (isNormalTerm(sourceTerm)) {
+                        if (isNormalWord(subjectWord)) {
                             String[] cells = line.trim().split("[|]");
 
                             int totalWeight = 0;
@@ -72,14 +71,14 @@ public class EdinburghAssociativeThesaurus extends FreeAssociationGenerator {
                             }
 
                             for (int i = 0; i < cells.length; i += 2) {
-                                String targetTerm = cells[i];
+                                String objectWord = cells[i];
                                 float weight = Float.valueOf(cells[i + 1]) / totalWeight;
 
-                                associate(sourceTerm, targetTerm, weight, writer);
+                                associate(subjectWord, objectWord, weight, writer);
                                 associationCount++;
                             }
                         } else {
-                            System.err.println(sourceTerm + " could not be normalized. No association created.");
+                            System.err.println(subjectWord + " could not be normalized. No association created.");
                         }
                     }
                 } finally {

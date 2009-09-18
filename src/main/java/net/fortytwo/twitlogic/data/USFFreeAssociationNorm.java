@@ -21,7 +21,6 @@ import java.util.HashSet;
  * User: josh
  * Date: Sep 12, 2009
  * Time: 5:51:08 PM
- * To change this template use File | Settings | File Templates.
  */
 public class USFFreeAssociationNorm extends FreeAssociationGenerator {
 
@@ -50,7 +49,7 @@ public class USFFreeAssociationNorm extends FreeAssociationGenerator {
             }
         };
 
-        DEFINED_TERMS = new HashSet<String>();
+        DEFINED_WORDS = new HashSet<String>();
 
         int associationCount = 0;
         int fileCount = 0;
@@ -76,11 +75,11 @@ public class USFFreeAssociationNorm extends FreeAssociationGenerator {
                             }
 
                             String[] cells = line.split(", ");
-                            String sourceTerm = cells[0];
-                            String targetTerm = cells[1];
+                            String subjectWord = cells[0];
+                            String objectWord = cells[1];
                             float weight = Float.valueOf(cells[5]);
 
-                            associate(sourceTerm, targetTerm, weight, writer);
+                            associate(subjectWord, objectWord, weight, writer);
 
                             associationCount++;
                         }
