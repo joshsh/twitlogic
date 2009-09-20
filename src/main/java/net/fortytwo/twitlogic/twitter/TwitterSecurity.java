@@ -104,42 +104,6 @@ public class TwitterSecurity {
         showInfo();
     }
 
-    /**
-     * bring the user to authUrl, e.g. open a web browser and note the PIN code
-     * ... you have to ask this from the user, or obtain it
-     * from the callback if you didn't do an out of band request
-     */
-    private String findPinCode(final String authURL) throws IOException {
-        /*
-        JFrame frame = new JFrame("hidden frame");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        String pinCode = (String) JOptionPane.showInputDialog(
-                frame,
-                "To allow " + TwitLogic.getName() + " access to your Twitter account:\n" +
-                        "1) visit the following URL\n" +
-                        "\t " + authURL + "\n" +
-                        "2) click \"Allow\"\n" +
-                        "3) enter the PIN code into the field below",
-                "Twitter OAuth PIN code required",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                "");
-        frame.dispose();
-        */
-
-        System.out.println("To allow " + TwitLogic.getName() + " access to your Twitter account:\n" +
-                "1) visit the following URL\n" +
-                "\t " + authURL + "\n" +
-                "2) click \"Allow\"\n" +
-                "3) enter the PIN code below and hit ENTER");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String pinCode = br.readLine();
-
-        return pinCode.trim();
-    }
-
     public void loadCredentials() {
         String accessToken = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN).trim();
         String tokenSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN_SECRET).trim();
@@ -196,6 +160,47 @@ public class TwitterSecurity {
         processStream(request, handler);
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * bring the user to authUrl, e.g. open a web browser and note the PIN code
+     * ... you have to ask this from the user, or obtain it
+     * from the callback if you didn't do an out of band request
+     * @param authURL
+     * @return
+     * @throws java.io.IOException
+     */
+    private String findPinCode(final String authURL) throws IOException {
+        /*
+        JFrame frame = new JFrame("hidden frame");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        String pinCode = (String) JOptionPane.showInputDialog(
+                frame,
+                "To allow " + TwitLogic.getName() + " access to your Twitter account:\n" +
+                        "1) visit the following URL\n" +
+                        "\t " + authURL + "\n" +
+                        "2) click \"Allow\"\n" +
+                        "3) enter the PIN code into the field below",
+                "Twitter OAuth PIN code required",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "");
+        frame.dispose();
+        */
+
+        System.out.println("To allow " + TwitLogic.getName() + " access to your Twitter account:\n" +
+                "1) visit the following URL\n" +
+                "\t " + authURL + "\n" +
+                "2) click \"Allow\"\n" +
+                "3) enter the PIN code below and hit ENTER");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String pinCode = br.readLine();
+
+        return pinCode.trim();
+    }
+
     // The following steps are performed everytime you
     // send a request accessing a resource on Twitter
     private void makeRequest() throws OAuthCommunicationException, OAuthExpectationFailedException, OAuthNotAuthorizedException, OAuthMessageSignerException, IOException {
@@ -235,7 +240,7 @@ public class TwitterSecurity {
         setAgent(request);
 
         consumer.sign(request);
-        request.setHeader("Authorization", new String(Base64.encodeBase64("antijosh:escher".getBytes())));
+        request.setHeader("Authorization", new String(Base64.encodeBase64("username:password".getBytes())));
 
         HttpClient client = createClient();
         HttpResponse response = client.execute(request);

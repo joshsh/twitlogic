@@ -6,14 +6,24 @@
 
 (defun show (r)
     (print-triples
-        (get-triples-list :s r) :format :ntriple))
+        (get-triples-list :s r :limit nil) :format :ntriple))
 (defun show-in (r)
     (print-triples
-        (get-triples-list :o r) :format :ntriple))
+        (get-triples-list :o r :limit nil) :format :ntriple))
 
 (defun text (s &optional limit)
     (print-triples (freetext-get-triples s)
     :limit (if (eq limit ()) 10 limit)))
+
+(defun count-triples-per-graph (&key size)
+    (let ((h (make-upi-hash-table :size (if (eq () size) 1000 size))))
+        (iterate-cursor (tr (get-triples))
+            (let ((graph (graph tr)))
+                (let ((count (gethash graph h)))
+                    (setf (gethash graph h)
+                        (if (eq count nil) 1 (+ count 1))))))
+        (loop for graph being the hash-key using (hash-value count) of h do
+            (format t "~%~70a ~d" graph count))))
 
 
 ;;;; ranking ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
