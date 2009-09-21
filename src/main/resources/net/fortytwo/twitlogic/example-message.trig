@@ -1,0 +1,29 @@
+@prefix ex: <http://fortytwo.net/2009/10/twitlogic#> .
+@prefix graphs: <http://twitlogic.fortytwo.net/resource/graph/> .
+@prefix hashtags: <http://twitlogic.fortytwo.net/resource/hashtag/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix users: <http://twitlogic.fortytwo.net/resource/user/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+{
+    graphs:joshsh-8nqWG rdf:type ex:Graph ;
+        ex:assertedBy users:joshsh ;
+        ex:timeStamp "2009-09-20T12:13:14"^^xsd:dateTime ;
+        ex:confidence "0.6"^^xsd:decimal ;
+        rdfs:comment "from tweet 'This is ambiguous: @xixiluo #livesIn #troy #ny.'" .
+
+    graphs:joshsh-xWRNN rdf:type ex:Graph ;
+        ex:assertedBy users:joshsh ;
+        ex:timeStamp "2009-09-20T12:13:14"^^xsd:dateTime ;
+        ex:confidence "0.2"^^xsd:decimal ;
+        rdfs:comment "from tweet 'This is ambiguous: @xixiluo #livesIn #troy #ny.'" .
+}
+
+graphs:joshsh-8nqWG {
+    users:xixiluo hashtags:livesIn hashtags:troy .
+}
+
+graphs:joshsh-xWRNN {
+    hashtags:livesIn hashtags:troy hashtags:ny .
+}

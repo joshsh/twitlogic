@@ -12,14 +12,15 @@
 ;; * weights are expected to be positive numbers (never zero and never negative)
 
 (defun create-weighted-vector (&key size)
-    (make-hash-table
+;;    (make-hash-table
+    (make-upi-hash-table
         :size (if (eq () size) 1000 size)))
 
 (defun weighted-vector-magnitude (vector)
-    (setq mag 0.0)
-    (loop for v being the hash-value of vector do
-        (setq mag (+ mag v)))
-    mag)
+    (let ((mag 0.0))
+        (loop for v being the hash-value of vector do
+            (setq mag (+ mag v)))
+        mag))
 
 (defun normalize-weighted-vector (vector)
     (let ((mag (weighted-vector-magnitude vector)))
@@ -32,6 +33,10 @@
 ;; Note: weight must be a positive number
 (defun set-weight (weighted-vector node weight)
     (setf (gethash node weighted-vector) weight))
+
+(defun increment-weight (weighted-vector node weight)
+    (setf (gethash node weighted-vector)
+        (+ weight (gethash node weighted-vector 0.0))))
 
 ;; Note: sorts the key/value list in order of descending value
 (defun show-weighted-vector (vector)
@@ -48,12 +53,19 @@
 ;; spreading activation
 
 (defun spread (start-vector step-callback maxdepth steps)
-    (let ((report-step-callback
-        (lambda (node weight)
-	    (print (concatenate 'string "took a step to " node)))))
-        (loop for i from 1 to steps do
-            (funcall step-callback "foo" report-step-callback))))
-
+    (let ((cur nil) (result (create-weighted-vector)))
+        (let ((report-step-callback
+            (lambda (node weight)
+                (setq cur node)
+                (increment-weight result node weight))))
+            (loop for i from 0 to (- steps 1) do
+	        ;; occasionally reset to a random starting point
+		;;(print (eq 0 (mod i maxdepth)))
+                (if (eq 0 (mod i maxdepth))
+	            (setq cur (choose-random-vector-element-by-weight start-vector)))
+            (funcall step-callback cur report-step-callback)))
+	(show-weighted-vector result)))
+	
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; spreading activation in Association networks
