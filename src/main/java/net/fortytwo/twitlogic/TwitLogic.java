@@ -20,10 +20,18 @@ public class TwitLogic {
 
     // Configuration property keys
     public static final String
-            TWITTER_CONSUMER_KEY = "net.fortytwo.twitlogic.twitterConsumerKey",
-            TWITTER_CONSUMER_SECRET = "net.fortytwo.twitlogic.twitterConsumerSecret",
-            TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitterAccessToken",
-            TWITTER_ACCESS_TOKEN_SECRET = "net.fortytwo.twitlogic.twitterAccessTokenSecret";
+            TWITTER_CONSUMER_KEY = "net.fortytwo.twitlogic.twitter.consumerKey",
+            TWITTER_CONSUMER_SECRET = "net.fortytwo.twitlogic.twitter.consumerSecret",
+            TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitter.accessToken",
+            TWITTER_ACCESS_TOKEN_SECRET = "net.fortytwo.twitlogic.twitter.accessTokenSecret",
+            TWITTER_USERNAME = "net.fortytwo.twitlogic.twitter.username",
+            TWITTER_PASSWORD = "net.fortytwo.twitlogic.twitter.password",
+            XMPP_SERVER = "net.fortytwo.twitlogic.xmpp.server",
+            XMPP_PORT = "net.fortytwo.twitlogic.xmpp.port",
+            XMPP_REPORTER_USERNAME = "net.fortytwo.twitlogic.xmpp.reporterUsername",
+            XMPP_REPORTER_PASSWORD = "net.fortytwo.twitlogic.xmpp.reporterPassword",
+            XMPP_REASONER_USERNAME = "net.fortytwo.twitlogic.xmpp.reasonerUsername",
+            XMPP_REASONER_PASSWORD = "net.fortytwo.twitlogic.xmpp.reasonerPassword";
 
     public static final String
             NAMESPACE = "http://fortytwo.net/2009/10/twitlogic#",

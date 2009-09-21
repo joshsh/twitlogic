@@ -4,12 +4,15 @@
 
 (in-package :triple-store-user)
 
+;; TODO: point out inaccurate documentation of print-triples at
+;;    http://www.franz.com/agraph/allegrograph/doc/reference-guide.html#print-triples
+;; If no :limit argument is supplied, a default limit is imposed.
 (defun show (r)
     (print-triples
-        (get-triples-list :s r :limit nil) :format :ntriple))
+        (get-triples-list :s r :limit nil) :limit nil :format :ntriple))
 (defun show-in (r)
     (print-triples
-        (get-triples-list :o r :limit nil) :format :ntriple))
+        (get-triples-list :o r :limit nil) :limit nil :format :ntriple))
 
 (defun text (s &optional limit)
     (print-triples (freetext-get-triples s)

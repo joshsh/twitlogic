@@ -20,7 +20,8 @@ package net.fortytwo.twitlogic;
 }
 
 tweet returns [List<List<Resource>> value]
-	:	(CRUFT)* a=allSequences {$value = $a.value;} (CRUFT)*
+	:	{$value = new LinkedList<List<Resource>>(); }
+		((CRUFT)* a=allSequences {$value = $a.value;})? (CRUFT)* EOF
 	;
 	
 allSequences returns [List<List<Resource>> value]
@@ -71,7 +72,8 @@ QUOTED_STRING :	'\"' .* '\"' ;
 // Note: this is a somewhat restrictive URL regex.
 // Characters not currently allowed: !$%'()*,:;<>@[\]^`{|}"
 //    http://example.org/xixiluo
-URL 	:	('a'..'z')+ '://'  // protocol
+URL 	:	'http://'  // protocol
+//URL 	:	('a'..'z')+ '://'  // protocol
         ('A'..'Z'|'a'..'z'|'0'..'9'|'-')+ ('.' ('A'..'Z'|'a'..'z'|'0'..'9'|'-')+)*  // domain name. Internationalized Domain Names are not taken into account.
         ('/' (
             ('A'..'Z'|'a'..'z'|'0'..'9'|'-'|'_'|'#'|'&'|'+'|'.'|'/'|'='|'?'|'~')*

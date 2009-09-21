@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.Handler;
@@ -234,13 +235,21 @@ public class TwitterSecurity {
         }
     }
 
+    private void authorizationCheat(final HttpUriRequest request) {
+        Properties props = TwitLogic.getConfiguration();
+        String username = props.getProperty(TwitLogic.TWITTER_USERNAME);
+        String password = props.getProperty(TwitLogic.TWITTER_PASSWORD);
+        String auth = new String(Base64.encodeBase64((username + ":" + password).getBytes()));
+        request.setHeader("Authorization", auth);
+    }
+
     private void processStream(final HttpUriRequest request, final Handler<TwitterStatus, Exception> handler) throws Exception {
 
         setAcceptHeader(request, new String[]{"application/json"});
         setAgent(request);
 
         consumer.sign(request);
-        request.setHeader("Authorization", new String(Base64.encodeBase64("username:password".getBytes())));
+        authorizationCheat(request);
 
         HttpClient client = createClient();
         HttpResponse response = client.execute(request);
