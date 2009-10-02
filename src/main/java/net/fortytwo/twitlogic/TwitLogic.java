@@ -1,15 +1,16 @@
 package net.fortytwo.twitlogic;
 
+import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.twitter.TwitterSecurity;
-import net.fortytwo.twitlogic.model.TwitterUser;
-
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.io.IOException;
-
+import net.fortytwo.twitlogic.twitter.TwitterStatus;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Author: josh
@@ -45,6 +46,7 @@ public class TwitLogic {
             WEIGHT = new URIImpl(NAMESPACE + "weight");
 
     private static final Properties configuration;
+    private static final Logger LOGGER;
 
     static {
         configuration = new Properties();
@@ -54,6 +56,19 @@ public class TwitLogic {
         } catch (IOException e) {
             throw new ExceptionInInitializerError(e);
         }
+
+        InputStream resourceAsStream = TwitLogic.class.getResourceAsStream("logging.properties");
+
+        try {
+            LogManager.getLogManager().readConfiguration(resourceAsStream);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LOGGER = getLogger(TwitLogic.class);
+        LOGGER.info("initialized logging");
     }
 
     public static String getName() {
@@ -68,6 +83,10 @@ public class TwitLogic {
         return configuration;
     }
 
+    public static Logger getLogger(final Class c) {
+        return Logger.getLogger(c.getName());
+    }
+
     public static void main(final String[] args) throws Exception {
         TwitterSecurity t = new TwitterSecurity();
 
@@ -75,43 +94,49 @@ public class TwitLogic {
 
         t.loadCredentials();
 
+        Handler<TwitterStatus, Exception> statusHandler = new ExampleStatusHandler();
+
         //processSampleStream(new ExampleStatusHandler());
         //processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
         //processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
-        t.processFollowFilterStream(aFewGoodUserIds(), new ExampleStatusHandler(), 0);
+        t.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
         //processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
 
 //        t.makeRequest();
     }
 
-    private static final TwitterUser[] A_FEW_GOOD_USERS = new TwitterUser[]{
-            new TwitterUser("antijosh", 71631722),      // test account
-            new TwitterUser("alvitest", 73477629),      // test account
+    private static final User[] A_FEW_GOOD_USERS = new User[]{
+            new User("antijosh", 71631722),      // test account
+            new User("alvitest", 73477629),      // test account
 
             // Some TWC-Twitterers (note: I think there are more...)
-            new TwitterUser("alvarograves", 39816942),  // Alvaro Graves
-            new TwitterUser("ankesh_k", 17346783),      // Ankesh Khandelwal
-            new TwitterUser("baojie", 14731308),        // Jie Bao
-            new TwitterUser("difrad", 18003181),        // Dominic DiFranzo
-            new TwitterUser("dlmcguinness", 19122108),  // Deborah McGuinness
-            new TwitterUser("ewpatton", 34309130),      // Evan Patton
-            new TwitterUser("jahendler", 15336340),     // James Hendler
-            new TwitterUser("joshsh", 7083182),         // Joshua Shinavier
-            new TwitterUser("jrweave", 20830884),       // Jesse Weaver
-            new TwitterUser("kasei", 643563),           // Gregory Williams
-            new TwitterUser("lidingpku", 26823198),     // Li Ding
-            new TwitterUser("shangz", 19274805),        // Zhenning Shangguan
-            new TwitterUser("taswegian", 15477931),     // Peter Fox
-            new TwitterUser("xixiluo", 33308444),       // Xixi Luo
+            new User("alvarograves", 39816942),  // Alvaro Graves
+            new User("ankesh_k", 17346783),      // Ankesh Khandelwal
+            new User("baojie", 14731308),        // Jie Bao
+            new User("difrad", 18003181),        // Dominic DiFranzo
+            new User("dlmcguinness", 19122108),  // Deborah McGuinness
+            new User("ewpatton", 34309130),      // Evan Patton
+            new User("jahendler", 15336340),     // James Hendler
+            new User("joshsh", 7083182),         // Joshua Shinavier
+            new User("jrweave", 20830884),       // Jesse Weaver
+            new User("kasei", 643563),           // Gregory Williams
+            new User("lidingpku", 26823198),     // Li Ding
+            new User("shangz", 19274805),        // Zhenning Shangguan
+            new User("taswegian", 15477931),     // Peter Fox
+            new User("xixiluo", 33308444),       // Xixi Luo
+
+            // Twitter Data contributors
+            new User("toddfast", 9869202),       // Todd Fast
+            new User("jirikopsa", 782594),       // Jiri Kopsa
 
             // Other friends of the Cause
-            new TwitterUser("twarko", 71089109),       // Marko Rodriguez
+            new User("twarko", 71089109),        // Marko Rodriguez
 
             // Miscellaneous people who use a lot of hashtags (not necessarily
             // with TwitLogic in mind).  Adds some healthy "noise" to test the
             // app against inevitable false positives.
-            new TwitterUser("tommyh", 5439642),
-            new TwitterUser("thecoventgarden", 33206959)};
+            new User("tommyh", 5439642),
+            new User("thecoventgarden", 33206959)};
 
     private static String[] aFewGoodUserIds() {
         String[] ids = new String[A_FEW_GOOD_USERS.length];
@@ -120,5 +145,4 @@ public class TwitLogic {
         }
         return ids;
     }
-
 }

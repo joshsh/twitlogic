@@ -25,7 +25,7 @@ public class PlainLiteral implements Resource {
     }
 
     public Type getType() {
-        return Type.LITERAL;
+        return Type.PLAIN_LITERAL;
     }
 
     public boolean equals(final Object other) {

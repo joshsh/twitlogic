@@ -1,31 +1,32 @@
 package net.fortytwo.twitlogic.xmpp;
 
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.ConnectionConfiguration;
+import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.TwitLogic;
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.PacketCollector;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.PacketExtension;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.repository.RepositoryException;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.PEPManager;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.sail.memory.MemoryStore;
 
 import java.io.IOException;
 import java.util.Properties;
-
-import net.fortytwo.twitlogic.TwitLogic;
+import java.util.Random;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,8 +36,11 @@ import net.fortytwo.twitlogic.TwitLogic;
  * To change this template use File | Settings | File Templates.
  */
 public class RDFXMPPStuff {
+    // TODO: change me
+    public static final String NODE = "http://jabber.org/protocol/tune" ;
 
     private static final String RESOURCE = "SomeResource/";
+    private static final Random RANDOM = new Random();
 
     private final String server;
     private final int port;
@@ -55,15 +59,25 @@ public class RDFXMPPStuff {
         reasonerPassword = props.getProperty(TwitLogic.XMPP_REASONER_PASSWORD);
     }
 
+    public static String randomId() {
+        // TODO: improve this
+        return "" + RANDOM.nextInt(1000000);
+    }
+
     public static void main(final String[] args) throws Exception {
+        XMPPConnection.DEBUG_ENABLED = true;
+
         try {
-            new RDFXMPPStuff().rdfPlay();
+            new RDFXMPPStuff().pubSubStuff();
+//            new RDFXMPPStuff().rdfPlay();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Thread.currentThread().sleep(100000);
-        System.exit(0);
+        while (true) {
+            Thread.currentThread().sleep(100000);
+        }
+
 
         /*
         ConnectionConfiguration config = new ConnectionConfiguration(SERVER, PORT);
@@ -125,46 +139,50 @@ public class RDFXMPPStuff {
 
         Message m = new Message();
         Repository senderRepo = createSampleRepository();
-        PacketExtension ext = new RDFPacketExtension(RDFFormat.RDFXML, senderRepo);
+        PacketExtension ext = new RDFPacketExtension(randomId(), RDFFormat.RDFXML, senderRepo);
         //PacketExtension ext = new RDFPacketExtension(RDFFormat.TRIX, senderRepo);
         m.addExtension(ext);
-        m.setBody("testing");
+        //m.setBody("testing");
         //m.setBody(ext.toXML());
         senderRepo.shutDown();
         m.setLanguage("en");
         m.setSubject("test message");
         //m.setBody("TwitLogic streaming RDF packet");
-        m.setType(Message.Type.normal);
+        m.setType(Message.Type.headline);
+        //m.setType(Message.Type.normal);
         System.out.println("message: " + m.toXML());
         senderChat.sendMessage(m);
     }
 
-    /*
-    private void rdfPlay() throws XMPPException, RDFHandlerException, RepositoryException {
-        // Create a c to the jabber.org server on a specific port.
-        ConnectionConfiguration config = new ConnectionConfiguration(SERVER, PORT);
+    private void pubSubStuff() throws Exception {
+        //XMPPConnection senderConn = createConnection(reporterUsername, reporterPassword);
+        //PEPManager senderManager = new PEPManager(senderConn);
 
-        XMPPConnection c = new XMPPConnection(config);
-        c.connect();
+        XMPPConnection receiverConn = createConnection(reasonerUsername, reasonerPassword);
 
-        c.login(REPORTER_USERNAME, REPORTER_PASSWORD);
+        PEPManager receiverManager = new PEPManager(receiverConn);
 
-        Presence p = new Presence(Presence.Type.available);
-        c.sendPacket(p);
+        Handler<RDFDocument, Exception> handler = new Handler<RDFDocument, Exception>() {
+            public boolean handle(final RDFDocument doc) throws Exception {
+                System.out.println("got a document: " + doc);
+                return true;
+            }
+        };
+        RDFPubSubReceiver receiver = new RDFPubSubReceiver(handler);
+        receiver.registerWith(receiverManager);
 
+        /*
+        Handler<RDFDocument, Exception> sender = new RDFPubSubSender(senderManager, RDFFormat.RDFXML);
         Repository repo = createSampleRepository();
+        RDFDocument doc = new SimpleRDFDocument(repo);
+        repo.shutDown();
+        sender.handle(doc);
 
-        MessageListener l = new MyListener();
-        Chat ch = c.getChatManager().createChat(REASONER_USERNAME, l);
-        Message m = new Message();
-        m.setBody("Perfunctory message body.");
-        m.addExtension(new RDFXMLPacketExtension(repo));
-        m.setLanguage("en");
-        m.setSubject("let's send some more *real* RDF/XML *with statements*, and chop off the XML declaration");
-        m.setType(Message.Type.normal);
-        System.out.println("message: " + m.toXML());
-        ch.sendMessage(m);
-    }*/
+        senderConn.disconnect();
+        //*/
+        
+        receiverConn.disconnect();
+    }
 
     private Repository createSampleRepository() throws RepositoryException, IOException, RDFParseException {
         Repository repo = new SailRepository(new MemoryStore());
@@ -173,8 +191,8 @@ public class RDFXMPPStuff {
         RepositoryConnection rc = repo.getConnection();
         try {
             String baseURI = "http://example.org/bogus#";
-            //rc.add(TwitLogic.class.getResourceAsStream("example-message.trig"), baseURI, RDFFormat.TRIG);
-            rc.add(RDF.TYPE, RDF.TYPE, RDF.PROPERTY);
+            rc.add(TwitLogic.class.getResourceAsStream("example-message.trig"), baseURI, RDFFormat.TRIG);
+            //rc.add(RDF.TYPE, RDF.TYPE, RDF.PROPERTY);
         } finally {
             rc.commit();
             rc.close();

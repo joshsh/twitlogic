@@ -1,5 +1,7 @@
 package net.fortytwo.twitlogic.twitter;
 
+import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.TwitLogic;
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -10,30 +12,28 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import oauth.signpost.signature.SignatureMethod;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HeaderIterator;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.commons.codec.binary.Base64;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
-
-import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.Handler;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,6 +53,8 @@ public class TwitterSecurity {
     private static final String
             ACCEPT = "Accept",
             USER_AGENT = "User-Agent";
+
+    private static final Logger LOGGER = TwitLogic.getLogger(TwitterSecurity.class);
 
     private final OAuthConsumer consumer;
     private final OAuthProvider provider;
@@ -244,7 +246,8 @@ public class TwitterSecurity {
     }
 
     private void processStream(final HttpUriRequest request, final Handler<TwitterStatus, Exception> handler) throws Exception {
-
+        LOGGER.info("preparing to listen to stream at " + request.getURI());
+        
         setAcceptHeader(request, new String[]{"application/json"});
         setAgent(request);
 

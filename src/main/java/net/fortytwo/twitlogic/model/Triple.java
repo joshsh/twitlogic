@@ -1,13 +1,9 @@
 package net.fortytwo.twitlogic.model;
 
-import net.fortytwo.twitlogic.model.Resource;
-
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 5, 2009
  * Time: 1:23:34 AM
- * To change this template use File | Settings | File Templates.
  */
 public class Triple {
     private final Resource subject;

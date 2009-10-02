@@ -14,7 +14,7 @@ import net.fortytwo.twitlogic.twitter.TwitterAPI;
  * Time: 10:05:19 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TwitterUser implements Resource {
+public class User implements Resource {
     //private final Date createdAt;
     //private final String description;
     //private final Integer favoritesCount;
@@ -40,7 +40,7 @@ public class TwitterUser implements Resource {
     //private final Integer utcOffset;
     //private final Boolean verified;
 
-    public TwitterUser(final String screenName) {
+    public User(final String screenName) {
         this.screenName = screenName;
 
         id = null;
@@ -53,7 +53,7 @@ public class TwitterUser implements Resource {
         url = null;
     }
 
-    public TwitterUser(final String screenName, final int id) {
+    public User(final String screenName, final int id) {
         this.id = id;
         this.screenName = screenName;
 
@@ -66,7 +66,7 @@ public class TwitterUser implements Resource {
         url = null;
     }
 
-    public TwitterUser(final JSONObject json) throws JSONException {
+    public User(final JSONObject json) throws JSONException {
         TwitterAPI.checkJSON(json);
 
         id = json.getInt(TwitterAPI.Field.ID.toString());
@@ -129,8 +129,8 @@ public class TwitterUser implements Resource {
     }
 
     public boolean equals(final Object other) {
-        if (other instanceof TwitterUser) {
-            TwitterUser otherUser = (TwitterUser) other;
+        if (other instanceof User) {
+            User otherUser = (User) other;
             if (null != screenName && null != otherUser.screenName) {
                 return screenName.equals(otherUser.screenName);
             } else if (null != id && null != otherUser.id) {

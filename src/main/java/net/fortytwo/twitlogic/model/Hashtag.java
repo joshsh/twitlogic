@@ -1,7 +1,5 @@
 package net.fortytwo.twitlogic.model;
 
-import net.fortytwo.twitlogic.model.Resource;
-
 /**
  * Created by IntelliJ IDEA.
  * User: josh
@@ -13,7 +11,7 @@ public class Hashtag implements Resource {
     private final String name;
 
     public Hashtag(final String name) {
-        this.name = name;
+        this.name = name.trim().toLowerCase();
     }
 
     public String getName() {

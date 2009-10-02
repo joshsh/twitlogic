@@ -1,32 +1,30 @@
-package net.fortytwo.twitlogic.syntax;
+package net.fortytwo.twitlogic.syntax.twiple;
 
-import org.antlr.runtime.CharStream;
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CommonTokenStream;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Comparator;
-import java.util.Collections;
-
-import net.fortytwo.twitlogic.model.TwitterUser;
+import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.TwipleLexer;
+import net.fortytwo.twitlogic.TwipleParser;
+import net.fortytwo.twitlogic.TweetContext;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.PlainLiteral;
-import net.fortytwo.twitlogic.model.URILiteral;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
-import net.fortytwo.twitlogic.Handler;
-import net.fortytwo.twitlogic.TwitLogicLexer;
-import net.fortytwo.twitlogic.TwitLogicParser;
+import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.model.TypedLiteral;
+import net.fortytwo.twitlogic.syntax.Matcher;
+import net.fortytwo.twitlogic.syntax.MatcherException;
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
+
+import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 6, 2009
  * Time: 2:29:09 PM
- * To change this template use File | Settings | File Templates.
  */
-public class TweetParser {
+public class TwipleMatcher implements Matcher {
     private enum PartOfSpeech {
         SUBJECT, PREDICATE, OBJECT
     }
@@ -49,9 +47,9 @@ public class TweetParser {
         switch (resource.getType()) {
             case HASHTAG:
                 return true;
-            case LITERAL:
+            case PLAIN_LITERAL:
                 return PartOfSpeech.OBJECT == pos;
-            case URL:
+            case TYPED_LITERAL:
                 return PartOfSpeech.OBJECT == pos;
             case USER:
                 return PartOfSpeech.PREDICATE != pos;
@@ -91,7 +89,7 @@ public class TweetParser {
         }
     }
 
-    private float weightTwitterUser(final TwitterUser user,
+    private float weightTwitterUser(final User user,
                                     final PartOfSpeech pos) {
         // TODO: consider penalties for long or strange usernames (or nonexistent ones, if it's practical to check)
         float weight = 1f;
@@ -121,7 +119,7 @@ public class TweetParser {
         }
     }
 
-    private float weightURL(final URILiteral uri,
+    private float weightURL(final TypedLiteral uri,
                             final PartOfSpeech pos) {
         // TODO: consider penalties for long or strange URLs
         float weight = 1f;
@@ -140,12 +138,12 @@ public class TweetParser {
         switch (resource.getType()) {
             case HASHTAG:
                 return weightHashtag((Hashtag) resource, pos);
-            case LITERAL:
+            case PLAIN_LITERAL:
                 return weightLiteral((PlainLiteral) resource, pos);
-            case URL:
-                return weightURL((URILiteral) resource, pos);
+            case TYPED_LITERAL:
+                return weightURL((TypedLiteral) resource, pos);
             case USER:
-                return weightTwitterUser((TwitterUser) resource, pos);
+                return weightTwitterUser((User) resource, pos);
             default:
                 throw new IllegalStateException("unexpected type: " + resource.getClass());
         }
@@ -206,8 +204,8 @@ public class TweetParser {
         resultHandler.handle(st);
     } */
 
-    private void matchStatements(final List<Resource> sequence,
-                                 final Handler<Triple, Exception> resultHandler) throws Exception {
+    private void matchTriples(final List<Resource> sequence,
+                              final Handler<Triple, MatcherException> resultHandler) throws MatcherException {
         for (int i = 0; i < sequence.size() - 2; i++) {
             Resource subject = sequence.get(i);
             Resource predicate = sequence.get(i + 1);
@@ -242,17 +240,41 @@ public class TweetParser {
         }
     }
 
+
+    public void match(final String expression,
+                      final Handler<Triple, MatcherException> handler,
+                      final TweetContext context) throws MatcherException {
+        // TODO: is it very inefficient to create a new lexer and parser for each input string?
+        CharStream s = new ANTLRStringStream(expression);
+        TwipleLexer lexer = new TwipleLexer(s);
+        CommonTokenStream tokens = new CommonTokenStream();
+        tokens.setTokenSource(lexer);
+        TwipleParser parser = new TwipleParser(tokens);
+
+        List<List<Resource>> sequences;
+        try {
+            sequences = parser.tweet();
+        } catch (RecognitionException e) {
+            throw new MatcherException(e);
+        }
+
+        for (List<Resource> sequence : sequences) {
+            matchTriples(sequence, handler);
+        }
+    }
+
+    /*
     public List<Triple> parse(final String text) throws Exception {
         // TODO: is it very inefficient to create a new lexer and parser for each input string?
         CharStream s = new ANTLRStringStream(text);
-        TwitLogicLexer lexer = new TwitLogicLexer(s);
+        TwipleLexer lexer = new TwipleLexer(s);
         CommonTokenStream tokens = new CommonTokenStream();
         tokens.setTokenSource(lexer);
-        TwitLogicParser parser = new TwitLogicParser(tokens);
+        TwipleParser parser = new TwipleParser(tokens);
 
         final List<Triple> allStatements = new LinkedList<Triple>();
 
-        Handler<Triple, Exception> resultHandler = new Handler<Triple, Exception>(){
+        Handler<Triple, Exception> resultHandler = new Handler<Triple, Exception>() {
             public boolean handle(final Triple t) throws Exception {
                 allStatements.add(t);
                 return true;
@@ -275,14 +297,5 @@ public class TweetParser {
 
         return allStatements;
     }
-
-    public static void main(final String[] args) throws Exception {
-        TweetParser p = new TweetParser();
-        p.parse("@joshsh #loves @xixiluo");
-
-
-        for (char c = 32; c < 128; c++) {
-            System.out.print("" + c);
-        }
-    }
+    */
 }

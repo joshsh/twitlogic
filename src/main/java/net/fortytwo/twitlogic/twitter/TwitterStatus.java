@@ -2,7 +2,7 @@ package net.fortytwo.twitlogic.twitter;
 
 import org.json.JSONObject;
 import org.json.JSONException;
-import net.fortytwo.twitlogic.model.TwitterUser;
+import net.fortytwo.twitlogic.model.User;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,7 +12,7 @@ import net.fortytwo.twitlogic.model.TwitterUser;
  * To change this template use File | Settings | File Templates.
  */
 public class TwitterStatus {
-    private final TwitterUser user;
+    private final User user;
 
     //private final Date createdAt;
     //private final Boolean favorited;
@@ -34,10 +34,10 @@ public class TwitterStatus {
         text = json.getString(TwitterAPI.Field.TEXT.toString());
 
         JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
-        user = new TwitterUser(userJSON);
+        user = new User(userJSON);
     }
 
-    public TwitterUser getUser() {
+    public User getUser() {
         return user;
     }
 
