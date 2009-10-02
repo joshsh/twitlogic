@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.twitter;
 
 import net.fortytwo.twitlogic.Handler;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.model.Tweet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,9 +23,9 @@ public class StatusStreamParser {
 
     private static final Logger LOGGER = TwitLogic.getLogger(StatusStreamParser.class);
 
-    private final Handler<TwitterStatus, Exception> statusHandler;
+    private final Handler<Tweet, Exception> statusHandler;
 
-    public StatusStreamParser(final Handler<TwitterStatus, Exception> statusHandler) {
+    public StatusStreamParser(final Handler<Tweet, Exception> statusHandler) {
         this.statusHandler = statusHandler;
     }
 
@@ -32,6 +33,8 @@ public class StatusStreamParser {
         BufferedReader b = new BufferedReader(new InputStreamReader(is));
 
         ExitReason exitReason = ExitReason.EXCEPTION_THROWN;
+        int lines = 0;
+        int emptyLines = 0;
         try {
             LOGGER.info("begin reading from stream");
             while (true) {
@@ -40,6 +43,7 @@ public class StatusStreamParser {
                     exitReason = ExitReason.END_OF_INPUT;
                     break;
                 } else {
+                    lines++;
                     line = line.trim();
                     //System.out.println(line);
                     if (0 < line.length()) {
@@ -55,12 +59,14 @@ public class StatusStreamParser {
                             break;
                         }
                     } else {
-                        LOGGER.fine("empty line");
+                        //LOGGER.fine("empty line");
+                        emptyLines++;
                     }
                 }
             }
         } finally {
             LOGGER.info("stop reading from stream (reason: " + exitReason + ")");
+            LOGGER.info("\tread " + lines + " lines incl. " + emptyLines + " empty");
             b.close();
         }
 
@@ -85,7 +91,7 @@ public class StatusStreamParser {
         // check on the generated JSON object to see whether it is
         // an "interesting" status update (and discarding it if not)
         // before going on to parse all of its fields.
-        TwitterStatus status = new TwitterStatus(el);
+        Tweet status = new Tweet(el);
 
         return statusHandler.handle(status);
     }

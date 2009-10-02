@@ -1,8 +1,8 @@
 package net.fortytwo.twitlogic;
 
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.twitter.TwitterSecurity;
-import net.fortytwo.twitlogic.twitter.TwitterStatus;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 
@@ -95,7 +95,7 @@ public class TwitLogic {
 
             t.loadCredentials();
 
-            Handler<TwitterStatus, Exception> statusHandler = new ExampleStatusHandler();
+            Handler<Tweet, Exception> statusHandler = new ExampleStatusHandler();
 
              t.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
             //t.processSampleStream(statusHandler);

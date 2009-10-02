@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.twitter;
 
 import net.fortytwo.twitlogic.Handler;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.model.Tweet;
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -110,13 +111,13 @@ public class TwitterSecurity {
         consumer.setTokenWithSecret(accessToken, tokenSecret);
     }
 
-    public void processSampleStream(final Handler<TwitterStatus, Exception> handler) throws Exception {
+    public void processSampleStream(final Handler<Tweet, Exception> handler) throws Exception {
         HttpGet request = new HttpGet(SAMPLE_STREAM_URL);
 
         processStream(request, handler);
     }
 
-    public void processTrackFilterStream(final String[] keywords, final Handler<TwitterStatus, Exception> handler) throws Exception {
+    public void processTrackFilterStream(final String[] keywords, final Handler<Tweet, Exception> handler) throws Exception {
         if (keywords.length > TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT) {
             throw new IllegalArgumentException("the default access level allows up to "
                     + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
@@ -135,7 +136,7 @@ public class TwitterSecurity {
     }
 
     public void processFollowFilterStream(final String[] userIds,
-                                          final Handler<TwitterStatus, Exception> handler,
+                                          final Handler<Tweet, Exception> handler,
                                           final int count) throws Exception {
         if (userIds.length > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
             throw new IllegalArgumentException("the default access level allows up to "
@@ -240,7 +241,7 @@ public class TwitterSecurity {
     }
 
     private void processStream(final HttpUriRequest request,
-                               final Handler<TwitterStatus, Exception> handler) throws Exception {
+                               final Handler<Tweet, Exception> handler) throws Exception {
         LOGGER.info("preparing to listen to stream at " + request.getURI());
         
         setAcceptHeader(request, new String[]{"application/json"});

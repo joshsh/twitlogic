@@ -1,27 +1,88 @@
 package net.fortytwo.twitlogic.model;
 
+import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.twitter.TwitterAPI;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.logging.Logger;
+
 /**
  * User: josh
- * Date: Oct 2, 2009
- * Time: 3:01:11 AM
+ * Date: Sep 3, 2009
+ * Time: 10:04:18 PM
  */
 public class Tweet implements Resource {
+    private static final Logger LOGGER = TwitLogic.getLogger(Tweet.class);
+
+    private final User user;
+
+    //private final Date createdAt;
+    //private final Boolean favorited;
+    private final String geo;
     private final String id;
+    private final String inReplyToScreenName;
+    private final String inReplyToStatusId;
+    private final String inReplyToUserId;
+    //private final String source;
+    private final String text;
+    //private final Boolean truncated;
 
-    public Tweet(final String id) {
-        this.id = id;
+    public Tweet(final JSONObject json) throws JSONException {
+        TwitterAPI.checkJSON(json);
+
+        String g = json.getString(TwitterAPI.Field.GEO.toString());
+        if (null != g && g.equals("null")) {
+            g = null;
+        }
+        geo = g;
+        if (null != geo) {
+            LOGGER.info("geo: " + geo);
+        }
+        id = json.getString(TwitterAPI.Field.ID.toString());
+        inReplyToScreenName = json.getString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString());
+        inReplyToStatusId = json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString());
+        inReplyToUserId = json.getString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString());
+        text = json.getString(TwitterAPI.Field.TEXT.toString());
+
+        JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
+        user = new User(userJSON);
     }
 
-    public Type getType() {
-        return Type.TWEET;
+    public User getUser() {
+        return user;
     }
 
-    public String toString() {
-        return "[tweet #" + id + "]";
+    public String getGeo() {
+        return geo;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getInReplyToScreenName() {
+        return inReplyToScreenName;
+    }
+
+    public String getInReplyToStatusId() {
+        return inReplyToStatusId;
+    }
+
+    public String getInReplyToUserId() {
+        return inReplyToUserId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public Resource.Type getType() {
+        return Resource.Type.TWEET;
+    }
+
+    public String toString() {
+        return "[tweet #" + id + "]";
     }
 
     public boolean equals(final Object other) {
@@ -33,3 +94,15 @@ public class Tweet implements Resource {
         return id.hashCode();
     }
 }
+
+/*
+    "created_at":"Thu Sep 03 22:58:51 +0000 2009",
+    "favorited":false,
+    "id":3744161500,
+    "in_reply_to_screen_name":"hannahmendonsa",
+    "in_reply_to_status_id":3743565780,
+    "in_reply_to_user_id":70044174,
+    "source":"web"
+    "text":"@hannahmendonsa I wanna see a kid who looks like Maika!\nI don't have any of those, haha. I've got like two that look like Brendon Urie.",
+    "truncated":false,
+ */

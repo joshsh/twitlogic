@@ -8,7 +8,6 @@ import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
-import net.fortytwo.twitlogic.twitter.TwitterStatus;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,7 +19,7 @@ import java.util.List;
  * Date: Sep 8, 2009
  * Time: 10:37:05 PM
  */
-class ExampleStatusHandler implements Handler<TwitterStatus, Exception> {
+class ExampleStatusHandler implements Handler<Tweet, Exception> {
     private final Matcher matcher;
 
     public ExampleStatusHandler() {
@@ -28,7 +27,7 @@ class ExampleStatusHandler implements Handler<TwitterStatus, Exception> {
                 new DemoAfterthoughtMatcher());
     }
 
-    public boolean handle(final TwitterStatus status) throws Exception {
+    public boolean handle(final Tweet status) throws Exception {
         System.out.println("" + status.getUser().getScreenName() + ": " + status.getText());
 
         TweetContext tweetContext = new TweetContext() {
