@@ -88,21 +88,25 @@ public class TwitLogic {
     }
 
     public static void main(final String[] args) throws Exception {
-        TwitterSecurity t = new TwitterSecurity();
+        try {
+            TwitterSecurity t = new TwitterSecurity();
 
 //        deriveCredentials();
 
-        t.loadCredentials();
+            t.loadCredentials();
 
-        Handler<TwitterStatus, Exception> statusHandler = new ExampleStatusHandler();
+            Handler<TwitterStatus, Exception> statusHandler = new ExampleStatusHandler();
 
-        //processSampleStream(new ExampleStatusHandler());
-        //processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
-        //processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
-        t.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
-        //processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
+             t.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
+            //t.processSampleStream(statusHandler);
+            //t.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
+            //t.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
+            //t.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
 
 //        t.makeRequest();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     private static final User[] A_FEW_GOOD_USERS = new User[]{

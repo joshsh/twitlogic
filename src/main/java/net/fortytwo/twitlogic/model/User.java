@@ -1,18 +1,14 @@
 package net.fortytwo.twitlogic.model;
 
-import org.json.JSONObject;
-import org.json.JSONException;
-
-import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.twitter.TwitterAPI;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 3, 2009
  * Time: 10:05:19 PM
- * To change this template use File | Settings | File Templates.
  */
 public class User implements Resource {
     //private final Date createdAt;
@@ -20,6 +16,7 @@ public class User implements Resource {
     //private final Integer favoritesCount;
     //private final Integer followersCount;
     //private final Integer friendsCount;
+    private final boolean geoEnabled;
     private final Integer id;
     private final String location;
     private final String name;
@@ -44,6 +41,7 @@ public class User implements Resource {
         this.screenName = screenName;
 
         id = null;
+        geoEnabled = false;
         location = null;
         name = null;
         profileBackgroundColor = null;
@@ -57,6 +55,7 @@ public class User implements Resource {
         this.id = id;
         this.screenName = screenName;
 
+        geoEnabled = false;
         location = null;
         name = null;
         profileBackgroundColor = null;
@@ -70,6 +69,7 @@ public class User implements Resource {
         TwitterAPI.checkJSON(json);
 
         id = json.getInt(TwitterAPI.Field.ID.toString());
+        geoEnabled = json.getBoolean(TwitterAPI.Field.GEO_ENABLED.toString());
         location = json.getString(TwitterAPI.Field.LOCATION.toString());
         name = json.getString(TwitterAPI.Field.NAME.toString());
         profileBackgroundColor = json.getString(TwitterAPI.Field.PROFILE_BACKGROUND_COLOR.toString());
@@ -78,6 +78,10 @@ public class User implements Resource {
         isProtected = json.getBoolean(TwitterAPI.Field.PROTECTED.toString());
         screenName = json.getString(TwitterAPI.Field.SCREEN_NAME.toString());
         url = json.getString(TwitterAPI.Field.URL.toString());
+    }
+
+    public boolean getGeoEnabled() {
+        return geoEnabled;
     }
 
     public Integer getId() {

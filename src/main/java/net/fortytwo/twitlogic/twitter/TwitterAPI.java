@@ -18,15 +18,18 @@ public class TwitterAPI {
     public static final int
             DEFAULT_TRACK_KEYWORDS_LIMIT = 200,
             DEFAULT_FOLLOW_USERIDS_LIMIT = 400;
-    
+
     public enum Field {
         CREATED_AT("created_at"), // Note: used in multiple contexts
         DECRIPTION("description"),
+        DELETE("delete"),
         FAVORITED("favorited"),
         FAVORITES_COUNT("favourites_count"),
         FOLLOWERS_COUNT("followers_count"),
         FOLLOWING("following"),
         FRIENDS_COUNT("friends_count"),
+        GEO("geo"),
+        GEO_ENABLED("geo_enabled"),
         ID("id"), // Note: used in multiple contexts
         IN_REPLY_TO_SCREEN_NAME("in_reply_to_screen_name"),
         IN_REPLY_TO_STATUS_ID("in_reply_to_status_id"),

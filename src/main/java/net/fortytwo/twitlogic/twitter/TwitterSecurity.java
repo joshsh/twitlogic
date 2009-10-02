@@ -84,12 +84,6 @@ public class TwitterSecurity {
         System.out.println("provider.getRequestTokenEndpointUrl() = " + provider.getRequestTokenEndpointUrl());
     }
 
-    public static void main(final String[] args) throws Exception {
-        TwitterSecurity t = new TwitterSecurity();
-        t.deriveCredentials();
-        t.makeRequest();
-    }
-
     /**
      * This should only be done once, to derive OAuth credentials.
      */
@@ -245,7 +239,8 @@ public class TwitterSecurity {
         request.setHeader("Authorization", auth);
     }
 
-    private void processStream(final HttpUriRequest request, final Handler<TwitterStatus, Exception> handler) throws Exception {
+    private void processStream(final HttpUriRequest request,
+                               final Handler<TwitterStatus, Exception> handler) throws Exception {
         LOGGER.info("preparing to listen to stream at " + request.getURI());
         
         setAcceptHeader(request, new String[]{"application/json"});

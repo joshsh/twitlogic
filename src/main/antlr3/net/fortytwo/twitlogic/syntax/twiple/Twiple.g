@@ -131,7 +131,7 @@ PRONOUN :
 	;
 */
 	   
-CRUFT 	:	'!'..'~' ;
+CRUFT 	:	('\u0000'..'\uFFFF') ;
 
 
 

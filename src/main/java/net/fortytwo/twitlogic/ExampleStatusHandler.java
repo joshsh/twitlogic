@@ -1,10 +1,10 @@
 package net.fortytwo.twitlogic;
 
-import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
+import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.Matcher;
+import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
@@ -36,7 +36,19 @@ class ExampleStatusHandler implements Handler<TwitterStatus, Exception> {
                 return null;
             }
 
-            public Resource thisTweet() {
+            public User repliedToUser() {
+                return null;
+            }
+
+            public User retweetedUser() {
+                return null;
+            }
+
+            public Tweet thisTweet() {
+                return null;
+            }
+
+            public Tweet repliedToTweet() {
                 return null;
             }
         };

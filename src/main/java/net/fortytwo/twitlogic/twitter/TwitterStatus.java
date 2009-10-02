@@ -1,21 +1,25 @@
 package net.fortytwo.twitlogic.twitter;
 
-import org.json.JSONObject;
-import org.json.JSONException;
+import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.User;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.logging.Logger;
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 3, 2009
  * Time: 10:04:18 PM
- * To change this template use File | Settings | File Templates.
  */
 public class TwitterStatus {
+    private static final Logger LOGGER = TwitLogic.getLogger(TwitterStatus.class);
+
     private final User user;
 
     //private final Date createdAt;
     //private final Boolean favorited;
+    private final String geo;
     private final String id;
     private final String inReplyToScreenName;
     private final String inReplyToStatusId;
@@ -27,6 +31,14 @@ public class TwitterStatus {
     public TwitterStatus(final JSONObject json) throws JSONException {
         TwitterAPI.checkJSON(json);
 
+        String g = json.getString(TwitterAPI.Field.GEO.toString());
+        if (null != g && g.equals("null")) {
+            g = null;
+        }
+        geo = g;
+        if (null != geo) {
+            LOGGER.info("geo: " + geo);
+        }
         id = json.getString(TwitterAPI.Field.ID.toString());
         inReplyToScreenName = json.getString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString());
         inReplyToStatusId = json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString());
@@ -41,6 +53,10 @@ public class TwitterStatus {
         return user;
     }
 
+    public String getGeo() {
+        return geo;
+    }
+    
     public String getId() {
         return id;
     }

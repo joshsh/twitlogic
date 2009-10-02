@@ -1,15 +1,15 @@
 package net.fortytwo.twitlogic.syntax;
 
 import junit.framework.TestCase;
-import net.fortytwo.twitlogic.model.Triple;
-import net.fortytwo.twitlogic.TweetContext;
-import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.TweetContext;
+import net.fortytwo.twitlogic.model.Triple;
+import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.User;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: josh
@@ -23,7 +23,19 @@ public abstract class MatcherTestBase extends TestCase {
             return null;
         }
 
-        public Resource thisTweet() {
+        public User repliedToUser() {
+            return null;
+        }
+
+        public User retweetedUser() {
+            return null;
+        }
+
+        public Tweet thisTweet() {
+            return null;
+        }
+
+        public Tweet repliedToTweet() {
             return null;
         }
     };
