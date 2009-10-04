@@ -1,6 +1,6 @@
 package net.fortytwo.twitlogic.syntax;
 
-import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.flow.Handler;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,8 +1,6 @@
 package net.fortytwo.twitlogic.twitter;
 
-import net.fortytwo.twitlogic.Handler;
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.model.Tweet;
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -14,53 +12,26 @@ import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import oauth.signpost.signature.SignatureMethod;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.Header;
-import org.apache.http.HeaderIterator;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Aug 10, 2009
  * Time: 5:38:51 PM
- * To change this template use File | Settings | File Templates.
  */
-public class TwitterSecurity {
-    private static final String
-            REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
-            ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
-            AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
-            FILTER_STREAM_URL = "http://stream.twitter.com/1/statuses/filter.json",
-            SAMPLE_STREAM_URL = "http://stream.twitter.com/1/statuses/sample.json";
-
-    private static final String
-            ACCEPT = "Accept",
-            USER_AGENT = "User-Agent";
-
-    private static final Logger LOGGER = TwitLogic.getLogger(TwitterSecurity.class);
+public class TwitterCredentials {
+    private static final Logger LOGGER = TwitLogic.getLogger(TwitterCredentials.class);
 
     private final OAuthConsumer consumer;
     private final OAuthProvider provider;
 
-    public TwitterSecurity() {
+    public TwitterCredentials() {
         String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY).trim();
         String consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET).trim();
 
@@ -70,9 +41,14 @@ public class TwitterSecurity {
                 SignatureMethod.HMAC_SHA1);
         provider = new DefaultOAuthProvider(
                 consumer,
-                REQUEST_TOKEN_URL,
-                ACCESS_TOKEN_URL,
-                AUTHORIZE_URL);
+                TwitterAPI.REQUEST_TOKEN_URL,
+                TwitterAPI.ACCESS_TOKEN_URL,
+                TwitterAPI.AUTHORIZE_URL);
+    }
+
+    public void sign(final HttpUriRequest request) throws OAuthExpectationFailedException, OAuthMessageSignerException {
+        consumer.sign(request);
+        authorizationCheat(request);
     }
 
     private void showInfo() {
@@ -111,59 +87,13 @@ public class TwitterSecurity {
         consumer.setTokenWithSecret(accessToken, tokenSecret);
     }
 
-    public void processSampleStream(final Handler<Tweet, Exception> handler) throws Exception {
-        HttpGet request = new HttpGet(SAMPLE_STREAM_URL);
-
-        processStream(request, handler);
-    }
-
-    public void processTrackFilterStream(final String[] keywords, final Handler<Tweet, Exception> handler) throws Exception {
-        if (keywords.length > TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT) {
-            throw new IllegalArgumentException("the default access level allows up to "
-                    + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
-                    + " track keywords (you have tried to use " + keywords.length + ")");
-        }
-
-        HttpPost request = new HttpPost(FILTER_STREAM_URL);
-
-        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair("track", commaDelimit(keywords)));
-
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-        request.setEntity(entity);
-
-        processStream(request, handler);
-    }
-
-    public void processFollowFilterStream(final String[] userIds,
-                                          final Handler<Tweet, Exception> handler,
-                                          final int count) throws Exception {
-        if (userIds.length > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
-            throw new IllegalArgumentException("the default access level allows up to "
-                    + TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT
-                    + " follow userids (you have tried to use " + userIds.length + ")");
-        }
-
-        HttpPost request = new HttpPost(FILTER_STREAM_URL);
-
-        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair("follow", commaDelimit(userIds)));
-        if (count > 0) {
-            formparams.add(new BasicNameValuePair("count", "" + count));
-        }
-
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-        request.setEntity(entity);
-
-        processStream(request, handler);
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
     /**
      * bring the user to authUrl, e.g. open a web browser and note the PIN code
      * ... you have to ask this from the user, or obtain it
      * from the callback if you didn't do an out of band request
+     *
      * @param authURL
      * @return
      * @throws java.io.IOException
@@ -199,6 +129,7 @@ public class TwitterSecurity {
         return pinCode.trim();
     }
 
+    /*
     // The following steps are performed everytime you
     // send a request accessing a resource on Twitter
     private void makeRequest() throws OAuthCommunicationException, OAuthExpectationFailedException, OAuthNotAuthorizedException, OAuthMessageSignerException, IOException {
@@ -220,17 +151,7 @@ public class TwitterSecurity {
         int statusCode = response.getStatusLine().getStatusCode();
 
         System.out.println("got status code: " + statusCode);
-    }
-
-    private void showResponseInfo(final HttpResponse response) {
-        System.out.println("response code: " + response.getStatusLine().getStatusCode());
-
-        HeaderIterator iter = response.headerIterator();
-        while (iter.hasNext()) {
-            Header h = iter.nextHeader();
-            System.out.println(h.getName() + ": " + h.getValue());
-        }
-    }
+    }*/
 
     private void authorizationCheat(final HttpUriRequest request) {
         Properties props = TwitLogic.getConfiguration();
@@ -238,72 +159,5 @@ public class TwitterSecurity {
         String password = props.getProperty(TwitLogic.TWITTER_PASSWORD);
         String auth = new String(Base64.encodeBase64((username + ":" + password).getBytes()));
         request.setHeader("Authorization", auth);
-    }
-
-    private void processStream(final HttpUriRequest request,
-                               final Handler<Tweet, Exception> handler) throws Exception {
-        LOGGER.info("preparing to listen to stream at " + request.getURI());
-        
-        setAcceptHeader(request, new String[]{"application/json"});
-        setAgent(request);
-
-        consumer.sign(request);
-        authorizationCheat(request);
-
-        HttpClient client = createClient();
-        HttpResponse response = client.execute(request);
-        showResponseInfo(response);
-
-        if (200 == response.getStatusLine().getStatusCode()) {
-            HttpEntity responseEntity = response.getEntity();
-            new StatusStreamParser(handler).parse(responseEntity.getContent());
-        } else {
-            response.getEntity().writeTo(System.err);
-        }
-    }
-
-    private String commaDelimit(final String[] elements) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-
-        for (String s : elements) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append(",");
-            }
-            sb.append(s);
-        }
-
-        return sb.toString();
-    }
-
-    private void setAgent(final HttpRequest request) {
-        request.setHeader(USER_AGENT, TwitLogic.getName() + "/" + TwitLogic.getVersion());
-    }
-
-    private HttpClient createClient() {
-        HttpClient client = new DefaultHttpClient();
-        //client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-        //        new DefaultHttpMethodRetryHandler());
-
-        // Twitter streaming API requires infinite timeout
-        client.getParams().setParameter("http.connection.timeout", 0);
-        client.getParams().setParameter("http.socket.timeout", 0);
-
-        return client;
-    }
-
-    private static void setAcceptHeader(final HttpRequest request, final String[] mimeTypes) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < mimeTypes.length; i++) {
-            if (i > 0) {
-                sb.append(", ");
-            }
-
-            sb.append(mimeTypes[i]);
-        }
-
-        request.setHeader(ACCEPT, sb.toString());
     }
 }

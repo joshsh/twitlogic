@@ -43,6 +43,9 @@ public abstract class ObjectPropertyAfterthoughtMatcher extends AfterthoughtMatc
         c = forHashtagObject(normed);
         if (null == c) {
             c = forUsernameObject(normed);
+            if (null == c) {
+                c = forUrlObject(normed);
+            }
         }
 
         return c;
@@ -60,6 +63,14 @@ public abstract class ObjectPropertyAfterthoughtMatcher extends AfterthoughtMatc
         return null == t
                 ? null
                 : new TokenizedObjectPropertyClause(t.first, new User(t.second.substring(1)), t.third);
+    }
+
+    // TODO: redirection resolution
+    private TokenizedObjectPropertyClause forUrlObject(final String normed) {
+        ThreeParts t = divide(normed, URL);
+        return null == t
+                ? null
+                : new TokenizedObjectPropertyClause(t.first, new URIReference(t.second), t.third);
     }
 
     private ThreeParts divide(final String whole,

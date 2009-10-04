@@ -1,14 +1,23 @@
 package net.fortytwo.twitlogic;
 
-import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
-import net.fortytwo.twitlogic.twitter.TwitterSecurity;
+import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.persistence.TweetPersister;
+import net.fortytwo.twitlogic.persistence.TweetStore;
+import net.fortytwo.twitlogic.server.TwitLogicServer;
+import net.fortytwo.twitlogic.syntax.Matcher;
+import net.fortytwo.twitlogic.syntax.MultiMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
+import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
+import net.fortytwo.twitlogic.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.twitter.TwitterClient;
+import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -21,6 +30,11 @@ public class TwitLogic {
 
     // Configuration property keys
     public static final String
+            NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
+            SAIL_CLASS = "net.fortytwo.twitlogic.persistence.sailClass",
+            COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
+            COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",
+            SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",
             TWITTER_CONSUMER_KEY = "net.fortytwo.twitlogic.twitter.consumerKey",
             TWITTER_CONSUMER_SECRET = "net.fortytwo.twitlogic.twitter.consumerSecret",
             TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitter.accessToken",
@@ -35,8 +49,7 @@ public class TwitLogic {
             XMPP_REASONER_PASSWORD = "net.fortytwo.twitlogic.xmpp.reasonerPassword";
 
     public static final String
-            NAMESPACE = "http://fortytwo.net/2009/10/twitlogic#",
-            RESOURCES_NAMESPACE = "http://twitlogic.fortytwo.net/resources/";
+            NAMESPACE = "http://fortytwo.net/2009/10/twitlogic#";
 
     public static final URI
             ASSOCIATION = new URIImpl(NAMESPACE + "Association"),
@@ -45,14 +58,18 @@ public class TwitLogic {
             WORD = new URIImpl(NAMESPACE + "Word"),
             WEIGHT = new URIImpl(NAMESPACE + "weight");
 
-    private static final Properties configuration;
+    public static final String
+            BASE_URI = "http://twitlogic.fortytwo.net/",
+            RESOURCES_NAMESPACE = BASE_URI + "resources/";
+
+    private static final TypedProperties CONFIGURATION;
     private static final Logger LOGGER;
 
     static {
-        configuration = new Properties();
+        CONFIGURATION = new TypedProperties();
 
         try {
-            configuration.load(TwitLogic.class.getResourceAsStream("twitlogic.properties"));
+            CONFIGURATION.load(TwitLogic.class.getResourceAsStream("twitlogic.properties"));
         } catch (IOException e) {
             throw new ExceptionInInitializerError(e);
         }
@@ -79,8 +96,8 @@ public class TwitLogic {
         return "0.1";
     }
 
-    public static Properties getConfiguration() {
-        return configuration;
+    public static TypedProperties getConfiguration() {
+        return CONFIGURATION;
     }
 
     public static Logger getLogger(final Class c) {
@@ -89,21 +106,26 @@ public class TwitLogic {
 
     public static void main(final String[] args) throws Exception {
         try {
-            TwitterSecurity t = new TwitterSecurity();
+            TweetStore store = TweetStore.getDefaultStore();
+            store.dump(System.out);
+            TwitLogicServer server = new TwitLogicServer(store);
 
-//        deriveCredentials();
+            //*
+            Matcher matcher = new MultiMatcher(new TwipleMatcher(),
+                new DemoAfterthoughtMatcher());
+            Handler<Tweet, TweetHandlerException> statusHandler = new TweetPersister(matcher, store);
 
-            t.loadCredentials();
+            TwitterClient client = new TwitterClient();
 
-            Handler<Tweet, Exception> statusHandler = new ExampleStatusHandler();
+            //Handler<Tweet, Exception> statusHandler = new ExampleStatusHandler();
 
-             t.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
-            //t.processSampleStream(statusHandler);
-            //t.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
-            //t.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
-            //t.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
-
-//        t.makeRequest();
+            //client.requestUserTimeline(new User(71631722), statusHandler);
+            client.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
+            //client.processSampleStream(statusHandler);
+            //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
+            //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
+            //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
+            //*/
         } catch (Throwable t) {
             t.printStackTrace();
         }

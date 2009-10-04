@@ -1,6 +1,6 @@
 package net.fortytwo.twitlogic.syntax.afterthought;
 
-import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 
@@ -29,7 +29,7 @@ public class CompoundAfterthoughtMatcher extends AfterthoughtMatcher {
 
         Handler<Triple, MatcherException> singleMatchHandler = new Handler<Triple, MatcherException>() {
             public boolean handle(final Triple triple) throws MatcherException {
-                context.handleCompletedTriple(triple.getPredicate(), triple.getObject());
+                context.handle(triple);
                 matched.value = true;
                 return true;
             }
@@ -38,7 +38,7 @@ public class CompoundAfterthoughtMatcher extends AfterthoughtMatcher {
         AfterthoughtContext newContext = new AfterthoughtContext(
                 context.getSubject(),
                 singleMatchHandler,
-                context.getTweetContext());
+                context);
 
         for (AfterthoughtMatcher parser : parsers) {
             parser.matchNormalized(normed, newContext);

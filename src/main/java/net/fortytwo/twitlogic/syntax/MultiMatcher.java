@@ -1,7 +1,7 @@
 package net.fortytwo.twitlogic.syntax;
 
 import net.fortytwo.twitlogic.model.Triple;
-import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.TweetContext;
 
 /**

@@ -1,0 +1,20 @@
+# Core W3C vocabularies
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+# Other vocabularies used to represent user-embedded data
+@prefix foaf:     <http://xmlns.com/foaf/0.1/> .
+@prefix sioc:     <http://rdfs.org/sioc/ns#> .
+@prefix rev:      <http://purl.org/stuff/rev#> .
+
+# Vocabularies used for internal purposes.
+@prefix ng:       <http://www.w3.org/2004/03/trix/rdfg-1/> .
+@prefix tl:       <http://fortytwo.net/2009/10/twitlogic#> .
+
+# Likely to be used in future.
+@prefix dc:       <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix geo:      <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .

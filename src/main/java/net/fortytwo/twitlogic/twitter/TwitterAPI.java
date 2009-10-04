@@ -7,17 +7,27 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 3, 2009
  * Time: 10:07:42 PM
- * To change this template use File | Settings | File Templates.
  */
 public class TwitterAPI {
     // See http://apiwiki.twitter.com/Streaming-API-Documentation#statuses/filter
     public static final int
             DEFAULT_TRACK_KEYWORDS_LIMIT = 200,
             DEFAULT_FOLLOW_USERIDS_LIMIT = 400;
+
+    public static final String
+            REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
+            ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
+            AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
+            FILTER_STREAM_URL = "http://stream.twitter.com/1/statuses/filter.json",
+            SAMPLE_STREAM_URL = "http://stream.twitter.com/1/statuses/sample.json",           
+            STATUSES_USERTIMELINE_URL = "http://twitter.com/statuses/user_timeline";
+
+    public static final String
+            SCREENNAME = "screen_name",
+            USER_ID = "user_id";
 
     public enum Field {
         CREATED_AT("created_at"), // Note: used in multiple contexts
@@ -85,6 +95,7 @@ public class TwitterAPI {
      * Checks for unknown keys in status element JSON.  If the Twitter API
      * is ever extended to include new keys (e.g. for geolocation), this check
      * will pick up on it.
+     *
      * @param json the JSON object to check
      */
     public static void checkJSON(final JSONObject json) {

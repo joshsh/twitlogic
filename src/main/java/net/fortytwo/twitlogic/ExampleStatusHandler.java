@@ -3,11 +3,14 @@ package net.fortytwo.twitlogic;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
+import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,7 +22,7 @@ import java.util.List;
  * Date: Sep 8, 2009
  * Time: 10:37:05 PM
  */
-class ExampleStatusHandler implements Handler<Tweet, Exception> {
+class ExampleStatusHandler implements Handler<Tweet, TweetHandlerException> {
     private final Matcher matcher;
 
     public ExampleStatusHandler() {
@@ -27,8 +30,10 @@ class ExampleStatusHandler implements Handler<Tweet, Exception> {
                 new DemoAfterthoughtMatcher());
     }
 
-    public boolean handle(final Tweet status) throws Exception {
-        System.out.println("" + status.getUser().getScreenName() + ": " + status.getText());
+    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+        System.out.println("" + tweet.getUser().getScreenName()
+                + " [" + tweet.getId() + "]"
+                + ": " + tweet.getText());
 
         TweetContext tweetContext = new TweetContext() {
             public User thisUser() {
@@ -50,6 +55,10 @@ class ExampleStatusHandler implements Handler<Tweet, Exception> {
             public Tweet repliedToTweet() {
                 return null;
             }
+
+            public Resource anonymousNode() {
+                return null;
+            }
         };
         final List<Triple> results = new LinkedList<Triple>();
         Handler<Triple, MatcherException> handler = new Handler<Triple, MatcherException>() {
@@ -59,7 +68,11 @@ class ExampleStatusHandler implements Handler<Tweet, Exception> {
             }
         };
 
-        matcher.match(status.getText(), handler, tweetContext);
+        try {
+            matcher.match(tweet.getText(), handler, tweetContext);
+        } catch (MatcherException e) {
+            throw new TweetHandlerException(e);
+        }
 
         Comparator<Triple> cmp = new Comparator<Triple>() {
             public int compare(final Triple first,

@@ -1,6 +1,6 @@
 package net.fortytwo.twitlogic.syntax.twiple;
 
-import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.TwipleLexer;
 import net.fortytwo.twitlogic.TwipleParser;
 import net.fortytwo.twitlogic.TweetContext;

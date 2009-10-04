@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic;
+package net.fortytwo.twitlogic.flow;
 
 /**
  * Created by IntelliJ IDEA.

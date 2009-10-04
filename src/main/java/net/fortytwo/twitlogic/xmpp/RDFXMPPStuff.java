@@ -1,6 +1,6 @@
 package net.fortytwo.twitlogic.xmpp;
 
-import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.TwitLogic;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ConnectionConfiguration;

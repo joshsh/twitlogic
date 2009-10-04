@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.Arrays;
 
-import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.flow.Handler;
 
 /**
  * Created by IntelliJ IDEA.

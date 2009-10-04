@@ -51,6 +51,20 @@ public class User implements Resource {
         url = null;
     }
 
+    public User(final int id) {
+        this.id = id;
+
+        screenName = null;
+        geoEnabled = false;
+        location = null;
+        name = null;
+        profileBackgroundColor = null;
+        profileImageUrl = null;
+        profileTextColor = null;
+        isProtected = null;
+        url = null;
+    }
+
     public User(final String screenName, final int id) {
         this.id = id;
         this.screenName = screenName;

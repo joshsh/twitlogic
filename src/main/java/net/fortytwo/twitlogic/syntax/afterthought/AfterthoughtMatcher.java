@@ -1,6 +1,6 @@
 package net.fortytwo.twitlogic.syntax.afterthought;
 
-import net.fortytwo.twitlogic.Handler;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.TweetContext;
 import net.fortytwo.twitlogic.model.Resource;
@@ -16,11 +16,9 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 29, 2009
  * Time: 9:07:42 PM
- * To change this template use File | Settings | File Templates.
  */
 public abstract class AfterthoughtMatcher implements Matcher {
     private final Logger LOGGER = TwitLogic.getLogger(AfterthoughtMatcher.class);
@@ -36,7 +34,8 @@ public abstract class AfterthoughtMatcher implements Matcher {
 
     protected static final Pattern
             HASHTAG = Pattern.compile("#[A-Za-z0-9-_]+"),
-            USERNAME = Pattern.compile("@[A-Za-z0-9-_]+");
+            USERNAME = Pattern.compile("@[A-Za-z0-9-_]+"),
+            URL = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
 
     protected abstract void matchNormalized(String normed,
                                             AfterthoughtContext context) throws MatcherException;

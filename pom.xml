@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo</groupId>
     <artifactId>twitlogic</artifactId>
-    <version>1.0-alpha1</version>
+    <version>0.1</version>
     <packaging>jar</packaging>
     <name>TwitLogic</name>
     <description>extracting structured information from the Twitter stream</description>
@@ -16,6 +16,11 @@
             <id>fortytwo</id>
             <name>fortytwo.net Maven repository</name>
             <url>http://fortytwo.net/maven2</url>
+        </repository>
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
         </repository>
     </repositories>
 
@@ -86,9 +91,36 @@
             <version>2.2.4</version>
         </dependency>
         <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-sail-nativerdf</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.2</version>
+        </dependency>
+
+        <!-- Restlet -->
+        <dependency>
+            <groupId>org.restlet</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet.ext.simple</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet.ext.httpclient</artifactId>
+            <version>1.1.5</version>
         </dependency>
 
         <dependency>

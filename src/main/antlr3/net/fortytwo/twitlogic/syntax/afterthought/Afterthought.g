@@ -35,7 +35,7 @@ candidate
 				if (null != this.helper) {
 					Resource subject = $r.value;
 					String expression = $PAREN_BLOCK.text;
-					expression = expression.substring(1, expression.length());
+					expression = expression.substring(1, expression.length() - 1);
 					this.helper.handleAfterthoughtCandidate(subject, expression);
 				}
 			})? candidate)?
