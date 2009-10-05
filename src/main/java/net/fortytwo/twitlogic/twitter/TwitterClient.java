@@ -44,11 +44,13 @@ public class TwitterClient {
     private final TwitterCredentials credentials;
 
     public TwitterClient() {
+        /*
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
         System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
         System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
-
+        //*/
+        
         credentials = new TwitterCredentials();
         credentials.loadCredentials();
     }
