@@ -3,6 +3,8 @@ package net.fortytwo.twitlogic.syntax.afterthought;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafDepictionMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafInterestMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafKnowsMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafMadeMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafMakerMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.RdfsSeeAlsoMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.ReviewMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.SelfInterestMatcher;
@@ -21,6 +23,8 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new FoafDepictionMatcher(),
                 new FoafInterestMatcher(),
                 new FoafKnowsMatcher(),
+                new FoafMadeMatcher(),
+                new FoafMakerMatcher(),
                 new RdfsSeeAlsoMatcher(),
                 new ReviewMatcher(),
                 new SelfInterestMatcher(),
