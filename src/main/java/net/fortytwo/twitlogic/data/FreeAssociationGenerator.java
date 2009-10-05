@@ -91,7 +91,7 @@ public abstract class FreeAssociationGenerator {
     }
 
     private static URI createResourceURI(final String resourceID) {
-        return VALUE_FACTORY.createURI(TwitLogic.RESOURCES_NAMESPACE + resourceID);
+        return VALUE_FACTORY.createURI(TwitLogic.RESOURCES_BASEURI + resourceID);
     }
 
 

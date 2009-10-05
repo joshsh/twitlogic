@@ -32,11 +32,6 @@ public abstract class AfterthoughtMatcher implements Matcher {
             "who", "which"
     };
 
-    protected static final Pattern
-            HASHTAG = Pattern.compile("#[A-Za-z0-9-_]+"),
-            USERNAME = Pattern.compile("@[A-Za-z0-9-_]+"),
-            URL = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
-
     protected abstract void matchNormalized(String normed,
                                             AfterthoughtContext context) throws MatcherException;
 

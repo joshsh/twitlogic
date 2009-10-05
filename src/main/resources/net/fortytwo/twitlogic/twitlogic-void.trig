@@ -1,0 +1,52 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ng:   <http://www.w3.org/2004/03/trix/rdfg-1/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rev:  <http://purl.org/stuff/rev#> .
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+@prefix tl:   <http://fortytwo.net/2009/10/twitlogic#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+{
+    <http://twitlogic.fortytwo.net/resource/graph-void> a ng:Graph ;
+        rdfs:comment "graph containing the VoiD description of the current TwitLogic data set" .
+}
+
+<http://twitlogic.fortytwo.net/resource/graph-void> {
+    <http://twitlogic.fortytwo.net/resource/dataset/TwitLogic-full> a void:Dataset ;
+        rdfs:comment "the current TwitLogic dataset described in terms of VoiD" ;
+
+        # TODO: find Twitter-related VoiD datasets to link into
+#        void:subset <http://twitlogic.fortytwo.net/resource/dataset/TwitLogic-linkset-user-twitter-...> ;
+#        void:subset <http://twitlogic.fortytwo.net/resource/dataset/TwitLogic-linkset-post-twitter-...> ;
+#        void:subset <http://twitlogic.fortytwo.net/resource/dataset/TwitLogic-linkset-hashtag-...> ;
+
+        # TODO: find better (more persistent) example resources
+        void:exampleResource
+            <http://twitlogic.fortytwo.net/resource/hashtag/politics> ,
+            <http://twitlogic.fortytwo.net/resource/user/twitter/7083182> ,
+            <http://twitlogic.fortytwo.net/resource/post/twitter/4589460180> ,
+            <http://twitlogic.fortytwo.net/resource/graph/twitter/4589460180> ;
+
+        # Note 'dataset' as oppsed to 'data'
+        void:dataDump <http://twitlogic.fortytwo.net/dataset/full.nq.gz> ;
+
+#        void:sparqlEndpoint <...> ;
+
+        # TODO: validate this against http://www.w3.org/TR/xmlschema-2/#regexs
+        void:uriRegexPattern "http://twitlogic\\.fortytwo\\.net/resource/.+" ;
+
+        void:vocabulary
+            foaf: ,
+            ng: ,
+            owl: ,
+            rdf: ,
+            rdfs: ,
+            sioc: ,
+            tl: ,
+            rev: ,
+            void: ,
+            xsd: ;
+}

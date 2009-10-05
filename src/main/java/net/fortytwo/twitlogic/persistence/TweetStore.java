@@ -90,9 +90,31 @@ public class TweetStore {
         LOGGER.info("initializing TwitLogic local store");
 
         repository = new SailRepository(sail);
-        addVocabularies(repository);
+        addSeedDataIfEmpty(repository);
 
         initialized = true;
+    }
+
+    private void addSeedDataIfEmpty(final Repository repository) throws TwitLogicStoreException {
+        try {
+            RepositoryConnection rc = repository.getConnection();
+            try {
+                if (rc.isEmpty()) {
+                    String baseURI = "http://example.org/bogusBaseURI/";
+                    rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
+                    rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.trig"), baseURI, RDFFormat.TRIG);
+                    rc.commit();
+                }
+            } finally {
+                rc.close();
+            }
+        } catch (IOException e) {
+            throw new TwitLogicStoreException(e);
+        } catch (RDFParseException e) {
+            throw new TwitLogicStoreException(e);
+        } catch (RepositoryException e) {
+            throw new TwitLogicStoreException(e);
+        }
     }
 
     public Sail getSail() {
@@ -141,24 +163,6 @@ public class TweetStore {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    private void addVocabularies(final Repository repository) throws TwitLogicStoreException {
-        try {
-            RepositoryConnection rc = repository.getConnection();
-            try {
-                String baseURI = "http://example.org/bogusBaseURI/";
-                rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
-            } finally {
-                rc.close();
-            }
-        } catch (IOException e) {
-            throw new TwitLogicStoreException(e);
-        } catch (RDFParseException e) {
-            throw new TwitLogicStoreException(e);
-        } catch (RepositoryException e) {
-            throw new TwitLogicStoreException(e);
-        }
-    }
 
     private Sail createSail(final String sailType) throws TwitLogicStoreException {
         System.out.println("creating Sail of type: " + sailType);

@@ -3,13 +3,16 @@ package net.fortytwo.twitlogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.persistence.PersistenceContext;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
+import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
+import net.fortytwo.twitlogic.twitter.CommandListener;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Author: josh
@@ -60,7 +64,15 @@ public class TwitLogic {
 
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
-            RESOURCES_NAMESPACE = BASE_URI + "resources/";
+            RESOURCES_BASEURI = BASE_URI + "resource/",
+            HASHTAGS_BASEURI = RESOURCES_BASEURI + "hashtag/",
+            TWEETS_BASEURI = RESOURCES_BASEURI + "post/twitter/",
+            USERS_BASEURI = RESOURCES_BASEURI + "user/twitter/";
+
+    public static final Pattern
+            HASHTAG_PATTERN = Pattern.compile("#[A-Za-z0-9-_]+"),
+            USERNAME_PATTERN = Pattern.compile("@[A-Za-z0-9-_]+"),
+            URL_PATTERN = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
 
     private static final TypedProperties CONFIGURATION;
     private static final Logger LOGGER;
@@ -106,18 +118,29 @@ public class TwitLogic {
 
     public static void main(final String[] args) throws Exception {
         try {
+            // Create a persistent store.
             TweetStore store = TweetStore.getDefaultStore();
             store.dump(System.out);
-            TwitLogicServer server = new TwitLogicServer(store);
 
-            //*
-            Matcher matcher = new MultiMatcher(new TwipleMatcher(),
-                new DemoAfterthoughtMatcher());
-            Handler<Tweet, TweetHandlerException> statusHandler = new TweetPersister(matcher, store);
+            // Launch linked data server.
+            new TwitLogicServer(store);
 
             TwitterClient client = new TwitterClient();
+            UserRegistry userRegistry = new UserRegistry(client);
+            PersistenceContext pContext = new PersistenceContext(userRegistry);
 
-            //Handler<Tweet, Exception> statusHandler = new ExampleStatusHandler();
+            // Create the tweet matcher.
+            Matcher matcher = new MultiMatcher(new TwipleMatcher(),
+                    new DemoAfterthoughtMatcher());
+            Handler<Tweet, TweetHandlerException> baseStatusHandler = new TweetPersister(matcher, store, pContext);
+
+            // Create an agent to listen for commands.
+            // Also take the opportunity to memoize users we're following.
+            String agentScreenName = TwitLogic.getConfiguration().getString(TwitLogic.TWITTER_USERNAME);
+            TwitLogicAgent agent = new TwitLogicAgent(agentScreenName, client, pContext);
+            Handler<Tweet, TweetHandlerException> statusHandler
+                    = userRegistry.createUserRegistryFilter(
+                    new CommandListener(agent, baseStatusHandler));
 
             //client.requestUserTimeline(new User(71631722), statusHandler);
             client.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);

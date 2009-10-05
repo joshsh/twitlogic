@@ -1,15 +1,16 @@
 package net.fortytwo.twitlogic.twitter;
 
-import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.persistence.UserRegistry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -65,6 +66,9 @@ public class StatusStreamParser {
                     }
                 }
             }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw new TweetHandlerException(t);
         } finally {
             LOGGER.info("stop reading from stream (reason: " + exitReason + ")");
             LOGGER.info("    read " + lines + " lines (including " + emptyLines + " empty lines)");

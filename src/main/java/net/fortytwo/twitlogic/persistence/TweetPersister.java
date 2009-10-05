@@ -14,6 +14,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.vocabs.SIOC;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -42,38 +43,18 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private final TweetStore store;
     private final Handler<Triple, MatcherException> tripleHandler;
     private final SimpleTweetContext tweetContext;
+    private final PersistenceContext persistenceContext;
     private final ValueFactory valueFactory;
 
     public TweetPersister(final Matcher matcher,
-                          final TweetStore store) {
+                          final TweetStore store,
+                          final PersistenceContext persistenceContext) {
         this.matcher = matcher;
         this.store = store;
+        this.persistenceContext = persistenceContext;
         this.valueFactory = store.getSail().getValueFactory();
         this.tweetContext = new SimpleTweetContext();
-        this.tripleHandler = new Handler<Triple, MatcherException>() {
-            public boolean handle(final Triple triple) throws MatcherException {
-                System.out.println("\t (" + triple.getWeight() + ")\t" + triple);
-                try {
-                    SailConnection sc = store.getSail().getConnection();
-                    try {
-                        org.openrdf.model.Resource graph = SesameTools.createRandomURI(valueFactory);
-                        Statement st = toRDF(triple, graph);
-                        if (null != st) {
-                            describeGraph(graph, tweetContext.thisTweet(), sc);
-                            // TODO: creating a statement and then breaking it into parts is wasty
-                            sc.addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
-                        }
-                        sc.commit();
-                    } finally {
-                        sc.close();
-                    }
-                } catch (SailException e) {
-                    throw new MatcherException(e);
-                }
-
-                return true;
-            }
-        };
+        this.tripleHandler = new TriplePersister();
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
@@ -105,7 +86,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     private Statement toRDF(final Triple triple,
-                            final org.openrdf.model.Resource graph) {
+                            final org.openrdf.model.Resource graph) throws TwitterClientException {
         Value subject = toRDF(triple.getSubject());
         Value predicate = toRDF(triple.getPredicate());
         Value object = toRDF(triple.getObject());
@@ -121,7 +102,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         }
     }
 
-    private Value toRDF(final Resource resource) {
+    private Value toRDF(final Resource resource) throws TwitterClientException {
         switch (resource.getType()) {
             case HASHTAG:
                 return valueOf((Hashtag) resource);
@@ -141,8 +122,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     private URI valueOf(final Hashtag hashtag) {
-        // TODO: assumes normalized hash tags
-        return valueFactory.createURI(SesameTools.HASHTAG_PREFIX + hashtag.getName());
+        return valueFactory.createURI(persistenceContext.valueOf(hashtag));
     }
 
     private Literal valueOf(final PlainLiteral literal) {
@@ -150,7 +130,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     private URI valueOf(final Tweet tweet) {
-        return valueFactory.createURI(SesameTools.TWEET_PREFIX + tweet.getId());
+        return valueFactory.createURI(persistenceContext.valueOf(tweet));
     }
 
     private Literal valueOf(final TypedLiteral literal) {
@@ -162,12 +142,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         return valueFactory.createURI(uri.getValue());
     }
 
-    private URI valueOf(final User user) {
-        Integer id = user.getId();
-        if (null == id) {
-            throw new IllegalArgumentException("tried to rdfize user with null id: " + user);
-        }
-        return valueFactory.createURI(SesameTools.USERS_PREFIX + id);
+    private URI valueOf(final User user) throws TwitterClientException {
+        return valueFactory.createURI(persistenceContext.valueOf(user));
     }
 
     private class SimpleTweetContext implements TweetContext {
@@ -211,6 +187,33 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
         public void setCurrentUser(final User user) {
             this.currentUser = user;
+        }
+    }
+
+    private class TriplePersister implements Handler<Triple, MatcherException> {
+        public boolean handle(final Triple triple) throws MatcherException {
+            System.out.println("\t (" + triple.getWeight() + ")\t" + triple);
+            try {
+                SailConnection sc = store.getSail().getConnection();
+                try {
+                    org.openrdf.model.Resource graph = SesameTools.createRandomURI(valueFactory);
+                    Statement st = toRDF(triple, graph);
+                    if (null != st) {
+                        describeGraph(graph, tweetContext.thisTweet(), sc);
+                        // TODO: creating a statement and then breaking it into parts is wasty
+                        sc.addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
+                    }
+                    sc.commit();
+                } catch (TwitterClientException e) {
+                    throw new MatcherException(e);
+                } finally {
+                    sc.close();
+                }
+            } catch (SailException e) {
+                throw new MatcherException(e);
+            }
+
+            return true;
         }
     }
 }

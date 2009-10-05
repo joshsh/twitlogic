@@ -2,6 +2,8 @@ package net.fortytwo.twitlogic.persistence;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.util.intervals.Interval;
 import net.fortytwo.twitlogic.util.intervals.IntervalSequence;
 import org.openrdf.model.Literal;
@@ -26,17 +28,20 @@ import java.util.logging.Logger;
 public class CoverageManager {
     private final Logger LOGGER = TwitLogic.getLogger(CoverageManager.class);
 
+    private final PersistenceContext persistenceContext;
     private final ValueFactory valueFactory;
 
-    public CoverageManager(final ValueFactory valueFactory) {
+    public CoverageManager(final PersistenceContext persistenceContext,
+                           final ValueFactory valueFactory) {
+        this.persistenceContext = persistenceContext;
         this.valueFactory = valueFactory;
     }
 
-    public IntervalSequence<Date> getCoverage(final int userId,
-                                              final SailConnection sc) throws SailException {
+    public IntervalSequence<Date> getCoverage(final User user,
+                                              final SailConnection sc) throws SailException, TwitterClientException {
         IntervalSequence<Date> sequence = new IntervalSequence<Date>();
 
-        for (Resource r : findIntervalResources(findUserURI(userId), sc)) {
+        for (Resource r : findIntervalResources(findUserURI(user), sc)) {
             Date start, end;
 
             CloseableIteration<? extends Statement, SailException> iter
@@ -61,10 +66,10 @@ public class CoverageManager {
         return sequence;
     }
 
-    public void setCoverage(final int userId,
+    public void setCoverage(final User user,
                             final IntervalSequence<Date> coverage,
-                            final SailConnection sc) throws SailException {
-        URI userURI = findUserURI(userId);
+                            final SailConnection sc) throws SailException, TwitterClientException {
+        URI userURI = findUserURI(user);
 
         for (Resource r : findIntervalResources(userURI, sc)) {
             sc.removeStatements(r, null, null, SesameTools.ADMIN_GRAPH);
@@ -98,8 +103,8 @@ public class CoverageManager {
         return lit.calendarValue().toGregorianCalendar().getTime();
     }
 
-    private URI findUserURI(final int userId) {
-        return valueFactory.createURI(SesameTools.USERS_PREFIX + userId);
+    private URI findUserURI(final User user) throws TwitterClientException {
+        return valueFactory.createURI(persistenceContext.valueOf(user));
     }
 
     /*

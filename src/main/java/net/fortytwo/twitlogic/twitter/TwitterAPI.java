@@ -18,12 +18,14 @@ public class TwitterAPI {
             DEFAULT_FOLLOW_USERIDS_LIMIT = 400;
 
     public static final String
-            REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
-            ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
-            AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
-            FILTER_STREAM_URL = "http://stream.twitter.com/1/statuses/filter.json",
-            SAMPLE_STREAM_URL = "http://stream.twitter.com/1/statuses/sample.json",           
-            STATUSES_USERTIMELINE_URL = "http://twitter.com/statuses/user_timeline";
+            OAUTH_REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
+            OAUTH_ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
+            OAUTH_AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
+            STREAM_STATUSES_FILTER_URL = "http://stream.twitter.com/1/statuses/filter.json",
+            STREAM_STATUSES_SAMPLE_URL = "http://stream.twitter.com/1/statuses/sample.json",
+            STATUSES_USER_TIMELINE_URL = "http://twitter.com/statuses/user_timeline",
+            STATUSES_UPDATE_URL = "http://twitter.com/statuses/update",
+            USERS_SHOW_URL = "http://twitter.com/users/show";
 
     public static final String
             SCREENNAME = "screen_name",
@@ -90,6 +92,14 @@ public class TwitterAPI {
             return name;
         }
     }
+
+    // API parameter names
+    public static final String
+            SCREEN_NAME = "screen_name",
+            STATUS = "status",
+            IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id",
+            LAT = "lat",
+            LONG = "long";
 
     /**
      * Checks for unknown keys in status element JSON.  If the Twitter API

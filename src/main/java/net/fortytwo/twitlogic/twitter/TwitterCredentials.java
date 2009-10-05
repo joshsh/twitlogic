@@ -28,8 +28,15 @@ import java.util.logging.Logger;
 public class TwitterCredentials {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitterCredentials.class);
 
+    private static final boolean USE_OAUTH = false;
+
     private final OAuthConsumer consumer;
     private final OAuthProvider provider;
+
+    public static void main(final String[] args) throws Exception {
+        TwitterCredentials c = new TwitterCredentials();
+        c.deriveCredentials();
+    }
 
     public TwitterCredentials() {
         String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY).trim();
@@ -41,14 +48,18 @@ public class TwitterCredentials {
                 SignatureMethod.HMAC_SHA1);
         provider = new DefaultOAuthProvider(
                 consumer,
-                TwitterAPI.REQUEST_TOKEN_URL,
-                TwitterAPI.ACCESS_TOKEN_URL,
-                TwitterAPI.AUTHORIZE_URL);
+                TwitterAPI.OAUTH_REQUEST_TOKEN_URL,
+                TwitterAPI.OAUTH_ACCESS_TOKEN_URL,
+                TwitterAPI.OAUTH_AUTHORIZE_URL);
     }
 
     public void sign(final HttpUriRequest request) throws OAuthExpectationFailedException, OAuthMessageSignerException {
-        consumer.sign(request);
-        authorizationCheat(request);
+        //request.getParams().s
+        if (USE_OAUTH) {
+            consumer.sign(request);
+        } else {
+            useBasicAuthentication(request);
+        }
     }
 
     private void showInfo() {
@@ -153,11 +164,11 @@ public class TwitterCredentials {
         System.out.println("got status code: " + statusCode);
     }*/
 
-    private void authorizationCheat(final HttpUriRequest request) {
+    private void useBasicAuthentication(final HttpUriRequest request) {
         Properties props = TwitLogic.getConfiguration();
         String username = props.getProperty(TwitLogic.TWITTER_USERNAME);
         String password = props.getProperty(TwitLogic.TWITTER_PASSWORD);
         String auth = new String(Base64.encodeBase64((username + ":" + password).getBytes()));
-        request.setHeader("Authorization", auth);
+        request.setHeader("Authorization", "Basic " + auth);
     }
 }

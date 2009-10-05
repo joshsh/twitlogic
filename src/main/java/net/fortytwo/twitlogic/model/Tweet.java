@@ -15,19 +15,39 @@ import java.util.logging.Logger;
 public class Tweet implements Resource {
     private static final Logger LOGGER = TwitLogic.getLogger(Tweet.class);
 
-    private final User user;
+    private User user;
 
     //private final Date createdAt;
     //private final Boolean favorited;
-    private final String geo;
-    private final String id;
-    private final String inReplyToScreenName;
-    private final String inReplyToStatusId;
-    private final String inReplyToUserId;
+    private String geo;
+    private String id;
+    private User inReplyToUser;
+    private Tweet inReplyToTweet;
     //private final String source;
-    private final String text;
+    private String text;
     //private final Boolean truncated;
 
+    /**
+     * Creates a new, empty tweet.
+     */
+    public Tweet() {
+    }
+
+    public Tweet(final String id) {
+        this.id = id;
+    }
+
+    private String stringValue(final String value) {
+        return null == value || value.equals("null")
+                ? null
+                : value;
+    }
+    /**
+     * Parses a tweet in Twitter's status element JSON format.  Some fields are required.
+     *
+     * @param json
+     * @throws JSONException
+     */
     public Tweet(final JSONObject json) throws JSONException {
         TwitterAPI.checkJSON(json);
 
@@ -40,9 +60,20 @@ public class Tweet implements Resource {
             LOGGER.info("geo: " + geo);
         }
         id = json.getString(TwitterAPI.Field.ID.toString());
-        inReplyToScreenName = json.getString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString());
-        inReplyToStatusId = json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString());
-        inReplyToUserId = json.getString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString());
+
+        String inReplyToUserId = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
+        String inReplyToScreenName = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
+        inReplyToUser = (null != inReplyToUserId)
+                ? new User(inReplyToScreenName, Integer.valueOf(inReplyToUserId))
+                : (null != inReplyToScreenName)
+                ? new User(inReplyToScreenName)
+                : null;
+
+        String inReplyToStatusId = json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString());
+        inReplyToTweet = null == inReplyToStatusId
+                ? null
+                : new Tweet(inReplyToStatusId);
+
         text = json.getString(TwitterAPI.Field.TEXT.toString());
 
         JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
@@ -61,16 +92,12 @@ public class Tweet implements Resource {
         return id;
     }
 
-    public String getInReplyToScreenName() {
-        return inReplyToScreenName;
+    public Tweet getInReplyToTweet() {
+        return inReplyToTweet;
     }
 
-    public String getInReplyToStatusId() {
-        return inReplyToStatusId;
-    }
-
-    public String getInReplyToUserId() {
-        return inReplyToUserId;
+    public User getInReplyToUser() {
+        return inReplyToUser;
     }
 
     public String getText() {
@@ -92,6 +119,30 @@ public class Tweet implements Resource {
 
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setGeo(String geo) {
+        this.geo = geo;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setInReplyToUser(User inReplyToUser) {
+        this.inReplyToUser = inReplyToUser;
+    }
+
+    public void setInReplyToTweet(Tweet inReplyToTweet) {
+        this.inReplyToTweet = inReplyToTweet;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }
 

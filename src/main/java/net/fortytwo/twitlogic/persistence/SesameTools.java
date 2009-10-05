@@ -22,10 +22,7 @@ public class SesameTools {
     private static final Random RANDOM = new Random();
 
     public static final String
-            RANDOMURI_PREFIX = "http://twitlogic.fortytwo.net/resource/",
-            HASHTAG_PREFIX = "http://twitlogic.fortytwo.net/hashtags/",
-            TWEET_PREFIX = "http://twitlogic.fortytwo.net/tweets/",
-            USERS_PREFIX = "http://twitlogic.fortytwo.net/users/";
+            RANDOMURI_PREFIX = "http://twitlogic.fortytwo.net/resource/";
 
     public static final URI
             TRIX_GRAPH = new URIImpl("http://www.w3.org/2004/03/trix/rdfg-1/Graph"),

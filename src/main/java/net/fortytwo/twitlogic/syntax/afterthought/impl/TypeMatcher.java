@@ -1,11 +1,12 @@
 package net.fortytwo.twitlogic.syntax.afterthought.impl;
 
+import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.PlainLiteral;
 import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtContext;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtMatcher;
-import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.vocabs.FOAF;
 import net.fortytwo.twitlogic.vocabs.RDF;
 
@@ -45,7 +46,7 @@ public class TypeMatcher extends AfterthoughtMatcher {
         if (l.startsWith("a ") | l.startsWith("an ")) {
             String rest = normed.substring(normed.indexOf(" ") + 1);
 
-            if (HASHTAG.matcher(rest).matches()) {
+            if (TwitLogic.HASHTAG_PATTERN.matcher(rest).matches()) {
                 context.handleCompletedTriple(new URIReference(RDF.TYPE), new Hashtag(rest.substring(1)));
                 return;
             } else {

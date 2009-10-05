@@ -11,7 +11,7 @@ import net.fortytwo.twitlogic.model.Triple;
  */
 public interface Matcher {
     void match(String expression,
-                  Handler<Triple, MatcherException> handler,
-                  TweetContext context) throws MatcherException;
+               Handler<Triple, MatcherException> handler,
+               TweetContext context) throws MatcherException;
 
 }
