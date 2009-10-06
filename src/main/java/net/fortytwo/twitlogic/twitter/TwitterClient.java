@@ -50,7 +50,7 @@ public class TwitterClient {
         System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
         System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
         //*/
-        
+
         credentials = new TwitterCredentials();
         credentials.loadCredentials();
     }
@@ -74,7 +74,7 @@ public class TwitterClient {
     public void processSampleStream(final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
         HttpGet request = new HttpGet(TwitterAPI.STREAM_STATUSES_SAMPLE_URL);
 
-        requestStatusStream(request, handler);
+        continuousStream(request, handler);
     }
 
     public void processTrackFilterStream(final String[] keywords, final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
@@ -91,12 +91,12 @@ public class TwitterClient {
 
         setEntity(request, formParams);
 
-        requestStatusStream(request, handler);
+        continuousStream(request, handler);
     }
 
     public void processFollowFilterStream(final String[] userIds,
                                           final Handler<Tweet, TweetHandlerException> handler,
-                                          final int count) throws TwitterClientException {
+                                          final int previousStatusCount) throws TwitterClientException {
         if (userIds.length > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
             throw new IllegalArgumentException("the default access level allows up to "
                     + TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT
@@ -107,13 +107,13 @@ public class TwitterClient {
 
         List<NameValuePair> formParams = new ArrayList<NameValuePair>();
         formParams.add(new BasicNameValuePair("follow", commaDelimit(userIds)));
-        if (count > 0) {
-            formParams.add(new BasicNameValuePair("count", "" + count));
+        if (previousStatusCount > 0) {
+            formParams.add(new BasicNameValuePair("count", "" + previousStatusCount));
         }
 
         setEntity(request, formParams);
 
-        requestStatusStream(request, handler);
+        continuousStream(request, handler);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ public class TwitterClient {
         //List<NameValuePair> formParams = new ArrayList<NameValuePair>();
         //formParams.add(new BasicNameValuePair(TwitterAPI.SCREEN_NAME, screenName));
         //setEntity(request, formParams);
-        
+
         JSONObject object = requestJSONObject(request);
         try {
             return new User(object);
@@ -262,18 +262,68 @@ public class TwitterClient {
         }
     }
 
-    private void requestStatusStream(final HttpUriRequest request,
-                                     final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+    private StatusStreamParser.ExitReason continuousStream(final HttpUriRequest request,
+                                                           final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+        long lastWait = 0;
+        while (true) {
+            long timeOfLastRequest = System.currentTimeMillis();
+            StatusStreamParser.ExitReason exit = singleStreamRequest(request, handler);
+            long wait;
+            switch (exit) {
+                case END_OF_INPUT:
+                    wait = nextWait(lastWait, timeOfLastRequest);
+                    break;
+                case EXCEPTION_THROWN:
+                    return exit;
+                case HANDLER_QUIT:
+                    return exit;
+                case NULL_RESPONSE:
+                    wait = nextWait(lastWait, timeOfLastRequest);
+                    break;
+                default:
+                    throw new IllegalStateException("unexpected exit state: " + exit);
+            }
+
+            try {
+                lastWait = wait;
+                LOGGER.fine("waiting " + wait + "ms before next request");
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                throw new TwitterClientException(e);
+            }
+        }
+    }
+
+    private static final long
+            MIN_WAIT = 10000,
+            MAX_WAIT = 320000;
+
+    private long nextWait(final long lastWait,
+                          final long timeOfLastRequest) {
+        return timeOfLastRequest + MIN_WAIT < System.currentTimeMillis()
+                ? 0
+                : 0 == lastWait
+                ? MIN_WAIT
+                : lastWait >= MAX_WAIT
+                ? MAX_WAIT
+                : lastWait * 2;
+    }
+
+    private StatusStreamParser.ExitReason singleStreamRequest(final HttpUriRequest request,
+                                                              final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
         try {
             HttpResponse response = makeRequest(request, true);
             if (null != response) {
                 HttpEntity responseEntity = response.getEntity();
-                new StatusStreamParser(handler).parse(responseEntity.getContent());
+                return new StatusStreamParser(handler).parse(responseEntity.getContent());
+            } else {
+                return StatusStreamParser.ExitReason.NULL_RESPONSE;
             }
         } catch (Exception e) {
             throw new TwitterClientException(e);
         }
     }
+
 
     private static void setAcceptHeader(final HttpRequest request, final String[] mimeTypes) {
         StringBuilder sb = new StringBuilder();

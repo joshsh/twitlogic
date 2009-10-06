@@ -3,7 +3,6 @@ package net.fortytwo.twitlogic.twitter;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
-import net.fortytwo.twitlogic.persistence.UserRegistry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class StatusStreamParser {
     public enum ExitReason {
-        END_OF_INPUT, HANDLER_QUIT, EXCEPTION_THROWN
+        END_OF_INPUT, HANDLER_QUIT, EXCEPTION_THROWN, NULL_RESPONSE
     }
 
     private static final Logger LOGGER = TwitLogic.getLogger(StatusStreamParser.class);

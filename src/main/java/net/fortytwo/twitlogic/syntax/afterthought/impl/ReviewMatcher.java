@@ -26,6 +26,7 @@ public class ReviewMatcher extends AfterthoughtMatcher {
     }*/
 
     private static final URIReference
+            TYPE = new URIReference(RDF.TYPE),
             HASREVIEW = new URIReference(Review.HASREVIEW),
             REVIEW = new URIReference(Review.REVIEW),
             RATING = new URIReference(Review.RATING),
@@ -45,7 +46,7 @@ public class ReviewMatcher extends AfterthoughtMatcher {
 
             Resource review = context.anonymousNode();
             context.handle(new Triple(context.getSubject(), HASREVIEW, review));
-            context.handle(new Triple(review, new URIReference(RDF.TYPE), REVIEW));
+            context.handle(new Triple(review, TYPE, REVIEW));
             context.handle(new Triple(review, RATING, new PlainLiteral("" + rating)));
             context.handle(new Triple(review, REVIEWER, context.thisUser()));
             context.handle(new Triple(review, TEXT, new PlainLiteral(context.thisTweet().getText())));

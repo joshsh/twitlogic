@@ -1,7 +1,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix ng:   <http://www.w3.org/2004/03/trix/rdfg-1/> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rev:  <http://purl.org/stuff/rev#> .
 @prefix sioc: <http://rdfs.org/sioc/ns#> .
@@ -10,7 +10,7 @@
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 {
-    <http://twitlogic.fortytwo.net/resource/graph-void> a ng:Graph ;
+    <http://twitlogic.fortytwo.net/resource/graph-void> a rdfg:Graph ;
         rdfs:comment "graph containing the VoiD description of the current TwitLogic data set" .
 }
 
@@ -40,9 +40,9 @@
 
         void:vocabulary
             foaf: ,
-            ng: ,
             owl: ,
             rdf: ,
+            rdfg: ,
             rdfs: ,
             sioc: ,
             tl: ,
