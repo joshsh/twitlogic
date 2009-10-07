@@ -132,7 +132,7 @@ public class TwitLogic {
 
             TwitterClient client = new TwitterClient();
             UserRegistry userRegistry = new UserRegistry(client);
-            PersistenceContext pContext = new PersistenceContext(userRegistry);
+            PersistenceContext pContext = new PersistenceContext(userRegistry, store);
 
             // Create the tweet matcher.
             Matcher matcher = new MultiMatcher(//new TwipleMatcher(),

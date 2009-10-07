@@ -48,7 +48,7 @@ public class TwitLogicAgent {
         if (TwitLogic.HASHTAG_PATTERN.matcher(text).matches()) {
             link = persistenceContext.valueOf(new Hashtag(text.substring(1)));
         } else if (TwitLogic.USERNAME_PATTERN.matcher(text).matches()) {
-            link = persistenceContext.valueOf(new User(text.substring(1)));
+            link = persistenceContext.valueOf(new User(text.substring(1)).getHeldBy());
         }
 
         if (null == link) {

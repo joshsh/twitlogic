@@ -2,17 +2,16 @@ package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
-
-import java.util.logging.Logger;
-
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.HttpClient;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.http.Header;
+import org.apache.http.HeaderIterator;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.HeaderIterator;
-import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.commons.httpclient.params.HttpMethodParams;
+
+import java.util.logging.Logger;
 
 /**
  * User: josh

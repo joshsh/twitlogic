@@ -1,6 +1,5 @@
 package net.fortytwo.twitlogic.persistence;
 
-import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.twitlogic.TweetContext;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
@@ -17,10 +16,9 @@ import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
-import net.fortytwo.twitlogic.vocabs.SIOC;
-import net.fortytwo.twitlogic.vocabs.FOAF;
-import net.fortytwo.twitlogic.vocabs.SIOCT;
 import net.fortytwo.twitlogic.vocabs.DCTerms;
+import net.fortytwo.twitlogic.vocabs.SIOC;
+import net.fortytwo.twitlogic.vocabs.SIOCT;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -30,9 +28,8 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -155,67 +152,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     private URI valueOf(final Person person) throws TwitterClientException {
-        try {
-            SailConnection sc = store.getSail().getConnection();
-            try {
-                URI userURI = valueOf(person.getAccount());
-                URI heldBy = null;
-                URI holdsAccount = valueFactory.createURI(FOAF.HOLDSACCOUNT);
-                CloseableIteration<? extends Statement, SailException> iter
-                        = sc.getStatements(null, holdsAccount, userURI, false, SesameTools.ADMIN_GRAPH);
-                try {
-                    if (iter.hasNext()) {
-                        heldBy = (URI) iter.next().getSubject();
-                    }
-                } finally {
-                    iter.close();
-                }
-
-                if (null != heldBy) {
-                    return heldBy;
-                } else {
-                    return persistPerson(person, sc);
-                }
-            } finally {
-                sc.close();
-            }
-        } catch (SailException e) {
-            throw new TwitterClientException(e);
-        }
+        return valueFactory.createURI(persistenceContext.valueOf(person));
     }
-
-    private void ensureUserHasBeenPersisted(final User user) throws TwitterClientException {
-        // TODO: this is a hack
-        valueOf(user.getHeldBy());
-    }
-
-    /*
-    private void ensureTweetHasBeenPersisted(final Tweet tweet) throws TwitterClientException {
-        URI tweetURI = valueOf(tweet);
-        try {
-            SailConnection sc = store.getSail().getConnection();
-            try {
-                boolean exists = false;
-                CloseableIteration<? extends Statement, SailException> iter
-                        = sc.getStatements(tweetURI, null, null, false, SesameTools.ADMIN_GRAPH);
-                try {
-                    if (iter.hasNext()) {
-                        exists = true;
-                    }
-                } finally {
-                    iter.close();
-                }
-
-                if (!exists) {
-                    persistTweet(tweet);
-                }
-            } finally {
-                sc.close();
-            }
-        } catch (SailException e) {
-            throw new TwitterClientException(e);
-        }
-    }*/
 
     private URI persistTweet(final Tweet tweet) throws TwitterClientException {
         URI graphURI = graphByTweet.get(tweet);
@@ -267,58 +205,6 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     private final Map<Tweet, URI> graphByTweet = new HashMap<Tweet, URI>();
-
-    private URI persistPerson(final Person person,
-                              final SailConnection sc) throws SailException, TwitterClientException {
-        User user = persistenceContext.getUserRegistry().findUserInfo(person.getAccount().getScreenName());
-        URI userURI = valueOf(user);
-        URI personURI = SesameTools.createRandomPersonURI(valueFactory);
-
-        sc.addStatement(personURI,
-                RDF.TYPE,
-                // not foaf:Person, as not all microblogging accounts belong to people
-                valueFactory.createURI(FOAF.AGENT),
-                SesameTools.ADMIN_GRAPH);
-        sc.addStatement(userURI,
-                RDF.TYPE,
-                valueFactory.createURI(SIOC.USER),
-                SesameTools.ADMIN_GRAPH);
-        sc.addStatement(personURI,
-                valueFactory.createURI(FOAF.HOLDSACCOUNT),
-                userURI,
-                SesameTools.ADMIN_GRAPH);
-        if (null != user.getScreenName()) {
-            sc.addStatement(userURI,
-                    valueFactory.createURI(SIOC.ID),
-                    valueFactory.createLiteral(user.getScreenName()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-        if (null != user.getUrl()) {
-            sc.addStatement(personURI,
-                    // TODO: type the homepage as foaf:Document
-                    valueFactory.createURI(FOAF.HOMEPAGE),
-                    valueFactory.createURI(user.getUrl()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-        if (null != user.getName()) {
-            sc.addStatement(personURI,
-                    valueFactory.createURI(FOAF.NAME),
-                    valueFactory.createLiteral(user.getName()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-        // TODO: use user.getLocation() / foaf:based_near
-        if (null != user.getProfileImageUrl()) {
-            sc.addStatement(personURI,
-                    // not foaf:img, because we don't assume the subject is a foaf:Person
-                    valueFactory.createURI(FOAF.DEPICTION),
-                    valueFactory.createURI(user.getProfileImageUrl()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-
-        sc.commit();
-
-        return personURI;
-    }
 
     private class SimpleTweetContext implements TweetContext {
         private Tweet currentTweet;
