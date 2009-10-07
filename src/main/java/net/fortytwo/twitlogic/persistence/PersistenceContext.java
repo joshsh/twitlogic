@@ -35,4 +35,8 @@ public class PersistenceContext {
 
         return TwitLogic.USERS_BASEURI + id;
     }
+
+    public UserRegistry getUserRegistry() {
+        return userRegistry;
+    }
 }

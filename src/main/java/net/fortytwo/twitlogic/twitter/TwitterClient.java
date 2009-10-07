@@ -166,6 +166,30 @@ public class TwitterClient {
         request.setEntity(entity);
     }
 
+    private HttpResponse requestUntilSucceed(final HttpUriRequest request) throws TwitterClientException {
+        long lastWait = 0;
+        while (true) {
+            long timeOfLastRequest = System.currentTimeMillis();
+            HttpResponse response = makeRequest(request, false);
+            int code = response.getStatusLine().getStatusCode();
+            long wait;
+            // TODO: use a different back-off policy for error responses
+            if (5 == code / 100) {
+                wait = nextWait(lastWait, timeOfLastRequest);
+            } else {
+                return response;
+            }
+
+            try {
+                lastWait = wait;
+                LOGGER.fine("waiting " + wait + "ms before next request");
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                throw new TwitterClientException(e);
+            }
+        }
+    }
+
     private HttpResponse makeRequest(final HttpUriRequest request,
                                      final boolean openEnded) throws TwitterClientException {
         try {
@@ -210,17 +234,13 @@ public class TwitterClient {
 
     private JSONObject requestJSONObject(final HttpUriRequest request) throws TwitterClientException {
         try {
-            HttpResponse response = makeRequest(request, false);
-            if (null != response) {
-                HttpEntity responseEntity = response.getEntity();
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                responseEntity.writeTo(bos);
-                JSONObject object = new JSONObject(bos.toString());
-                bos.close();
-                return object;
-            } else {
-                return null;
-            }
+            HttpResponse response = requestUntilSucceed(request);
+            HttpEntity responseEntity = response.getEntity();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            responseEntity.writeTo(bos);
+            JSONObject object = new JSONObject(bos.toString());
+            bos.close();
+            return object;
         } catch (Exception e) {
             throw new TwitterClientException(e);
         }
@@ -228,17 +248,13 @@ public class TwitterClient {
 
     private JSONArray requestJSONArray(final HttpUriRequest request) throws TwitterClientException {
         try {
-            HttpResponse response = makeRequest(request, false);
-            if (null != response) {
-                HttpEntity responseEntity = response.getEntity();
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                responseEntity.writeTo(bos);
-                JSONArray array = new JSONArray(bos.toString());
-                bos.close();
-                return array;
-            } else {
-                return null;
-            }
+            HttpResponse response = requestUntilSucceed(request);
+            HttpEntity responseEntity = response.getEntity();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            responseEntity.writeTo(bos);
+            JSONArray array = new JSONArray(bos.toString());
+            bos.close();
+            return array;
         } catch (Exception e) {
             throw new TwitterClientException(e);
         }

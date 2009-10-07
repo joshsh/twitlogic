@@ -103,6 +103,7 @@ public class TweetStore {
                     String baseURI = "http://example.org/bogusBaseURI/";
                     rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
                     rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.trig"), baseURI, RDFFormat.TRIG);
+                    rc.add(TwitLogic.class.getResourceAsStream("twitlogic-metadata.trig"), baseURI, RDFFormat.TRIG);
                     rc.commit();
                 }
             } finally {

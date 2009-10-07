@@ -11,7 +11,6 @@ import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
-import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
 import net.fortytwo.twitlogic.twitter.CommandListener;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
@@ -39,6 +38,8 @@ public class TwitLogic {
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
             COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",
             SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",
+            SERVER_PORT = "net.fortytwo.twitlogic.server.port",
+            SERVER_STATICCONTENTDIRECTORY = "net.fortytwo.twitlogic.server.staticContentDirectory",
             TWITTER_CONSUMER_KEY = "net.fortytwo.twitlogic.twitter.consumerKey",
             TWITTER_CONSUMER_SECRET = "net.fortytwo.twitlogic.twitter.consumerSecret",
             TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitter.accessToken",
@@ -65,7 +66,9 @@ public class TwitLogic {
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
             RESOURCES_BASEURI = BASE_URI + "resource/",
+            GRAPHS_BASEURI = RESOURCES_BASEURI + "graph/",
             HASHTAGS_BASEURI = RESOURCES_BASEURI + "hashtag/",
+            PERSONS_BASEURI = RESOURCES_BASEURI + "person/",
             TWEETS_BASEURI = RESOURCES_BASEURI + "post/twitter/",
             USERS_BASEURI = RESOURCES_BASEURI + "user/twitter/";
 
@@ -130,7 +133,7 @@ public class TwitLogic {
             PersistenceContext pContext = new PersistenceContext(userRegistry);
 
             // Create the tweet matcher.
-            Matcher matcher = new MultiMatcher(new TwipleMatcher(),
+            Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
                     new DemoAfterthoughtMatcher());
             Handler<Tweet, TweetHandlerException> baseStatusHandler = new TweetPersister(matcher, store, pContext);
 

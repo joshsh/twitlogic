@@ -71,7 +71,7 @@ propertyObjectPair[Resource s] returns [Triple value]
 
 subjectResource returns [Resource value]
 	:	h=hashtag {$value = $h.value;}
-	|	s=screenName {$value = $s.value;}
+	|	s=screenName {$value = $s.value.getHeldBy();}
 	// TODO: add support for URLs as subjects
 	;
 		

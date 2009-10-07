@@ -8,6 +8,7 @@ package net.fortytwo.twitlogic.vocabs;
 public interface SIOC {
     public static final String NAMESPACE = "http://rdfs.org/sioc/ns#";
 
+    // TODO: some of these are actually FOAF properties
     public static final String
             ABOUT = NAMESPACE + "about",
             ACCOUNT_OF = NAMESPACE + "account_of",
@@ -32,6 +33,7 @@ public interface SIOC {
             GROUP_OF = NAMESPACE + "group_of",
             HAS_ADMINISTRATOR = NAMESPACE + "has_administrator",
             HAS_CONTAINER = NAMESPACE + "has_container",
+            HAS_CREATOR = NAMESPACE + "has_creator",
             HAS_DISCUSSION = NAMESPACE + "has_discussion",
             HAS_FUNCTION = NAMESPACE + "has_function",
             HAS_GROUP = NAMESPACE + "has_group",
@@ -47,7 +49,6 @@ public interface SIOC {
             HAS_SPACE = NAMESPACE + "has_space",
             HAS_SUBSCRIBER = NAMESPACE + "has_subscriber",
             HAS_USERGROUP = NAMESPACE + "has_usergroup",
-            HOLDSACCOUNT = NAMESPACE + "holdsAccount",
             HOST_OF = NAMESPACE + "host_of",
             ID = NAMESPACE + "id",
             IP_ADDRESS = NAMESPACE + "ip_address",

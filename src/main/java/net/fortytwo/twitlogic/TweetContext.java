@@ -1,5 +1,6 @@
 package net.fortytwo.twitlogic;
 
+import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
@@ -11,6 +12,7 @@ import net.fortytwo.twitlogic.model.User;
  */
 public interface TweetContext {
     User thisUser();
+    Person thisPerson();
 
     User repliedToUser();
 

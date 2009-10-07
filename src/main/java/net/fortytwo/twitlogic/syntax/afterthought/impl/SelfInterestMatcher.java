@@ -20,7 +20,7 @@ public class SelfInterestMatcher extends AfterthoughtMatcher {
                                 final AfterthoughtContext context) throws MatcherException {
         if (normed.equals("+1")) {
             Triple t = new Triple(
-                    context.thisUser(),
+                    context.thisPerson(),
                     new URIReference(FOAF.INTEREST),
                     context.getSubject());
 

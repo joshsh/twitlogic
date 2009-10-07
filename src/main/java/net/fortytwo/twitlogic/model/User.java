@@ -12,7 +12,7 @@ import org.json.JSONObject;
  */
 public class User implements Resource {
     //private final Date createdAt;
-    //private final String description;
+    private final String description;
     //private final Integer favoritesCount;
     //private final Integer followersCount;
     //private final Integer friendsCount;
@@ -37,18 +37,23 @@ public class User implements Resource {
     //private final Integer utcOffset;
     //private final Boolean verified;
 
+    private final Person heldBy;
+
     public User(final String screenName) {
         this.screenName = screenName;
 
         id = null;
         geoEnabled = false;
         location = null;
+        description = null;
         name = null;
         profileBackgroundColor = null;
         profileImageUrl = null;
         profileTextColor = null;
         isProtected = null;
         url = null;
+
+        heldBy = new Person(this);
     }
 
     public User(final int id) {
@@ -57,12 +62,15 @@ public class User implements Resource {
         screenName = null;
         geoEnabled = false;
         location = null;
+        description = null;
         name = null;
         profileBackgroundColor = null;
         profileImageUrl = null;
         profileTextColor = null;
         isProtected = null;
         url = null;
+
+        heldBy = new Person(this);
     }
 
     public User(final String screenName, final int id) {
@@ -71,12 +79,15 @@ public class User implements Resource {
 
         geoEnabled = false;
         location = null;
+        description = null;
         name = null;
         profileBackgroundColor = null;
         profileImageUrl = null;
         profileTextColor = null;
         isProtected = null;
         url = null;
+
+        heldBy = new Person(this);
     }
 
     public User(final JSONObject json) throws JSONException {
@@ -84,14 +95,26 @@ public class User implements Resource {
 
         id = json.getInt(TwitterAPI.Field.ID.toString());
         geoEnabled = json.getBoolean(TwitterAPI.Field.GEO_ENABLED.toString());
-        location = json.getString(TwitterAPI.Field.LOCATION.toString());
-        name = json.getString(TwitterAPI.Field.NAME.toString());
-        profileBackgroundColor = json.getString(TwitterAPI.Field.PROFILE_BACKGROUND_COLOR.toString());
-        profileImageUrl = json.getString(TwitterAPI.Field.PROFILE_IMAGE_URL.toString());
-        profileTextColor = json.getString(TwitterAPI.Field.PROFILE_TEXT_COLOR.toString());
+        location = getString(json, TwitterAPI.Field.LOCATION);
+        description = getString(json, TwitterAPI.Field.DESCRIPTION);
+        name = getString(json, TwitterAPI.Field.NAME);
+        profileBackgroundColor = getString(json, TwitterAPI.Field.PROFILE_BACKGROUND_COLOR);
+        profileImageUrl = getString(json, TwitterAPI.Field.PROFILE_IMAGE_URL);
+        profileTextColor = getString(json, TwitterAPI.Field.PROFILE_TEXT_COLOR);
         isProtected = json.getBoolean(TwitterAPI.Field.PROTECTED.toString());
-        screenName = json.getString(TwitterAPI.Field.SCREEN_NAME.toString());
-        url = json.getString(TwitterAPI.Field.URL.toString());
+        screenName = getString(json, TwitterAPI.Field.SCREEN_NAME);
+        url = getString(json, TwitterAPI.Field.URL);
+
+        heldBy = new Person(this);
+    }
+
+    public static String getString(final JSONObject json,
+                                   final TwitterAPI.Field key) throws JSONException {
+        String s = json.getString(key.toString());
+        if (null != s && s.equals("null")) {
+            s = null;
+        }
+        return s;
     }
 
     public boolean getGeoEnabled() {
@@ -104,6 +127,10 @@ public class User implements Resource {
 
     public String getLocation() {
         return location;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getName() {
@@ -132,6 +159,10 @@ public class User implements Resource {
 
     public String getUrl() {
         return url;
+    }
+
+    public Person getHeldBy() {
+        return heldBy;
     }
 
     public String toString() {

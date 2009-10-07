@@ -1,6 +1,8 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.vocabs.SIOC;
+import net.fortytwo.twitlogic.vocabs.FOAF;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -21,12 +23,9 @@ import java.util.Random;
 public class SesameTools {
     private static final Random RANDOM = new Random();
 
-    public static final String
-            RANDOMURI_PREFIX = "http://twitlogic.fortytwo.net/resource/";
-
     public static final URI
             TRIX_GRAPH = new URIImpl("http://www.w3.org/2004/03/trix/rdfg-1/Graph"),
-            ADMIN_GRAPH = new URIImpl(TwitLogic.NAMESPACE + "AdminGraph"),
+            ADMIN_GRAPH = new URIImpl(TwitLogic.GRAPHS_BASEURI + "twitlogic-metadata"),
             COVERED_INTERVAL = new URIImpl(TwitLogic.NAMESPACE + "converedInterval"),
             TIMESTAMP = new URIImpl(TwitLogic.NAMESPACE + "timeStamp"),
             START_DATE = new URIImpl(TwitLogic.NAMESPACE + "startDate"),
@@ -59,7 +58,17 @@ public class SesameTools {
     }
 
     // TODO: improve this
-    public static URI createRandomURI(final ValueFactory valueFactory) {
-        return valueFactory.createURI(RANDOMURI_PREFIX + RANDOM.nextInt(Integer.MAX_VALUE));
+    public static URI createRandomResourceURI(final ValueFactory valueFactory) {
+        return valueFactory.createURI(TwitLogic.RESOURCES_BASEURI + RANDOM.nextInt(Integer.MAX_VALUE));
+    }
+
+    // TODO: improve this
+    public static URI createRandomGraphURI(final ValueFactory valueFactory) {
+        return valueFactory.createURI(TwitLogic.GRAPHS_BASEURI + RANDOM.nextInt(Integer.MAX_VALUE));
+    }
+
+    // TODO: improve this
+    public static URI createRandomPersonURI(final ValueFactory valueFactory) {
+        return valueFactory.createURI(TwitLogic.PERSONS_BASEURI + RANDOM.nextInt(Integer.MAX_VALUE));
     }
 }

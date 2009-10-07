@@ -48,7 +48,7 @@ public class ReviewMatcher extends AfterthoughtMatcher {
             context.handle(new Triple(context.getSubject(), HASREVIEW, review));
             context.handle(new Triple(review, TYPE, REVIEW));
             context.handle(new Triple(review, RATING, new PlainLiteral("" + rating)));
-            context.handle(new Triple(review, REVIEWER, context.thisUser()));
+            context.handle(new Triple(review, REVIEWER, context.thisPerson()));
             context.handle(new Triple(review, TEXT, new PlainLiteral(context.thisTweet().getText())));
         }
     }

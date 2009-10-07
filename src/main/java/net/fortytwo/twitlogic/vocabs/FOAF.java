@@ -8,10 +8,12 @@ package net.fortytwo.twitlogic.vocabs;
 public interface FOAF {
     public static final String NAMESPACE = "http://xmlns.com/foaf/0.1/";
 
+    // TODO: add the rest of the classes
     public static final String
             ACCOUNTNAME = NAMESPACE + "accountName",
             ACCOUNTSERVICEHOMEPAGE = NAMESPACE + "accountServiceHomepage",
             AGE = NAMESPACE + "age",
+            AGENT = NAMESPACE + "Agent",
             AIMCHATID = NAMESPACE + "aimChatID",
             BASEDNEAR = NAMESPACE + "based_near",
             BIRTHDAY = NAMESPACE + "birthday",
@@ -45,6 +47,7 @@ public interface FOAF {
             NICK = NAMESPACE + "nick",
             PAGE = NAMESPACE + "page",
             PASTPROJECT = NAMESPACE + "pastProject",
+            PERSON = NAMESPACE + "Person",
             PHONE = NAMESPACE + "phone",
             PLAN = NAMESPACE + "plan",
             PRIMARYTOPIC = NAMESPACE + "primaryTopic",

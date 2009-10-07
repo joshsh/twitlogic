@@ -59,4 +59,10 @@ public class UserRegistry {
             }
         };
     }
+
+    public User findUserInfo(final String screenName) throws TwitterClientException {
+        User user = client.findUserInfo(screenName);
+        add(user);
+        return user;
+    }
 }

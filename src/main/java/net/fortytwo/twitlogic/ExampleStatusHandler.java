@@ -1,15 +1,16 @@
 package net.fortytwo.twitlogic;
 
+import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.model.Person;
+import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
-import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 
 import java.util.Collections;
@@ -38,6 +39,10 @@ class ExampleStatusHandler implements Handler<Tweet, TweetHandlerException> {
         TweetContext tweetContext = new TweetContext() {
             public User thisUser() {
                 return null;
+            }
+
+            public Person thisPerson() {
+                return thisUser().getHeldBy();
             }
 
             public User repliedToUser() {

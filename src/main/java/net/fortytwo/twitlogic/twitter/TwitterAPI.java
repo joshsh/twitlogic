@@ -33,7 +33,7 @@ public class TwitterAPI {
 
     public enum Field {
         CREATED_AT("created_at"), // Note: used in multiple contexts
-        DECRIPTION("description"),
+        DESCRIPTION("description"),
         DELETE("delete"),
         FAVORITED("favorited"),
         FAVORITES_COUNT("favourites_count"),

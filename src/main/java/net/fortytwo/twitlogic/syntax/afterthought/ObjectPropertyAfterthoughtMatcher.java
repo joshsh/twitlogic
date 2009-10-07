@@ -63,7 +63,7 @@ public abstract class ObjectPropertyAfterthoughtMatcher extends AfterthoughtMatc
         ThreeParts t = divide(normed, TwitLogic.USERNAME_PATTERN);
         return null == t
                 ? null
-                : new TokenizedObjectPropertyClause(t.first, new User(t.second.substring(1)), t.third);
+                : new TokenizedObjectPropertyClause(t.first, new User(t.second.substring(1)).getHeldBy(), t.third);
     }
 
     // TODO: redirection resolution

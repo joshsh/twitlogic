@@ -9,6 +9,11 @@ import net.fortytwo.twitlogic.syntax.afterthought.impl.RdfsSeeAlsoMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.ReviewMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.SelfInterestMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.TypeMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVCategoryMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVDepictsMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVSimilarToMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVStudiesMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVUsesMatcher;
 
 import java.util.Arrays;
 
@@ -28,7 +33,12 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new RdfsSeeAlsoMatcher(),
                 new ReviewMatcher(),
                 new SelfInterestMatcher(),
-                new TypeMatcher()
+                new TypeMatcher(),
+                new OVCategoryMatcher(),
+                new OVDepictsMatcher(),
+                new OVSimilarToMatcher(),
+                new OVStudiesMatcher(),
+                new OVUsesMatcher()
         }));
     }
 }

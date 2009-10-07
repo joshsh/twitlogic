@@ -14,6 +14,8 @@ import org.restlet.Context;
 import org.restlet.data.Protocol;
 import org.restlet.data.Request;
 
+import java.io.File;
+
 /**
  * User: josh
  * Date: Oct 3, 2009
@@ -43,8 +45,10 @@ public class TwitLogicServer {
         final ValueFactory valueFactory = sail.getValueFactory();
 
         final String serverBaseURI;
+        final int serverPort;
         try {
             serverBaseURI = TwitLogic.getConfiguration().getURI(TwitLogic.SERVER_BASEURI).toString();
+            serverPort = TwitLogic.getConfiguration().getInt(TwitLogic.SERVER_PORT, DEFAULT_PORT);
         } catch (PropertyException e) {
             throw new ServerException(e);
         }
@@ -115,7 +119,9 @@ public class TwitLogicServer {
 
         // Create a new Restlet component and add a HTTP server connector to it
         Component component = new Component();
-        component.getServers().add(Protocol.HTTP, 8182);
+        component.getServers().add(Protocol.HTTP, serverPort);
+        //component.getServers().add(Protocol.FILE);
+        component.getClients().add(Protocol.FILE); 
 
         component.getDefaultHost().getContext().getAttributes().put(SERVER_ATTR, this);
         component.getDefaultHost().attach(new RootApplication());

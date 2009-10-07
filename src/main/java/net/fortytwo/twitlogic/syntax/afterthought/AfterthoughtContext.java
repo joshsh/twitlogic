@@ -1,12 +1,13 @@
 package net.fortytwo.twitlogic.syntax.afterthought;
 
+import net.fortytwo.twitlogic.TweetContext;
 import net.fortytwo.twitlogic.flow.Handler;
-import net.fortytwo.twitlogic.syntax.MatcherException;
+import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
-import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.model.Tweet;
-import net.fortytwo.twitlogic.TweetContext;
+import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.syntax.MatcherException;
 
 /**
  * User: josh
@@ -42,6 +43,10 @@ public class AfterthoughtContext implements TweetContext {
 
     public User thisUser() {
         return baseContext.thisUser();
+    }
+
+    public Person thisPerson() {
+        return thisUser().getHeldBy();
     }
 
     public User repliedToUser() {

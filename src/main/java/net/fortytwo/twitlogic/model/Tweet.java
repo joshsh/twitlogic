@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.logging.Logger;
+import java.util.Date;
 
 /**
  * User: josh
@@ -17,7 +18,7 @@ public class Tweet implements Resource {
 
     private User user;
 
-    //private final Date createdAt;
+    private Date createdAt;
     //private final Boolean favorited;
     private String geo;
     private String id;
@@ -42,6 +43,7 @@ public class Tweet implements Resource {
                 ? null
                 : value;
     }
+
     /**
      * Parses a tweet in Twitter's status element JSON format.  Some fields are required.
      *
@@ -51,10 +53,7 @@ public class Tweet implements Resource {
     public Tweet(final JSONObject json) throws JSONException {
         TwitterAPI.checkJSON(json);
 
-        String g = json.getString(TwitterAPI.Field.GEO.toString());
-        if (null != g && g.equals("null")) {
-            g = null;
-        }
+        String g = User.getString(json, TwitterAPI.Field.GEO);
         geo = g;
         if (null != geo) {
             LOGGER.info("geo: " + geo);
@@ -76,12 +75,20 @@ public class Tweet implements Resource {
 
         text = json.getString(TwitterAPI.Field.TEXT.toString());
 
+        String dateString = User.getString(json, TwitterAPI.Field.CREATED_AT);
+        // TODO: use the date read in from Twitter, rather than the current time
+        createdAt = new Date();
+
         JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
         user = new User(userJSON);
     }
 
     public User getUser() {
         return user;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
     public String getGeo() {
@@ -123,6 +130,10 @@ public class Tweet implements Resource {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setCreatedAt(final Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public void setGeo(String geo) {
