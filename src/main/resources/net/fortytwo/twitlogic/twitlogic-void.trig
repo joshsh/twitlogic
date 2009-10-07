@@ -26,9 +26,9 @@
 
         # TODO: find better (more persistent) example resources
         void:exampleResource
-            <http://twitlogic.fortytwo.net/resource/hashtag/twitlogic> ,
-    #        <http://twitlogic.fortytwo.net/resource/user/twitter/7083182>,
-            <http://twitlogic.fortytwo.net/resource/person/1454889030> ;
+            <http://twitlogic.fortytwo.net/resource/hashtag/twitlogic>,
+#            <http://twitlogic.fortytwo.net/resource/user/twitter/7083182>,
+#            <http://twitlogic.fortytwo.net/resource/person/1454889030> ;
 #            <http://twitlogic.fortytwo.net/resource/post/twitter/4589460180> ,
 #            <http://twitlogic.fortytwo.net/resource/graph/twitter/4589460180> ;
 
