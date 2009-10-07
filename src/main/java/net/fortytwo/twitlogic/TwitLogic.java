@@ -188,7 +188,8 @@ public class TwitLogic {
 
             // Other friends of the Cause
             new User("twarko", 71089109),        // Marko Rodriguez
-
+            new User("semantictweet", 49974254), // Semantic Tweet
+            
             // Miscellaneous people who use a lot of hashtags (not necessarily
             // with TwitLogic in mind).  Adds some healthy "noise" to test the
             // app against inevitable false positives.

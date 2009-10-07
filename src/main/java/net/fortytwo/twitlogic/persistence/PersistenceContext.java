@@ -12,6 +12,7 @@ import net.fortytwo.twitlogic.vocabs.SIOC;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -93,6 +94,11 @@ public class PersistenceContext {
                 // not foaf:Person, as not all microblogging accounts belong to people
                 valueFactory.createURI(FOAF.AGENT),
                 SesameTools.ADMIN_GRAPH);
+        // Shout-out to SemanticTweet
+        sc.addStatement(personURI,
+                OWL.SAMEAS,
+                valueFactory.createURI(semanticTweetURI(person.getAccount())),
+                SesameTools.ADMIN_GRAPH);
         sc.addStatement(userURI,
                 RDF.TYPE,
                 valueFactory.createURI(SIOC.USER),
@@ -132,6 +138,14 @@ public class PersistenceContext {
         sc.commit();
 
         return personURI;
+    }
+
+    private String semanticTweetURI(final User user) {
+        if (null == user.getScreenName()) {
+            throw new IllegalArgumentException("null screen name");
+        } else {
+            return "http://semantictweet.com/" + user.getScreenName() + "#me";
+        }
     }
 
     public UserRegistry getUserRegistry() {
