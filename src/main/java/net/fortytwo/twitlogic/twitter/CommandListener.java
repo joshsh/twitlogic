@@ -31,8 +31,9 @@ public class CommandListener implements Handler<Tweet, TweetHandlerException> {
                 ? null
                 : tweet.getInReplyToUser().getScreenName();
         // Note: reply-to-tweet is not taken into account here
-        if ((null != s && s.equals(userName))
-                || tweet.getText().trim().startsWith("@" + userName)) {
+        if ((null != s && (s.equals(userName) || s.equals(TwitLogicAgent.ASPIRATIONAL_SCREENNAME)))
+                || tweet.getText().trim().startsWith("@" + userName)
+                || tweet.getText().trim().startsWith("@" + TwitLogicAgent.ASPIRATIONAL_SCREENNAME)) {
             LOGGER.info("received a command from " + tweet.getUser() + ": " + tweet.getText());
             try {
                 agent.interpretCommand(tweet);

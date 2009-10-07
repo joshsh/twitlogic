@@ -4,6 +4,8 @@ import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.PersistenceContext;
+import net.fortytwo.twitlogic.services.bitly.BitlyClient;
+import net.fortytwo.twitlogic.services.bitly.BitlyClientException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
 
@@ -13,15 +15,21 @@ import net.fortytwo.twitlogic.twitter.TwitterClientException;
  * Time: 9:14:03 PM
  */
 public class TwitLogicAgent {
+    // TwitLogic doesn't actually own this screen name, but wants to, as it
+    // is likely that users will mistakenly tweet at it.
+    public final static String ASPIRATIONAL_SCREENNAME = "twitlogic";
+
     private final TwitterClient twitterClient;
+    private final BitlyClient bitlyClient;
     private final PersistenceContext persistenceContext;
     private final String screenName;
 
     public TwitLogicAgent(final String screenName,
                           final TwitterClient twitterClient,
-                          final PersistenceContext persistenceContext) {
+                          final PersistenceContext persistenceContext) throws BitlyClientException {
         this.screenName = screenName;
         this.twitterClient = twitterClient;
+        bitlyClient = new BitlyClient();
         this.persistenceContext = persistenceContext;
     }
 
@@ -32,6 +40,8 @@ public class TwitLogicAgent {
         String s = "@" + screenName;
         if (text.startsWith(s)) {
             text = text.substring(s.length()).trim();
+        } else if (text.startsWith(ASPIRATIONAL_SCREENNAME)) {
+            text = text.substring(ASPIRATIONAL_SCREENNAME.length()).trim();
         }
 
         String link = null;
@@ -44,7 +54,11 @@ public class TwitLogicAgent {
         if (null == link) {
             response = dontUnderstand(request);
         } else {
-            response = replyWithLink(request, link);
+            try {
+                response = replyWithLink(request, link);
+            } catch (BitlyClientException e) {
+                throw new TwitterClientException(e);
+            }
         }
 
         /*
@@ -63,6 +77,10 @@ response.setText("@" + request.getUser().getScreenName() + " ");     */
         twitterClient.updateStatus(response);
     }
 
+    private String zitgistify(final String resourceURL) throws BitlyClientException {
+        return "http://dataviewer.zitgist.com/?uri="
+                + BitlyClient.percentEncode(resourceURL);
+    }
     private Tweet createReply(final Tweet request,
                               final String message) {
         String text = "@" + request.getUser().getScreenName() + " " + message;
@@ -82,8 +100,10 @@ response.setText("@" + request.getUser().getScreenName() + " ");     */
     }
 
     private Tweet replyWithLink(final Tweet request,
-                                final String link) {
-        String message = "see: " + link;
+                                final String resourceURL) throws BitlyClientException {
+        String shortUrl = bitlyClient.shorten(
+                zitgistify(resourceURL));
+        String message = "see: " + shortUrl;
         return createReply(request, message);
     }
 }

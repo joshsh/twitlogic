@@ -33,6 +33,8 @@ public class TwitLogic {
 
     // Configuration property keys
     public static final String
+            BITLY_LOGIN = "net.fortytwo.twitlogic.services.bitly.login",
+            BITLY_APIKEY = "net.fortytwo.twitlogic.services.bitly.apiKey",
             NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
             SAIL_CLASS = "net.fortytwo.twitlogic.persistence.sailClass",
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
@@ -158,6 +160,9 @@ public class TwitLogic {
     }
 
     private static final User[] A_FEW_GOOD_USERS = new User[]{
+            new User("twit_logic", 76195293),    // TwitLogic account
+            new User("twitlogic", 62329516),     // aspirational TwitLogic account
+
             new User("antijosh", 71631722),      // test account
             new User("alvitest", 73477629),      // test account
 

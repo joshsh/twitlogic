@@ -27,11 +27,12 @@
         # TODO: find better (more persistent) example resources
         void:exampleResource
             <http://twitlogic.fortytwo.net/resource/hashtag/twitlogic> ,
-            <http://twitlogic.fortytwo.net/resource/user/twitter/7083182> ; #,
+    #        <http://twitlogic.fortytwo.net/resource/user/twitter/7083182>,
+            <twitlogic.fortytwo.net/resource/person/1454889030> ;
 #            <http://twitlogic.fortytwo.net/resource/post/twitter/4589460180> ,
 #            <http://twitlogic.fortytwo.net/resource/graph/twitter/4589460180> ;
 
-        # Note 'dataset' as oppsed to 'data'
+        # Note 'dataset' as opposed to 'data'
         void:dataDump <http://twitlogic.fortytwo.net/archive/twitlogic-full.nq.gz> ;
 
 #        void:sparqlEndpoint <...> ;
