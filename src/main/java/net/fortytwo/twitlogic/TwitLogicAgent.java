@@ -22,12 +22,9 @@ public class TwitLogicAgent {
     private final TwitterClient twitterClient;
     private final BitlyClient bitlyClient;
     private final PersistenceContext persistenceContext;
-    private final String screenName;
 
-    public TwitLogicAgent(final String screenName,
-                          final TwitterClient twitterClient,
+    public TwitLogicAgent(final TwitterClient twitterClient,
                           final PersistenceContext persistenceContext) throws BitlyClientException {
-        this.screenName = screenName;
         this.twitterClient = twitterClient;
         bitlyClient = new BitlyClient();
         this.persistenceContext = persistenceContext;
@@ -37,12 +34,16 @@ public class TwitLogicAgent {
         Tweet response;
 
         String text = request.getText().trim();
+
+        // TODO: a space character is not the only possibility for terminating the @username
+        text = text.substring(text.indexOf(" ") + 1);
+        /*
         String s = "@" + screenName;
         if (text.startsWith(s)) {
             text = text.substring(s.length()).trim();
         } else if (text.startsWith(ASPIRATIONAL_SCREENNAME)) {
             text = text.substring(ASPIRATIONAL_SCREENNAME.length()).trim();
-        }
+        }*/
 
         String link = null;
         if (TwitLogic.HASHTAG_PATTERN.matcher(text).matches()) {

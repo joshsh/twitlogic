@@ -141,8 +141,7 @@ public class TwitLogic {
 
             // Create an agent to listen for commands.
             // Also take the opportunity to memoize users we're following.
-            String agentScreenName = TwitLogic.getConfiguration().getString(TwitLogic.TWITTER_USERNAME);
-            TwitLogicAgent agent = new TwitLogicAgent(agentScreenName, client, pContext);
+            TwitLogicAgent agent = new TwitLogicAgent(client, pContext);
             Handler<Tweet, TweetHandlerException> statusHandler
                     = userRegistry.createUserRegistryFilter(
                     new CommandListener(agent, baseStatusHandler));

@@ -6,6 +6,8 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -15,25 +17,23 @@ import java.util.logging.Logger;
  */
 public class CommandListener implements Handler<Tweet, TweetHandlerException> {
     private static final Logger LOGGER = TwitLogic.getLogger(CommandListener.class);
-    private final String userName;
+    //private final String userName;
     private final TwitLogicAgent agent;
     private final Handler<Tweet, TweetHandlerException> baseHandler;
+    private final Set<String> selfScreenNames;
 
     public CommandListener(final TwitLogicAgent agent,
                            final Handler<Tweet, TweetHandlerException> baseHandler) throws PropertyException {
         this.agent = agent;
         this.baseHandler = baseHandler;
-        userName = TwitLogic.getConfiguration().getString(TwitLogic.TWITTER_USERNAME);
+
+        selfScreenNames = new HashSet<String>();
+        selfScreenNames.add(TwitLogic.getConfiguration().getString(TwitLogic.TWITTER_USERNAME));
+        selfScreenNames.add(TwitLogicAgent.ASPIRATIONAL_SCREENNAME);
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
-        String s = null == tweet.getInReplyToUser()
-                ? null
-                : tweet.getInReplyToUser().getScreenName();
-        // Note: reply-to-tweet is not taken into account here
-        if ((null != s && (s.equals(userName) || s.equals(TwitLogicAgent.ASPIRATIONAL_SCREENNAME)))
-                || tweet.getText().trim().startsWith("@" + userName)
-                || tweet.getText().trim().startsWith("@" + TwitLogicAgent.ASPIRATIONAL_SCREENNAME)) {
+        if (null != getReplyTo(tweet)) {
             LOGGER.info("received a command from " + tweet.getUser() + ": " + tweet.getText());
             try {
                 agent.interpretCommand(tweet);
@@ -44,5 +44,30 @@ public class CommandListener implements Handler<Tweet, TweetHandlerException> {
         }
 
         return baseHandler.handle(tweet);
+    }
+
+    private String getReplyTo(final Tweet tweet) {
+        if (null != tweet.getInReplyToUser() && null != tweet.getInReplyToUser().getScreenName()) {
+            return tweet.getInReplyToUser().getScreenName();
+        } else {
+            String text = tweet.getText();
+            if (null == text) {
+                return null;
+            } else {
+                text = text.trim();
+
+                if (text.startsWith("@")) {
+                    text = text.substring(1);
+                    for (String s : selfScreenNames) {
+                        if (text.startsWith(s)) {
+                            // TODO: rule out screen names for which this screen name is a prefix
+                            return s;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }
