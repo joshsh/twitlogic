@@ -10,11 +10,9 @@ import net.fortytwo.twitlogic.TwitLogic;
 import java.util.regex.Pattern;
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 29, 2009
  * Time: 9:14:16 PM
- * To change this template use File | Settings | File Templates.
  */
 public abstract class ObjectPropertyAfterthoughtMatcher extends AfterthoughtMatcher {
 

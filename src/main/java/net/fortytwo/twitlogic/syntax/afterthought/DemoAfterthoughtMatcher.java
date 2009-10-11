@@ -9,6 +9,11 @@ import net.fortytwo.twitlogic.syntax.afterthought.impl.RdfsSeeAlsoMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.ReviewMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.SelfInterestMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.TypeMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.AddressMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.BirthdayMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.EmailAddressMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.FaxMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.PhoneMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVCategoryMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVDepictsMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVSimilarToMatcher;
@@ -24,7 +29,7 @@ import java.util.Arrays;
  */
 public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
     public DemoAfterthoughtMatcher() {
-        super(Arrays.asList(new AfterthoughtMatcher[]{
+        super(Arrays.asList(
                 new FoafDepictionMatcher(),
                 new FoafInterestMatcher(),
                 new FoafKnowsMatcher(),
@@ -34,11 +39,17 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new ReviewMatcher(),
                 new SelfInterestMatcher(),
                 new TypeMatcher(),
+                // OpenVocab
                 new OVCategoryMatcher(),
                 new OVDepictsMatcher(),
                 new OVSimilarToMatcher(),
                 new OVStudiesMatcher(),
-                new OVUsesMatcher()
-        }));
+                new OVUsesMatcher(),
+                // Contact
+                new AddressMatcher(),
+                new BirthdayMatcher(),
+                new EmailAddressMatcher(),
+                new FaxMatcher(),
+                new PhoneMatcher()));
     }
 }

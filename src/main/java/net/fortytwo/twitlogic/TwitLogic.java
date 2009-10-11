@@ -193,7 +193,8 @@ public class TwitLogic {
             // with TwitLogic in mind).  Adds some healthy "noise" to test the
             // app against inevitable false positives.
             new User("tommyh", 5439642),
-            new User("thecoventgarden", 33206959)};
+            //new User("thecoventgarden", 33206959)
+    };
 
     private static String[] aFewGoodUserIds() {
         String[] ids = new String[A_FEW_GOOD_USERS.length];
