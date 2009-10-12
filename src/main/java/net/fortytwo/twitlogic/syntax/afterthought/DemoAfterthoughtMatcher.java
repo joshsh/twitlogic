@@ -1,13 +1,13 @@
 package net.fortytwo.twitlogic.syntax.afterthought;
 
-import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafDepictionMatcher;
-import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafInterestMatcher;
-import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafKnowsMatcher;
-import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafMadeMatcher;
-import net.fortytwo.twitlogic.syntax.afterthought.impl.FoafMakerMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafDepictionMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafInterestMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafKnowsMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafMadeMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafMakerMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.RdfsSeeAlsoMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.ReviewMatcher;
-import net.fortytwo.twitlogic.syntax.afterthought.impl.SelfInterestMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.SelfInterestMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.TypeMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.AddressMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.BirthdayMatcher;

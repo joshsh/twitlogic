@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic.syntax.afterthought.impl;
+package net.fortytwo.twitlogic.syntax.afterthought.impl.foaf;
 
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.URIReference;
