@@ -11,6 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.net.SocketException;
 import java.util.logging.Logger;
 
 /**
@@ -100,7 +101,7 @@ public abstract class CommonHttpClient {
     }
 
     protected HttpResponse makeRequest(final HttpUriRequest request,
-                                     final boolean openEnded) throws TwitterClientException {
+                                       final boolean openEnded) throws TwitterClientException {
         try {
             logRequest(request);
 
@@ -119,7 +120,14 @@ public abstract class CommonHttpClient {
             }
 
             HttpClient client = createClient(openEnded);
-            HttpResponse response = client.execute(request);
+
+            HttpResponse response;
+            try {
+                response = client.execute(request);
+            } catch (SocketException e) {
+                LOGGER.severe("socket error. No response to display");
+                throw new TwitterClientException(e);
+            }
 
             if (null == response) {
                 LOGGER.severe("null response");
@@ -140,7 +148,7 @@ public abstract class CommonHttpClient {
     }
 
     protected long nextWait(final long lastWait,
-                          final long timeOfLastRequest) {
+                            final long timeOfLastRequest) {
         return timeOfLastRequest + MIN_WAIT < System.currentTimeMillis()
                 ? 0
                 : 0 == lastWait

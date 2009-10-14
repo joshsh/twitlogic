@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,13 +120,7 @@ public class TwitterClient extends CommonHttpClient {
         }
 
         setEntity(request, formParams);
-        try {
-            credentials.sign(request);
-        } catch (OAuthExpectationFailedException e) {
-            throw new TwitterClientException(e);
-        } catch (OAuthMessageSignerException e) {
-            throw new TwitterClientException(e);
-        }
+        sign(request);
         makeRequest(request, false);
     }
 
@@ -146,6 +141,16 @@ public class TwitterClient extends CommonHttpClient {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    private void sign(final HttpUriRequest request) throws TwitterClientException {
+        try {
+            credentials.sign(request);
+        } catch (OAuthExpectationFailedException e) {
+            throw new TwitterClientException(e);
+        } catch (OAuthMessageSignerException e) {
+            throw new TwitterClientException(e);
+        }
+    }
 
     private void setEntity(final HttpPost request,
                            final List<NameValuePair> formParams) throws TwitterClientException {
@@ -238,18 +243,21 @@ public class TwitterClient extends CommonHttpClient {
 
     private StatusStreamParser.ExitReason singleStreamRequest(final HttpUriRequest request,
                                                               final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
-        try {
-            credentials.sign(request);
-            HttpResponse response = makeRequest(request, true);
-            if (null != response) {
-                HttpEntity responseEntity = response.getEntity();
+        sign(request);
+        HttpResponse response = makeRequest(request, true);
+        if (null != response) {
+            HttpEntity responseEntity = response.getEntity();
+            try {
                 return new StatusStreamParser(handler).parse(responseEntity.getContent());
-            } else {
-                return StatusStreamParser.ExitReason.NULL_RESPONSE;
+            } catch (IOException e) {
+                throw new TwitterClientException(e);
+            } catch (TweetHandlerException e) {
+                throw new TwitterClientException(e);
             }
-        } catch (Exception e) {
-            throw new TwitterClientException(e);
+        } else {
+            return StatusStreamParser.ExitReason.NULL_RESPONSE;
         }
+
     }
 
     private String commaDelimit(final String[] elements) {
