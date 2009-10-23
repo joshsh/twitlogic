@@ -17,7 +17,9 @@ import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.rio.RDFFormat;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.LogManager;
@@ -127,6 +129,11 @@ public class TwitLogic {
             TweetStore store = TweetStore.getDefaultStore();
             store.dump(System.out);
 
+            // TODO: use N-Quads instead of TriG
+            File f = new File(TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
+                    "archive/twitlogic-full.trig.gz");
+            store.dumpToCompressedFile(f, RDFFormat.TRIG);
+
             // Launch linked data server.
             new TwitLogicServer(store);
 
@@ -174,6 +181,7 @@ public class TwitLogic {
             new User("ewpatton", 34309130),      // Evan Patton
             new User("jahendler", 15336340),     // James Hendler
             new User("joshsh", 7083182),         // Joshua Shinavier
+            new User("jpmccu", 47621026),        // Jim McCusker
             new User("jrweave", 20830884),       // Jesse Weaver
             new User("kasei", 643563),           // Gregory Williams
             new User("lidingpku", 26823198),     // Li Ding
@@ -188,7 +196,7 @@ public class TwitLogic {
             // Other friends of the Cause
             new User("twarko", 71089109),        // Marko Rodriguez
             new User("semantictweet", 49974254), // Semantic Tweet
-            
+
             // Miscellaneous people who use a lot of hashtags (not necessarily
             // with TwitLogic in mind).  Adds some healthy "noise" to test the
             // app against inevitable false positives.

@@ -18,9 +18,11 @@ import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Logger;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * User: josh
@@ -160,6 +162,27 @@ public class TweetStore {
             rc.export(h);
         } finally {
             rc.close();
+        }
+    }
+
+    public void dumpToCompressedFile(final File file,
+                                     final RDFFormat format) throws IOException, RepositoryException, RDFHandlerException {
+        OutputStream out = new FileOutputStream(file);
+        try {
+            OutputStream gzipOut = new GZIPOutputStream(out);
+            try {
+                RDFHandler h = Rio.createWriter(format, gzipOut);
+                RepositoryConnection rc = getRepository().getConnection();
+                try {
+                    rc.export(h);
+                } finally {
+                    rc.close();
+                }
+            } finally {
+                gzipOut.close();
+            }
+        } finally {
+            out.close();
         }
     }
 
