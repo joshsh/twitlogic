@@ -168,7 +168,8 @@ public class TwitLogic {
     private static final User[] A_FEW_GOOD_USERS = new User[]{
             new User("twit_logic", 76195293),    // TwitLogic account
             new User("twitlogic", 62329516),     // aspirational TwitLogic account
-
+            new User("datagovwiki", 84994400),  // DataGovWiki bot
+            
             new User("antijosh", 71631722),      // test account
             new User("alvitest", 73477629),      // test account
 
@@ -188,6 +189,7 @@ public class TwitLogic {
             new User("shangz", 19274805),        // Zhenning Shangguan
             new User("taswegian", 15477931),     // Peter Fox
             new User("xixiluo", 33308444),       // Xixi Luo
+            new User("shankzz", 18604757),       // Shankar Arunachalam
 
             // Twitter Data contributors
             new User("toddfast", 9869202),       // Todd Fast
