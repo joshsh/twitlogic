@@ -9,4 +9,8 @@ public class TwitterClientException extends Exception {
     public TwitterClientException(final Throwable cause) {
         super(cause);
     }
+
+    public TwitterClientException(final String message) {
+        super(message);
+    }
 }

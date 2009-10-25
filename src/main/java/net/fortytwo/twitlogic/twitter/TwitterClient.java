@@ -121,7 +121,7 @@ public class TwitterClient extends CommonHttpClient {
 
         setEntity(request, formParams);
         sign(request);
-        makeRequest(request, false);
+        makeSignedJSONRequest(request, false);
     }
 
     public User findUserInfo(final String screenName) throws TwitterClientException {
@@ -244,7 +244,7 @@ public class TwitterClient extends CommonHttpClient {
     private StatusStreamParser.ExitReason singleStreamRequest(final HttpUriRequest request,
                                                               final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
         sign(request);
-        HttpResponse response = makeRequest(request, true);
+        HttpResponse response = makeSignedJSONRequest(request, true);
         if (null != response) {
             HttpEntity responseEntity = response.getEntity();
             try {
