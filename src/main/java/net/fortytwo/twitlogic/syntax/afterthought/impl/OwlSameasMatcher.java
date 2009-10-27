@@ -17,6 +17,8 @@ public class OwlSameasMatcher  extends ObjectPropertyAfterthoughtMatcher {
         String p = predicate.toLowerCase();
         return p.equals("same as")
                 | p.equals("=")
+                | p.equals("aka")
+                | p.equals("a.k.a.")
                 | p.equals("ie")
                 | p.equals("i.e.");
     }

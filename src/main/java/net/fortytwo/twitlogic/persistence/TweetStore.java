@@ -107,6 +107,7 @@ public class TweetStore {
             RepositoryConnection rc = repository.getConnection();
             try {
                 if (rc.isEmpty()) {
+                    LOGGER.info("adding seed data");
                     String baseURI = "http://example.org/bogusBaseURI/";
                     rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
                     rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.trig"), baseURI, RDFFormat.TRIG);
@@ -161,6 +162,7 @@ public class TweetStore {
     // convenience methods, may be moved ///////////////////////////////////////
 
     public void dump(final OutputStream out) throws RepositoryException, RDFHandlerException {
+        LOGGER.info("dumping triple store to output stream");
         RDFHandler h = Rio.createWriter(RDFFormat.TRIG, out);
         RepositoryConnection rc = getRepository().getConnection();
         try {
@@ -172,6 +174,7 @@ public class TweetStore {
 
     public void dumpToFile(final File file,
                            final RDFFormat format) throws IOException, RepositoryException, RDFHandlerException {
+        LOGGER.info("dumping triple store, using format " + format + " to file: " + file);
         OutputStream out = new FileOutputStream(file);
         try {
             RDFHandler h = Rio.createWriter(format, out);
@@ -188,6 +191,7 @@ public class TweetStore {
 
     public void dumpToCompressedFile(final File file,
                                      final RDFFormat format) throws IOException, RepositoryException, RDFHandlerException {
+        LOGGER.info("dumping compressed triple store to output stream");
         OutputStream out = new FileOutputStream(file);
         try {
             OutputStream gzipOut = new GZIPOutputStream(out);
@@ -208,6 +212,8 @@ public class TweetStore {
     }
 
     public void dumpToSparqlUpdateEndpoint(final String endpointURI) throws TwitLogicStoreException {
+        LOGGER.info("dumping triple store to SPARUL endpoint: " + endpointURI);
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         try {
@@ -220,7 +226,7 @@ public class TweetStore {
 
         String data = bos.toString();
 
-
+        // TODO
     }
 
     ////////////////////////////////////////////////////////////////////////////

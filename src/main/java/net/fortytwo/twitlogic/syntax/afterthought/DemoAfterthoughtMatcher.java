@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.syntax.afterthought;
 
 import net.fortytwo.twitlogic.syntax.afterthought.impl.OwlSameasMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.PmlIsPartOfMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.RdfsSeeAlsoMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.ReviewMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.TypeMatcher;
@@ -52,6 +53,8 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new OVSimilarToMatcher(),
                 new OVStudiesMatcher(),
                 new OVUsesMatcher(),
+                // PML
+                new PmlIsPartOfMatcher(),
                 // Contact
                 new AddressMatcher(),
                 new BirthdayMatcher(),
