@@ -65,8 +65,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
-        System.out.println("" + tweet.getUser().getScreenName()
-                + " [" + tweet.getId() + "]"
+        System.out.println("tweet " + tweet.getId()
+                + " by @" + tweet.getUser().getScreenName()
                 + ": " + tweet.getText());
 
         tweetContext.setCurrentTweet(tweet);

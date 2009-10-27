@@ -134,10 +134,6 @@ public class TwitLogic {
                     "archive/twitlogic-full.trig.gz");
             store.dumpToCompressedFile(f, RDFFormat.TRIG);
 
-            f = new File(TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
-                    "archive/twitlogic-full.rdf");
-            store.dumpToFile(f, RDFFormat.RDFXML);
-
 //     store.dumpToSparqlUpdateEndpoint("none");
 
             // Launch linked data server.

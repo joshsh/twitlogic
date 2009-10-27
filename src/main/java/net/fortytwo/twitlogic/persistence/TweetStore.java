@@ -96,6 +96,9 @@ public class TweetStore {
         repository = new SailRepository(sail);
         addSeedDataIfEmpty(repository);
 
+        // TODO: this is a hack
+        new Thread(new PeriodicDumperRunnable()).start();
+
         initialized = true;
     }
 
@@ -269,5 +272,29 @@ public class TweetStore {
         }
 
         return sail;
+    }
+
+    private class PeriodicDumperRunnable implements Runnable {
+        public void run() {
+            while (true) {
+                try {
+                    File f = new File(TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
+                            "archive/twitlogic-full.rdf");
+                    dumpToFile(f, RDFFormat.RDFXML);
+                } catch (Throwable t) {
+                    LOGGER.severe("dumper runnable died with error: " + t);
+                    t.printStackTrace();
+                    return;
+                }
+
+                try {
+                    Thread.sleep(30 * 60 * 1000);
+                } catch (InterruptedException e) {
+                    LOGGER.severe("dumper runnable died with error: " + e);
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        }
     }
 }
