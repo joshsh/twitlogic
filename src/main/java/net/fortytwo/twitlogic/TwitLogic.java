@@ -134,6 +134,8 @@ public class TwitLogic {
                     "archive/twitlogic-full.trig.gz");
             store.dumpToCompressedFile(f, RDFFormat.TRIG);
 
+//     store.dumpToSparqlUpdateEndpoint("none");
+
             // Launch linked data server.
             new TwitLogicServer(store);
 
@@ -144,7 +146,7 @@ public class TwitLogic {
             // Create the tweet matcher.
             Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
                     new DemoAfterthoughtMatcher());
-            Handler<Tweet, TweetHandlerException> baseStatusHandler = new TweetPersister(matcher, store, pContext);
+            Handler<Tweet, TweetHandlerException> baseStatusHandler = new TweetPersister(matcher, store, pContext, client);
 
             // Create an agent to listen for commands.
             // Also take the opportunity to memoize users we're following.

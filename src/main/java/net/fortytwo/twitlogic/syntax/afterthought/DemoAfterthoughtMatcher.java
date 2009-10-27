@@ -1,5 +1,6 @@
 package net.fortytwo.twitlogic.syntax.afterthought;
 
+import net.fortytwo.twitlogic.syntax.afterthought.impl.OwlSameasMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.RdfsSeeAlsoMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.ReviewMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.TypeMatcher;
@@ -40,6 +41,8 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new ReviewMatcher(),
                 new SelfInterestMatcher(),
                 new TypeMatcher(),
+                // OWL
+                new OwlSameasMatcher(),
                 // OpenVocab
                 new OVCategoryMatcher(),
                 new OVDepictsMatcher(),

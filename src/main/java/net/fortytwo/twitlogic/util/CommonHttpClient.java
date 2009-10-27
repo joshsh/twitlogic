@@ -13,9 +13,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 /**
  * User: josh
@@ -162,19 +162,18 @@ public abstract class CommonHttpClient {
     }
 
     // TODO: error handling
-    protected String resolve301Redirection(final String originalURI) throws TwitterClientException {
+    // TODO: multiple (possibly circular) redirects
+    public String resolve301Redirection(final String originalURI) throws TwitterClientException {
         HttpClient client = createClient(false);
+        client.getParams().setBooleanParameter("http.protocol.handle-redirects", false);
+
         HttpUriRequest request = new HttpGet(originalURI);
 
-        HttpResponse response = null;
+        HttpResponse response;
         try {
             response = client.execute(request);
         } catch (IOException e) {
             throw new TwitterClientException(e);
-        }
-
-        if (null == response) {
-            throw new TwitterClientException("null response");
         }
 
         if (301 == response.getStatusLine().getStatusCode()) {

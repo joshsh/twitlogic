@@ -16,6 +16,7 @@ import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.util.CommonHttpClient;
 import net.fortytwo.twitlogic.vocabs.DCTerms;
 import net.fortytwo.twitlogic.vocabs.SIOC;
 import net.fortytwo.twitlogic.vocabs.SIOCT;
@@ -48,16 +49,19 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private final SimpleTweetContext tweetContext;
     private final PersistenceContext persistenceContext;
     private final ValueFactory valueFactory;
+    private final CommonHttpClient httpClient;
 
     public TweetPersister(final Matcher matcher,
                           final TweetStore store,
-                          final PersistenceContext persistenceContext) {
+                          final PersistenceContext persistenceContext,
+                          final CommonHttpClient httpClient) {
         this.matcher = matcher;
         this.store = store;
         this.persistenceContext = persistenceContext;
         this.valueFactory = store.getSail().getValueFactory();
         this.tweetContext = new SimpleTweetContext();
         this.tripleHandler = new TriplePersister();
+        this.httpClient = httpClient;
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
@@ -143,8 +147,9 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                 valueFactory.createURI(literal.getDatatype()));
     }
 
-    private URI valueOf(final URIReference uri) {
-        return valueFactory.createURI(uri.getValue());
+    private URI valueOf(final URIReference uri) throws TwitterClientException {
+        String nonRedirecting = httpClient.resolve301Redirection(uri.getValue());
+        return valueFactory.createURI(nonRedirecting);
     }
 
     private URI valueOf(final User user) throws TwitterClientException {

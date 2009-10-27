@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.repository.Repository;
@@ -183,6 +184,16 @@ public class TweetStore {
             }
         } finally {
             out.close();
+        }
+    }
+
+    public void dumpToSparqlUpdateEndpoint(final String endpointURI) throws TwitLogicStoreException {
+        try {
+            SparqlUpdateTools.dumpTripleStore(this.getSail(), System.out);
+        } catch (SailException e) {
+            throw new TwitLogicStoreException(e);
+        } catch (IOException e) {
+            throw new TwitLogicStoreException(e);
         }
     }
 
