@@ -18,6 +18,7 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -166,6 +167,22 @@ public class TweetStore {
         }
     }
 
+    public void dumpToFile(final File file,
+                           final RDFFormat format) throws IOException, RepositoryException, RDFHandlerException {
+        OutputStream out = new FileOutputStream(file);
+        try {
+            RDFHandler h = Rio.createWriter(format, out);
+            RepositoryConnection rc = getRepository().getConnection();
+            try {
+                rc.export(h);
+            } finally {
+                rc.close();
+            }
+        } finally {
+            out.close();
+        }
+    }
+
     public void dumpToCompressedFile(final File file,
                                      final RDFFormat format) throws IOException, RepositoryException, RDFHandlerException {
         OutputStream out = new FileOutputStream(file);
@@ -188,13 +205,19 @@ public class TweetStore {
     }
 
     public void dumpToSparqlUpdateEndpoint(final String endpointURI) throws TwitLogicStoreException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
         try {
-            SparqlUpdateTools.dumpTripleStore(this.getSail(), System.out);
+            SparqlUpdateTools.dumpTripleStore(this.getSail(), bos);
         } catch (SailException e) {
             throw new TwitLogicStoreException(e);
         } catch (IOException e) {
             throw new TwitLogicStoreException(e);
         }
+
+        String data = bos.toString();
+
+
     }
 
     ////////////////////////////////////////////////////////////////////////////
