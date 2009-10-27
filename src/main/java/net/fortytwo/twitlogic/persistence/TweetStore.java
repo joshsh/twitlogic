@@ -288,7 +288,7 @@ public class TweetStore {
                 }
 
                 try {
-                    Thread.sleep(30 * 60 * 1000);
+                    Thread.sleep(5 * 60 * 1000);
                 } catch (InterruptedException e) {
                     LOGGER.severe("dumper runnable died with error: " + e);
                     e.printStackTrace();

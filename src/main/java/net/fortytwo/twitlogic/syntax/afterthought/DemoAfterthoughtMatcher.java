@@ -21,6 +21,9 @@ import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVDepictsMatche
 import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVSimilarToMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVStudiesMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVUsesMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.skos.SkosBroaderMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.skos.SkosNarrowerMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.skos.SkosRelatedMatcher;
 
 import java.util.Arrays;
 
@@ -55,6 +58,10 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new EmailAddressMatcher(),
                 new FaxMatcher(),
                 new PhoneMatcher(),
+                // SKOS
+                new SkosBroaderMatcher(),
+                new SkosNarrowerMatcher(),
+                new SkosRelatedMatcher(),
                 // Miscellaneous
                 new MentionedBy()));
     }
