@@ -127,7 +127,7 @@ public class TwitLogic {
         try {
             // Create a persistent store.
             TweetStore store = TweetStore.getDefaultStore();
-            store.dump(System.out);
+            //store.dump(System.out);
 
             // TODO: use N-Quads instead of TriG
             File f = new File(TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
@@ -171,7 +171,7 @@ public class TwitLogic {
             new User("twit_logic", 76195293),    // TwitLogic account
             new User("twitlogic", 62329516),     // aspirational TwitLogic account
             new User("datagovwiki", 84994400),  // DataGovWiki bot
-            
+
             new User("antijosh", 71631722),      // test account
             new User("alvitest", 73477629),      // test account
 

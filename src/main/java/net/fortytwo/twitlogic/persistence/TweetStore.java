@@ -96,10 +96,10 @@ public class TweetStore {
         repository = new SailRepository(sail);
         addSeedDataIfEmpty(repository);
 
+        initialized = true;
+
         // TODO: this is a hack
         new Thread(new PeriodicDumperRunnable()).start();
-
-        initialized = true;
     }
 
     private void addSeedDataIfEmpty(final Repository repository) throws TwitLogicStoreException {
