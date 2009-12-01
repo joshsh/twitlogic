@@ -3,9 +3,9 @@ package net.fortytwo.twitlogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.persistence.PersistenceContext;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
+import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
@@ -72,6 +72,7 @@ public class TwitLogic {
             RESOURCES_BASEURI = BASE_URI + "resource/",
             GRAPHS_BASEURI = RESOURCES_BASEURI + "graph/",
             HASHTAGS_BASEURI = RESOURCES_BASEURI + "hashtag/",
+            LOCATIONS_BASEURI = RESOURCES_BASEURI + "location/",
             PERSONS_BASEURI = RESOURCES_BASEURI + "person/",
             TWEETS_BASEURI = RESOURCES_BASEURI + "post/twitter/",
             USERS_BASEURI = RESOURCES_BASEURI + "user/twitter/";
@@ -127,7 +128,7 @@ public class TwitLogic {
         try {
             // Create a persistent store.
             TweetStore store = TweetStore.getDefaultStore();
-            //store.dump(System.out);
+            store.dump(System.out);
 
             // TODO: use N-Quads instead of TriG
             File f = new File(TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
@@ -141,36 +142,55 @@ public class TwitLogic {
 
             TwitterClient client = new TwitterClient();
             UserRegistry userRegistry = new UserRegistry(client);
-            PersistenceContext pContext = new PersistenceContext(userRegistry, store);
+            //PersistenceContext pContext = new PersistenceContext(userRegistry, store);
 
             // Create the tweet matcher.
             Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
                     new DemoAfterthoughtMatcher());
-            Handler<Tweet, TweetHandlerException> baseStatusHandler = new TweetPersister(matcher, store, pContext, client);
 
-            // Create an agent to listen for commands.
-            // Also take the opportunity to memoize users we're following.
-            TwitLogicAgent agent = new TwitLogicAgent(client, pContext);
-            Handler<Tweet, TweetHandlerException> statusHandler
-                    = userRegistry.createUserRegistryFilter(
-                    new CommandListener(agent, baseStatusHandler));
+            TweetStoreConnection c = store.createConnection();
+            try {
+                Handler<Tweet, TweetHandlerException> baseStatusHandler = new TweetPersister(matcher, store, c, client, false);
 
-            //client.requestUserTimeline(new User(71631722), statusHandler);
-            client.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
-            //client.processSampleStream(statusHandler);
-            //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
-            //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
-            //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
-            //*/
+                // Create an agent to listen for commands.
+                // Also take the opportunity to memoize users we're following.
+                TwitLogicAgent agent = new TwitLogicAgent(client);
+                Handler<Tweet, TweetHandlerException> statusHandler
+                        = userRegistry.createUserRegistryFilter(
+                        new CommandListener(agent, baseStatusHandler));
+
+                //client.requestUserTimeline(new User(71631722), statusHandler);
+                client.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
+                //client.processSampleStream(statusHandler);
+                //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
+                //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
+                //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
+                //*/
+            } finally {
+                c.close();
+            }
         } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 
+    /*
+    private class TweetPrinter implements Handler<Tweet, TweetHandlerException> {
+        public boolean handle(final Tweet tweet) throws TweetHandlerException {
+            return false;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
+
+    private void showSampleTweets() {
+        TwitterClient client = new TwitterClient();
+        client.processSampleStream();
+    }
+     */
+
     private static final User[] A_FEW_GOOD_USERS = new User[]{
             new User("twit_logic", 76195293),    // TwitLogic account
             new User("twitlogic", 62329516),     // aspirational TwitLogic account
-            new User("datagovwiki", 84994400),  // DataGovWiki bot
+            new User("datagovwiki", 84994400),   // DataGovWiki bot
 
             new User("antijosh", 71631722),      // test account
             new User("alvitest", 73477629),      // test account
@@ -185,13 +205,14 @@ public class TwitLogic {
             new User("jahendler", 15336340),     // James Hendler
             new User("joshsh", 7083182),         // Joshua Shinavier
             new User("jpmccu", 47621026),        // Jim McCusker
+            new User("jrmichaelis", 58557080),   // James Michaelis
             new User("jrweave", 20830884),       // Jesse Weaver
             new User("kasei", 643563),           // Gregory Williams
             new User("lidingpku", 26823198),     // Li Ding
             new User("shangz", 19274805),        // Zhenning Shangguan
+            new User("shankzz", 18604757),       // Shankar Arunachalam
             new User("taswegian", 15477931),     // Peter Fox
             new User("xixiluo", 33308444),       // Xixi Luo
-            new User("shankzz", 18604757),       // Shankar Arunachalam
 
             // Twitter Data contributors
             new User("toddfast", 9869202),       // Todd Fast

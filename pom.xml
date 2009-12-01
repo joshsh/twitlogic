@@ -96,6 +96,21 @@
             <version>2.2.4</version>
         </dependency>
         <dependency>
+            <groupId>org.openrdf.elmo</groupId>
+            <artifactId>elmo-api</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.elmo</groupId>
+            <artifactId>elmo-sesame</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.elmo</groupId>
+            <artifactId>elmo-owl</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.2</version>

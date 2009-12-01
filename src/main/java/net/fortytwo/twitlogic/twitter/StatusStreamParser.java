@@ -46,7 +46,7 @@ public class StatusStreamParser {
                 } else {
                     lines++;
                     line = line.trim();
-                    //System.out.println(line);
+                    System.out.println(line);
                     if (0 < line.length()) {
                         JSONObject json;
                         try {

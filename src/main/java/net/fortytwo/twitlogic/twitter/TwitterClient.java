@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.twitter;
 
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.flow.NullHandler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.util.CommonHttpClient;
@@ -274,5 +275,10 @@ public class TwitterClient extends CommonHttpClient {
         }
 
         return sb.toString();
+    }
+
+    public static void main(final String[] args) throws Exception {
+        TwitterClient client = new TwitterClient();
+        client.processSampleStream(new NullHandler<Tweet, TweetHandlerException>());
     }
 }

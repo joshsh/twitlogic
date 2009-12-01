@@ -21,13 +21,10 @@ public class TwitLogicAgent {
 
     private final TwitterClient twitterClient;
     private final BitlyClient bitlyClient;
-    private final PersistenceContext persistenceContext;
 
-    public TwitLogicAgent(final TwitterClient twitterClient,
-                          final PersistenceContext persistenceContext) throws BitlyClientException {
+    public TwitLogicAgent(final TwitterClient twitterClient) throws BitlyClientException {
         this.twitterClient = twitterClient;
         bitlyClient = new BitlyClient();
-        this.persistenceContext = persistenceContext;
     }
 
     public void interpretCommand(final Tweet request) throws TwitterClientException {
@@ -47,9 +44,9 @@ public class TwitLogicAgent {
 
         String link = null;
         if (TwitLogic.HASHTAG_PATTERN.matcher(text).matches()) {
-            link = persistenceContext.valueOf(new Hashtag(text.substring(1)));
+            link = PersistenceContext.uriOf(new Hashtag(text.substring(1)));
         } else if (TwitLogic.USERNAME_PATTERN.matcher(text).matches()) {
-            link = persistenceContext.valueOf(new User(text.substring(1)).getHeldBy());
+            link = PersistenceContext.uriOf(new User(text.substring(1)).getHeldBy());
         }
 
         if (null == link) {

@@ -13,7 +13,6 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 /**
  * User: josh

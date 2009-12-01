@@ -1,9 +1,22 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.persistence.beans.Agent;
+import net.fortytwo.twitlogic.persistence.beans.Document;
+import net.fortytwo.twitlogic.persistence.beans.Graph;
+import net.fortytwo.twitlogic.persistence.beans.Image;
+import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
+import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
+import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
+import org.openrdf.concepts.owl.ObjectProperty;
+import org.openrdf.concepts.owl.Thing;
+import org.openrdf.elmo.ElmoManagerFactory;
+import org.openrdf.elmo.ElmoModule;
+import org.openrdf.elmo.sesame.SesameManagerFactory;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -18,6 +31,7 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
 
+import javax.xml.namespace.QName;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,9 +52,11 @@ public class TweetStore {
 
     private final Sail sail;
     private Repository repository;
+    private ElmoModule adminElmoModule;
+    private SesameManagerFactory elmoManagerFactory;
     private boolean initialized = false;
 
-    public static TweetStore getDefaultStore() throws TwitLogicStoreException {
+    public static TweetStore getDefaultStore() throws TweetStoreException {
         if (null == defaultStore) {
             defaultStore = new TweetStore();
             defaultStore.initialize();
@@ -61,23 +77,16 @@ public class TweetStore {
         return defaultStore;
     }
 
-    public class TwitLogicStoreException extends Exception {
-        public TwitLogicStoreException(final Throwable cause) {
-            super(cause);
-        }
-
-        public TwitLogicStoreException(final String msg) {
-            super(msg);
-        }
+    private TweetStore() throws TweetStoreException {
+        this(TwitLogic.getConfiguration());
     }
 
-    private TweetStore() throws TwitLogicStoreException {
-        TypedProperties props = TwitLogic.getConfiguration();
+    public TweetStore(final TypedProperties props) throws TweetStoreException {
         String sailType;
         try {
             sailType = props.getString(TwitLogic.SAIL_CLASS);
         } catch (PropertyException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         }
         sail = createSail(sailType);
     }
@@ -86,7 +95,7 @@ public class TweetStore {
         this.sail = sail;
     }
 
-    public void initialize() throws TwitLogicStoreException {
+    public void initialize() throws TweetStoreException {
         if (initialized) {
             throw new IllegalStateException("store has already been initialized");
         }
@@ -96,13 +105,35 @@ public class TweetStore {
         repository = new SailRepository(sail);
         addSeedDataIfEmpty(repository);
 
+        // Elmo setup.
+        adminElmoModule = new ElmoModule();
+        adminElmoModule.setGraph(new QName(SesameTools.ADMIN_GRAPH.toString()));
+        adminElmoModule.addConcept(Thing.class);
+        adminElmoModule.addConcept(ObjectProperty.class);  // Dunno why this is necessary, but Elmo logs warnings without it
+
+        // TwitLogic-specific classes
+        adminElmoModule.addConcept(Agent.class);
+        adminElmoModule.addConcept(Document.class);
+        adminElmoModule.addConcept(Graph.class);
+        adminElmoModule.addConcept(Image.class);
+        adminElmoModule.addConcept(MicroblogPost.class);
+        adminElmoModule.addConcept(SpatialThing.class);
+        adminElmoModule.addConcept(User.class);
+
+        elmoManagerFactory
+                = new SesameManagerFactory(adminElmoModule, repository);
+        elmoManagerFactory.setQueryLanguage(QueryLanguage.SPARQL);
         initialized = true;
 
         // TODO: this is a hack
         new Thread(new PeriodicDumperRunnable()).start();
     }
 
-    private void addSeedDataIfEmpty(final Repository repository) throws TwitLogicStoreException {
+    public TweetStoreConnection createConnection() throws TweetStoreException {
+        return new TweetStoreConnection(this);
+    }
+
+    private void addSeedDataIfEmpty(final Repository repository) throws TweetStoreException {
         try {
             RepositoryConnection rc = repository.getConnection();
             try {
@@ -118,11 +149,11 @@ public class TweetStore {
                 rc.close();
             }
         } catch (IOException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         } catch (RDFParseException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         } catch (RepositoryException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         }
     }
 
@@ -142,7 +173,19 @@ public class TweetStore {
         return repository;
     }
 
-    public void shutDown() throws TwitLogicStoreException {
+    public ElmoModule getElmoModule() {
+        if (!initialized) {
+            throw new IllegalStateException("not yet initialized");
+        }
+
+        return adminElmoModule;
+    }
+
+    public ElmoManagerFactory getElmoManagerFactory() {
+        return elmoManagerFactory;
+    }
+
+    public void shutDown() throws TweetStoreException {
         if (!initialized) {
             throw new IllegalStateException("not yet initialized");
         }
@@ -154,7 +197,7 @@ public class TweetStore {
         try {
             sail.shutDown();
         } catch (SailException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         }
     }
 
@@ -211,7 +254,7 @@ public class TweetStore {
         }
     }
 
-    public void dumpToSparqlUpdateEndpoint(final String endpointURI) throws TwitLogicStoreException {
+    public void dumpToSparqlUpdateEndpoint(final String endpointURI) throws TweetStoreException {
         LOGGER.info("dumping triple store to SPARUL endpoint: " + endpointURI);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -219,9 +262,9 @@ public class TweetStore {
         try {
             SparqlUpdateTools.dumpTripleStore(this.getSail(), bos);
         } catch (SailException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         } catch (IOException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         }
 
         String data = bos.toString();
@@ -231,7 +274,7 @@ public class TweetStore {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private Sail createSail(final String sailType) throws TwitLogicStoreException {
+    private Sail createSail(final String sailType) throws TweetStoreException {
         System.out.println("creating Sail of type: " + sailType);
         Sail sail;
 
@@ -240,33 +283,33 @@ public class TweetStore {
         } else if (sailType.equals(NativeStore.class.getName())) {
             sail = createNativeStore();
         } else {
-            throw new TwitLogicStoreException("unhandled Sail type: " + sailType);
+            throw new TweetStoreException("unhandled Sail type: " + sailType);
         }
 
         return sail;
     }
 
-    private Sail createMemoryStore() throws TwitLogicStoreException {
+    private Sail createMemoryStore() throws TweetStoreException {
         LOGGER.info("instantiating MemoryStore");
 
         Sail sail = new MemoryStore();
         try {
             sail.initialize();
         } catch (SailException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         }
 
         return sail;
     }
 
-    private Sail createNativeStore() throws TwitLogicStoreException {
+    private Sail createNativeStore() throws TweetStoreException {
         TypedProperties props = TwitLogic.getConfiguration();
         File dir;
 
         try {
             dir = props.getFile(TwitLogic.NATIVESTORE_DIRECTORY);
         } catch (PropertyException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         }
 
         LOGGER.info("instantiating NativeStore in directory: " + dir);
@@ -274,7 +317,7 @@ public class TweetStore {
         try {
             sail.initialize();
         } catch (SailException e) {
-            throw new TwitLogicStoreException(e);
+            throw new TweetStoreException(e);
         }
 
         return sail;

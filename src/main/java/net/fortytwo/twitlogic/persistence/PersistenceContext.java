@@ -1,154 +1,171 @@
 package net.fortytwo.twitlogic.persistence;
 
-import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Tweet;
-import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.twitter.TwitterClientException;
-import net.fortytwo.twitlogic.vocabs.FOAF;
-import net.fortytwo.twitlogic.vocabs.SIOC;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.OWL;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
+import net.fortytwo.twitlogic.persistence.beans.Agent;
+import net.fortytwo.twitlogic.persistence.beans.Document;
+import net.fortytwo.twitlogic.persistence.beans.Graph;
+import net.fortytwo.twitlogic.persistence.beans.Image;
+import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
+import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
+import net.fortytwo.twitlogic.persistence.beans.User;
+import org.openrdf.concepts.owl.Thing;
+import org.openrdf.elmo.ElmoManager;
+
+import javax.xml.namespace.QName;
 
 /**
+ * Note: the (private) "persist" methods of the class use an "add only" approach:
+ * functional relationships such as names and homepages are only added or
+ * replaced, never removed.  So if a user removes its homepage link,
+ * TwitLogic will remember the old homepage until the user chooses a new,
+ * valid homepage URL.
+ * <p/>
  * User: josh
- * Date: Oct 5, 2009
- * Time: 2:07:49 AM
+ * Date: Nov 23, 2009
+ * Time: 10:31:14 PM
  */
 public class PersistenceContext {
-    private final UserRegistry userRegistry;
-    private final TweetStore store;
+    private final ElmoManager manager;
 
-    public PersistenceContext(final UserRegistry userRegistry,
-                              final TweetStore store) {
-        this.userRegistry = userRegistry;
-        this.store = store;
+    public PersistenceContext(final ElmoManager manager) {
+        this.manager = manager;
     }
 
-    public String valueOf(final Hashtag hashtag) {
-        // TODO: assumes normalized hash tags
-        return TwitLogic.HASHTAGS_BASEURI + hashtag.getName();
+    public MicroblogPost persist(final Tweet tweet) {
+        MicroblogPost post = postForTweet(tweet);
+
+        // For now, we create an "embedded knowledge" graph even if no embedded
+        // data is recognized.
+        post.setEmbedsKnowledge(graphForTweet(tweet));
+
+        if (null != tweet.getCreatedAt()) {
+            // TODO: put these in the ISO 8601 format
+            post.setCreated(SesameTools.toXMLGregorianCalendar(tweet.getCreatedAt()));
+        }
+
+        if (null != tweet.getText()) {
+            post.setContent(tweet.getText());
+        }
+
+        if (null != tweet.getUser()) {
+            User user = userForUser(tweet.getUser());
+            post.setHasCreator(user);
+        }
+
+        // TODO: geo, in-reply-to-tweet, in-reply-to-user
+
+        return post;
     }
 
-    public String valueOf(final Tweet tweet) {
+    public User persist(final net.fortytwo.twitlogic.model.User tweetUser) {
+        User user = userForUser(tweetUser);
+
+        if (null != tweetUser.getScreenName()) {
+            user.setId(tweetUser.getScreenName());
+        }
+
+        Agent agent = user.getAccountOf();
+
+        if (null == agent) {
+            agent = agentForUser(tweetUser);
+            user.setAccountOf(agent);
+        }
+
+        if (null != tweetUser.getName()) {
+            agent.setName(tweetUser.getName());
+        }
+
+        if (null != tweetUser.getDescription()) {
+            agent.setRdfsComment(tweetUser.getDescription());
+        }
+
+        if (null != tweetUser.getLocation()) {
+            SpatialThing basedNear = agent.getBasedNear();
+            if (null == basedNear) {
+                basedNear = spatialThing();
+                agent.setBasedNear(basedNear);
+            }
+
+            basedNear.setRdfsComment(tweetUser.getLocation());
+        }
+
+        if (null != tweetUser.getUrl()
+                && TwitLogic.URL_PATTERN.matcher(tweetUser.getUrl()).matches()) {
+            // Note: we can't easily delete an existing homepage (removing its
+            // rdf:type statement), as it might be the homepage of another
+            // agent.  Therefore, "orphaned" Document resources are possible.
+
+            Document homepage = manager.designate(new QName(tweetUser.getUrl()), Document.class);
+            agent.setHomepage(homepage);
+        }
+
+        if (null != tweetUser.getProfileImageUrl()
+                && TwitLogic.URL_PATTERN.matcher(tweetUser.getProfileImageUrl()).matches()) {
+            // Note: we can't easily delete an existing image (removing its
+            // rdf:type statement), as it might be the image of another
+            // agent.  Therefore, "orphaned" Image resources are possible.
+
+            Image depiction = manager.designate(new QName(tweetUser.getProfileImageUrl()), Image.class);
+            agent.setDepiction(depiction);
+        }
+
+        return user;
+    }
+
+    public Thing persist(final Hashtag hashtag) {
+        return designate(uriOf(hashtag), Thing.class);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private User userForUser(final net.fortytwo.twitlogic.model.User user) {
+        return designate(uriOf(user), User.class);
+    }
+
+    private Agent agentForUser(final net.fortytwo.twitlogic.model.User user) {
+        return designate(uriOf(user.getHeldBy()), Agent.class);
+    }
+
+    private SpatialThing spatialThing() {
+        String uri = TwitLogic.LOCATIONS_BASEURI + SesameTools.randomIdString();
+        return designate(uri, SpatialThing.class);
+    }
+
+    private MicroblogPost postForTweet(final Tweet tweet) {
+        return designate(uriOf(tweet), MicroblogPost.class);
+    }
+
+    private Graph graphForTweet(final Tweet tweet) {
+        String uri = TwitLogic.GRAPHS_BASEURI + "twitter/" + tweet.getId();
+        return designate(uri, Graph.class);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private <T> T designate(final String uri,
+                            final Class<T> c) {
+        return manager.designate(new QName(uri), c);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public static String uriOf(final net.fortytwo.twitlogic.model.User user) {
+        return TwitLogic.USERS_BASEURI + user.getId();
+    }
+
+    public static String uriOf(final Person person) {
+        return TwitLogic.PERSONS_BASEURI + "twitter/" + person.getAccount().getId();
+    }
+
+    public static String uriOf(final Tweet tweet) {
         return TwitLogic.TWEETS_BASEURI + tweet.getId();
     }
 
-    public String valueOf(final User user) throws TwitterClientException {
-        Integer id = user.getId();
-        if (null == id) {
-            id = userRegistry.resolveUserId(user.getScreenName());
-        }
-
-        return TwitLogic.USERS_BASEURI + id;
-    }
-
-    public String valueOf(final Person person) throws TwitterClientException {
-        ValueFactory valueFactory = store.getSail().getValueFactory();
-        try {
-            SailConnection sc = store.getSail().getConnection();
-            try {
-                URI userURI = valueFactory.createURI(valueOf(person.getAccount()));
-                URI heldBy = null;
-                URI holdsAccount = valueFactory.createURI(FOAF.HOLDSACCOUNT);
-                CloseableIteration<? extends Statement, SailException> iter
-                        = sc.getStatements(null, holdsAccount, userURI, false, SesameTools.ADMIN_GRAPH);
-                try {
-                    if (iter.hasNext()) {
-                        heldBy = (URI) iter.next().getSubject();
-                    }
-                } finally {
-                    iter.close();
-                }
-
-                if (null != heldBy) {
-                    return heldBy.toString();
-                } else {
-                    return persistPerson(person, sc).toString();
-                }
-            } finally {
-                sc.close();
-            }
-        } catch (SailException e) {
-            throw new TwitterClientException(e);
-        }
-    }
-
-
-    private URI persistPerson(final Person person,
-                              final SailConnection sc) throws SailException, TwitterClientException {
-        ValueFactory valueFactory = store.getSail().getValueFactory();
-        User user = userRegistry.findUserInfo(person.getAccount().getScreenName());
-        URI userURI = valueFactory.createURI(valueOf(user));
-        URI personURI = SesameTools.createRandomPersonURI(valueFactory);
-
-        sc.addStatement(personURI,
-                RDF.TYPE,
-                // not foaf:Person, as not all microblogging accounts belong to people
-                valueFactory.createURI(FOAF.AGENT),
-                SesameTools.ADMIN_GRAPH);
-        // Shout-out to SemanticTweet
-        sc.addStatement(personURI,
-                OWL.SAMEAS,
-                valueFactory.createURI(semanticTweetURI(person.getAccount())),
-                SesameTools.ADMIN_GRAPH);
-        sc.addStatement(userURI,
-                RDF.TYPE,
-                valueFactory.createURI(SIOC.USER),
-                SesameTools.ADMIN_GRAPH);
-        sc.addStatement(personURI,
-                valueFactory.createURI(FOAF.HOLDSACCOUNT),
-                userURI,
-                SesameTools.ADMIN_GRAPH);
-        if (null != user.getScreenName()) {
-            sc.addStatement(userURI,
-                    valueFactory.createURI(SIOC.ID),
-                    valueFactory.createLiteral(user.getScreenName()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-        if (null != user.getUrl()) {
-            sc.addStatement(personURI,
-                    // TODO: type the homepage as foaf:Document
-                    valueFactory.createURI(FOAF.HOMEPAGE),
-                    valueFactory.createURI(user.getUrl()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-        if (null != user.getName()) {
-            sc.addStatement(personURI,
-                    valueFactory.createURI(FOAF.NAME),
-                    valueFactory.createLiteral(user.getName()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-        // TODO: use user.getLocation() / foaf:based_near
-        if (null != user.getProfileImageUrl()) {
-            sc.addStatement(personURI,
-                    // not foaf:img, because we don't assume the subject is a foaf:Person
-                    valueFactory.createURI(FOAF.DEPICTION),
-                    valueFactory.createURI(user.getProfileImageUrl()),
-                    SesameTools.ADMIN_GRAPH);
-        }
-
-        sc.commit();
-
-        return personURI;
-    }
-
-    private String semanticTweetURI(final User user) {
-        if (null == user.getScreenName()) {
-            throw new IllegalArgumentException("null screen name");
-        } else {
-            return "http://semantictweet.com/" + user.getScreenName() + "#me";
-        }
-    }
-
-    public UserRegistry getUserRegistry() {
-        return userRegistry;
+    public static String uriOf(final Hashtag hashtag) {
+        // FIXME: assumes normalized hash tags
+        return TwitLogic.HASHTAGS_BASEURI + hashtag.getName();
     }
 }

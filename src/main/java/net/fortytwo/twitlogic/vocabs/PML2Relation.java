@@ -10,5 +10,4 @@ public interface PML2Relation {
 
     public static final String
             ISPARTOF = NAMESPACE + "isPartOf";
-    
 }
