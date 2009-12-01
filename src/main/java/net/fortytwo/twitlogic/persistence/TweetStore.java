@@ -51,6 +51,7 @@ public class TweetStore {
     private static TweetStore defaultStore;
 
     private final Sail sail;
+    private final TypedProperties configuration;
     private Repository repository;
     private ElmoModule adminElmoModule;
     private SesameManagerFactory elmoManagerFactory;
@@ -81,18 +82,20 @@ public class TweetStore {
         this(TwitLogic.getConfiguration());
     }
 
-    public TweetStore(final TypedProperties props) throws TweetStoreException {
+    public TweetStore(final TypedProperties conf) throws TweetStoreException {
+        this.configuration = conf;
         String sailType;
         try {
-            sailType = props.getString(TwitLogic.SAIL_CLASS);
+            sailType = conf.getString(TwitLogic.SAIL_CLASS);
         } catch (PropertyException e) {
             throw new TweetStoreException(e);
         }
-        sail = createSail(sailType);
+        sail = createSail(sailType, conf);
     }
 
     public TweetStore(final Sail sail) {
         this.sail = sail;
+        this.configuration = TwitLogic.getConfiguration();
     }
 
     public void initialize() throws TweetStoreException {
@@ -126,7 +129,7 @@ public class TweetStore {
         initialized = true;
 
         // TODO: this is a hack
-        new Thread(new PeriodicDumperRunnable()).start();
+        new Thread(new PeriodicDumperRunnable(configuration)).start();
     }
 
     public TweetStoreConnection createConnection() throws TweetStoreException {
@@ -191,6 +194,7 @@ public class TweetStore {
         }
 
         LOGGER.info("shutting down TwitLogic local store");
+        new Exception().printStackTrace();
 
         // Note: elmoModule doesn't need to be closed or shutDown.
 
@@ -274,14 +278,15 @@ public class TweetStore {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private Sail createSail(final String sailType) throws TweetStoreException {
+    private Sail createSail(final String sailType,
+                            final TypedProperties props) throws TweetStoreException {
         System.out.println("creating Sail of type: " + sailType);
         Sail sail;
 
         if (sailType.equals(MemoryStore.class.getName())) {
-            sail = createMemoryStore();
+            sail = createMemoryStore(props);
         } else if (sailType.equals(NativeStore.class.getName())) {
-            sail = createNativeStore();
+            sail = createNativeStore(props);
         } else {
             throw new TweetStoreException("unhandled Sail type: " + sailType);
         }
@@ -289,7 +294,7 @@ public class TweetStore {
         return sail;
     }
 
-    private Sail createMemoryStore() throws TweetStoreException {
+    private Sail createMemoryStore(final TypedProperties conf) throws TweetStoreException {
         LOGGER.info("instantiating MemoryStore");
 
         Sail sail = new MemoryStore();
@@ -302,12 +307,11 @@ public class TweetStore {
         return sail;
     }
 
-    private Sail createNativeStore() throws TweetStoreException {
-        TypedProperties props = TwitLogic.getConfiguration();
+    private Sail createNativeStore(final TypedProperties conf) throws TweetStoreException {
         File dir;
 
         try {
-            dir = props.getFile(TwitLogic.NATIVESTORE_DIRECTORY);
+            dir = conf.getFile(TwitLogic.NATIVESTORE_DIRECTORY);
         } catch (PropertyException e) {
             throw new TweetStoreException(e);
         }
@@ -324,10 +328,16 @@ public class TweetStore {
     }
 
     private class PeriodicDumperRunnable implements Runnable {
+        private final TypedProperties conf;
+
+        public PeriodicDumperRunnable(final TypedProperties conf) {
+            this.conf = conf;
+        }
+
         public void run() {
             while (true) {
                 try {
-                    File f = new File(TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
+                    File f = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
                             "archive/twitlogic-full.rdf");
                     dumpToFile(f, RDFFormat.RDFXML);
                 } catch (Throwable t) {
