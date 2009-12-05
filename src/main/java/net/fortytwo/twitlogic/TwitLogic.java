@@ -39,6 +39,7 @@ public class TwitLogic {
             BITLY_APIKEY = "net.fortytwo.twitlogic.services.bitly.apiKey",
             NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
             SAIL_CLASS = "net.fortytwo.twitlogic.persistence.sailClass",
+            DUMPINTERVAL = "net.fortytwo.twitlogic.persistence.dumpInterval",
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
             COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",
             SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",

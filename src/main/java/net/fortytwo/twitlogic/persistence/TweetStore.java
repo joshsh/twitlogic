@@ -129,7 +129,11 @@ public class TweetStore {
         initialized = true;
 
         // TODO: this is a hack
-        new Thread(new PeriodicDumperRunnable(configuration)).start();
+        try {
+            new Thread(new PeriodicDumperRunnable(configuration)).start();
+        } catch (PropertyException e) {
+            throw new TweetStoreException(e);
+        }
     }
 
     public TweetStoreConnection createConnection() throws TweetStoreException {
@@ -329,9 +333,11 @@ public class TweetStore {
 
     private class PeriodicDumperRunnable implements Runnable {
         private final TypedProperties conf;
+        private final long dumpInterval;
 
-        public PeriodicDumperRunnable(final TypedProperties conf) {
+        public PeriodicDumperRunnable(final TypedProperties conf) throws PropertyException {
             this.conf = conf;
+            dumpInterval = conf.getLong(TwitLogic.DUMPINTERVAL);
         }
 
         public void run() {
@@ -347,7 +353,7 @@ public class TweetStore {
                 }
 
                 try {
-                    Thread.sleep(5 * 60 * 1000);
+                    Thread.sleep(dumpInterval);
                 } catch (InterruptedException e) {
                     LOGGER.severe("dumper runnable died with error: " + e);
                     e.printStackTrace();

@@ -12,6 +12,8 @@ import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 
+import java.io.File;
+
 /**
  * User: josh
  * Date: Nov 20, 2009
@@ -57,5 +59,10 @@ public class EarthquakeTweets {
         } catch (Throwable t) {
             t.printStackTrace();
         }
+    }
+
+    private void dumpCSV(final TweetStore store,
+                         final File outputFile) {
+        
     }
 }
