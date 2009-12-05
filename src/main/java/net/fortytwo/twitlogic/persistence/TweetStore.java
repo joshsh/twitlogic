@@ -198,7 +198,7 @@ public class TweetStore {
         }
 
         LOGGER.info("shutting down TwitLogic local store");
-        new Exception().printStackTrace();
+//        new Exception().printStackTrace();
 
         // Note: elmoModule doesn't need to be closed or shutDown.
 
