@@ -104,7 +104,7 @@ public class CoverageManager {
     }
 
     private URI findUserURI(final User user) throws TwitterClientException {
-        return valueFactory.createURI(persistenceContext.valueOf(user));
+        return valueFactory.createURI(PersistenceContext.uriOf(user));
     }
 
     /*

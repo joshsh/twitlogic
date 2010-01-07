@@ -1,8 +1,6 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.vocabs.SIOC;
-import net.fortytwo.twitlogic.vocabs.FOAF;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -59,16 +57,20 @@ public class SesameTools {
 
     // TODO: improve this
     public static URI createRandomResourceURI(final ValueFactory valueFactory) {
-        return valueFactory.createURI(TwitLogic.RESOURCES_BASEURI + RANDOM.nextInt(Integer.MAX_VALUE));
+        return valueFactory.createURI(TwitLogic.RESOURCES_BASEURI + randomIdString());
     }
 
     // TODO: improve this
     public static URI createRandomGraphURI(final ValueFactory valueFactory) {
-        return valueFactory.createURI(TwitLogic.GRAPHS_BASEURI + RANDOM.nextInt(Integer.MAX_VALUE));
+        return valueFactory.createURI(TwitLogic.GRAPHS_BASEURI + randomIdString());
     }
 
     // TODO: improve this
     public static URI createRandomPersonURI(final ValueFactory valueFactory) {
-        return valueFactory.createURI(TwitLogic.PERSONS_BASEURI + RANDOM.nextInt(Integer.MAX_VALUE));
+        return valueFactory.createURI(TwitLogic.PERSONS_BASEURI + randomIdString());
+    }
+
+    public static String randomIdString() {
+        return "" + RANDOM.nextInt(Integer.MAX_VALUE);
     }
 }

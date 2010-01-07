@@ -18,6 +18,11 @@
             <url>http://fortytwo.net/maven2</url>
         </repository>
         <repository>
+            <id>aduna-repo</id>
+            <name>Aduna repository</name>
+            <url>http://repo.aduna-software.org/maven2/releases</url>
+        </repository>
+        <repository>
             <id>maven-restlet</id>
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
@@ -94,6 +99,21 @@
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-nativerdf</artifactId>
             <version>2.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.elmo</groupId>
+            <artifactId>elmo-api</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.elmo</groupId>
+            <artifactId>elmo-sesame</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.elmo</groupId>
+            <artifactId>elmo-owl</artifactId>
+            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

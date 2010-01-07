@@ -4,11 +4,9 @@ import net.fortytwo.twitlogic.vocabs.FOAF;
 import net.fortytwo.twitlogic.syntax.afterthought.ObjectPropertyAfterthoughtMatcher;
 
 /**
- * Created by IntelliJ IDEA.
  * User: josh
  * Date: Sep 29, 2009
  * Time: 10:29:09 PM
- * To change this template use File | Settings | File Templates.
  */
 public class FoafKnowsMatcher extends ObjectPropertyAfterthoughtMatcher {
     protected String getPropertyURI() {

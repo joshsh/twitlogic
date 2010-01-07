@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.Header;
@@ -8,9 +9,11 @@ import org.apache.http.HeaderIterator;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Logger;
 
@@ -80,7 +83,7 @@ public abstract class CommonHttpClient {
         long lastWait = 0;
         while (true) {
             long timeOfLastRequest = System.currentTimeMillis();
-            HttpResponse response = makeRequest(request, false);
+            HttpResponse response = makeSignedJSONRequest(request, false);
             int code = response.getStatusLine().getStatusCode();
             long wait;
             // TODO: use a different back-off policy for error responses
@@ -100,8 +103,8 @@ public abstract class CommonHttpClient {
         }
     }
 
-    protected HttpResponse makeRequest(final HttpUriRequest request,
-                                       final boolean openEnded) throws TwitterClientException {
+    protected HttpResponse makeSignedJSONRequest(final HttpUriRequest request,
+                                                 final boolean openEnded) throws TwitterClientException {
         try {
             logRequest(request);
 
@@ -156,5 +159,38 @@ public abstract class CommonHttpClient {
                 : lastWait >= MAX_WAIT
                 ? MAX_WAIT
                 : lastWait * 2;
+    }
+
+    // TODO: error handling
+    // TODO: multiple (possibly circular) redirects
+    public String resolve301Redirection(final String originalURI) throws TwitterClientException {
+        HttpClient client = createClient(false);
+        client.getParams().setBooleanParameter("http.protocol.handle-redirects", false);
+
+        HttpUriRequest request = new HttpGet(originalURI);
+
+        HttpResponse response;
+        try {
+            response = client.execute(request);
+        } catch (IOException e) {
+            throw new TwitterClientException(e);
+        }
+
+        if (301 == response.getStatusLine().getStatusCode()) {
+            return response.getHeaders("Location")[0].getValue();
+        } else {
+            return originalURI;
+        }
+    }
+
+    public static void main(final String[] args) throws Exception {
+        CommonHttpClient client = new TwitterClient();
+
+        String before = "http://bit.ly/1xkuDX";
+        //String before = "http://twitlogic.fortytwo.net/resource/hashtag/sdow2009";
+        String after = client.resolve301Redirection(before);
+
+        System.out.println("before: " + before);
+        System.out.println("after: " + after);
     }
 }

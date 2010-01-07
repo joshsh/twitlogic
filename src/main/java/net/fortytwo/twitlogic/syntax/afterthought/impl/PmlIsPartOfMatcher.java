@@ -1,20 +1,20 @@
 package net.fortytwo.twitlogic.syntax.afterthought.impl;
 
 import net.fortytwo.twitlogic.syntax.afterthought.ObjectPropertyAfterthoughtMatcher;
-import net.fortytwo.twitlogic.vocabs.RDFS;
+import net.fortytwo.twitlogic.vocabs.PML2Relation;
 
 /**
  * User: josh
- * Date: Sep 29, 2009
- * Time: 10:29:09 PM
+ * Date: Oct 27, 2009
+ * Time: 10:33:25 AM
  */
-public class RdfsSeeAlsoMatcher extends ObjectPropertyAfterthoughtMatcher {
+public class PmlIsPartOfMatcher extends ObjectPropertyAfterthoughtMatcher {
     protected String getPropertyURI() {
-        return RDFS.SEEALSO;
+        return PML2Relation.ISPARTOF;
     }
 
     protected boolean predicateMatches(final String predicate) {
         String p = predicate.toLowerCase();
-        return p.equals("see");
+        return p.equals("part of");
     }
 }
