@@ -174,6 +174,7 @@ public class TwitLogic {
             new User("ewpatton", 34309130),      // Evan Patton
             new User("jahendler", 15336340),     // James Hendler
             new User("joshsh", 7083182),         // Joshua Shinavier
+            new User("jpmccu", 47621026),        // Jim McCusker
             new User("jrweave", 20830884),       // Jesse Weaver
             new User("kasei", 643563),           // Gregory Williams
             new User("lidingpku", 26823198),     // Li Ding
