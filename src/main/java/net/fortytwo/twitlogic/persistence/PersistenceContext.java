@@ -15,6 +15,8 @@ import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManager;
 
 import javax.xml.namespace.QName;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Note: the (private) "persist" methods of the class use an "add only" approach:
@@ -73,6 +75,13 @@ public class PersistenceContext {
             agent = agentForUser(tweetUser);
             user.setAccountOf(agent);
         }
+
+        Set<Thing> equivalentAgents = new HashSet<Thing>();
+        String semanticTweetUri
+                = "http://semantictweet.com/" + tweetUser.getScreenName() + "#me";
+        equivalentAgents.add(
+                designate(semanticTweetUri, Thing.class));
+        agent.setOwlSameAs(equivalentAgents);
 
         if (null != tweetUser.getName()) {
             agent.setName(tweetUser.getName());
