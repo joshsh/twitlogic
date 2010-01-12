@@ -3,5 +3,5 @@
 
 {
     <http://twitlogic.fortytwo.net/resource/graph/twitlogic-metadata> a rdfg:Graph ;
-        rdfs:comment "a named graph containing instance-level metadata for TwitLogic's user-generated content" .
+        rdfs:comment "a named graph containing metadata about microbloggers, microblogging accounts, microblog posts, and annotation named graphs" .
 }
