@@ -52,7 +52,7 @@ public class StatusStreamParser {
                         try {
                             json = new JSONObject(line);
                         } catch (JSONException e) {
-                            throw new IOException("Could not parse status element as JSON: \"" + line + "\"", e);
+                            throw new TweetHandlerException("Could not parse status element as JSON: \"" + line + "\"", e);
                         }
 
                         if (!handleStatusElement(json)) {
@@ -95,7 +95,7 @@ public class StatusStreamParser {
         // check on the generated JSON object to see whether it is
         // an "interesting" status update (and discarding it if not)
         // before going on to parse all of its fields.
-        Tweet status = null;
+        Tweet status;
         try {
             status = new Tweet(el);
         } catch (JSONException e) {

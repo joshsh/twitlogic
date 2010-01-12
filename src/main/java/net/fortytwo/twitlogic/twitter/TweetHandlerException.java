@@ -9,4 +9,13 @@ public class TweetHandlerException extends Exception {
     public TweetHandlerException(final Throwable cause) {
         super(cause);
     }
+
+    public TweetHandlerException(final String msg) {
+        super(msg);
+    }
+
+    public TweetHandlerException(final String msg,
+                                 final Throwable cause) {
+        super(msg, cause);
+    }
 }

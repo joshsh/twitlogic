@@ -9,7 +9,7 @@
     <version>0.1</version>
     <packaging>jar</packaging>
     <name>TwitLogic</name>
-    <description>extracting structured information from the Twitter stream</description>
+    <description>real-time #SemanticWeb in &lt;= 140 chars</description>
 
     <repositories>
         <repository>
@@ -119,6 +119,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
         </dependency>
 
         <!-- Restlet -->

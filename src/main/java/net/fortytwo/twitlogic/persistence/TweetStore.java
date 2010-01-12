@@ -16,6 +16,8 @@ import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManagerFactory;
 import org.openrdf.elmo.ElmoModule;
 import org.openrdf.elmo.sesame.SesameManagerFactory;
+import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -106,7 +108,7 @@ public class TweetStore {
         LOGGER.info("initializing TwitLogic local store");
 
         repository = new SailRepository(sail);
-        addSeedDataIfEmpty(repository);
+        refreshKnowledgeBaseMetadata(repository);
 
         // Elmo setup.
         adminElmoModule = new ElmoModule();
@@ -140,18 +142,28 @@ public class TweetStore {
         return new TweetStoreConnection(this);
     }
 
-    private void addSeedDataIfEmpty(final Repository repository) throws TweetStoreException {
+    private void refreshKnowledgeBaseMetadata(final Repository repository) throws TweetStoreException {
         try {
             RepositoryConnection rc = repository.getConnection();
             try {
-                if (rc.isEmpty()) {
-                    LOGGER.info("adding seed data");
-                    String baseURI = "http://example.org/bogusBaseURI/";
-                    rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
-                    rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.trig"), baseURI, RDFFormat.TRIG);
-                    rc.add(TwitLogic.class.getResourceAsStream("twitlogic-metadata.trig"), baseURI, RDFFormat.TRIG);
-                    rc.commit();
-                }
+                ValueFactory vf = repository.getValueFactory();
+                URI voidGraph = vf.createURI(TwitLogic.GRAPHS_BASEURI + "twitlogic-void");
+                URI[] metaGraphs = {null, voidGraph};
+
+                // Remove all existing statements from the knowledge base
+                // metadata graphs.  All graphs must be listed here, or we
+                // may end up with messy, inconsistent metadata.
+                rc.remove(null, null, null, metaGraphs);
+
+                //if (rc.isEmpty()) {
+                LOGGER.info("adding seed data");
+                String baseURI = "http://example.org/bogusBaseURI/";
+                rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
+                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.trig"), baseURI, RDFFormat.TRIG);
+                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-metadata.trig"), baseURI, RDFFormat.TRIG);
+
+                rc.commit();
+                //}
             } finally {
                 rc.close();
             }
@@ -343,9 +355,17 @@ public class TweetStore {
         public void run() {
             while (true) {
                 try {
-                    File f = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
-                            "archive/twitlogic-full.rdf");
-                    dumpToFile(f, RDFFormat.RDFXML);
+                    // Note: this uncompressed file is generated only for the
+                    // sake of the Linking Open Conference Tweets application
+                    // (in case we put it back up)
+                    File f1 = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
+                            "dump/twitlogic-full.rdf");
+                    dumpToFile(f1, RDFFormat.RDFXML);
+
+                    // TODO: use N-Quads instead of (or in addition to) TriG
+                    File f2 = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
+                            "dump/twitlogic-full.trig.gz");
+                    dumpToCompressedFile(f2, RDFFormat.TRIG);
                 } catch (Throwable t) {
                     LOGGER.severe("dumper runnable died with error: " + t);
                     t.printStackTrace();

@@ -17,9 +17,7 @@ import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.RDFFormat;
- 
-import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.LogManager;
@@ -70,6 +68,7 @@ public class TwitLogic {
  
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
+            DUMPS_BASEURI = BASE_URI + "dump/",
             RESOURCES_BASEURI = BASE_URI + "resource/",
             GRAPHS_BASEURI = RESOURCES_BASEURI + "graph/",
             HASHTAGS_BASEURI = RESOURCES_BASEURI + "hashtag/",
@@ -130,11 +129,6 @@ public class TwitLogic {
             // Create a persistent store.
             TweetStore store = TweetStore.getDefaultStore();
             store.dump(System.out);
- 
-            // TODO: use N-Quads instead of TriG
-            File f = new File(TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
-                    "archive/twitlogic-full.trig.gz");
-            store.dumpToCompressedFile(f, RDFFormat.TRIG);
  
 // store.dumpToSparqlUpdateEndpoint("none");
  
