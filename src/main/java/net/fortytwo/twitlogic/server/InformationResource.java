@@ -18,7 +18,9 @@ import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,6 +78,31 @@ public class InformationResource extends Resource {
         return null;
     }
 
+    private void addIncidentStatements(final org.openrdf.model.Resource vertex,
+                                       final Collection<Statement> statements,
+                                       final SailConnection c) throws SailException {
+        // Select outbound statements
+        CloseableIteration<? extends Statement, SailException> stIter
+                = c.getStatements(vertex, null, null, false);
+        try {
+            while (stIter.hasNext()) {
+                statements.add(stIter.next());
+            }
+        } finally {
+            stIter.close();
+        }
+
+        // Select inbound statements
+        stIter = c.getStatements(null, null, vertex, false);
+        try {
+            while (stIter.hasNext()) {
+                statements.add(stIter.next());
+            }
+        } finally {
+            stIter.close();
+        }
+    }
+
     private Representation getRDFRepresentation(final RDFFormat format) {
         try {
             Collection<Namespace> namespaces = new LinkedList<Namespace>();
@@ -83,25 +110,23 @@ public class InformationResource extends Resource {
 
             SailConnection sc = sail.getConnection();
             try {
-                // Select outbound statements
-                CloseableIteration<? extends Statement, SailException> stIter
-                        = sc.getStatements(selfUri, null, null, false);
-                try {
-                    while (stIter.hasNext()) {
-                        statements.add(stIter.next());
-                    }
-                } finally {
-                    stIter.close();
-                }
+                // Add statements incident on the resource itself.
+                addIncidentStatements(selfUri, statements, sc);
 
-                // Select inbound statements
-                stIter = sc.getStatements(null, null, selfUri, false);
-                try {
-                    while (stIter.hasNext()) {
-                        statements.add(stIter.next());
+                // Due to the nature of the TwitLogic data set, we also need
+                // some key statements about the graphs the above statements
+                // are in.
+                Set<org.openrdf.model.Resource> graphs = new HashSet<org.openrdf.model.Resource>();
+                for (Statement st : statements) {
+                    org.openrdf.model.Resource graph = st.getContext();
+                    if (null != graph) {
+                        graphs.add(graph);
                     }
-                } finally {
-                    stIter.close();
+                }
+                // Note: selfUri will not be in this set, as graphs don't
+                // describe themselves in TwitLogic.
+                for (org.openrdf.model.Resource graph : graphs) {
+                    addIncidentStatements(graph, statements, sc);
                 }
 
                 // Select namespaces, for human-friendliness
@@ -122,7 +147,7 @@ public class InformationResource extends Resource {
         } catch (Throwable t) {
             // TODO: put this in the logger message
             t.printStackTrace();
-            
+
             LOGGER.log(Level.WARNING, "failed to create RDF representation", t);
             return null;
         }
