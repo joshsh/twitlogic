@@ -129,9 +129,7 @@ public class TwitLogic {
             // Create a persistent store.
             TweetStore store = TweetStore.getDefaultStore();
             store.dump(System.out);
- 
-// store.dumpToSparqlUpdateEndpoint("none");
- 
+
             // Launch linked data server.
             new TwitLogicServer(store);
  
@@ -145,7 +143,9 @@ public class TwitLogic {
  
             TweetStoreConnection c = store.createConnection();
             try {
-                Handler<Tweet, TweetHandlerException> baseStatusHandler = new TweetPersister(matcher, store, c, client, false);
+                boolean persistOnlyMatchingTweets = true;
+                Handler<Tweet, TweetHandlerException> baseStatusHandler
+                        = new TweetPersister(matcher, store, c, client, persistOnlyMatchingTweets);
  
                 // Create an agent to listen for commands.
                 // Also take the opportunity to memoize users we're following.
