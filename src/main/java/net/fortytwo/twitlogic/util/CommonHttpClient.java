@@ -187,7 +187,7 @@ public abstract class CommonHttpClient {
         CommonHttpClient client = new TwitterClient();
 
         String before = "http://bit.ly/1xkuDX";
-        //String before = "http://twitlogic.fortytwo.net/resource/hashtag/sdow2009";
+        //String before = "http://twitlogic.fortytwo.net/hashtag/sdow2009";
         String after = client.resolve301Redirection(before);
 
         System.out.println("before: " + before);

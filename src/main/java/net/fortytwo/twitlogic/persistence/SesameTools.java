@@ -56,9 +56,9 @@ public class SesameTools {
     }
 
     // TODO: improve this
-    public static URI createRandomResourceURI(final ValueFactory valueFactory) {
-        return valueFactory.createURI(TwitLogic.RESOURCES_BASEURI + randomIdString());
-    }
+    //public static URI createRandomResourceURI(final ValueFactory valueFactory) {
+    //    return valueFactory.createURI(TwitLogic.BASE_URI + randomIdString());
+    //}
 
     // TODO: improve this
     public static URI createRandomGraphURI(final ValueFactory valueFactory) {

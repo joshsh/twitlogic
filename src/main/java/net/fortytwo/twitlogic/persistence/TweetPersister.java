@@ -208,9 +208,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         }
 
         public Resource anonymousNode() {
-            // TODO: this is a little stupid.
-            return new URIReference(
-                    SesameTools.createRandomResourceURI(valueFactory).toString());
+            // TODO
+            return null;
         }
     }
 

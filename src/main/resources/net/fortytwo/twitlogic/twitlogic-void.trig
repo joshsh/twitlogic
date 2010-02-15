@@ -8,17 +8,17 @@
 @prefix void: <http://rdfs.org/ns/void#> .
 
 # Had to tweak this.
-@prefix : <http://twitlogic.fortytwo.net/resource/dataset/> .
+@prefix : <http://twitlogic.fortytwo.net/dataset/> .
 
 # Need this to describe the dataset named graph, since this is TriG, not Turtle.
 @prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
 
 {
-    <http://twitlogic.fortytwo.net/resource/graph/twitlogic-void> a rdfg:Graph ;
+    <http://twitlogic.fortytwo.net/graph/twitlogic-void> a rdfg:Graph ;
         rdfs:comment "a named graph containing the VoiD description of the current TwitLogic knowledge base" .
 }
 
-<http://twitlogic.fortytwo.net/resource/graph/twitlogic-void> {
+<http://twitlogic.fortytwo.net/graph/twitlogic-void> {
     :twitlogic-full rdf:type void:Dataset ;
         foaf:homepage <http://twitlogic.fortytwo.net> ;
         dcterms:title "the TwitLogic knowledge base" ;
@@ -42,8 +42,8 @@
         void:vocabulary <http://purl.org/dc/terms/> ;
         void:vocabulary <http://rdfs.org/sioc/types#> ;
         void:vocabulary <http://purl.org/dc/terms/> ;
-        void:exampleResource <http://twitlogic.fortytwo.net/resource/hashtag/twitlogic> ;
-        void:exampleResource <http://twitlogic.fortytwo.net/resource/user/twitter/7083182> ;
+        void:exampleResource <http://twitlogic.fortytwo.net/hashtag/twitlogic> ;
+        void:exampleResource <http://twitlogic.fortytwo.net/user/twitter/7083182> ;
         void:subset :semantictweet-linkset1 .
 
     # Tweaked data set URI, added comment

@@ -57,6 +57,8 @@ public class EarthquakeTweets {
             "}";
 
     public static void main(final String[] args) throws Exception {
+        System.out.println(SELECT_DUMP_FIELDS);
+        System.exit(0);
         try {
             doit();
         } catch (Throwable t) {

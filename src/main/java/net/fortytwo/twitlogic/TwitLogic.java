@@ -1,5 +1,5 @@
 package net.fortytwo.twitlogic;
- 
+
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
@@ -17,7 +17,9 @@ import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.rio.RDFFormat;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.LogManager;
@@ -69,13 +71,12 @@ public class TwitLogic {
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
             DUMPS_BASEURI = BASE_URI + "dump/",
-            RESOURCES_BASEURI = BASE_URI + "resource/",
-            GRAPHS_BASEURI = RESOURCES_BASEURI + "graph/",
-            HASHTAGS_BASEURI = RESOURCES_BASEURI + "hashtag/",
-            LOCATIONS_BASEURI = RESOURCES_BASEURI + "location/",
-            PERSONS_BASEURI = RESOURCES_BASEURI + "person/",
-            TWEETS_BASEURI = RESOURCES_BASEURI + "post/twitter/",
-            USERS_BASEURI = RESOURCES_BASEURI + "user/twitter/";
+            GRAPHS_BASEURI = BASE_URI + "graph/",
+            HASHTAGS_BASEURI = BASE_URI + "hashtag/",
+            LOCATIONS_BASEURI = BASE_URI + "location/",
+            PERSONS_BASEURI = BASE_URI + "person/",
+            TWEETS_BASEURI = BASE_URI + "post/twitter/",
+            USERS_BASEURI = BASE_URI + "user/twitter/";
  
     public static final Pattern
             HASHTAG_PATTERN = Pattern.compile("#[A-Za-z0-9-_]+"),
@@ -129,6 +130,11 @@ public class TwitLogic {
             // Create a persistent store.
             TweetStore store = TweetStore.getDefaultStore();
             store.dump(System.out);
+
+store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
+System.exit(0);
+//store.clear();
+//store.load(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 
             // Launch linked data server.
             new TwitLogicServer(store);

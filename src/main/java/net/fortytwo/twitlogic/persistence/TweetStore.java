@@ -382,4 +382,40 @@ public class TweetStore {
             }
         }
     }
+
+    public void clear() throws TweetStoreException {
+        try {
+            RepositoryConnection rc = repository.getConnection();
+            try {
+                rc.clear();
+                rc.commit();
+            } finally {
+                rc.close();
+            }
+        } catch (RepositoryException e) {
+            throw new TweetStoreException(e);
+        }
+    }
+
+    public void load(final File file,
+                     final RDFFormat format) throws TweetStoreException {
+        try {
+            RepositoryConnection rc = repository.getConnection();
+            try {
+                try {
+                    rc.add(file, "http://example.org/baseURI", format);
+                } catch (IOException e) {
+                    throw new TweetStoreException(e);
+                } catch (RDFParseException e) {
+                    throw new TweetStoreException(e);
+                }
+
+                rc.commit();
+            } finally {
+                rc.close();
+            }
+        } catch (RepositoryException e) {
+            throw new TweetStoreException(e);
+        }
+    }
 }
