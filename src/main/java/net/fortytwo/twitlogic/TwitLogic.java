@@ -68,6 +68,7 @@ public class TwitLogic {
  
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
+            DATASETS_BASEURI = BASE_URI + "datasets/",
             DUMPS_BASEURI = BASE_URI + "dump/",
             GRAPHS_BASEURI = BASE_URI + "graph/",
             HASHTAGS_BASEURI = BASE_URI + "hashtag/",
@@ -75,6 +76,18 @@ public class TwitLogic {
             PERSONS_BASEURI = BASE_URI + "person/",
             TWEETS_BASEURI = BASE_URI + "post/twitter/",
             USERS_BASEURI = BASE_URI + "user/twitter/";
+
+    // This graph contains all of TwitLogic's authoritative metadata about
+    // named graphs, microblog posts, microblog authors, etc., as well as
+    // voiD metadata about the knowledge base itself.
+    public static final URI
+            AUTHORITATIVE_GRAPH = null;
+
+    // Other special resources
+    public static final String
+            TWITLOGIC_DATASET = DATASETS_BASEURI + "twitlogic-full",
+            SEMANTICTWEET_DATASET = DATASETS_BASEURI + "semantictweet",
+            SEMANTICTWEET_LINKSET1 = DATASETS_BASEURI + "semantictweet-linkset1";
  
     public static final Pattern
             HASHTAG_PATTERN = Pattern.compile("#[A-Za-z0-9-_]+"),
@@ -133,7 +146,8 @@ public class TwitLogic {
 //System.exit(0);
 //store.clear();
 //store.load(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
-
+//System.exit(0);
+            
             // Launch linked data server.
             new TwitLogicServer(store);
  

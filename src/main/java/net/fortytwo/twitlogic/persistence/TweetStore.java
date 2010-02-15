@@ -16,6 +16,7 @@ import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManagerFactory;
 import org.openrdf.elmo.ElmoModule;
 import org.openrdf.elmo.sesame.SesameManagerFactory;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.query.QueryLanguage;
@@ -33,7 +34,6 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
 
-import javax.xml.namespace.QName;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -112,7 +112,7 @@ public class TweetStore {
 
         // Elmo setup.
         adminElmoModule = new ElmoModule();
-        adminElmoModule.setGraph(new QName(SesameTools.ADMIN_GRAPH.toString()));
+        adminElmoModule.setGraph(null);  // for TwitLogic.AUTHORITATIVE_GRAPH
         adminElmoModule.addConcept(Thing.class);
         adminElmoModule.addConcept(ObjectProperty.class);  // Dunno why this is necessary, but Elmo logs warnings without it
 
@@ -147,20 +147,28 @@ public class TweetStore {
             RepositoryConnection rc = repository.getConnection();
             try {
                 ValueFactory vf = repository.getValueFactory();
-                URI voidGraph = vf.createURI(TwitLogic.GRAPHS_BASEURI + "twitlogic-void");
-                URI[] metaGraphs = {null, voidGraph};
 
-                // Remove all existing statements from the knowledge base
-                // metadata graphs.  All graphs must be listed here, or we
-                // may end up with messy, inconsistent metadata.
-                rc.remove(null, null, null, metaGraphs);
+                // Remove all authoritative statements about these resources
+                // from the knowledge base.  All resources must be listed here,
+                // else we may end up with messy, superfluous metadata.
+                String[] metaResources = {
+                        TwitLogic.TWITLOGIC_DATASET,
+                        TwitLogic.SEMANTICTWEET_DATASET,
+                        TwitLogic.SEMANTICTWEET_LINKSET1};
 
+                for (String r : metaResources) {
+                    URI u = vf.createURI(r);
+                    rc.remove(u, null, null, TwitLogic.AUTHORITATIVE_GRAPH);
+                    rc.remove((Resource) null, null, u, TwitLogic.AUTHORITATIVE_GRAPH);
+                }
+
+                rc.clearNamespaces();
+                
                 //if (rc.isEmpty()) {
                 LOGGER.info("adding seed data");
-                String baseURI = "http://example.org/bogusBaseURI/";
+                String baseURI = "http://example.org/baseURI/";
                 rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
-                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.trig"), baseURI, RDFFormat.TRIG);
-                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-metadata.trig"), baseURI, RDFFormat.TRIG);
+                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.ttl"), baseURI, RDFFormat.TURTLE);
 
                 rc.commit();
                 //}

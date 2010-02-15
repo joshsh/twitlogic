@@ -5,6 +5,9 @@ import net.fortytwo.twitlogic.TwitLogic;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -150,6 +153,37 @@ public class WebResource extends Resource {
         }
     }
 
+    // Note: a SPARQL query might be more efficient (in applications other than TwitLogic)
+    private void addGraphSeeAlsoStatements(final org.openrdf.model.Resource graph,
+                                           final Collection<Statement> statements,
+                                           final SailConnection c,
+                                           final ValueFactory vf) throws SailException {
+        Set<URI> describedResources = new HashSet<URI>();
+        CloseableIteration<? extends Statement, SailException> iter
+                = c.getStatements(null, null, null, false, graph);
+        try {
+            while (iter.hasNext()) {
+                Statement st = iter.next();
+                Value s = st.getSubject();
+                Value o = st.getObject();
+
+                if (s instanceof URI) {
+                    describedResources.add((URI) s);
+                }
+
+                if (o instanceof URI) {
+                    describedResources.add((URI) o);
+                }
+            }
+        } finally {
+            iter.close();
+        }
+
+        for (URI r : describedResources) {
+            statements.add(vf.createStatement(graph, RDFS.SEEALSO, r, TwitLogic.AUTHORITATIVE_GRAPH));
+        }
+    }
+
     private Representation getRDFRepresentation(final URI subject,
                                                 final RDFFormat format) {
         try {
@@ -161,6 +195,7 @@ public class WebResource extends Resource {
                 // Add statements incident on the resource itself.
                 addIncidentStatements(subject, statements, sc);
 
+                /*
                 // Due to the nature of the TwitLogic data set, we also need
                 // some key statements about the graphs the above statements
                 // are in.
@@ -176,6 +211,7 @@ public class WebResource extends Resource {
                 for (org.openrdf.model.Resource graph : graphs) {
                     addIncidentStatements(graph, statements, sc);
                 }
+                */
 
                 // Select namespaces, for human-friendliness
                 CloseableIteration<? extends Namespace, SailException> nsIter

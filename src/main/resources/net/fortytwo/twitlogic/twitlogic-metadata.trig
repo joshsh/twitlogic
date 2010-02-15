@@ -1,7 +1,0 @@
-@prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-
-{
-    <http://twitlogic.fortytwo.net/graph/twitlogic-metadata> a rdfg:Graph ;
-        rdfs:comment "a named graph containing metadata about microbloggers, microblogging accounts, microblog posts, and annotation named graphs" .
-}

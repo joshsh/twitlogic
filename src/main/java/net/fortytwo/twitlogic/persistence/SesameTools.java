@@ -22,8 +22,6 @@ public class SesameTools {
     private static final Random RANDOM = new Random();
 
     public static final URI
-            TRIX_GRAPH = new URIImpl("http://www.w3.org/2004/03/trix/rdfg-1/Graph"),
-            ADMIN_GRAPH = new URIImpl(TwitLogic.GRAPHS_BASEURI + "twitlogic-metadata"),
             COVERED_INTERVAL = new URIImpl(TwitLogic.NAMESPACE + "converedInterval"),
             TIMESTAMP = new URIImpl(TwitLogic.NAMESPACE + "timeStamp"),
             START_DATE = new URIImpl(TwitLogic.NAMESPACE + "startDate"),
