@@ -29,6 +29,7 @@ public class RootApplication extends Application {
         router.attach("/", new Directory(getContext(), "file://" + staticContentDir + "/"));
 
         // FIXME: use constants defined in TwitLogic.java
+        router.attach("/dataset/", WebResource.class);
         router.attach("/graph/", WebResource.class);
         router.attach("/hashtag/", WebResource.class);
         router.attach("/location/", WebResource.class);

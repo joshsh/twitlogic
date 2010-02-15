@@ -59,8 +59,4 @@
         void:linkPredicate <http://www.w3.org/2002/07/owl#sameAs> ;
         void:target :twitlogic-full ;
         void:target :semantictweet .
-
-    # Added this
-    <http://twitlogic.fortytwo.net/dump/twitlogic-full.trig.gz>
-        rdfs:comment "a regularly-updated compressed TriG serialization of the knowledge base"
 }
