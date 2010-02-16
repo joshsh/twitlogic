@@ -70,7 +70,7 @@ public class TwitLogic {
  
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
-            DATASETS_BASEURI = BASE_URI + "datasets/",
+            DATASETS_BASEURI = BASE_URI + "dataset/",
             DUMPS_BASEURI = BASE_URI + "dump/",
             GRAPHS_BASEURI = BASE_URI + "graph/",
             HASHTAGS_BASEURI = BASE_URI + "hashtag/",
@@ -121,7 +121,44 @@ public class TwitLogic {
         LOGGER = getLogger(TwitLogic.class);
         LOGGER.info("initialized logging");
     }
- 
+
+    public enum ResourceType {
+        DataSet("dataset", "data set"),
+        Graph("graph", "named graph"),
+        Hashtag("hashtag", "hashtag resource"),
+        Location("location", "location"),
+        Person("person", "person"),
+        Post("post", "microblog post"),
+        User("user", "microblog user account");
+
+        private final String uriPath;
+        private final String name;
+
+        private ResourceType(final String uriPath,
+                             final String name) {
+            this.uriPath = uriPath;
+            this.name = name;
+        }
+
+        public String getUriPath() {
+            return uriPath;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static ResourceType findByName(final String name) {
+            for (ResourceType t : ResourceType.values()) {
+                if (t.name().equals(name)) {
+                    return t;
+                }
+            }
+
+            return null;
+        }
+    }
+
     public static String getName() {
         return "TwitLogic";
     }

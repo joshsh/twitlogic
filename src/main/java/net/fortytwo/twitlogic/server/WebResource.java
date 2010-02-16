@@ -2,11 +2,13 @@ package net.fortytwo.twitlogic.server;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.vocabs.FOAF;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
@@ -44,17 +46,20 @@ public class WebResource extends Resource {
     private static final Logger LOGGER
             = TwitLogic.getLogger(WebResource.class);
 
-    enum ResourceType {
+    enum WebResourceCategory {
         InformationResource, NonInformationResource
     }
 
     protected final String selfURI;
-    private final String hostIdentifier;
 
-    protected ResourceType resourceType;
-    protected String subjectResourceURI;
+    private String hostIdentifier;
+    private String baseRef;
+    private String subjectResourceURI;
+    private String typeSpecificId;
+    protected WebResourceCategory webResourceCategory;
     protected Sail sail;
     private RDFFormat format = null;
+    private URI datasetURI;
 
     public WebResource(final Context context,
                        final Request request,
@@ -62,7 +67,6 @@ public class WebResource extends Resource {
         super(context, request, response);
 
         selfURI = request.getResourceRef().toString();
-        hostIdentifier = request.getResourceRef().getHostIdentifier();
 
         /*
         System.out.println("selfURI = " + selfURI);
@@ -71,22 +75,27 @@ public class WebResource extends Resource {
         System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
         System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
         System.out.println("host ref = " + request.getHostRef().toString());
-        */
+        //*/
 
         int i = selfURI.lastIndexOf(".");
         if (i > 0) {
             String suffix = selfURI.substring(i + 1);
-            subjectResourceURI = selfURI.substring(0, i);
             format = RDFStuff.findFormat(suffix);
         }
 
         if (null == format) {
-            resourceType = ResourceType.NonInformationResource;
+            webResourceCategory = WebResourceCategory.NonInformationResource;
             getVariants().addAll(RDFStuff.getRDFVariants());
         } else {
-            resourceType = ResourceType.InformationResource;
+            webResourceCategory = WebResourceCategory.InformationResource;
             getVariants().add(RDFStuff.findVariant(format));
-            sail = TwitLogicServer.getWiki(context).getSail(request);
+
+            hostIdentifier = request.getResourceRef().getHostIdentifier();
+            baseRef = request.getResourceRef().getBaseRef().toString();
+            subjectResourceURI = selfURI.substring(0, i);
+            typeSpecificId = subjectResourceURI.substring(baseRef.length());
+            datasetURI = TwitLogicServer.getServer(context).getDatasetURI();
+            sail = TwitLogicServer.getServer(context).getSail(request);
         }
     }
 
@@ -108,13 +117,13 @@ public class WebResource extends Resource {
 
     @Override
     public Representation represent(final Variant variant) {
-        switch (resourceType) {
+        switch (webResourceCategory) {
             case InformationResource:
                 return representInformationResource();
             case NonInformationResource:
                 return representNonInformationResource(variant);
             default:
-                throw new IllegalStateException("no such resource type: " + resourceType);
+                throw new IllegalStateException("no such resource type: " + webResourceCategory);
         }
     }
 
@@ -195,18 +204,47 @@ public class WebResource extends Resource {
         }
     }
 
+    private String resourceDescriptor() {
+        for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
+            if (baseRef.contains(t.getUriPath())) {
+                return t.getName();
+            }
+        }
+
+        return "resource";
+    }
+
+    private void addDocumentMetadata(final Collection<Statement> statements,
+                                     final SailConnection c,
+                                     final ValueFactory vf) throws SailException {
+        // Metadata about the document itself
+        URI docURI = vf.createURI(selfURI);
+        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT), TwitLogic.AUTHORITATIVE_GRAPH));
+        statements.add(vf.createStatement(docURI, RDFS.LABEL,
+                vf.createLiteral("" + format.getName() + " description of "
+                        + resourceDescriptor() + " '" + typeSpecificId + "'")));
+        // Note: we go to the trouble of special-casing the dataset URI, so that
+        // it is properly rewritten, along with all other TwitLogic resource
+        // URIs (which are rewritten through the Sail).
+        statements.add(vf.createStatement(docURI, RDFS.SEEALSO, datasetURI));
+    }
+
     private Representation getRDFRepresentation(final URI subject,
                                                 final RDFFormat format) {
         try {
             Collection<Namespace> namespaces = new LinkedList<Namespace>();
             Collection<Statement> statements = new LinkedList<Statement>();
 
-            SailConnection sc = sail.getConnection();
+            SailConnection c = sail.getConnection();
             try {
                 // Add statements incident on the resource itself.
-                addIncidentStatements(subject, statements, sc);
+                addIncidentStatements(subject, statements, c);
 
-                addGraphSeeAlsoStatements(subject, statements, sc, sail.getValueFactory());
+                // Add virtual statements about named graphs.
+                addGraphSeeAlsoStatements(subject, statements, c, sail.getValueFactory());
+
+                // Add virtual statements about the document.
+                addDocumentMetadata(statements, c, sail.getValueFactory());
 
                 /*
                 // Due to the nature of the TwitLogic data set, we also need
@@ -228,7 +266,7 @@ public class WebResource extends Resource {
 
                 // Select namespaces, for human-friendliness
                 CloseableIteration<? extends Namespace, SailException> nsIter
-                        = sc.getNamespaces();
+                        = c.getNamespaces();
                 try {
                     while (nsIter.hasNext()) {
                         namespaces.add(nsIter.next());
@@ -237,7 +275,7 @@ public class WebResource extends Resource {
                     nsIter.close();
                 }
             } finally {
-                sc.close();
+                c.close();
             }
             return new RDFRepresentation(statements, namespaces, format);
 

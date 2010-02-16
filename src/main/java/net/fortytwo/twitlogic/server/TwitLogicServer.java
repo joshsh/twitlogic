@@ -1,11 +1,11 @@
 package net.fortytwo.twitlogic.server;
 
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.server.rewriter.RewriterSail;
 import net.fortytwo.twitlogic.server.rewriter.RewritingSchema;
 import net.fortytwo.twitlogic.server.rewriter.URIRewriter;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
@@ -13,8 +13,6 @@ import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.data.Protocol;
 import org.restlet.data.Request;
-
-import java.io.File;
 
 /**
  * User: josh
@@ -30,13 +28,18 @@ public class TwitLogicServer {
     private static TwitLogicServer singleton;
 
     private final SailSelector sailSelector;
+    private final URI datasetURI;
 
-    public static TwitLogicServer getWiki(final Context context) {
+    public static TwitLogicServer getServer(final Context context) {
         return singleton;
     }
 
     public Sail getSail(final Request request) throws Exception {
         return sailSelector.selectSail(request);
+    }
+
+    public URI getDatasetURI() {
+        return datasetURI;
     }
 
     public TwitLogicServer(final TweetStore store) throws ServerException {
@@ -107,7 +110,12 @@ public class TwitLogicServer {
                     fromStoreRewriter);
 
             sail = new RewriterSail(sail, schema);
+
+            datasetURI = fromStoreRewriter.rewrite(sail.getValueFactory().createURI(TwitLogic.TWITLOGIC_DATASET));
+        } else {
+            datasetURI = sail.getValueFactory().createURI(TwitLogic.TWITLOGIC_DATASET);
         }
+
 
         final Sail selectedSail = sail;
 
