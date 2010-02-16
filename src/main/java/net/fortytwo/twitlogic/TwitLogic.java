@@ -17,7 +17,9 @@ import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.rio.RDFFormat;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.LogManager;
@@ -142,7 +144,7 @@ public class TwitLogic {
             TweetStore store = TweetStore.getDefaultStore();
             //store.dump(System.out);
 
-//store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
+store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 //System.exit(0);
 //store.clear();
 //store.load(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);

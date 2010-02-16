@@ -48,8 +48,10 @@ public class WebResource extends Resource {
         InformationResource, NonInformationResource
     }
 
+    protected final String selfURI;
+    private final String hostIdentifier;
+
     protected ResourceType resourceType;
-    protected String selfURI;
     protected String subjectResourceURI;
     protected Sail sail;
     private RDFFormat format = null;
@@ -60,7 +62,16 @@ public class WebResource extends Resource {
         super(context, request, response);
 
         selfURI = request.getResourceRef().toString();
-        //System.out.println("selfURI = " + selfURI);
+        hostIdentifier = request.getResourceRef().getHostIdentifier();
+
+        /*
+        System.out.println("selfURI = " + selfURI);
+        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
+        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
+        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
+        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
+        System.out.println("host ref = " + request.getHostRef().toString());
+        */
 
         int i = selfURI.lastIndexOf(".");
         if (i > 0) {
@@ -167,11 +178,11 @@ public class WebResource extends Resource {
                 Value s = st.getSubject();
                 Value o = st.getObject();
 
-                if (s instanceof URI) {
+                if (s instanceof URI && s.toString().startsWith(hostIdentifier)) {
                     describedResources.add((URI) s);
                 }
 
-                if (o instanceof URI) {
+                if (o instanceof URI && o.toString().startsWith(hostIdentifier)) {
                     describedResources.add((URI) o);
                 }
             }
@@ -194,6 +205,8 @@ public class WebResource extends Resource {
             try {
                 // Add statements incident on the resource itself.
                 addIncidentStatements(subject, statements, sc);
+
+                addGraphSeeAlsoStatements(subject, statements, sc, sail.getValueFactory());
 
                 /*
                 // Due to the nature of the TwitLogic data set, we also need
