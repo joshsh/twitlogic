@@ -23,6 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -85,19 +87,30 @@ public class TwitterClient extends CommonHttpClient {
         continuousStream(request, handler);
     }
 
-    public void processFollowFilterStream(final String[] userIds,
+
+    private static String[] userIds(final Collection<User> users) {
+        String[] ids = new String[users.size()];
+        int i = 0;
+        for (User user : users) {
+            ids[i] = "" + user.getId();
+            i++;
+        }
+        return ids;
+    }
+
+    public void processFollowFilterStream(final Collection<User> users,
                                           final Handler<Tweet, TweetHandlerException> handler,
                                           final int previousStatusCount) throws TwitterClientException {
-        if (userIds.length > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
+        if (users.size() > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
             throw new IllegalArgumentException("the default access level allows up to "
                     + TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT
-                    + " follow userids (you have tried to use " + userIds.length + ")");
+                    + " follow userids (you have tried to use " + users.size() + ")");
         }
 
         HttpPost request = new HttpPost(TwitterAPI.STREAM_STATUSES_FILTER_URL);
 
         List<NameValuePair> formParams = new ArrayList<NameValuePair>();
-        formParams.add(new BasicNameValuePair("follow", commaDelimit(userIds)));
+        formParams.add(new BasicNameValuePair("follow", commaDelimit(userIds(users))));
         if (previousStatusCount > 0) {
             formParams.add(new BasicNameValuePair("count", "" + previousStatusCount));
         }
@@ -141,7 +154,33 @@ public class TwitterClient extends CommonHttpClient {
         }
     }
 
+    public List<User> getListMembers(final User user,
+                                     final String listId) throws TwitterClientException {
+        HttpGet request = new HttpGet(TwitterAPI.API_LISTS_URL
+                + "/" + user.getScreenName() + "/" + listId + "/members.json");
+        sign(request);
+
+        JSONObject json = requestJSONObject(request);
+        try {
+            return constructUserList(json);
+        } catch (JSONException e) {
+            throw new TwitterClientException(e);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
+
+    private List<User> constructUserList(final JSONObject json) throws JSONException {
+        TwitterAPI.checkJSON(json);
+
+        List<User> users = new LinkedList<User>();
+        JSONArray array = json.getJSONArray(TwitterAPI.Field.USERS.toString());
+        for (int i = 0; i < array.length(); i++) {
+            users.add(new User(array.getJSONObject(i)));
+        }
+
+        return users;
+    }
 
     private void sign(final HttpUriRequest request) throws TwitterClientException {
         try {

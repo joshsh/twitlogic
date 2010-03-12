@@ -14,6 +14,7 @@ import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.twitter.CommandListener;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -22,17 +23,20 @@ import org.openrdf.rio.RDFFormat;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
- 
+
 /**
-* Author: josh
-* Date: Sep 3, 2009
-* Time: 1:55:26 PM
-*/
+ * Author: josh
+ * Date: Sep 3, 2009
+ * Time: 1:55:26 PM
+ */
 public class TwitLogic {
- 
+
     // Configuration property keys
     public static final String
             BITLY_LOGIN = "net.fortytwo.twitlogic.services.bitly.login",
@@ -42,6 +46,7 @@ public class TwitLogic {
             DUMPINTERVAL = "net.fortytwo.twitlogic.persistence.dumpInterval",
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
             COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",
+            FOLLOWLIST = "net.fortytwo.twitlogic.followList",
             SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",
             SERVER_PORT = "net.fortytwo.twitlogic.server.port",
             SERVER_STATICCONTENTDIRECTORY = "net.fortytwo.twitlogic.server.staticContentDirectory",
@@ -57,17 +62,17 @@ public class TwitLogic {
             XMPP_REPORTER_PASSWORD = "net.fortytwo.twitlogic.xmpp.reporterPassword",
             XMPP_REASONER_USERNAME = "net.fortytwo.twitlogic.xmpp.reasonerUsername",
             XMPP_REASONER_PASSWORD = "net.fortytwo.twitlogic.xmpp.reasonerPassword";
- 
+
     public static final String
             NAMESPACE = "http://fortytwo.net/2009/10/twitlogic#";
- 
+
     public static final URI
             ASSOCIATION = new URIImpl(NAMESPACE + "Association"),
             SUBJECT = new URIImpl(NAMESPACE + "subject"),
             OBJECT = new URIImpl(NAMESPACE + "object"),
             WORD = new URIImpl(NAMESPACE + "Word"),
             WEIGHT = new URIImpl(NAMESPACE + "weight");
- 
+
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
             DATASETS_BASEURI = BASE_URI + "dataset/",
@@ -90,26 +95,27 @@ public class TwitLogic {
             TWITLOGIC_DATASET = DATASETS_BASEURI + "twitlogic-full",
             SEMANTICTWEET_DATASET = DATASETS_BASEURI + "semantictweet",
             SEMANTICTWEET_LINKSET1 = DATASETS_BASEURI + "semantictweet-linkset1";
- 
+
     public static final Pattern
             HASHTAG_PATTERN = Pattern.compile("#[A-Za-z0-9-_]+"),
+            LIST_PATTERN = Pattern.compile("[A-Za-z0-9-_]+/[A-Za-z0-9-_]+"),
             USERNAME_PATTERN = Pattern.compile("@[A-Za-z0-9-_]+"),
             URL_PATTERN = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
- 
+
     private static final TypedProperties CONFIGURATION;
     private static final Logger LOGGER;
- 
+
     static {
         CONFIGURATION = new TypedProperties();
- 
+
         try {
             CONFIGURATION.load(TwitLogic.class.getResourceAsStream("twitlogic.properties"));
         } catch (IOException e) {
             throw new ExceptionInInitializerError(e);
         }
- 
+
         InputStream resourceAsStream = TwitLogic.class.getResourceAsStream("logging.properties");
- 
+
         try {
             LogManager.getLogManager().readConfiguration(resourceAsStream);
         } catch (SecurityException e) {
@@ -117,7 +123,7 @@ public class TwitLogic {
         } catch (IOException e) {
             e.printStackTrace();
         }
- 
+
         LOGGER = getLogger(TwitLogic.class);
         LOGGER.info("initialized logging");
     }
@@ -162,57 +168,60 @@ public class TwitLogic {
     public static String getName() {
         return "TwitLogic";
     }
- 
+
     public static String getVersion() {
         return "0.1";
     }
- 
+
     public static TypedProperties getConfiguration() {
         return CONFIGURATION;
     }
- 
+
     public static Logger getLogger(final Class c) {
         return Logger.getLogger(c.getName());
     }
- 
+
     public static void main(final String[] args) throws Exception {
         try {
             // Create a persistent store.
             TweetStore store = TweetStore.getDefaultStore();
             //store.dump(System.out);
 
-store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
+            store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 //System.exit(0);
 //store.clear();
 //store.load(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 //System.exit(0);
-            
+
             // Launch linked data server.
             new TwitLogicServer(store);
- 
+
             TwitterClient client = new TwitterClient();
             UserRegistry userRegistry = new UserRegistry(client);
             //PersistenceContext pContext = new PersistenceContext(userRegistry, store);
- 
+
             // Create the tweet matcher.
             Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
                     new DemoAfterthoughtMatcher());
- 
+
             TweetStoreConnection c = store.createConnection();
             try {
                 boolean persistOnlyMatchingTweets = true;
                 Handler<Tweet, TweetHandlerException> baseStatusHandler
                         = new TweetPersister(matcher, store, c, client, persistOnlyMatchingTweets);
- 
+
                 // Create an agent to listen for commands.
                 // Also take the opportunity to memoize users we're following.
                 TwitLogicAgent agent = new TwitLogicAgent(client);
                 Handler<Tweet, TweetHandlerException> statusHandler
                         = userRegistry.createUserRegistryFilter(
                         new CommandListener(agent, baseStatusHandler));
- 
+
+                Collection<User> users = findFollowList(client);
+
+                client.processFollowFilterStream(users, statusHandler, 0);
                 //client.requestUserTimeline(new User(71631722), statusHandler);
-                client.processFollowFilterStream(aFewGoodUserIds(), statusHandler, 0);
+                //client.processFollowFilterStream(A_FEW_GOOD_USERS, statusHandler, 0);
                 //client.processSampleStream(statusHandler);
                 //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
                 //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
@@ -225,7 +234,36 @@ store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
             t.printStackTrace();
         }
     }
- 
+
+    // Note: for now, lists are not persisted in any way
+    private static Collection<User> findFollowList(final TwitterClient client) throws Exception {
+        TypedProperties props = TwitLogic.getConfiguration();
+
+        // Note: this doesn't really need to be an order-preserving collection,
+        // because Java properties are not order-preserving.
+        Collection<User> users = new LinkedHashSet<User>();
+        for (String key : props.stringPropertyNames()) {
+            if (key.startsWith(TwitLogic.FOLLOWLIST)) {
+                String listVal = props.getString(key);
+                if (!LIST_PATTERN.matcher(listVal).matches()) {
+                    throw new PropertyException("invalid list: " + listVal + " (should be of the form user_name/list_id)");
+                }
+
+                String[] parts = listVal.split("/");
+                User user = new User(parts[0]);
+                String listId = parts[1];
+
+                List<User> l = client.getListMembers(user, listId);
+                users.addAll(l);
+            }
+        }
+
+        if (0 == users.size()) {
+            throw new Exception("no users to follow!  Set the " + TwitLogic.FOLLOWLIST + " property of your configuration to a non-empty list");
+        }
+        return users;
+    }
+
     /*
 private class TweetPrinter implements Handler<Tweet, TweetHandlerException> {
 public boolean handle(final Tweet tweet) throws TweetHandlerException {
@@ -238,15 +276,16 @@ TwitterClient client = new TwitterClient();
 client.processSampleStream();
 }
 */
- 
+
+/*
     private static final User[] A_FEW_GOOD_USERS = new User[]{
             new User("twit_logic", 76195293), // TwitLogic account
             new User("twitlogic", 62329516), // aspirational TwitLogic account
             new User("datagovwiki", 84994400), // DataGovWiki bot
- 
+
             new User("antijosh", 71631722), // test account
             new User("alvitest", 73477629), // test account
- 
+
             // Some TWC-Twitterers (note: I think there are more...)
             new User("alvarograves", 39816942), // Alvaro Graves
             new User("ankesh_k", 17346783), // Ankesh Khandelwal
@@ -265,28 +304,21 @@ client.processSampleStream();
             new User("shankzz", 18604757), // Shankar Arunachalam
             new User("taswegian", 15477931), // Peter Fox
             new User("xixiluo", 33308444), // Xixi Luo
- 
+
             // Twitter Data contributors
             new User("toddfast", 9869202), // Todd Fast
             new User("jirikopsa", 782594), // Jiri Kopsa
- 
+
             // Other friends of the Cause
             new User("twarko", 71089109), // Marko Rodriguez
             new User("semantictweet", 49974254), // Semantic Tweet
- 
+
             // Miscellaneous people who use a lot of hashtags (not necessarily
             // with TwitLogic in mind). Adds some healthy "noise" to test the
             // app against inevitable false positives.
             new User("tommyh", 5439642),
             //new User("thecoventgarden", 33206959)
     };
- 
-    private static String[] aFewGoodUserIds() {
-        String[] ids = new String[A_FEW_GOOD_USERS.length];
-        for (int i = 0; i < ids.length; i++) {
-            ids[i] = "" + A_FEW_GOOD_USERS[i].getId();
-        }
-        return ids;
-    }
+    */
 }
 

@@ -18,6 +18,7 @@ public class TwitterAPI {
             DEFAULT_FOLLOW_USERIDS_LIMIT = 400;
 
     public static final String
+            API_LISTS_URL = "http://api.twitter.com/1",
             OAUTH_REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
             OAUTH_ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
             OAUTH_AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
@@ -66,6 +67,7 @@ public class TwitterAPI {
         TRUNCATED("truncated"),
         URL("url"),
         USER("user"),
+        USERS("users"),
         UTC_OFFSET("utc_offset"),
         VERIFIED("verified");
 
