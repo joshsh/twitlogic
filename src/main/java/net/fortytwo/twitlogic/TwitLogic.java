@@ -47,6 +47,7 @@ public class TwitLogic {
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
             COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",
             FOLLOWLIST = "net.fortytwo.twitlogic.followList",
+            FOLLOWUSER = "net.fortytwo.twitlogic.followUser",
             SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",
             SERVER_PORT = "net.fortytwo.twitlogic.server.port",
             SERVER_STATICCONTENTDIRECTORY = "net.fortytwo.twitlogic.server.staticContentDirectory",
@@ -255,6 +256,14 @@ public class TwitLogic {
 
                 List<User> l = client.getListMembers(user, listId);
                 users.addAll(l);
+            } else if (key.startsWith(TwitLogic.FOLLOWUSER)) {
+                String screenName = props.getString(key);
+                if (!USERNAME_PATTERN.matcher(screenName).matches()) {
+                    throw new PropertyException("invalid screen name: " + screenName);
+                }
+
+                User u = new User(screenName);
+                users.add(u);
             }
         }
 
