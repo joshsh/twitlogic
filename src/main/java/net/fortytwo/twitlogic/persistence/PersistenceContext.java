@@ -128,6 +128,12 @@ public class PersistenceContext {
         return designate(uriOf(hashtag), Thing.class);
     }
 
+    public Agent persist(final net.fortytwo.twitlogic.model.Person tweetPerson) {
+        net.fortytwo.twitlogic.model.User tweetUser = tweetPerson.getAccount();
+        User user = persist(tweetUser);
+        return user.getAccountOf();
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private User userForUser(final net.fortytwo.twitlogic.model.User user) {

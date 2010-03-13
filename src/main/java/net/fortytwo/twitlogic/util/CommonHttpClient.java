@@ -1,8 +1,19 @@
 package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.twitter.TwitterAPIException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.twitter.errors.BadGatewayException;
+import net.fortytwo.twitlogic.twitter.errors.BadRequestException;
+import net.fortytwo.twitlogic.twitter.errors.EnhanceYourCalmException;
+import net.fortytwo.twitlogic.twitter.errors.ForbiddenException;
+import net.fortytwo.twitlogic.twitter.errors.InternalServerErrorException;
+import net.fortytwo.twitlogic.twitter.errors.NotAcceptableException;
+import net.fortytwo.twitlogic.twitter.errors.NotFoundException;
+import net.fortytwo.twitlogic.twitter.errors.NotModifiedException;
+import net.fortytwo.twitlogic.twitter.errors.ServiceUnavailableException;
+import net.fortytwo.twitlogic.twitter.errors.UnauthorizedException;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.Header;
 import org.apache.http.HeaderIterator;
@@ -32,9 +43,11 @@ public abstract class CommonHttpClient {
     private static final long
             MIN_WAIT = 10000,
             MAX_WAIT = 320000;
+    private static final long
+            PATIENCE_FACTOR = 3;
 
     protected void logRequest(final HttpUriRequest request) {
-        LOGGER.fine("issuing request for:  " + request.getURI());
+        LOGGER.info("issuing HTTP " + request.getMethod() + " request for <" + request.getURI());
     }
 
     protected static void setAcceptHeader(final HttpRequest request, final String[] mimeTypes) {
@@ -81,17 +94,42 @@ public abstract class CommonHttpClient {
 
     protected HttpResponse requestUntilSucceed(final HttpUriRequest request) throws TwitterClientException {
         long lastWait = 0;
+
         while (true) {
             long timeOfLastRequest = System.currentTimeMillis();
-            HttpResponse response = makeSignedJSONRequest(request, false);
-            int code = response.getStatusLine().getStatusCode();
-            long wait;
-            // TODO: use a different back-off policy for error responses
-            if (5 == code / 100) {
-                wait = nextWait(lastWait, timeOfLastRequest);
-            } else {
-                return response;
+            HttpResponse response;
+
+            // Wait longer if the problem may be due to Twitter being down or overloaded.
+            boolean beExtraPatient = false;
+
+            try {
+                return makeSignedJSONRequest(request, false);
+            } catch (NotModifiedException e) {
+                throw e;
+            } catch (BadRequestException e) {
+                // Try again.
+                // TODO: how to tell whether we're being rate limited or it is an eternally bad request?
+            } catch (UnauthorizedException e) {
+                throw e;
+            } catch (ForbiddenException e) {
+                throw e;
+            } catch (NotFoundException e) {
+                throw e;
+            } catch (NotAcceptableException e) {
+                throw e;
+            } catch (EnhanceYourCalmException e) {
+                // Try again.
+            } catch (InternalServerErrorException e) {
+                throw e;
+            } catch (BadGatewayException e) {
+                // Try again.
+                beExtraPatient = true;
+            } catch (ServiceUnavailableException e) {
+                // Try again.
+                beExtraPatient = true;
             }
+
+            long wait = nextWait(lastWait, timeOfLastRequest, beExtraPatient);
 
             try {
                 lastWait = wait;
@@ -108,9 +146,9 @@ public abstract class CommonHttpClient {
         try {
             logRequest(request);
 
-            for (Header h : request.getHeaders("Expect")) {
-                System.out.println("Expect header: " + h.getName() + ", " + h.getValue());
-            }
+            //for (Header h : request.getHeaders("Expect")) {
+            //    System.out.println("Expect header: " + h.getName() + ", " + h.getValue());
+            //}
 
             // HttpClient seems to get the capitalization wrong ("100-Continue"), which confuses Twitter.
             request.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, false);
@@ -118,9 +156,9 @@ public abstract class CommonHttpClient {
             setAcceptHeader(request, new String[]{"application/json"});
             setAgent(request);
 
-            for (Header h : request.getHeaders("Authorization")) {
-                System.out.println("Authorization header: " + h.getName() + ", " + h.getValue());
-            }
+            //for (Header h : request.getHeaders("Authorization")) {
+            //    System.out.println("Authorization header: " + h.getName() + ", " + h.getValue());
+            //}
 
             HttpClient client = createClient(openEnded);
 
@@ -134,30 +172,58 @@ public abstract class CommonHttpClient {
 
             if (null == response) {
                 LOGGER.severe("null response");
-                return null;
+                throw new TwitterClientException("null HTTP response");
             } else {
-                showResponseInfo(response);
+                //showResponseInfo(response);
 
-                if (200 != response.getStatusLine().getStatusCode()) {
-                    response.getEntity().writeTo(System.err);
-                    return null;
-                } else {
+                int code = response.getStatusLine().getStatusCode();
+                if (200 == code) {
                     return response;
+                } else {
+                    LOGGER.warning("unsuccessful request (response code " + code + ")");
+                    switch (code) {
+                        case 304:
+                            throw new NotModifiedException();
+                        case 400:
+                            throw new BadRequestException();
+                        case 401:
+                            throw new UnauthorizedException();
+                        case 403:
+                            throw new ForbiddenException();
+                        case 404:
+                            throw new NotFoundException();
+                        case 406:
+                            throw new NotAcceptableException();
+                        case 420:
+                            throw new EnhanceYourCalmException();
+                        case 500:
+                            throw new InternalServerErrorException();
+                        case 502:
+                            throw new BadGatewayException();
+                        case 503:
+                            throw new ServiceUnavailableException();
+                        default:
+                            throw new TwitterAPIException("unexpected response code: " + code);
+                    }
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new TwitterClientException(e);
         }
     }
 
     protected long nextWait(final long lastWait,
-                            final long timeOfLastRequest) {
+                            final long timeOfLastRequest,
+                            final boolean beExtraPatient) {
+        long minWait = beExtraPatient ? MIN_WAIT * PATIENCE_FACTOR : MIN_WAIT;
+        long maxWait = beExtraPatient ? MAX_WAIT * PATIENCE_FACTOR : MAX_WAIT;
+
         return timeOfLastRequest + MIN_WAIT < System.currentTimeMillis()
                 ? 0
                 : 0 == lastWait
-                ? MIN_WAIT
-                : lastWait >= MAX_WAIT
-                ? MAX_WAIT
+                ? minWait
+                : lastWait >= maxWait
+                ? maxWait
                 : lastWait * 2;
     }
 

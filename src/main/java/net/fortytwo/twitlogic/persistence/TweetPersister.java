@@ -52,10 +52,10 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private boolean freshTweet;
 
     public TweetPersister(final Matcher matcher,
-                             final TweetStore store,
-                             final TweetStoreConnection storeConnection,
-                             final CommonHttpClient httpClient,
-                             final boolean persistOnlyMatchingTweets) throws TweetStoreException {
+                          final TweetStore store,
+                          final TweetStoreConnection storeConnection,
+                          final CommonHttpClient httpClient,
+                          final boolean persistOnlyMatchingTweets) throws TweetStoreException {
         this.matcher = matcher;
         this.storeConnection = storeConnection;
         this.valueFactory = store.getSail().getValueFactory();
@@ -67,47 +67,57 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
-        LOGGER.info("tweet " + tweet.getId()
+        LOGGER.fine("tweet " + tweet.getId()
                 + " by @" + tweet.getUser().getScreenName()
                 + ": " + tweet.getText());
 
-        try {
-            currentTweet = tweet;
-            currentUser = tweet.getUser();
+        currentTweet = tweet;
+        currentUser = tweet.getUser();
 
-            if (persistOnlyMatchingTweets) {
-                freshTweet = true;
-            } else {
-                try {
-                    persistTweet(tweet);
-                } catch (TwitterClientException e) {
-                    throw new TweetHandlerException(e);
-                }
-
-                freshTweet = false;
-            }
-
-            if (null != matcher) {
-                try {
-                    matcher.match(tweet.getText(), tripleHandler, tweetContext);
-                } catch (MatcherException e) {
-                    throw new TweetHandlerException(e);
-                }
-            }
-        } finally {
+        if (persistOnlyMatchingTweets) {
+            freshTweet = true;
+        } else {
             try {
-                storeConnection.commit();
-            } catch (TweetStoreException e) {
+                persistTweet(tweet);
+            } catch (TwitterClientException e) {
+                throw new TweetHandlerException(e);
+            }
+
+            freshTweet = false;
+        }
+
+        if (null != matcher) {
+            try {
+                matcher.match(tweet.getText(), tripleHandler, tweetContext);
+            } catch (MatcherException e) {
+                throw new TweetHandlerException(e);
+            }
+
+            try {
+                storeConnection.getSailConnection().commit();
+            } catch (SailException e) {
                 throw new TweetHandlerException(e);
             }
         }
+
+        // TODO: roll back changes when an exception has been thrown
 
         return true;
     }
 
     private void persistTweet(final Tweet tweet) throws TwitterClientException {
+        // TODO: only begin a transaction, and subsequently commit, when something is matched.
+        // Perhaps this requires layering the persister below the matcher.
+        storeConnection.begin();
+
         currentMicroblogPost = persistenceContext.persist(tweet);
         persistenceContext.persist(tweet.getUser());
+
+        try {
+            storeConnection.commit();
+        } catch (TweetStoreException e) {
+            throw new TwitterClientException(e);
+        }
     }
 
     private Statement toRDF(final Triple triple,
@@ -141,8 +151,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                 return valueOf((URIReference) resource);
             case USER:
                 return valueOf((User) resource);
-//            case PERSON:
-//                return valueOf((Person) resource);
+            case PERSON:
+                return valueOf((Person) resource);
             default:
                 throw new IllegalStateException("unhandled resource type: " + resource.getType());
         }
@@ -172,6 +182,10 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
     private URI valueOf(final User user) throws TwitterClientException {
         return uriOf(persistenceContext.persist(user));
+    }
+
+    private URI valueOf(final Person person) throws TwitterClientException {
+        return uriOf(persistenceContext.persist(person));
     }
 
     private URI uriOf(final Thing thing) {

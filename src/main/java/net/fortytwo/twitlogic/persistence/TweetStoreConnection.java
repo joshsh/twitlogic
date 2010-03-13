@@ -31,12 +31,16 @@ public class TweetStoreConnection {
         createElmoManager();
     }
 
+    public void begin() {
+        elmoManager.getTransaction().begin();
+    }
+
     private void createElmoManager() {
         elmoManager = tweetStore.getElmoManagerFactory().createElmoManager();
 
         // Use an active transaction (rather than using auto-commit mode).
         // We will explicitly call commit() and rollback().
-        elmoManager.getTransaction().begin();
+    //    elmoManager.getTransaction().begin();
     }
 
     private void closeElmoManager() {

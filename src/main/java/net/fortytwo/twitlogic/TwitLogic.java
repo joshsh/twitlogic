@@ -23,9 +23,10 @@ import org.openrdf.rio.RDFFormat;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -98,8 +99,9 @@ public class TwitLogic {
             SEMANTICTWEET_LINKSET1 = DATASETS_BASEURI + "semantictweet-linkset1";
 
     public static final Pattern
+            CONFIG_LIST_PATTERN = Pattern.compile("[A-Za-z0-9-_]+/[A-Za-z0-9-_]+"),
+            CONFIG_USERNAME_PATTERN = Pattern.compile("[A-Za-z0-9-_]+"),
             HASHTAG_PATTERN = Pattern.compile("#[A-Za-z0-9-_]+"),
-            LIST_PATTERN = Pattern.compile("[A-Za-z0-9-_]+/[A-Za-z0-9-_]+"),
             USERNAME_PATTERN = Pattern.compile("@[A-Za-z0-9-_]+"),
             URL_PATTERN = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
 
@@ -214,13 +216,21 @@ public class TwitLogic {
                 // Create an agent to listen for commands.
                 // Also take the opportunity to memoize users we're following.
                 TwitLogicAgent agent = new TwitLogicAgent(client);
-                Handler<Tweet, TweetHandlerException> statusHandler
+                Handler<Tweet, TweetHandlerException> realtimeStatusHandler
                         = userRegistry.createUserRegistryFilter(
                         new CommandListener(agent, baseStatusHandler));
 
-                Collection<User> users = findFollowList(client);
+                Set<User> users = findFollowList(client);
 
-                client.processFollowFilterStream(users, statusHandler, 0);
+                GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
+                //GregorianCalendar cal = new GregorianCalendar(2010, 3, 1);
+
+                // Note: don't run old tweets through the command listener, or
+                // TwitLogic will respond, annoyingly, to old commands.
+                client.processTimelineFrom(users, cal.getTime(), baseStatusHandler);
+
+                client.processFollowFilterStream(users, realtimeStatusHandler, 0);
+
                 //client.requestUserTimeline(new User(71631722), statusHandler);
                 //client.processFollowFilterStream(A_FEW_GOOD_USERS, statusHandler, 0);
                 //client.processSampleStream(statusHandler);
@@ -237,16 +247,16 @@ public class TwitLogic {
     }
 
     // Note: for now, lists are not persisted in any way
-    private static Collection<User> findFollowList(final TwitterClient client) throws Exception {
+    private static Set<User> findFollowList(final TwitterClient client) throws Exception {
         TypedProperties props = TwitLogic.getConfiguration();
 
         // Note: this doesn't really need to be an order-preserving collection,
         // because Java properties are not order-preserving.
-        Collection<User> users = new LinkedHashSet<User>();
+        Set<User> users = new LinkedHashSet<User>();
         for (String key : props.stringPropertyNames()) {
             if (key.startsWith(TwitLogic.FOLLOWLIST)) {
                 String listVal = props.getString(key);
-                if (!LIST_PATTERN.matcher(listVal).matches()) {
+                if (!CONFIG_LIST_PATTERN.matcher(listVal).matches()) {
                     throw new PropertyException("invalid list: " + listVal + " (should be of the form user_name/list_id)");
                 }
 
@@ -258,7 +268,7 @@ public class TwitLogic {
                 users.addAll(l);
             } else if (key.startsWith(TwitLogic.FOLLOWUSER)) {
                 String screenName = props.getString(key);
-                if (!USERNAME_PATTERN.matcher(screenName).matches()) {
+                if (!CONFIG_USERNAME_PATTERN.matcher(screenName).matches()) {
                     throw new PropertyException("invalid screen name: " + screenName);
                 }
 

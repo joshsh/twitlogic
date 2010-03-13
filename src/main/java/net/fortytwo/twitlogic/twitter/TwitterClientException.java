@@ -6,6 +6,10 @@ package net.fortytwo.twitlogic.twitter;
  * Time: 10:06:32 PM
  */
 public class TwitterClientException extends Exception {
+    public TwitterClientException() {
+        super();
+    }
+    
     public TwitterClientException(final Throwable cause) {
         super(cause);
     }

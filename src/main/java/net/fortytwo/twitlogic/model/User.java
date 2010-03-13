@@ -11,6 +11,7 @@ import org.json.JSONObject;
  * Time: 10:05:19 PM
  */
 public class User implements Resource {
+    //provate final Boolean contributorsEnabled;
     //private final Date createdAt;
     private final String description;
     //private final Integer favoritesCount;
@@ -18,6 +19,7 @@ public class User implements Resource {
     //private final Integer friendsCount;
     private final boolean geoEnabled;
     private final Integer id;
+    //private final String language;
     private final String location;
     private final String name;
     //private final String notifications; // Appropriate data type unknown.
@@ -31,6 +33,7 @@ public class User implements Resource {
     private final String profileTextColor;
     private final Boolean isProtected; // Note: field name is "protected"
     private final String screenName;
+    //private final Tweet status;
     //private final Integer statusesCount;
     //private final String timeZone;
     private final String url;
@@ -91,7 +94,7 @@ public class User implements Resource {
     }
 
     public User(final JSONObject json) throws JSONException {
-        TwitterAPI.checkJSON(json);
+        TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.USER);
 
         id = json.getInt(TwitterAPI.Field.ID.toString());
         geoEnabled = json.getBoolean(TwitterAPI.Field.GEO_ENABLED.toString());

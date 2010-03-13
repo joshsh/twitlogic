@@ -18,12 +18,15 @@ public class Tweet implements Resource {
 
     private User user;
 
+    // private final List<User> contributors;
+    // private final ??? coordinates;
     private Date createdAt;
     //private final Boolean favorited;
     private String geo;
     private String id;
     private User inReplyToUser;
     private Tweet inReplyToTweet;
+    // private final ??? place;
     //private final String source;
     private String text;
     //private final Boolean truncated;
@@ -51,7 +54,7 @@ public class Tweet implements Resource {
      * @throws JSONException
      */
     public Tweet(final JSONObject json) throws JSONException {
-        TwitterAPI.checkJSON(json);
+        TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.STATUS);
 
         String g = User.getString(json, TwitterAPI.Field.GEO);
         geo = g;

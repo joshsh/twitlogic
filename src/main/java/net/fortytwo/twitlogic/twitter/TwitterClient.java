@@ -5,6 +5,7 @@ import net.fortytwo.twitlogic.flow.NullHandler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.util.CommonHttpClient;
+import net.fortytwo.twitlogic.twitter.errors.UnauthorizedException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import org.apache.http.HttpEntity;
@@ -24,8 +25,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: josh
@@ -156,22 +159,102 @@ public class TwitterClient extends CommonHttpClient {
 
     public List<User> getListMembers(final User user,
                                      final String listId) throws TwitterClientException {
-        HttpGet request = new HttpGet(TwitterAPI.API_LISTS_URL
-                + "/" + user.getScreenName() + "/" + listId + "/members.json");
-        sign(request);
+        List<User> users = new LinkedList<User>();
 
-        JSONObject json = requestJSONObject(request);
-        try {
-            return constructUserList(json);
-        } catch (JSONException e) {
-            throw new TwitterClientException(e);
+        String cursor = "-1";
+
+        // Note: a null cursor doesn't appear to occur, but just to be safe...
+        while (null != cursor && !cursor.equals("0")) {
+            HttpGet request = new HttpGet(TwitterAPI.API_LISTS_URL
+                    + "/" + user.getScreenName() + "/" + listId + "/members.json"
+                    + "?cursor=" + cursor);
+            sign(request);
+
+            JSONObject json = requestJSONObject(request);
+            //System.out.println(json);
+
+            try {
+                users.addAll(constructUserList(json));
+            } catch (JSONException e) {
+                throw new TwitterClientException(e);
+            }
+
+            cursor = json.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
+        }
+
+        return users;
+    }
+
+    public boolean processPublicTimelinePage(final User user,
+                                             final int page,
+                                             final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+        if (page < 1) {
+            throw new IllegalArgumentException("bad page number");
+        }
+
+        // Note: no need to authenticate
+        HttpGet request = new HttpGet(TwitterAPI.USER_TIMELINE_URL
+                + "/" + user.getScreenName() + ".json"
+                + "?page=" + page + "&count=" + TwitterAPI.COUNT_LIMIT);
+
+        JSONArray array = requestJSONArray(request);
+        //System.out.println(array);
+        for (int i = 0; i < array.length(); i++) {
+            Tweet t;
+            try {
+                t = new Tweet(array.getJSONObject(i));
+            } catch (JSONException e) {
+                throw new TwitterClientException(e);
+            }
+
+            if (!handler.handle(t)) {
+                return false;
+            }
+        }
+
+        return 0 < array.length();
+    }
+
+    public void processTimelineFrom(final User user,
+                                    final Date minTimestamp,
+                                    final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+        Handler<Tweet, TweetHandlerException> dateFilter = new Handler<Tweet, TweetHandlerException>() {
+            private int statuses = 0;
+
+            public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                if (++statuses >= TwitterAPI.STATUSES_LIMIT) {
+                    LOGGER.warning("maximum number (" + TwitterAPI.STATUSES_LIMIT
+                            + ") of statuses retrieved for user " + user.getScreenName());
+                }
+
+                System.out.println("\tcreated at: " + tweet.getCreatedAt());
+                return (tweet.getCreatedAt().compareTo(minTimestamp) >= 0)
+                        && handler.handle(tweet);
+            }
+        };
+
+        int page = 1;
+        while (processPublicTimelinePage(user, page, dateFilter)) {
+            page++;
+        }
+    }
+
+    public void processTimelineFrom(final Set<User> users,
+                                    final Date minTimestamp,
+                                    final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+        for (User u : users) {
+            try {
+                processTimelineFrom(u, minTimestamp, handler);
+            } catch (UnauthorizedException e) { // Soft fail here
+                LOGGER.warning("not authorized to get " + u.getScreenName() + "'s timeline");
+            }
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
     private List<User> constructUserList(final JSONObject json) throws JSONException {
-        TwitterAPI.checkJSON(json);
+        TwitterAPI.checkUserListJSON(json);
 
         List<User> users = new LinkedList<User>();
         JSONArray array = json.getJSONArray(TwitterAPI.Field.USERS.toString());
@@ -203,6 +286,19 @@ public class TwitterClient extends CommonHttpClient {
         request.setEntity(entity);
     }
 
+    private void checkForTwitterAPIException(final JSONObject json) throws TwitterAPIException {
+        String msg = json.optString(TwitterAPI.ErrorField.ERROR.toString());
+
+        if (null != msg && 0 < msg.length()) {
+            System.out.println(json);
+            if (msg.equals("Not authorized")) {
+                throw new UnauthorizedException();
+            } else {
+                throw new TwitterAPIException(msg);
+            }
+        }
+    }
+
     private JSONObject requestJSONObject(final HttpUriRequest request) throws TwitterClientException {
         try {
             HttpResponse response = requestUntilSucceed(request);
@@ -211,8 +307,11 @@ public class TwitterClient extends CommonHttpClient {
             responseEntity.writeTo(bos);
             JSONObject object = new JSONObject(bos.toString());
             bos.close();
+            checkForTwitterAPIException(object);
             return object;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            throw new TwitterClientException(e);
+        } catch (JSONException e) {
             throw new TwitterClientException(e);
         }
     }
@@ -223,10 +322,17 @@ public class TwitterClient extends CommonHttpClient {
             HttpEntity responseEntity = response.getEntity();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             responseEntity.writeTo(bos);
-            JSONArray array = new JSONArray(bos.toString());
+            String s = bos.toString();
             bos.close();
-            return array;
-        } catch (Exception e) {
+            // If the response starts with a '{' instead of a '[', assume it's an error
+            if (s.startsWith(("{"))) {
+                JSONObject object = new JSONObject(s);
+                checkForTwitterAPIException(object);
+            }
+            return new JSONArray(s);
+        } catch (IOException e) {
+            throw new TwitterClientException(e);
+        } catch (JSONException e) {
             throw new TwitterClientException(e);
         }
     }
@@ -258,14 +364,16 @@ public class TwitterClient extends CommonHttpClient {
             long wait;
             switch (exit) {
                 case END_OF_INPUT:
-                    wait = nextWait(lastWait, timeOfLastRequest);
+                    // TODO: should we ever be extra patient here?
+                    wait = nextWait(lastWait, timeOfLastRequest, false);
                     break;
                 case EXCEPTION_THROWN:
                     return exit;
                 case HANDLER_QUIT:
                     return exit;
                 case NULL_RESPONSE:
-                    wait = nextWait(lastWait, timeOfLastRequest);
+                    // TODO: should we ever be extra patient here?
+                    wait = nextWait(lastWait, timeOfLastRequest, false);
                     break;
                 default:
                     throw new IllegalStateException("unexpected exit state: " + exit);
