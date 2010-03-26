@@ -9,7 +9,7 @@ import org.openrdf.elmo.annotations.rdf;
  * Date: Nov 20, 2009
  * Time: 6:30:13 PM
  */
-@rdf(SIOC.USER)
+@rdf(SIOC.USERACCOUNT)
 public interface User extends Thing {
     @rdf(SIOC.ID)
     String getId();

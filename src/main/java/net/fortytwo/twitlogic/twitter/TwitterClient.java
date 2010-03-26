@@ -185,7 +185,7 @@ public class TwitterClient extends CommonHttpClient {
         return users;
     }
 
-    public boolean processPublicTimelinePage(final User user,
+    public boolean handlePublicTimelinePage(final User user,
                                              final int page,
                                              final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
         if (page < 1) {
@@ -215,9 +215,9 @@ public class TwitterClient extends CommonHttpClient {
         return 0 < array.length();
     }
 
-    public void processTimelineFrom(final User user,
-                                    final Date minTimestamp,
-                                    final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+    public void handleTimelineFrom(final User user,
+                                   final Date minTimestamp,
+                                   final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
         Handler<Tweet, TweetHandlerException> dateFilter = new Handler<Tweet, TweetHandlerException>() {
             private int statuses = 0;
 
@@ -234,7 +234,7 @@ public class TwitterClient extends CommonHttpClient {
         };
 
         int page = 1;
-        while (processPublicTimelinePage(user, page, dateFilter)) {
+        while (handlePublicTimelinePage(user, page, dateFilter)) {
             page++;
         }
     }
@@ -244,7 +244,7 @@ public class TwitterClient extends CommonHttpClient {
                                     final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
         for (User u : users) {
             try {
-                processTimelineFrom(u, minTimestamp, handler);
+                handleTimelineFrom(u, minTimestamp, handler);
             } catch (UnauthorizedException e) { // Soft fail here
                 LOGGER.warning("not authorized to get " + u.getScreenName() + "'s timeline");
             }

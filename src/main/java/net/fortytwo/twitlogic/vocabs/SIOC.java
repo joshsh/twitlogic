@@ -85,7 +85,7 @@ public interface SIOC {
             THREAD = NAMESPACE + "Thread",
             TITLE = NAMESPACE + "title",
             TOPIC = NAMESPACE + "topic",
-            USER = NAMESPACE + "User",
+            USERACCOUNT = NAMESPACE + "UserAccount",
             USERGROUP = NAMESPACE + "Usergroup",
             USERGROUP_OF = NAMESPACE + "usergroup_of";
 
