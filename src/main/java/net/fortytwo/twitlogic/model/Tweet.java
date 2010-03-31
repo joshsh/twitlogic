@@ -27,6 +27,7 @@ public class Tweet implements Resource {
     private User inReplyToUser;
     private Tweet inReplyToTweet;
     // private final ??? place;
+    private Tweet retweetOf;
     //private final String source;
     private String text;
     //private final Boolean truncated;
@@ -76,6 +77,11 @@ public class Tweet implements Resource {
                 ? null
                 : new Tweet(inReplyToStatusId);
 
+        JSONObject rt = json.optJSONObject(TwitterAPI.Field.RETWEETED_STATUS.toString());
+        retweetOf = null == rt
+                ? null
+                : new Tweet(rt);
+
         text = json.getString(TwitterAPI.Field.TEXT.toString());
 
         String dateString = User.getString(json, TwitterAPI.Field.CREATED_AT);
@@ -104,6 +110,10 @@ public class Tweet implements Resource {
 
     public Tweet getInReplyToTweet() {
         return inReplyToTweet;
+    }
+
+    public Tweet getRetweetOf() {
+        return retweetOf;
     }
 
     public User getInReplyToUser() {

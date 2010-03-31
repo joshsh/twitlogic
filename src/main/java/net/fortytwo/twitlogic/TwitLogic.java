@@ -236,7 +236,7 @@ public class TwitLogic {
                     // TwitLogic will respond, annoyingly, to old commands.
                     //client.processTimelineFrom(users, cal.getTime(), baseStatusHandler);
 
-                    client.processFollowFilterStream(users, realtimeStatusHandler, 0);
+                    //client.processFollowFilterStream(users, realtimeStatusHandler, 0);
                     //*/
 
 
@@ -246,7 +246,7 @@ public class TwitLogic {
                     //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
                     //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
                     //client.processTrackFilterStream(new String[]{"$BAC", "$JPM", "$BA", "$MSFT", "$GOOG", "$GS", "$MS", "$XOM", "$WMT"}, new ExampleStatusHandler());
-                    //client.processTrackFilterStream(new String[]{"RT"}, new ExampleStatusHandler());
+                    client.processTrackFilterStream(new String[]{"RT"}, new ExampleStatusHandler());
                     //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
                     //*/
                 } finally {

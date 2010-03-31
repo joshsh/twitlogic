@@ -131,6 +131,7 @@ public class TwitterAPI {
         PROFILE_SIDEBAR_COLOR("profile_sidebar_fill_color"),
         PROFILE_TEXT_COLOR("profile_text_color"),
         PROTECTED("protected"),
+        RETWEETED_STATUS("retweeted_status"),
         SCREEN_NAME("screen_name"),
         SOURCE("source"),
         STATUS("status"),
