@@ -117,6 +117,7 @@ public class TwitterAPI {
         IN_REPLY_TO_STATUS_ID("in_reply_to_status_id"),
         IN_REPLY_TO_USER_ID("in_reply_to_user_id"),
         LANG("lang"),
+        LIMIT("limit"),
         LOCATION("location"),
         NAME("name"),
         NOTIFICATIONS("notifications"),

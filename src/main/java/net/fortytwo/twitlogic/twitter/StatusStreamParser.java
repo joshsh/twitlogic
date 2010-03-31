@@ -80,13 +80,20 @@ public class StatusStreamParser {
     private boolean handleStatusElement(final JSONObject el) throws TweetHandlerException {
         if (null != el.opt(TwitterAPI.Field.DELETE.toString())) {
             return handleDeleteStatusElement(el);
+        } else if (null != el.opt(TwitterAPI.Field.LIMIT.toString())) {
+            return handleLimitStatusElement(el);
         } else {
             return handleNormalStatusElement(el);
         }
     }
 
     private boolean handleDeleteStatusElement(final JSONObject el) {
-        LOGGER.info("skipping delete element");
+        LOGGER.info("skipping 'delete' status element");
+        return true;
+    }
+
+    private boolean handleLimitStatusElement(final JSONObject el) {
+        LOGGER.warning("skipping 'limit' status element");
         return true;
     }
 

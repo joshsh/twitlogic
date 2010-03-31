@@ -50,7 +50,7 @@ import java.util.zip.GZIPOutputStream;
 public class TweetStore {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitLogic.class);
 
-    private static TweetStore defaultStore;
+    //private static TweetStore defaultStore;
 
     private final Sail sail;
     private final TypedProperties configuration;
@@ -59,6 +59,7 @@ public class TweetStore {
     private SesameManagerFactory elmoManagerFactory;
     private boolean initialized = false;
 
+    /*
     public static TweetStore getDefaultStore() throws TweetStoreException {
         if (null == defaultStore) {
             defaultStore = new TweetStore();
@@ -78,7 +79,7 @@ public class TweetStore {
         }
 
         return defaultStore;
-    }
+    }*/
 
     private TweetStore() throws TweetStoreException {
         this(TwitLogic.getConfiguration());

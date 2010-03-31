@@ -187,59 +187,73 @@ public class TwitLogic {
     public static void main(final String[] args) throws Exception {
         try {
             // Create a persistent store.
-            TweetStore store = TweetStore.getDefaultStore();
-            //store.dump(System.out);
+            TweetStore store = new TweetStore(TwitLogic.getConfiguration());
+            store.initialize();
 
-            store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
+            try {
+                //TweetStore store = TweetStore.getDefaultStore();
+
+                //store.dump(System.out);
+
+                store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 //System.exit(0);
 //store.clear();
 //store.load(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 //System.exit(0);
 
-            // Launch linked data server.
-            new TwitLogicServer(store);
+                // Launch linked data server.
+                new TwitLogicServer(store);
 
-            TwitterClient client = new TwitterClient();
-            UserRegistry userRegistry = new UserRegistry(client);
-            //PersistenceContext pContext = new PersistenceContext(userRegistry, store);
+                TwitterClient client = new TwitterClient();
+                UserRegistry userRegistry = new UserRegistry(client);
+                //PersistenceContext pContext = new PersistenceContext(userRegistry, store);
 
-            // Create the tweet matcher.
-            Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
-                    new DemoAfterthoughtMatcher());
+                // Create the tweet matcher.
+                Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
+                        new DemoAfterthoughtMatcher());
 
-            TweetStoreConnection c = store.createConnection();
-            try {
-                boolean persistOnlyMatchingTweets = true;
-                Handler<Tweet, TweetHandlerException> baseStatusHandler
-                        = new TweetPersister(matcher, store, c, client, persistOnlyMatchingTweets);
+                TweetStoreConnection c = store.createConnection();
+                try {
 
-                // Create an agent to listen for commands.
-                // Also take the opportunity to memoize users we're following.
-                TwitLogicAgent agent = new TwitLogicAgent(client);
-                Handler<Tweet, TweetHandlerException> realtimeStatusHandler
-                        = userRegistry.createUserRegistryFilter(
-                        new CommandListener(agent, baseStatusHandler));
+                    boolean persistOnlyMatchingTweets = true;
+                    Handler<Tweet, TweetHandlerException> baseStatusHandler
+                            = new TweetPersister(matcher, store, c, client, persistOnlyMatchingTweets);
 
-                Set<User> users = findFollowList(client);
+                    // Create an agent to listen for commands.
+                    // Also take the opportunity to memoize users we're following.
+                    TwitLogicAgent agent = new TwitLogicAgent(client);
+                    Handler<Tweet, TweetHandlerException> realtimeStatusHandler
+                            = userRegistry.createUserRegistryFilter(
+                            new CommandListener(agent, baseStatusHandler));
 
-                GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
-                //GregorianCalendar cal = new GregorianCalendar(2010, 3, 1);
+                    Set<User> users = findFollowList(client);
 
-                // Note: don't run old tweets through the command listener, or
-                // TwitLogic will respond, annoyingly, to old commands.
-                client.processTimelineFrom(users, cal.getTime(), baseStatusHandler);
+                    GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
+                    //GregorianCalendar cal = new GregorianCalendar(2010, 3, 1);
 
-                client.processFollowFilterStream(users, realtimeStatusHandler, 0);
 
-                //client.requestUserTimeline(new User(71631722), statusHandler);
-                //client.processFollowFilterStream(A_FEW_GOOD_USERS, statusHandler, 0);
-                //client.processSampleStream(statusHandler);
-                //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
-                //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
-                //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
-                //*/
+                    // Note: don't run old tweets through the command listener, or
+                    // TwitLogic will respond, annoyingly, to old commands.
+                    //client.processTimelineFrom(users, cal.getTime(), baseStatusHandler);
+
+                    client.processFollowFilterStream(users, realtimeStatusHandler, 0);
+                    //*/
+
+
+                    //client.requestUserTimeline(new User(71631722), statusHandler);
+                    //client.processFollowFilterStream(A_FEW_GOOD_USERS, statusHandler, 0);
+                    //client.processSampleStream(statusHandler);
+                    //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
+                    //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
+                    //client.processTrackFilterStream(new String[]{"$BAC", "$JPM", "$BA", "$MSFT", "$GOOG", "$GS", "$MS", "$XOM", "$WMT"}, new ExampleStatusHandler());
+                    //client.processTrackFilterStream(new String[]{"RT"}, new ExampleStatusHandler());
+                    //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
+                    //*/
+                } finally {
+                    c.close();
+                }
             } finally {
-                c.close();
+                store.shutDown();
             }
         } catch (Throwable t) {
             t.printStackTrace();
