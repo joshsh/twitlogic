@@ -26,6 +26,7 @@ public interface SIOC {
             EARLIER_VERSION = NAMESPACE + "earlier_version",
             EMAIL = NAMESPACE + "email",
             EMAIL_SHA1 = NAMESPACE + "email_sha1",
+            EMBEDS_KNOWLEDGE = NAMESPACE + "embeds_knowledge",
             FIRST_NAME = NAMESPACE + "first_name",
             FOLLOWS = NAMESPACE + "follows",
             FORUM = NAMESPACE + "Forum",
@@ -88,7 +89,4 @@ public interface SIOC {
             USERACCOUNT = NAMESPACE + "UserAccount",
             USERGROUP = NAMESPACE + "Usergroup",
             USERGROUP_OF = NAMESPACE + "usergroup_of";
-
-    public static final String
-            EMBEDSKNOWLEDGE = NAMESPACE + "embedsKnowledge";
 }

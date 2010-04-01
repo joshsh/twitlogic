@@ -15,7 +15,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 @rdf(SIOCT.MICROBLOGPOST)
 public interface MicroblogPost extends Thing {
-    @rdf(SIOC.EMBEDSKNOWLEDGE)
+    @rdf(SIOC.EMBEDS_KNOWLEDGE)
     Graph getEmbedsKnowledge();
 
     void setEmbedsKnowledge(Graph embedsKnowledge);
