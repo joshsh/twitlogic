@@ -62,6 +62,12 @@ public class PersistenceContext {
             post.setReplyOf(p);
         }
 
+        // Note: we assume that no tweet will be simultaneously a retweet of one tweet and a reply to another.
+        if (null != tweet.getRetweetOf()) {
+            MicroblogPost p = postForTweet(tweet.getRetweetOf());
+            post.setReplyOf(p);
+        }
+
         // TODO: geo, in-reply-to-user
 
         return post;

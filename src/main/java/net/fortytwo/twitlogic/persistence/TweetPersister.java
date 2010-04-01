@@ -115,9 +115,12 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         persistenceContext.persist(tweet.getUser());
         if (!this.persistOnlyMatchingTweets) {
             // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
-            // of replies.
+            // of replies and/or retweets.
             if (null != tweet.getInReplyToTweet()) {
                 persistenceContext.persist(tweet.getInReplyToTweet());
+            }
+            if (null != tweet.getRetweetOf()) {
+                persistenceContext.persist(tweet.getRetweetOf());
             }
         }
 
