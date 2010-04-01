@@ -113,7 +113,9 @@ public class TwitterClient extends CommonHttpClient {
         HttpPost request = new HttpPost(TwitterAPI.STREAM_STATUSES_FILTER_URL);
 
         List<NameValuePair> formParams = new ArrayList<NameValuePair>();
-        formParams.add(new BasicNameValuePair("follow", commaDelimit(userIds(users))));
+        String followList = commaDelimit(userIds(users));
+        LOGGER.fine("following: " + followList);
+        formParams.add(new BasicNameValuePair("follow", followList));
         if (previousStatusCount > 0) {
             formParams.add(new BasicNameValuePair("count", "" + previousStatusCount));
         }

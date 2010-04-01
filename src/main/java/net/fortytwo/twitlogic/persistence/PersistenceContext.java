@@ -57,7 +57,12 @@ public class PersistenceContext {
             post.setHasCreator(user);
         }
 
-        // TODO: geo, in-reply-to-tweet, in-reply-to-user
+        if (null != tweet.getInReplyToTweet()) {
+            MicroblogPost p = postForTweet(tweet.getInReplyToTweet());
+            post.setReplyOf(p);
+        }
+
+        // TODO: geo, in-reply-to-user
 
         return post;
     }

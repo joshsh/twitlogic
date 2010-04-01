@@ -34,4 +34,9 @@ public interface MicroblogPost extends Thing {
     User getHasCreator();
 
     void setHasCreator(User hasCreator);
+
+    @rdf(SIOC.REPLY_OF)
+    MicroblogPost getReplyOf();
+
+    void setReplyOf(MicroblogPost replyOf);
 }

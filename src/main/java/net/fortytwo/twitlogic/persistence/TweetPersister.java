@@ -62,7 +62,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         this.tweetContext = new SimpleTweetContext();
         this.tripleHandler = new TriplePersister();
         this.httpClient = httpClient;
-        this.persistenceContext = new PersistenceContext(storeConnection.getElmoManager());
+        this.persistenceContext = new PersistenceContext(
+                storeConnection.getElmoManager());
         this.persistOnlyMatchingTweets = persistOnlyMatchingTweets;
     }
 
@@ -112,6 +113,13 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
         currentMicroblogPost = persistenceContext.persist(tweet);
         persistenceContext.persist(tweet.getUser());
+        if (!this.persistOnlyMatchingTweets) {
+            // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
+            // of replies.
+            if (null != tweet.getInReplyToTweet()) {
+                persistenceContext.persist(tweet.getInReplyToTweet());
+            }
+        }
 
         try {
             storeConnection.commit();

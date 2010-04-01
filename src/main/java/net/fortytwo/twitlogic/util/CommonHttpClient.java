@@ -47,7 +47,7 @@ public abstract class CommonHttpClient {
             PATIENCE_FACTOR = 3;
 
     protected void logRequest(final HttpUriRequest request) {
-        LOGGER.info("issuing HTTP " + request.getMethod() + " request for <" + request.getURI());
+        LOGGER.info("issuing HTTP " + request.getMethod() + " request for <" + request.getURI() + ">");
     }
 
     protected static void setAcceptHeader(final HttpRequest request, final String[] mimeTypes) {
