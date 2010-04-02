@@ -5,8 +5,10 @@ import net.fortytwo.twitlogic.twitter.TwitterAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.logging.Logger;
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * User: josh
@@ -31,6 +33,8 @@ public class Tweet implements Resource {
     //private final String source;
     private String text;
     //private final Boolean truncated;
+
+    private final Collection<Triple> annotations = new LinkedList<Triple>();
 
     /**
      * Creates a new, empty tweet.
@@ -57,8 +61,7 @@ public class Tweet implements Resource {
     public Tweet(final JSONObject json) throws JSONException {
         TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.STATUS);
 
-        String g = User.getString(json, TwitterAPI.Field.GEO);
-        geo = g;
+        geo = User.getString(json, TwitterAPI.Field.GEO);
         if (null != geo) {
             LOGGER.info("geo: " + geo);
         }
@@ -72,12 +75,13 @@ public class Tweet implements Resource {
                 ? new User(inReplyToScreenName)
                 : null;
 
-        String inReplyToStatusId = json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString());
+        String inReplyToStatusId = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
         inReplyToTweet = null == inReplyToStatusId
                 ? null
                 : new Tweet(inReplyToStatusId);
 
         JSONObject rt = json.optJSONObject(TwitterAPI.Field.RETWEETED_STATUS.toString());
+        //System.out.println("retweet: " + rt);
         retweetOf = null == rt
                 ? null
                 : new Tweet(rt);
@@ -126,6 +130,10 @@ public class Tweet implements Resource {
 
     public Resource.Type getType() {
         return Resource.Type.TWEET;
+    }
+
+    public Collection<Triple> getAnnotations() {
+        return annotations;
     }
 
     public String toString() {

@@ -31,10 +31,6 @@ public class TwitterAPI {
             USER_TIMELINE_URL = "http://twitter.com/statuses/user_timeline",
             USERS_SHOW_URL = "http://twitter.com/users/show";
 
-    public static final String
-            SCREENNAME = "screen_name",
-            USER_ID = "user_id";
-
     public enum FieldContext {
         STATUS, USER
     }
@@ -175,7 +171,8 @@ public class TwitterAPI {
             STATUS = "status",
             IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id",
             LAT = "lat",
-            LONG = "long";
+            LONG = "long",
+            USER_ID = "user_id";
 
     /**
      * Checks for unknown keys in status element JSON.  If the Twitter API

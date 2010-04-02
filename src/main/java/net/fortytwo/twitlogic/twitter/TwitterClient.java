@@ -57,7 +57,7 @@ public class TwitterClient extends CommonHttpClient {
                 .append(".json").append("?");
 
         if (null == user.getId()) {
-            sb.append(TwitterAPI.SCREENNAME).append("=").append(user.getScreenName());
+            sb.append(TwitterAPI.SCREEN_NAME).append("=").append(user.getScreenName());
         } else {
             sb.append(TwitterAPI.USER_ID).append("=").append(user.getId());
         }

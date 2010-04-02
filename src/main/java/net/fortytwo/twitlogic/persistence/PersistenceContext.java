@@ -36,12 +36,13 @@ public class PersistenceContext {
         this.manager = manager;
     }
 
-    public MicroblogPost persist(final Tweet tweet) {
+    public MicroblogPost persist(final Tweet tweet,
+                                 final boolean persistGraph) {
         MicroblogPost post = postForTweet(tweet);
 
-        // For now, we create an "embedded knowledge" graph even if no embedded
-        // data is recognized.
-        post.setEmbedsKnowledge(graphForTweet(tweet));
+        if (persistGraph) {
+            post.setEmbedsKnowledge(graphForTweet(tweet));
+        }
 
         if (null != tweet.getCreatedAt()) {
             // TODO: put these in the ISO 8601 format

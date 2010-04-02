@@ -38,6 +38,7 @@ public class StatusStreamParser {
         int emptyLines = 0;
         try {
             LOGGER.info("begin reading from stream");
+            // Break out when the end of input is reached, when the handler quits, or when an exception is thrown.
             while (true) {
                 String line = b.readLine();
                 if (null == line) {

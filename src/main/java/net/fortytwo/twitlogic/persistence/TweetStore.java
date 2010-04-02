@@ -48,7 +48,7 @@ import java.util.zip.GZIPOutputStream;
  * Time: 9:10:17 PM
  */
 public class TweetStore {
-    private static final Logger LOGGER = TwitLogic.getLogger(TwitLogic.class);
+    private static final Logger LOGGER = TwitLogic.getLogger(TweetStore.class);
 
     //private static TweetStore defaultStore;
 
@@ -81,19 +81,15 @@ public class TweetStore {
         return defaultStore;
     }*/
 
-    private TweetStore() throws TweetStoreException {
-        this(TwitLogic.getConfiguration());
-    }
-
-    public TweetStore(final TypedProperties conf) throws TweetStoreException {
-        this.configuration = conf;
+    public TweetStore() throws TweetStoreException {
+        configuration = TwitLogic.getConfiguration();
         String sailType;
         try {
-            sailType = conf.getString(TwitLogic.SAIL_CLASS);
+            sailType = configuration.getString(TwitLogic.SAIL_CLASS);
         } catch (PropertyException e) {
             throw new TweetStoreException(e);
         }
-        sail = createSail(sailType, conf);
+        sail = createSail(sailType, configuration);
     }
 
     public TweetStore(final Sail sail) {
@@ -130,59 +126,10 @@ public class TweetStore {
                 = new SesameManagerFactory(adminElmoModule, repository);
         elmoManagerFactory.setQueryLanguage(QueryLanguage.SPARQL);
         initialized = true;
-
-        // TODO: this is a hack
-        try {
-            new Thread(new PeriodicDumperRunnable(configuration)).start();
-        } catch (PropertyException e) {
-            throw new TweetStoreException(e);
-        }
     }
 
     public TweetStoreConnection createConnection() throws TweetStoreException {
         return new TweetStoreConnection(this);
-    }
-
-    private void refreshKnowledgeBaseMetadata(final Repository repository) throws TweetStoreException {
-        try {
-            RepositoryConnection rc = repository.getConnection();
-            try {
-                ValueFactory vf = repository.getValueFactory();
-
-                // Remove all authoritative statements about these resources
-                // from the knowledge base.  All resources must be listed here,
-                // else we may end up with messy, superfluous metadata.
-                String[] metaResources = {
-                        TwitLogic.TWITLOGIC_DATASET,
-                        TwitLogic.SEMANTICTWEET_DATASET,
-                        TwitLogic.SEMANTICTWEET_LINKSET1};
-
-                for (String r : metaResources) {
-                    URI u = vf.createURI(r);
-                    rc.remove(u, null, null, TwitLogic.AUTHORITATIVE_GRAPH);
-                    rc.remove((Resource) null, null, u, TwitLogic.AUTHORITATIVE_GRAPH);
-                }
-
-                rc.clearNamespaces();
-                
-                //if (rc.isEmpty()) {
-                LOGGER.info("adding seed data");
-                String baseURI = "http://example.org/baseURI/";
-                rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
-                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.ttl"), baseURI, RDFFormat.TURTLE);
-
-                rc.commit();
-                //}
-            } finally {
-                rc.close();
-            }
-        } catch (IOException e) {
-            throw new TweetStoreException(e);
-        } catch (RDFParseException e) {
-            throw new TweetStoreException(e);
-        } catch (RepositoryException e) {
-            throw new TweetStoreException(e);
-        }
     }
 
     public Sail getSail() {
@@ -301,6 +248,42 @@ public class TweetStore {
         // TODO
     }
 
+    public void clear() throws TweetStoreException {
+        try {
+            RepositoryConnection rc = repository.getConnection();
+            try {
+                rc.clear();
+                rc.commit();
+            } finally {
+                rc.close();
+            }
+        } catch (RepositoryException e) {
+            throw new TweetStoreException(e);
+        }
+    }
+
+    public void load(final File file,
+                     final RDFFormat format) throws TweetStoreException {
+        try {
+            RepositoryConnection rc = repository.getConnection();
+            try {
+                try {
+                    rc.add(file, "http://example.org/baseURI", format);
+                } catch (IOException e) {
+                    throw new TweetStoreException(e);
+                } catch (RDFParseException e) {
+                    throw new TweetStoreException(e);
+                }
+
+                rc.commit();
+            } finally {
+                rc.close();
+            }
+        } catch (RepositoryException e) {
+            throw new TweetStoreException(e);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private Sail createSail(final String sailType,
@@ -352,77 +335,43 @@ public class TweetStore {
         return sail;
     }
 
-    private class PeriodicDumperRunnable implements Runnable {
-        private final TypedProperties conf;
-        private final long dumpInterval;
-
-        public PeriodicDumperRunnable(final TypedProperties conf) throws PropertyException {
-            this.conf = conf;
-            dumpInterval = conf.getLong(TwitLogic.DUMPINTERVAL);
-        }
-
-        public void run() {
-            while (true) {
-                try {
-                    // Note: this uncompressed file is generated only for the
-                    // sake of the Linking Open Conference Tweets application
-                    // (in case we put it back up)
-                    File f1 = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
-                            "dump/twitlogic-full.rdf");
-                    dumpToFile(f1, RDFFormat.RDFXML);
-
-                    // TODO: use N-Quads instead of (or in addition to) TriG
-                    File f2 = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
-                            "dump/twitlogic-full.trig.gz");
-                    dumpToCompressedFile(f2, RDFFormat.TRIG);
-                } catch (Throwable t) {
-                    LOGGER.severe("dumper runnable died with error: " + t);
-                    t.printStackTrace();
-                    return;
-                }
-
-                try {
-                    Thread.sleep(dumpInterval);
-                } catch (InterruptedException e) {
-                    LOGGER.severe("dumper runnable died with error: " + e);
-                    e.printStackTrace();
-                    return;
-                }
-            }
-        }
-    }
-
-    public void clear() throws TweetStoreException {
+    private void refreshKnowledgeBaseMetadata(final Repository repository) throws TweetStoreException {
         try {
             RepositoryConnection rc = repository.getConnection();
             try {
-                rc.clear();
+                ValueFactory vf = repository.getValueFactory();
+
+                // Remove all authoritative statements about these resources
+                // from the knowledge base.  All resources must be listed here,
+                // else we may end up with messy, superfluous metadata.
+                String[] metaResources = {
+                        TwitLogic.TWITLOGIC_DATASET,
+                        TwitLogic.SEMANTICTWEET_DATASET,
+                        TwitLogic.SEMANTICTWEET_LINKSET1};
+
+                for (String r : metaResources) {
+                    URI u = vf.createURI(r);
+                    rc.remove(u, null, null, TwitLogic.AUTHORITATIVE_GRAPH);
+                    rc.remove((Resource) null, null, u, TwitLogic.AUTHORITATIVE_GRAPH);
+                }
+
+                rc.clearNamespaces();
+
+                //if (rc.isEmpty()) {
+                LOGGER.info("adding seed data");
+                String baseURI = "http://example.org/baseURI/";
+                rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
+                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.ttl"), baseURI, RDFFormat.TURTLE);
+
                 rc.commit();
+                //}
             } finally {
                 rc.close();
             }
-        } catch (RepositoryException e) {
+        } catch (IOException e) {
             throw new TweetStoreException(e);
-        }
-    }
-
-    public void load(final File file,
-                     final RDFFormat format) throws TweetStoreException {
-        try {
-            RepositoryConnection rc = repository.getConnection();
-            try {
-                try {
-                    rc.add(file, "http://example.org/baseURI", format);
-                } catch (IOException e) {
-                    throw new TweetStoreException(e);
-                } catch (RDFParseException e) {
-                    throw new TweetStoreException(e);
-                }
-
-                rc.commit();
-            } finally {
-                rc.close();
-            }
+        } catch (RDFParseException e) {
+            throw new TweetStoreException(e);
         } catch (RepositoryException e) {
             throw new TweetStoreException(e);
         }

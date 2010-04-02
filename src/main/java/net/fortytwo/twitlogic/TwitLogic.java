@@ -3,10 +3,13 @@ package net.fortytwo.twitlogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.UserRegistry;
+import net.fortytwo.twitlogic.persistence.PeriodicDumpfileGenerator;
+import net.fortytwo.twitlogic.persistence.TweetStoreException;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
@@ -26,6 +29,7 @@ import java.io.InputStream;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -105,7 +109,7 @@ public class TwitLogic {
             USERNAME_PATTERN = Pattern.compile("@[A-Za-z0-9-_]+"),
             URL_PATTERN = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
 
-    private static final TypedProperties CONFIGURATION;
+    private static TypedProperties CONFIGURATION;
     private static final Logger LOGGER;
 
     static {
@@ -180,6 +184,10 @@ public class TwitLogic {
         return CONFIGURATION;
     }
 
+    public static void setConfiguration(final Properties properties) {
+        CONFIGURATION = new TypedProperties(properties);
+    }
+
     public static Logger getLogger(final Class c) {
         return Logger.getLogger(c.getName());
     }
@@ -187,12 +195,17 @@ public class TwitLogic {
     public static void main(final String[] args) throws Exception {
         try {
             // Create a persistent store.
-            TweetStore store = new TweetStore(TwitLogic.getConfiguration());
+            TweetStore store = new TweetStore();
             store.initialize();
 
+            // TODO: this is a hack
             try {
-                //TweetStore store = TweetStore.getDefaultStore();
+                new Thread(new PeriodicDumpfileGenerator(store, TwitLogic.getConfiguration())).start();
+            } catch (PropertyException e) {
+                throw new TweetStoreException(e);
+            }
 
+            try {
                 //store.dump(System.out);
 
                 store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
@@ -208,16 +221,17 @@ public class TwitLogic {
                 UserRegistry userRegistry = new UserRegistry(client);
                 //PersistenceContext pContext = new PersistenceContext(userRegistry, store);
 
-                // Create the tweet matcher.
-                Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
-                        new DemoAfterthoughtMatcher());
-
                 TweetStoreConnection c = store.createConnection();
                 try {
+                    // Create the tweet persister.
+                    boolean persistUnannotatedTweets = false;
+                    TweetPersister persister = new TweetPersister(store, c, client, persistUnannotatedTweets);
 
-                    boolean persistOnlyMatchingTweets = true;
+                    // Create the tweet matcher and annotator.
+                    Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
+                            new DemoAfterthoughtMatcher());
                     Handler<Tweet, TweetHandlerException> baseStatusHandler
-                            = new TweetPersister(matcher, store, c, client, persistOnlyMatchingTweets);
+                            = new TweetAnnotator(matcher, persister);
 
                     // Create an agent to listen for commands.
                     // Also take the opportunity to memoize users we're following.
@@ -244,7 +258,7 @@ public class TwitLogic {
                     //client.processSampleStream(statusHandler);
                     //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
                     //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
-                    //client.processTrackFilterStream(new String[]{"$BAC", "$JPM", "$BA", "$MSFT", "$GOOG", "$GS", "$MS", "$XOM", "$WMT"}, new ExampleStatusHandler());
+                    //client.processTrackFilterStream(new String[]{"#gold", "#oil", "$BAC", "$JPM", "$BA", "$MSFT", "$GOOG", "$GS", "$MS", "$XOM", "$WMT"}, new ExampleStatusHandler());
                     //client.processTrackFilterStream(new String[]{"RT"}, new ExampleStatusHandler());
                     //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
                     //*/
@@ -260,7 +274,7 @@ public class TwitLogic {
     }
 
     // Note: for now, lists are not persisted in any way
-    private static Set<User> findFollowList(final TwitterClient client) throws Exception {
+    public static Set<User> findFollowList(final TwitterClient client) throws Exception {
         TypedProperties props = TwitLogic.getConfiguration();
 
         // Note: this doesn't really need to be an order-preserving collection,

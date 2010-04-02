@@ -1,6 +1,7 @@
 package edu.rpi.cs.datascience;
 
 import info.aduna.iteration.CloseableIteration;
+import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.TwitLogicAgent;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
@@ -12,7 +13,6 @@ import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.twitter.CommandListener;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
-import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.Literal;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Properties;
 
 /**
  * User: josh
@@ -68,11 +69,12 @@ public class EarthquakeTweets {
 
     private static void doit() throws Exception {
         try {
-            TypedProperties conf = new TypedProperties();
+            Properties conf = new Properties();
             conf.load(EarthquakeTweets.class.getResourceAsStream("datascience.properties"));
+            TwitLogic.setConfiguration(conf);
 
             // Create a persistent store.
-            TweetStore store = new TweetStore(conf);
+            TweetStore store = new TweetStore();
             store.initialize();
 
             try {
@@ -83,8 +85,8 @@ public class EarthquakeTweets {
                 UserRegistry userRegistry = new UserRegistry(client);
                 TweetStoreConnection c = store.createConnection();
                 try {
-                    Handler<Tweet, TweetHandlerException> baseStatusHandler
-                            = new TweetPersister(null, store, c, client, false);
+                    boolean persistUnannotatedTweets = true;
+                    TweetPersister baseStatusHandler = new TweetPersister(store, c, client, persistUnannotatedTweets);
 
                     // Create an agent to listen for commands.
                     // Also take the opportunity to memoize users we're following.

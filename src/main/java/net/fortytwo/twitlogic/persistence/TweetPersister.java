@@ -1,8 +1,6 @@
 package net.fortytwo.twitlogic.persistence;
 
-import net.fortytwo.twitlogic.TweetContext;
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.util.CommonHttpClient;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
@@ -14,10 +12,9 @@ import net.fortytwo.twitlogic.model.TypedLiteral;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
-import net.fortytwo.twitlogic.syntax.Matcher;
-import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.util.CommonHttpClient;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -37,34 +34,22 @@ import java.util.logging.Logger;
 public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetPersister.class);
 
-    private final Matcher matcher;
     private final TweetStoreConnection storeConnection;
-    private final Handler<Triple, MatcherException> tripleHandler;
-    private final TweetContext tweetContext;
     private final ValueFactory valueFactory;
     private final PersistenceContext persistenceContext;
     private final CommonHttpClient httpClient;
-    private final boolean persistOnlyMatchingTweets;
+    private final boolean persistUnannotatedTweets;
 
-    private Tweet currentTweet;
-    private User currentUser;
-    private MicroblogPost currentMicroblogPost;
-    private boolean freshTweet;
-
-    public TweetPersister(final Matcher matcher,
-                          final TweetStore store,
+    public TweetPersister(final TweetStore store,
                           final TweetStoreConnection storeConnection,
                           final CommonHttpClient httpClient,
-                          final boolean persistOnlyMatchingTweets) throws TweetStoreException {
-        this.matcher = matcher;
+                          final boolean persistUnannotatedTweets) throws TweetStoreException {
         this.storeConnection = storeConnection;
         this.valueFactory = store.getSail().getValueFactory();
-        this.tweetContext = new SimpleTweetContext();
-        this.tripleHandler = new TriplePersister();
         this.httpClient = httpClient;
         this.persistenceContext = new PersistenceContext(
                 storeConnection.getElmoManager());
-        this.persistOnlyMatchingTweets = persistOnlyMatchingTweets;
+        this.persistUnannotatedTweets = persistUnannotatedTweets;
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
@@ -72,63 +57,66 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                 + " by @" + tweet.getUser().getScreenName()
                 + ": " + tweet.getText());
 
-        currentTweet = tweet;
-        currentUser = tweet.getUser();
+        boolean hasAnnotations = 0 < tweet.getAnnotations().size();
+        if (persistUnannotatedTweets || hasAnnotations) {
+            storeConnection.begin();
 
-        if (persistOnlyMatchingTweets) {
-            freshTweet = true;
-        } else {
-            try {
-                persistTweet(tweet);
-            } catch (TwitterClientException e) {
-                throw new TweetHandlerException(e);
-            }
+            MicroblogPost currentMicroblogPost = persistenceContext.persist(tweet, hasAnnotations);
+            persistenceContext.persist(tweet.getUser());
 
-            freshTweet = false;
-        }
-
-        if (null != matcher) {
-            try {
-                matcher.match(tweet.getText(), tripleHandler, tweetContext);
-            } catch (MatcherException e) {
-                throw new TweetHandlerException(e);
-            }
-
-            try {
-                storeConnection.getSailConnection().commit();
-            } catch (SailException e) {
-                throw new TweetHandlerException(e);
-            }
-        }
-
-        // TODO: roll back changes when an exception has been thrown
-
-        return true;
-    }
-
-    private void persistTweet(final Tweet tweet) throws TwitterClientException {
-        // TODO: only begin a transaction, and subsequently commit, when something is matched.
-        // Perhaps this requires layering the persister below the matcher.
-        storeConnection.begin();
-
-        currentMicroblogPost = persistenceContext.persist(tweet);
-        persistenceContext.persist(tweet.getUser());
-        if (!this.persistOnlyMatchingTweets) {
             // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
             // of replies and/or retweets.
             if (null != tweet.getInReplyToTweet()) {
-                persistenceContext.persist(tweet.getInReplyToTweet());
+                this.handle(tweet.getInReplyToTweet());
             }
             if (null != tweet.getRetweetOf()) {
-                persistenceContext.persist(tweet.getRetweetOf());
+                this.handle(tweet.getRetweetOf());
             }
+
+            try {
+                storeConnection.commit();
+            } catch (TweetStoreException e) {
+                throw new TweetHandlerException(e);
+            }
+
+            // Note: these Sail operations are performed outside of the Elmo transaction.  If they were to be
+            // carried out inside the transaction, apparently Sesame would kill the thread without throwing
+            // an exception or logging an error.
+            if (hasAnnotations) {
+                for (Triple triple : tweet.getAnnotations()) {
+                    System.out.println("\t (" + triple.getWeight() + ")\t" + triple);
+
+                    try {
+                        Statement st = toRDF(triple, uriOf(currentMicroblogPost.getEmbedsKnowledge()));
+                        if (null != st) {
+                            // FIXME: creating a statement and then breaking it into parts is wasty
+                            try {
+                                //System.out.println("subject: " + st.getSubject());
+                                //System.out.println("predicate: " + st.getPredicate());
+                                //System.out.println("object: " + st.getObject());
+                                //System.out.println("context: " + st.getContext());
+                                storeConnection.getSailConnection()
+                                        .addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
+                            } catch (SailException e) {
+                                throw new TweetHandlerException(e);
+                            }
+                        }
+                    } catch (TwitterClientException e) {
+                        throw new TweetHandlerException(e);
+                    }
+                }
+
+                try {
+                    storeConnection.getSailConnection().commit();
+                } catch (SailException e) {
+                    throw new TweetHandlerException(e);
+                }
+            }
+
+            // TODO: roll back changes when an exception has been thrown
         }
 
-        try {
-            storeConnection.commit();
-        } catch (TweetStoreException e) {
-            throw new TwitterClientException(e);
-        }
+        return true;
     }
 
     private Statement toRDF(final Triple triple,
@@ -178,7 +166,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     private URI valueOf(final Tweet tweet) {
-        return uriOf(persistenceContext.persist(tweet));
+        return uriOf(persistenceContext.persist(tweet, 0 < tweet.getAnnotations().size()));
     }
 
     private Literal valueOf(final TypedLiteral literal) {
@@ -202,72 +190,5 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private URI uriOf(final Thing thing) {
         QName q = thing.getQName();
         return valueFactory.createURI(q.getNamespaceURI() + q.getLocalPart());
-    }
-
-    private class SimpleTweetContext implements TweetContext {
-        public User thisUser() {
-            return currentUser;
-        }
-
-        public Person thisPerson() {
-            return thisUser().getHeldBy();
-        }
-
-        public User repliedToUser() {
-            // TODO
-            return null;
-        }
-
-        public User retweetedUser() {
-            // TODO
-            return null;
-        }
-
-        public Tweet thisTweet() {
-            return currentTweet;
-        }
-
-        public Tweet repliedToTweet() {
-            // TODO
-            return null;
-        }
-
-        public Resource anonymousNode() {
-            // TODO
-            return null;
-        }
-    }
-
-    private class TriplePersister implements Handler<Triple, MatcherException> {
-        public boolean handle(final Triple triple) throws MatcherException {
-            // If the tweet from which this triple is taken has not yet been persisted, do so.
-            if (freshTweet) {
-                try {
-                    persistTweet(tweetContext.thisTweet());
-                } catch (TwitterClientException e) {
-                    throw new MatcherException(e);
-                }
-
-                freshTweet = false;
-            }
-
-            System.out.println("\t (" + triple.getWeight() + ")\t" + triple);
-            try {
-                Statement st = toRDF(triple, uriOf(currentMicroblogPost.getEmbedsKnowledge()));
-                if (null != st) {
-                    // TODO: creating a statement and then breaking it into parts is wasty
-                    try {
-                        storeConnection.getSailConnection()
-                                .addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
-                    } catch (SailException e) {
-                        throw new MatcherException(e);
-                    }
-                }
-            } catch (TwitterClientException e) {
-                throw new MatcherException(e);
-            }
-
-            return true;
-        }
     }
 }
