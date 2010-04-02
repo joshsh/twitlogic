@@ -10,6 +10,8 @@ public interface SKOS {
 
     public static final String
             BROADER = NAMESPACE + "broader",
+            BROADERTRANSITIVE = NAMESPACE + "broaderTransitive",
             NARROWER = NAMESPACE + "narrower",
+            NARROWERTRANSITIVE = NAMESPACE + "narrowerTransitive",
             RELATED = NAMESPACE + "related";
 }

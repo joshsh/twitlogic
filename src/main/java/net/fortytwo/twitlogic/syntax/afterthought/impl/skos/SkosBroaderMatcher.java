@@ -10,7 +10,7 @@ import net.fortytwo.twitlogic.vocabs.SKOS;
  */
 public class SkosBroaderMatcher extends ObjectPropertyAfterthoughtMatcher {
     protected String getPropertyURI() {
-        return SKOS.BROADER;
+        return SKOS.BROADERTRANSITIVE;
     }
 
     protected boolean predicateMatches(final String predicate) {
