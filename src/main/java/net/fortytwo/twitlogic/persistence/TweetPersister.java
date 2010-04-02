@@ -64,19 +64,20 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
             MicroblogPost currentMicroblogPost = persistenceContext.persist(tweet, hasAnnotations);
             persistenceContext.persist(tweet.getUser());
 
+            try {
+                storeConnection.commit();
+            } catch (TweetStoreException e) {
+                throw new TweetHandlerException(e);
+            }
+
             // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
             // of replies and/or retweets.
+            // Note: these tweets are persisted in their own transactions.
             if (null != tweet.getInReplyToTweet()) {
                 this.handle(tweet.getInReplyToTweet());
             }
             if (null != tweet.getRetweetOf()) {
                 this.handle(tweet.getRetweetOf());
-            }
-
-            try {
-                storeConnection.commit();
-            } catch (TweetStoreException e) {
-                throw new TweetHandlerException(e);
             }
 
             // Note: these Sail operations are performed outside of the Elmo transaction.  If they were to be
