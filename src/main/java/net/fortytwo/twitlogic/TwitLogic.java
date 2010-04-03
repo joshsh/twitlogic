@@ -3,16 +3,16 @@ package net.fortytwo.twitlogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.syntax.TweetAnnotator;
+import net.fortytwo.twitlogic.persistence.PeriodicDumpfileGenerator;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
-import net.fortytwo.twitlogic.persistence.UserRegistry;
-import net.fortytwo.twitlogic.persistence.PeriodicDumpfileGenerator;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
+import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
+import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.twitter.CommandListener;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
@@ -230,7 +230,7 @@ public class TwitLogic {
                     // Create the tweet matcher and annotator.
                     Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
                             new DemoAfterthoughtMatcher());
-                    Handler<Tweet, TweetHandlerException> baseStatusHandler
+                    Handler<Tweet, TweetHandlerException> annotator
                             = new TweetAnnotator(matcher, persister);
 
                     // Create an agent to listen for commands.
@@ -238,20 +238,23 @@ public class TwitLogic {
                     TwitLogicAgent agent = new TwitLogicAgent(client);
                     Handler<Tweet, TweetHandlerException> realtimeStatusHandler
                             = userRegistry.createUserRegistryFilter(
-                            new CommandListener(agent, baseStatusHandler));
+                            new CommandListener(agent, annotator));
 
                     Set<User> users = findFollowList(client);
 
-                    GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
-                    //GregorianCalendar cal = new GregorianCalendar(2010, 3, 1);
+                    //*
+                    {
+                        GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
+                        //GregorianCalendar cal = new GregorianCalendar(2010, 3, 1);
 
 
-                    // Note: don't run old tweets through the command listener, or
-                    // TwitLogic will respond, annoyingly, to old commands.
-                    //client.processTimelineFrom(users, cal.getTime(), baseStatusHandler);
+                        // Note: don't run old tweets through the command listener, or
+                        // TwitLogic will respond, annoyingly, to old commands.
+                        client.processTimelineFrom(users, cal.getTime(), annotator);
+                    }
+                    //*/
 
                     client.processFollowFilterStream(users, realtimeStatusHandler, 0);
-                    //*/
 
                     //client.requestUserTimeline(new User(71631722), statusHandler);
                     //client.processFollowFilterStream(A_FEW_GOOD_USERS, statusHandler, 0);

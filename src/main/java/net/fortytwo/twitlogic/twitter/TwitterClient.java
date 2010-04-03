@@ -4,13 +4,14 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.flow.NullHandler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.util.CommonHttpClient;
 import net.fortytwo.twitlogic.twitter.errors.UnauthorizedException;
+import net.fortytwo.twitlogic.util.CommonHttpClient;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -39,6 +40,11 @@ import java.util.Set;
 public class TwitterClient extends CommonHttpClient {
     private final TwitterCredentials credentials;
 
+    // Separate clients for separate rate-limiting policies.
+    private final RequestExecutor restAPIClient;
+    private final RequestExecutor streamingAPIClient;
+    private final RequestExecutor updateAPIClient;
+
     public TwitterClient() {
         /*
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
@@ -49,6 +55,41 @@ public class TwitterClient extends CommonHttpClient {
 
         credentials = new TwitterCredentials();
         credentials.loadCredentials();
+
+        restAPIClient = new RequestExecutor() {
+            private final RateLimiter rateLimiter = new RateLimiter();
+            private final HttpClient client = createClient(false);
+
+            public HttpResponse execute(HttpUriRequest request) throws TwitterClientException {
+                try {
+                    rateLimiter.throttleRequest();
+                } catch (InterruptedException e) {
+                    throw new TwitterClientException(e);
+                }
+
+                try {
+                    return client.execute(request);
+                } catch (IOException e) {
+                    throw new TwitterClientException(e);
+                }
+            }
+        };
+
+        // TODO: rate limiting
+        streamingAPIClient = new RequestExecutor() {
+            private final HttpClient client = createClient(true);
+
+            public HttpResponse execute(HttpUriRequest request) throws TwitterClientException {
+                try {
+                    return client.execute(request);
+                } catch (IOException e) {
+                    throw new TwitterClientException(e);
+                }
+            }
+        };
+
+        // TODO: rate limiting
+        updateAPIClient = new DefaultRequestExecutor();
     }
 
     public void requestUserTimeline(final User user,
@@ -140,7 +181,7 @@ public class TwitterClient extends CommonHttpClient {
 
         setEntity(request, formParams);
         sign(request);
-        makeSignedJSONRequest(request, false);
+        makeSignedJSONRequest(request, updateAPIClient);
     }
 
     public User findUserInfo(final String screenName) throws TwitterClientException {
@@ -188,8 +229,8 @@ public class TwitterClient extends CommonHttpClient {
     }
 
     public boolean handlePublicTimelinePage(final User user,
-                                             final int page,
-                                             final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+                                            final int page,
+                                            final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
         if (page < 1) {
             throw new IllegalArgumentException("bad page number");
         }
@@ -229,7 +270,7 @@ public class TwitterClient extends CommonHttpClient {
                             + ") of statuses retrieved for user " + user.getScreenName());
                 }
 
-                System.out.println("\tcreated at: " + tweet.getCreatedAt());
+                //System.out.println("\tcreated at: " + tweet.getCreatedAt());
                 return (tweet.getCreatedAt().compareTo(minTimestamp) >= 0)
                         && handler.handle(tweet);
             }
@@ -303,7 +344,7 @@ public class TwitterClient extends CommonHttpClient {
 
     private JSONObject requestJSONObject(final HttpUriRequest request) throws TwitterClientException {
         try {
-            HttpResponse response = requestUntilSucceed(request);
+            HttpResponse response = requestUntilSucceed(request, restAPIClient);
             HttpEntity responseEntity = response.getEntity();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             responseEntity.writeTo(bos);
@@ -320,7 +361,7 @@ public class TwitterClient extends CommonHttpClient {
 
     private JSONArray requestJSONArray(final HttpUriRequest request) throws TwitterClientException {
         try {
-            HttpResponse response = requestUntilSucceed(request);
+            HttpResponse response = requestUntilSucceed(request, restAPIClient);
             HttpEntity responseEntity = response.getEntity();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             responseEntity.writeTo(bos);
@@ -394,7 +435,7 @@ public class TwitterClient extends CommonHttpClient {
     private StatusStreamParser.ExitReason singleStreamRequest(final HttpUriRequest request,
                                                               final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
         sign(request);
-        HttpResponse response = makeSignedJSONRequest(request, true);
+        HttpResponse response = makeSignedJSONRequest(request, streamingAPIClient);
         if (null != response) {
             HttpEntity responseEntity = response.getEntity();
             try {

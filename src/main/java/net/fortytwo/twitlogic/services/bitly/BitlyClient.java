@@ -62,6 +62,9 @@ public class BitlyClient extends CommonHttpClient {
     private final String bitlyLogin;
     private final String bitlyAPIKey;
 
+    // TODO: does bit.ly have a rate-limiting policy?
+    private final RequestExecutor client = new DefaultRequestExecutor();
+
     public BitlyClient() throws BitlyClientException {
         TypedProperties conf = TwitLogic.getConfiguration();
         try {
@@ -82,7 +85,7 @@ public class BitlyClient extends CommonHttpClient {
 
         try {
             HttpGet request = new HttpGet(sb.toString());
-            HttpResponse response = requestUntilSucceed(request);
+            HttpResponse response = requestUntilSucceed(request, client);
             HttpEntity responseEntity = response.getEntity();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             responseEntity.writeTo(bos);

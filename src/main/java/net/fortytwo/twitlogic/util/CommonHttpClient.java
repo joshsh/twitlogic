@@ -25,7 +25,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.logging.Logger;
 
 /**
@@ -92,7 +91,8 @@ public abstract class CommonHttpClient {
         }
     }
 
-    protected HttpResponse requestUntilSucceed(final HttpUriRequest request) throws TwitterClientException {
+    protected HttpResponse requestUntilSucceed(final HttpUriRequest request,
+                                               final RequestExecutor client) throws TwitterClientException {
         long lastWait = 0;
 
         while (true) {
@@ -100,10 +100,10 @@ public abstract class CommonHttpClient {
             HttpResponse response;
 
             // Wait longer if the problem may be due to Twitter being down or overloaded.
-            boolean beExtraPatient = false;
+            boolean beExtraPatient = true;
 
             try {
-                return makeSignedJSONRequest(request, false);
+                return makeSignedJSONRequest(request, client);
             } catch (NotModifiedException e) {
                 throw e;
             } catch (BadRequestException e) {
@@ -142,73 +142,62 @@ public abstract class CommonHttpClient {
     }
 
     protected HttpResponse makeSignedJSONRequest(final HttpUriRequest request,
-                                                 final boolean openEnded) throws TwitterClientException {
-        try {
-            logRequest(request);
+                                                 final RequestExecutor client) throws TwitterClientException {
+        logRequest(request);
 
-            //for (Header h : request.getHeaders("Expect")) {
-            //    System.out.println("Expect header: " + h.getName() + ", " + h.getValue());
-            //}
+        //for (Header h : request.getHeaders("Expect")) {
+        //    System.out.println("Expect header: " + h.getName() + ", " + h.getValue());
+        //}
 
-            // HttpClient seems to get the capitalization wrong ("100-Continue"), which confuses Twitter.
-            request.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, false);
+        // HttpClient seems to get the capitalization wrong ("100-Continue"), which confuses Twitter.
+        request.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, false);
 
-            setAcceptHeader(request, new String[]{"application/json"});
-            setAgent(request);
+        setAcceptHeader(request, new String[]{"application/json"});
+        setAgent(request);
 
-            //for (Header h : request.getHeaders("Authorization")) {
-            //    System.out.println("Authorization header: " + h.getName() + ", " + h.getValue());
-            //}
+        //for (Header h : request.getHeaders("Authorization")) {
+        //    System.out.println("Authorization header: " + h.getName() + ", " + h.getValue());
+        //}
 
-            HttpClient client = createClient(openEnded);
+        HttpResponse response;
+        response = client.execute(request);
 
-            HttpResponse response;
-            try {
-                response = client.execute(request);
-            } catch (SocketException e) {
-                LOGGER.severe("socket error. No response to display");
-                throw new TwitterClientException(e);
-            }
+        if (null == response) {
+            LOGGER.severe("null response");
+            throw new TwitterClientException("null HTTP response");
+        } else {
+            //showResponseInfo(response);
 
-            if (null == response) {
-                LOGGER.severe("null response");
-                throw new TwitterClientException("null HTTP response");
+            int code = response.getStatusLine().getStatusCode();
+            if (200 == code) {
+                return response;
             } else {
-                //showResponseInfo(response);
-
-                int code = response.getStatusLine().getStatusCode();
-                if (200 == code) {
-                    return response;
-                } else {
-                    LOGGER.warning("unsuccessful request (response code " + code + ")");
-                    switch (code) {
-                        case 304:
-                            throw new NotModifiedException();
-                        case 400:
-                            throw new BadRequestException();
-                        case 401:
-                            throw new UnauthorizedException();
-                        case 403:
-                            throw new ForbiddenException();
-                        case 404:
-                            throw new NotFoundException();
-                        case 406:
-                            throw new NotAcceptableException();
-                        case 420:
-                            throw new EnhanceYourCalmException();
-                        case 500:
-                            throw new InternalServerErrorException();
-                        case 502:
-                            throw new BadGatewayException();
-                        case 503:
-                            throw new ServiceUnavailableException();
-                        default:
-                            throw new TwitterAPIException("unexpected response code: " + code);
-                    }
+                LOGGER.warning("unsuccessful request (response code " + code + ")");
+                switch (code) {
+                    case 304:
+                        throw new NotModifiedException();
+                    case 400:
+                        throw new BadRequestException();
+                    case 401:
+                        throw new UnauthorizedException();
+                    case 403:
+                        throw new ForbiddenException();
+                    case 404:
+                        throw new NotFoundException();
+                    case 406:
+                        throw new NotAcceptableException();
+                    case 420:
+                        throw new EnhanceYourCalmException();
+                    case 500:
+                        throw new InternalServerErrorException();
+                    case 502:
+                        throw new BadGatewayException();
+                    case 503:
+                        throw new ServiceUnavailableException();
+                    default:
+                        throw new TwitterAPIException("unexpected response code: " + code);
                 }
             }
-        } catch (IOException e) {
-            throw new TwitterClientException(e);
         }
     }
 
@@ -246,6 +235,22 @@ public abstract class CommonHttpClient {
             return response.getHeaders("Location")[0].getValue();
         } else {
             return originalURI;
+        }
+    }
+
+    protected interface RequestExecutor {
+        HttpResponse execute(HttpUriRequest httpUriRequest) throws TwitterClientException;
+    }
+
+    public class DefaultRequestExecutor implements RequestExecutor {
+        private final HttpClient client = createClient(false);
+
+        public HttpResponse execute(HttpUriRequest request) throws TwitterClientException {
+            try {
+                return client.execute(request);
+            } catch (IOException e) {
+                throw new TwitterClientException(e);
+            }
         }
     }
 
