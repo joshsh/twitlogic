@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Logger;
+import java.text.ParseException;
 
 /**
  * User: josh
@@ -88,9 +89,15 @@ public class Tweet implements Resource {
 
         text = json.getString(TwitterAPI.Field.TEXT.toString());
 
+        // Parse the date provided by Twitter, rather than using the current date/time.
+        // We may not have received this tweet in real time.
         String dateString = User.getString(json, TwitterAPI.Field.CREATED_AT);
-        // TODO: use the date read in from Twitter, rather than the current time
-        createdAt = new Date();
+        try {
+            createdAt = TwitterAPI.parseTwitterDateString(dateString);
+        } catch (ParseException e) {
+            // FIXME: this shouldn't really be a JSONException
+            throw new JSONException(e);
+        }
 
         JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
         user = new User(userJSON);

@@ -36,15 +36,6 @@ import java.util.Arrays;
 public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
     public DemoAfterthoughtMatcher() {
         super(Arrays.asList(
-                new FoafDepictionMatcher(),
-                new FoafInterestMatcher(),
-                new FoafKnowsMatcher(),
-                new FoafMadeMatcher(),
-                new FoafMakerMatcher(),
-                new RdfsSeeAlsoMatcher(),
-                new ReviewMatcher(),
-                new SelfInterestMatcher(),
-                new TypeMatcher(),
                 // OWL
                 new OwlSameasMatcher(),
                 // OpenVocab
@@ -66,6 +57,15 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new SkosNarrowerMatcher(),
                 new SkosRelatedMatcher(),
                 // Miscellaneous
+                new FoafDepictionMatcher(),
+                new FoafInterestMatcher(),
+                new FoafKnowsMatcher(),
+                new FoafMadeMatcher(),
+                new FoafMakerMatcher(),
+                new RdfsSeeAlsoMatcher(),
+                new ReviewMatcher(),
+                new SelfInterestMatcher(),
+                new TypeMatcher(),
                 new MentionedBy()));
     }
 }

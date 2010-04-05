@@ -1,10 +1,11 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TweetContext;
-import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.model.Person;
-import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.Resource;
+import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.model.User;
 
 /**
  * User: josh
@@ -14,7 +15,7 @@ import net.fortytwo.twitlogic.model.Resource;
 public class SimpleTweetContext implements TweetContext {
     private final Tweet tweet;
 
-    public SimpleTweetContext(Tweet tweet) {
+    public SimpleTweetContext(final Tweet tweet) {
         this.tweet = tweet;
     }
 
@@ -28,12 +29,12 @@ public class SimpleTweetContext implements TweetContext {
 
     public User repliedToUser() {
         // TODO
-        return null;
+        throw new IllegalStateException("not implemented");
     }
 
     public User retweetedUser() {
         // TODO
-        return null;
+        throw new IllegalStateException("not implemented");
     }
 
     public Tweet thisTweet() {
@@ -42,11 +43,10 @@ public class SimpleTweetContext implements TweetContext {
 
     public Tweet repliedToTweet() {
         // TODO
-        return null;
+        throw new IllegalStateException("not implemented");
     }
 
     public Resource anonymousNode() {
-        // TODO
-        return null;
+        return new URIReference(SesameTools.createRandomMiscellaneousURIString());
     }
 }

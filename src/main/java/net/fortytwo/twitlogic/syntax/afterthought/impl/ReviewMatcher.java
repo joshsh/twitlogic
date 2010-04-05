@@ -26,28 +26,30 @@ public class ReviewMatcher extends AfterthoughtMatcher {
     }*/
 
     private static final URIReference
-            TYPE = new URIReference(RDF.TYPE),
             HASREVIEW = new URIReference(Review.HASREVIEW),
-            REVIEW = new URIReference(Review.REVIEW),
+            MAXRATING = new URIReference(Review.MAXRATING),
+            MINRATING = new URIReference(Review.MINRATING),
             RATING = new URIReference(Review.RATING),
+            REVIEW = new URIReference(Review.REVIEW),
+            REVIEWER = new URIReference(Review.REVIEWER),
             TEXT = new URIReference(Review.TEXT),
-            REVIEWER = new URIReference(Review.REVIEWER);
+            TYPE = new URIReference(RDF.TYPE);
 
     public void matchNormalized(final String normed,
                                 final AfterthoughtContext context) throws MatcherException {
         if (RATING_EXPR.matcher(normed).matches()) {
             String[] pair = normed.split("/");
-            int n = Integer.valueOf(pair[0]);
-            int d = Integer.valueOf(pair[1]);
-            // TODO: this will give ratings of ridiculously high precision.  Perhaps use MAXRATING, MINRATING
-            double rating = n > d
-                    ? 1.0
-                    : 5.0 * n / (double) d;
+            int rating = Integer.valueOf(pair[0]);
+            int maxRating = Integer.valueOf(pair[1]);
+            // TODO: arguably 1
+            int minRating = 0;
 
             Resource review = context.anonymousNode();
             context.handle(new Triple(context.getSubject(), HASREVIEW, review));
             context.handle(new Triple(review, TYPE, REVIEW));
             context.handle(new Triple(review, RATING, new PlainLiteral("" + rating)));
+            context.handle(new Triple(review, MAXRATING, new PlainLiteral("" + maxRating)));
+            context.handle(new Triple(review, MINRATING, new PlainLiteral("" + minRating)));
             context.handle(new Triple(review, REVIEWER, context.thisPerson()));
             context.handle(new Triple(review, TEXT, new PlainLiteral(context.thisTweet().getText())));
         }

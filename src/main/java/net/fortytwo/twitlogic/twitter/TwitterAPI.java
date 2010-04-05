@@ -2,9 +2,12 @@ package net.fortytwo.twitlogic.twitter;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * User: josh
@@ -199,6 +202,15 @@ public class TwitterAPI {
                 System.err.println("unexpected field in user list: " + key);
             }
         }
+    }
+
+    // E.g.  Tue Nov 11 17:41:37 +0000 2008
+    public static Date parseTwitterDateString(final String dateStr) throws ParseException {
+        // parse Twitter date
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+        dateFormat.setLenient(false);
+        return dateFormat.parse(dateStr);
     }
 
     public static void main(final String[] args) {

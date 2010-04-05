@@ -38,7 +38,7 @@ class ExampleStatusHandler implements Handler<Tweet, TweetHandlerException> {
 
         TweetContext tweetContext = new TweetContext() {
             public User thisUser() {
-                return null;
+                throw new IllegalStateException("not implemented");
             }
 
             public Person thisPerson() {
@@ -46,23 +46,23 @@ class ExampleStatusHandler implements Handler<Tweet, TweetHandlerException> {
             }
 
             public User repliedToUser() {
-                return null;
+                throw new IllegalStateException("not implemented");
             }
 
             public User retweetedUser() {
-                return null;
+                throw new IllegalStateException("not implemented");
             }
 
             public Tweet thisTweet() {
-                return null;
+                throw new IllegalStateException("not implemented");
             }
 
             public Tweet repliedToTweet() {
-                return null;
+                throw new IllegalStateException("not implemented");
             }
 
             public Resource anonymousNode() {
-                return null;
+                throw new IllegalStateException("not implemented");
             }
         };
         final List<Triple> results = new LinkedList<Triple>();

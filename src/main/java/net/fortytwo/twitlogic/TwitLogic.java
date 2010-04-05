@@ -79,6 +79,7 @@ public class TwitLogic {
             WORD = new URIImpl(NAMESPACE + "Word"),
             WEIGHT = new URIImpl(NAMESPACE + "weight");
 
+    // Note: keep these in agreement with the ResourceType enum.
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
             DATASETS_BASEURI = BASE_URI + "dataset/",
@@ -86,6 +87,7 @@ public class TwitLogic {
             GRAPHS_BASEURI = BASE_URI + "graph/",
             HASHTAGS_BASEURI = BASE_URI + "hashtag/",
             LOCATIONS_BASEURI = BASE_URI + "location/",
+            MISCELLANEOUS_BASEURI = BASE_URI + "miscellaneous/",
             PERSONS_BASEURI = BASE_URI + "person/",
             TWEETS_BASEURI = BASE_URI + "post/twitter/",
             USERS_BASEURI = BASE_URI + "user/twitter/";
@@ -140,6 +142,7 @@ public class TwitLogic {
         Graph("graph", "named graph"),
         Hashtag("hashtag", "hashtag resource"),
         Location("location", "location"),
+        Miscellaneous("miscellaneous", "miscellaneous resource"),
         Person("person", "person"),
         Post("post", "microblog post"),
         User("user", "microblog user account");

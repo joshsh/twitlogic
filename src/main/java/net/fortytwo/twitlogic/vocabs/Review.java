@@ -9,20 +9,20 @@ public interface Review {
     public static final String NAMESPACE = "http://purl.org/stuff/rev#";
 
     public static final String
-            COMMENT = "Comment",
-            COMMENTER = "commenter",
-            FEEDBACK = "Feedback",
-            HASCOMMENT = "hasComment",
-            HASFEEDBACK = "hasFeedback",
-            HASREVIEW = "hasReview",
-            MAXRATING = "maxRating",
-            MINRATING = "minRating",
-            POSITIVEVOTES = "positiveVotes",
-            RATING = "rating",
-            REVIEW = "Review",
-            REVIEWER = "reviewer",
-            TEXT = "text",
-            TITLE = "title",
-            TOTALVOTES = "totalVotes",
-            TYPE = "type";
+            COMMENT = NAMESPACE + "Comment",
+            COMMENTER = NAMESPACE + "commenter",
+            FEEDBACK = NAMESPACE + "Feedback",
+            HASCOMMENT = NAMESPACE + "hasComment",
+            HASFEEDBACK = NAMESPACE + "hasFeedback",
+            HASREVIEW = NAMESPACE + "hasReview",
+            MAXRATING = NAMESPACE + "maxRating",
+            MINRATING = NAMESPACE + "minRating",
+            POSITIVEVOTES = NAMESPACE + "positiveVotes",
+            RATING = NAMESPACE + "rating",
+            REVIEW = NAMESPACE + "Review",
+            REVIEWER = NAMESPACE + "reviewer",
+            TEXT = NAMESPACE + "text",
+            TITLE = NAMESPACE + "title",
+            TOTALVOTES = NAMESPACE + "totalVotes",
+            TYPE = NAMESPACE + "type";
 }

@@ -15,7 +15,7 @@ import net.fortytwo.twitlogic.vocabs.FOAF;
  * Time: 11:05:15 PM
  */
 public class AfterthoughtMatcherTest extends MatcherTestBase {
-    private static Resource
+    private static final Resource
             JOSHSH = new User("joshsh"),
             KNOWS = new URIReference(FOAF.KNOWS),
             PHONE = new URIReference(Contact.PHONE),

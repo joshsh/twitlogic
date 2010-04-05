@@ -7,6 +7,7 @@ import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
 
 import java.util.Arrays;
@@ -19,10 +20,17 @@ import java.util.Set;
  * Time: 9:12:46 PM
  */
 public abstract class MatcherTestBase extends TestCase {
+    protected static final String BNODE_URI_BASE = "http://example.org/bnodes/";
+    protected int bnodeIndex = 0;
+    protected Tweet currentTweet = new Tweet();
+
     protected Matcher matcher;
+
     protected final TweetContext tweetContext = new TweetContext() {
+        private final User user = new User(1234567890);
+
         public User thisUser() {
-            return null;
+            return user;
         }
 
         public Person thisPerson() {
@@ -30,26 +38,28 @@ public abstract class MatcherTestBase extends TestCase {
         }
 
         public User repliedToUser() {
-            return null;
+            throw new IllegalStateException("not implemented");
         }
 
         public User retweetedUser() {
-            return null;
+            throw new IllegalStateException("not implemented");
         }
 
         public Tweet thisTweet() {
-            return null;
+            return currentTweet;
         }
 
         public Tweet repliedToTweet() {
-            return null;
+            throw new IllegalStateException("not implemented");
         }
 
         public Resource anonymousNode() {
-            return null;
+            return bnode(++bnodeIndex);
         }
     };
+
     protected final Set<Triple> results = new HashSet<Triple>();
+
     protected final Handler<Triple, MatcherException> handler = new Handler<Triple, MatcherException>() {
         public boolean handle(final Triple triple) throws MatcherException {
             results.add(triple);
@@ -68,6 +78,7 @@ public abstract class MatcherTestBase extends TestCase {
 
     protected void assertExpected(final String expression,
                                   final Triple... expectedTriples) throws MatcherException {
+        currentTweet.setText(expression);
         results.clear();
         matcher.match(expression, handler, tweetContext);
         Set<Triple> expected = new HashSet<Triple>();
@@ -82,5 +93,9 @@ public abstract class MatcherTestBase extends TestCase {
                 fail("unexpected triple found: " + t);
             }
         }
+    }
+
+    protected URIReference bnode(final int id) {
+        return new URIReference(BNODE_URI_BASE + id);
     }
 }

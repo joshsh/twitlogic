@@ -12,6 +12,7 @@ import net.fortytwo.twitlogic.model.User;
  */
 public interface TweetContext {
     User thisUser();
+
     Person thisPerson();
 
     User repliedToUser();

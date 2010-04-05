@@ -59,6 +59,7 @@ public class SesameTools {
     //}
 
     // TODO: improve this
+
     public static URI createRandomGraphURI(final ValueFactory valueFactory) {
         return valueFactory.createURI(TwitLogic.GRAPHS_BASEURI + randomIdString());
     }
@@ -66,6 +67,11 @@ public class SesameTools {
     // TODO: improve this
     public static URI createRandomPersonURI(final ValueFactory valueFactory) {
         return valueFactory.createURI(TwitLogic.PERSONS_BASEURI + randomIdString());
+    }
+
+    // TODO: improve this
+    public static String createRandomMiscellaneousURIString() {
+        return TwitLogic.MISCELLANEOUS_BASEURI + randomIdString();
     }
 
     public static String randomIdString() {
