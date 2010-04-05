@@ -47,8 +47,8 @@ public class CommandListener implements Handler<Tweet, TweetHandlerException> {
     }
 
     private String getReplyTo(final Tweet tweet) {
-        if (null != tweet.getInReplyToUser()) {
-            String s = tweet.getInReplyToUser().getScreenName();
+        if (null != tweet.getInReplyToTweet()) {
+            String s = tweet.getInReplyToTweet().getUser().getScreenName();
             if (null != s && selfScreenNames.contains(s)) {
                 return s;
             } else {

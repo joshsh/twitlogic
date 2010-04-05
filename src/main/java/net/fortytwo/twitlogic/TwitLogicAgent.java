@@ -85,9 +85,7 @@ response.setText("@" + request.getUser().getScreenName() + " ");     */
         Tweet reply = new Tweet();
         reply.setText(text);
 
-        // Note: one or the other of these is probably sufficient...
         reply.setInReplyToTweet(request);
-        reply.setInReplyToUser(request.getUser());
 
         return reply;
     }

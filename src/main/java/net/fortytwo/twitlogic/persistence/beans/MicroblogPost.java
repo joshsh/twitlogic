@@ -15,6 +15,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 @rdf(SIOCT.MICROBLOGPOST)
 public interface MicroblogPost extends Thing {
+    
     @rdf(SIOC.EMBEDS_KNOWLEDGE)
     Graph getEmbedsKnowledge();
 
@@ -39,4 +40,9 @@ public interface MicroblogPost extends Thing {
     MicroblogPost getReplyOf();
 
     void setReplyOf(MicroblogPost replyOf);
+
+    @rdf(SIOC.ADDRESSED_TO)
+    User getAddressedTo();
+
+    void setAddressedTo(User addressedTo);
 }

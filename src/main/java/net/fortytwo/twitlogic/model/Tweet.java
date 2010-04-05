@@ -27,7 +27,7 @@ public class Tweet implements Resource {
     //private final Boolean favorited;
     private String geo;
     private String id;
-    private User inReplyToUser;
+    //private User inReplyToUser;
     private Tweet inReplyToTweet;
     // private final ??? place;
     private Tweet retweetOf;
@@ -68,18 +68,19 @@ public class Tweet implements Resource {
         }
         id = json.getString(TwitterAPI.Field.ID.toString());
 
+        // Evidently, these three fields are a unit.
         String inReplyToUserId = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
         String inReplyToScreenName = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
-        inReplyToUser = (null != inReplyToUserId)
-                ? new User(inReplyToScreenName, Integer.valueOf(inReplyToUserId))
-                : (null != inReplyToScreenName)
-                ? new User(inReplyToScreenName)
-                : null;
-
         String inReplyToStatusId = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
-        inReplyToTweet = null == inReplyToStatusId
-                ? null
-                : new Tweet(inReplyToStatusId);
+        if (null != inReplyToUserId
+                && null != inReplyToScreenName
+                && null != inReplyToStatusId) {
+            User u = new User(inReplyToScreenName, Integer.valueOf(inReplyToUserId));
+            inReplyToTweet = new Tweet(inReplyToStatusId);
+            inReplyToTweet.setUser(u);
+        } else {
+            inReplyToTweet = null;
+        }
 
         JSONObject rt = json.optJSONObject(TwitterAPI.Field.RETWEETED_STATUS.toString());
         //System.out.println("retweet: " + rt);
@@ -127,10 +128,6 @@ public class Tweet implements Resource {
         return retweetOf;
     }
 
-    public User getInReplyToUser() {
-        return inReplyToUser;
-    }
-
     public String getText() {
         return text;
     }
@@ -170,10 +167,6 @@ public class Tweet implements Resource {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setInReplyToUser(User inReplyToUser) {
-        this.inReplyToUser = inReplyToUser;
     }
 
     public void setInReplyToTweet(Tweet inReplyToTweet) {

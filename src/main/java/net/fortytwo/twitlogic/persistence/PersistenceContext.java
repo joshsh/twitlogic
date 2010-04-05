@@ -69,7 +69,13 @@ public class PersistenceContext {
             post.setReplyOf(p);
         }
 
-        // TODO: geo, in-reply-to-user
+        /*
+        if (null != tweet.getInReplyToUser()) {
+            User user = userForUser(tweet.getInReplyToUser());
+            post.setAddressedTo(user);
+        }*/
+
+        // TODO: geo
 
         return post;
     }

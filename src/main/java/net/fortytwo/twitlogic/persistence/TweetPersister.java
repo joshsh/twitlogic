@@ -107,7 +107,6 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                             throw new TweetHandlerException(e);
                         }
                     }
-
                 }
 
                 try {
