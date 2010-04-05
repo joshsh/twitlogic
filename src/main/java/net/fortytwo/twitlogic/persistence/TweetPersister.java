@@ -86,25 +86,28 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
             if (hasAnnotations) {
                 for (Triple triple : tweet.getAnnotations()) {
                     System.out.println("\t (" + triple.getWeight() + ")\t" + triple);
+                    Statement st;
 
                     try {
-                        Statement st = toRDF(triple, uriOf(currentMicroblogPost.getEmbedsKnowledge()));
-                        if (null != st) {
-                            // FIXME: creating a statement and then breaking it into parts is wasty
-                            try {
-                                //System.out.println("subject: " + st.getSubject());
-                                //System.out.println("predicate: " + st.getPredicate());
-                                //System.out.println("object: " + st.getObject());
-                                //System.out.println("context: " + st.getContext());
-                                storeConnection.getSailConnection()
-                                        .addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
-                            } catch (SailException e) {
-                                throw new TweetHandlerException(e);
-                            }
-                        }
+                        st = toRDF(triple, uriOf(currentMicroblogPost.getEmbedsKnowledge()));
                     } catch (TwitterClientException e) {
                         throw new TweetHandlerException(e);
                     }
+
+                    if (null != st) {
+                        // FIXME: creating a statement and then breaking it into parts is wasty
+                        try {
+                            //System.out.println("subject: " + st.getSubject());
+                            //System.out.println("predicate: " + st.getPredicate());
+                            //System.out.println("object: " + st.getObject());
+                            //System.out.println("context: " + st.getContext());
+                            storeConnection.getSailConnection()
+                                    .addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
+                        } catch (SailException e) {
+                            throw new TweetHandlerException(e);
+                        }
+                    }
+
                 }
 
                 try {
@@ -176,8 +179,11 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     private URI valueOf(final URIReference uri) throws TwitterClientException {
-        String nonRedirecting = httpClient.resolve301Redirection(uri.getValue());
-        return valueFactory.createURI(nonRedirecting);
+        //String nonRedirecting = httpClient.resolve301Redirection(uri.getValue());
+        //return valueFactory.createURI(nonRedirecting);
+
+        // TODO: consider bringing 301 resolution back.
+        return valueFactory.createURI(uri.getValue());
     }
 
     private URI valueOf(final User user) throws TwitterClientException {
