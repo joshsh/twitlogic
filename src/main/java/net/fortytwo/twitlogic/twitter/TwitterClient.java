@@ -68,7 +68,9 @@ public class TwitterClient extends CommonHttpClient {
                 }
 
                 try {
-                    return client.execute(request);
+                    HttpResponse response = client.execute(request);
+                    rateLimiter.updateRateLimitStatus(response);
+                    return response;
                 } catch (IOException e) {
                     throw new TwitterClientException(e);
                 }
@@ -238,7 +240,7 @@ public class TwitterClient extends CommonHttpClient {
         // Note: no need to authenticate
         HttpGet request = new HttpGet(TwitterAPI.USER_TIMELINE_URL
                 + "/" + user.getScreenName() + ".json"
-                + "?page=" + page + "&count=" + TwitterAPI.COUNT_LIMIT);
+                + "?page=" + page + "&count=" + TwitterAPI.TIMELINE_PAGE_COUNT_LIMIT);
 
         JSONArray array = requestJSONArray(request);
         //System.out.println(array);

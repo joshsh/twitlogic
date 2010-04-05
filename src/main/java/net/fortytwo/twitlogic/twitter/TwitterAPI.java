@@ -17,10 +17,10 @@ import java.util.Map;
 public class TwitterAPI {
     // See http://apiwiki.twitter.com/Streaming-API-Documentation#statuses/filter
     public static final int
-            COUNT_LIMIT = 200,
+            TIMELINE_PAGE_COUNT_LIMIT = 200,
             DEFAULT_TRACK_KEYWORDS_LIMIT = 200,
             DEFAULT_FOLLOW_USERIDS_LIMIT = 400,
-            REST_API_REQUESTS_PER_HOUR_LIMIT = 150,
+            DEFAULT_REST_API_REQUESTS_PER_HOUR_LIMIT = 150,
             STATUSES_LIMIT = 3200;  // At most this many statuses may be retrieved from a timeline via the 'page' and 'count' REST parameters.
 
     public static final String
