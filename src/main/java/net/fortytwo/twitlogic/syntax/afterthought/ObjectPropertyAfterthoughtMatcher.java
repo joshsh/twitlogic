@@ -5,7 +5,7 @@ import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.syntax.MatcherException;
-import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.syntax.TweetSyntax;
 
 import java.util.regex.Pattern;
 
@@ -51,14 +51,14 @@ public abstract class ObjectPropertyAfterthoughtMatcher extends AfterthoughtMatc
     }
 
     private TokenizedObjectPropertyClause forHashtagObject(final String normed) {
-        ThreeParts t = divide(normed, TwitLogic.HASHTAG_PATTERN);
+        ThreeParts t = divide(normed, TweetSyntax.HASHTAG_PATTERN);
         return null == t
                 ? null
                 : new TokenizedObjectPropertyClause(t.first, new Hashtag(t.second.substring(1)), t.third);
     }
 
     private TokenizedObjectPropertyClause forUsernameObject(final String normed) {
-        ThreeParts t = divide(normed, TwitLogic.USERNAME_PATTERN);
+        ThreeParts t = divide(normed, TweetSyntax.USERNAME_PATTERN);
         return null == t
                 ? null
                 : new TokenizedObjectPropertyClause(t.first, new User(t.second.substring(1)).getHeldBy(), t.third);
@@ -66,7 +66,7 @@ public abstract class ObjectPropertyAfterthoughtMatcher extends AfterthoughtMatc
 
     // TODO: redirection resolution
     private TokenizedObjectPropertyClause forUrlObject(final String normed) {
-        ThreeParts t = divide(normed, TwitLogic.URL_PATTERN);
+        ThreeParts t = divide(normed, TweetSyntax.URL_PATTERN);
         return null == t
                 ? null
                 : new TokenizedObjectPropertyClause(t.first, new URIReference(t.second), t.third);

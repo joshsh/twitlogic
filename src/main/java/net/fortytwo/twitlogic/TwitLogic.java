@@ -12,6 +12,7 @@ import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
+import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.twitter.CommandListener;
@@ -105,10 +106,7 @@ public class TwitLogic {
 
     public static final Pattern
             CONFIG_LIST_PATTERN = Pattern.compile("[A-Za-z0-9-_]+/[A-Za-z0-9-_]+"),
-            CONFIG_USERNAME_PATTERN = Pattern.compile("[A-Za-z0-9-_]+"),
-            HASHTAG_PATTERN = Pattern.compile("#[A-Za-z0-9-_]+"),
-            USERNAME_PATTERN = Pattern.compile("@[A-Za-z0-9-_]+"),
-            URL_PATTERN = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
+            CONFIG_USERNAME_PATTERN = Pattern.compile("[A-Za-z0-9-_]+");
 
     private static TypedProperties CONFIGURATION;
     private static final Logger LOGGER;
@@ -229,11 +227,14 @@ public class TwitLogic {
                     boolean persistUnannotatedTweets = false;
                     TweetPersister persister = new TweetPersister(store, c, client, persistUnannotatedTweets);
 
-                    // Create the tweet matcher and annotator.
+                    // Add a "topic sniffer".
+                    TopicSniffer topicSniffer = new TopicSniffer(persister);
+
+                    // Add a tweet annotator.
                     Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
                             new DemoAfterthoughtMatcher());
                     Handler<Tweet, TweetHandlerException> annotator
-                            = new TweetAnnotator(matcher, persister);
+                            = new TweetAnnotator(matcher, topicSniffer);
 
                     // Create an agent to listen for commands.
                     // Also take the opportunity to memoize users we're following.
@@ -315,62 +316,5 @@ public class TwitLogic {
         }
         return users;
     }
-
-    /*
-private class TweetPrinter implements Handler<Tweet, TweetHandlerException> {
-public boolean handle(final Tweet tweet) throws TweetHandlerException {
-return false; //To change body of implemented methods use File | Settings | File Templates.
-}
-}
- 
-private void showSampleTweets() {
-TwitterClient client = new TwitterClient();
-client.processSampleStream();
-}
-*/
-
-/*
-    private static final User[] A_FEW_GOOD_USERS = new User[]{
-            new User("twit_logic", 76195293), // TwitLogic account
-            new User("twitlogic", 62329516), // aspirational TwitLogic account
-            new User("datagovwiki", 84994400), // DataGovWiki bot
-
-            new User("antijosh", 71631722), // test account
-            new User("alvitest", 73477629), // test account
-
-            // Some TWC-Twitterers (note: I think there are more...)
-            new User("alvarograves", 39816942), // Alvaro Graves
-            new User("ankesh_k", 17346783), // Ankesh Khandelwal
-            new User("baojie", 14731308), // Jie Bao
-            new User("difrad", 18003181), // Dominic DiFranzo
-            new User("dlmcguinness", 19122108), // Deborah McGuinness
-            new User("ewpatton", 34309130), // Evan Patton
-            new User("jahendler", 15336340), // James Hendler
-            new User("joshsh", 7083182), // Joshua Shinavier
-            new User("jpmccu", 47621026), // Jim McCusker
-            new User("jrmichaelis", 58557080), // James Michaelis
-            new User("jrweave", 20830884), // Jesse Weaver
-            new User("kasei", 643563), // Gregory Williams
-            new User("lidingpku", 26823198), // Li Ding
-            new User("shangz", 19274805), // Zhenning Shangguan
-            new User("shankzz", 18604757), // Shankar Arunachalam
-            new User("taswegian", 15477931), // Peter Fox
-            new User("xixiluo", 33308444), // Xixi Luo
-
-            // Twitter Data contributors
-            new User("toddfast", 9869202), // Todd Fast
-            new User("jirikopsa", 782594), // Jiri Kopsa
-
-            // Other friends of the Cause
-            new User("twarko", 71089109), // Marko Rodriguez
-            new User("semantictweet", 49974254), // Semantic Tweet
-
-            // Miscellaneous people who use a lot of hashtags (not necessarily
-            // with TwitLogic in mind). Adds some healthy "noise" to test the
-            // app against inevitable false positives.
-            new User("tommyh", 5439642),
-            //new User("thecoventgarden", 33206959)
-    };
-    */
 }
 

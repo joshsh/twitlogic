@@ -12,8 +12,8 @@ import net.fortytwo.twitlogic.twitter.TweetHandlerException;
  * Time: 6:58:27 PM
  */
 public class TweetAnnotator implements Handler<Tweet, TweetHandlerException> {
-    private final Matcher matcher;
     private final Handler<Tweet, TweetHandlerException> baseHandler;
+    private final Matcher matcher;
 
     public TweetAnnotator(final Matcher matcher,
                           final Handler<Tweet, TweetHandlerException> baseHandler) {

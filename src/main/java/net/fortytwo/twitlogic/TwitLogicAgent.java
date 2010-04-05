@@ -8,6 +8,7 @@ import net.fortytwo.twitlogic.services.bitly.BitlyClient;
 import net.fortytwo.twitlogic.services.bitly.BitlyClientException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.syntax.TweetSyntax;
 
 /**
  * User: josh
@@ -43,9 +44,9 @@ public class TwitLogicAgent {
         }*/
 
         String link = null;
-        if (TwitLogic.HASHTAG_PATTERN.matcher(text).matches()) {
+        if (TweetSyntax.HASHTAG_PATTERN.matcher(text).matches()) {
             link = PersistenceContext.uriOf(new Hashtag(text.substring(1)));
-        } else if (TwitLogic.USERNAME_PATTERN.matcher(text).matches()) {
+        } else if (TweetSyntax.USERNAME_PATTERN.matcher(text).matches()) {
             link = PersistenceContext.uriOf(new User(text.substring(1)).getHeldBy());
         }
 

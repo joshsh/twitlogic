@@ -11,6 +11,7 @@ import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
+import net.fortytwo.twitlogic.syntax.TweetSyntax;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManager;
 
@@ -69,6 +70,12 @@ public class PersistenceContext {
             post.setReplyOf(p);
         }
 
+        Set<Thing> topics = new HashSet<Thing>();
+        for (Hashtag t : tweet.getTopics()) {
+            topics.add(persist(t));
+        }
+        post.setTopic(topics);
+        
         /*
         if (null != tweet.getInReplyToUser()) {
             User user = userForUser(tweet.getInReplyToUser());
@@ -120,7 +127,7 @@ public class PersistenceContext {
         }
 
         if (null != tweetUser.getUrl()
-                && TwitLogic.URL_PATTERN.matcher(tweetUser.getUrl()).matches()) {
+                && TweetSyntax.URL_PATTERN.matcher(tweetUser.getUrl()).matches()) {
             // Note: we can't easily delete an existing homepage (removing its
             // rdf:type statement), as it might be the homepage of another
             // agent.  Therefore, "orphaned" Document resources are possible.
@@ -130,7 +137,7 @@ public class PersistenceContext {
         }
 
         if (null != tweetUser.getProfileImageUrl()
-                && TwitLogic.URL_PATTERN.matcher(tweetUser.getProfileImageUrl()).matches()) {
+                && TweetSyntax.URL_PATTERN.matcher(tweetUser.getProfileImageUrl()).matches()) {
             // Note: we can't easily delete an existing image (removing its
             // rdf:type statement), as it might be the image of another
             // agent.  Therefore, "orphaned" Image resources are possible.

@@ -1,10 +1,10 @@
 package net.fortytwo.twitlogic.syntax.afterthought.impl;
 
-import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.PlainLiteral;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.syntax.MatcherException;
+import net.fortytwo.twitlogic.syntax.TweetSyntax;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtContext;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtMatcher;
 import net.fortytwo.twitlogic.vocabs.FOAF;
@@ -46,25 +46,20 @@ public class TypeMatcher extends AfterthoughtMatcher {
         if (l.startsWith("a ") | l.startsWith("an ")) {
             String rest = normed.substring(normed.indexOf(" ") + 1);
 
-            if (TwitLogic.HASHTAG_PATTERN.matcher(rest).matches()) {
+            if (TweetSyntax.HASHTAG_PATTERN.matcher(rest).matches()) {
                 context.handleCompletedTriple(new URIReference(RDF.TYPE), new Hashtag(rest.substring(1)));
-                return;
             } else {
                 String rl = rest.toLowerCase();
                 if (MALE_SYNONYMS.contains(rl)) {
                     produceGender(Gender.MALE, context);
-                    return;
                 } else if (FEMALE_SYNONYMS.contains(rl)) {
                     produceGender(Gender.FEMALE, context);
-                    return;
                 }
             }
         } else if (MALE_SYNONYMS.contains(l)) {
             produceGender(Gender.MALE, context);
-            return;
         } else if (FEMALE_SYNONYMS.contains(l)) {
             produceGender(Gender.FEMALE, context);
-            return;
         }
     }
 

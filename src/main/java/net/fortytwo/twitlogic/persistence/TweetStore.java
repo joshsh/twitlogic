@@ -50,36 +50,12 @@ import java.util.zip.GZIPOutputStream;
 public class TweetStore {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetStore.class);
 
-    //private static TweetStore defaultStore;
-
     private final Sail sail;
     private final TypedProperties configuration;
     private Repository repository;
     private ElmoModule adminElmoModule;
     private SesameManagerFactory elmoManagerFactory;
     private boolean initialized = false;
-
-    /*
-    public static TweetStore getDefaultStore() throws TweetStoreException {
-        if (null == defaultStore) {
-            defaultStore = new TweetStore();
-            defaultStore.initialize();
-
-            Runtime.getRuntime().addShutdownHook(new Thread("shutdown hook for default TwitLogic store") {
-                @Override
-                public void run() {
-                    try {
-                        defaultStore.shutDown();
-                        //defaultStore.getSail().shutDown();
-                    } catch (Throwable t) {
-                        LOGGER.severe("failure in store shutdown: " + t.getMessage());
-                    }
-                }
-            });
-        }
-
-        return defaultStore;
-    }*/
 
     public TweetStore() throws TweetStoreException {
         configuration = TwitLogic.getConfiguration();
@@ -181,8 +157,9 @@ public class TweetStore {
     // convenience methods, may be moved ///////////////////////////////////////
 
     public void dump(final OutputStream out) throws RepositoryException, RDFHandlerException {
-        LOGGER.info("dumping triple store to output stream");
-        RDFHandler h = Rio.createWriter(RDFFormat.TRIG, out);
+        RDFFormat format = RDFFormat.TRIG;
+        LOGGER.info("dumping triple store in format " + format.getName() + " to output stream");
+        RDFHandler h = Rio.createWriter(format, out);
         RepositoryConnection rc = getRepository().getConnection();
         try {
             rc.export(h);
@@ -193,7 +170,7 @@ public class TweetStore {
 
     public void dumpToFile(final File file,
                            final RDFFormat format) throws IOException, RepositoryException, RDFHandlerException {
-        LOGGER.info("dumping triple store, using format " + format + " to file: " + file);
+        LOGGER.info("dumping triple store in format " + format.getName() + " to file: " + file);
         OutputStream out = new FileOutputStream(file);
         try {
             RDFHandler h = Rio.createWriter(format, out);
@@ -210,7 +187,7 @@ public class TweetStore {
 
     public void dumpToCompressedFile(final File file,
                                      final RDFFormat format) throws IOException, RepositoryException, RDFHandlerException {
-        LOGGER.info("dumping compressed triple store to output stream");
+        LOGGER.info("dumping compressed triple store in format " + format.getName() + " to file: " + file);
         OutputStream out = new FileOutputStream(file);
         try {
             OutputStream gzipOut = new GZIPOutputStream(out);

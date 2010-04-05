@@ -37,7 +37,6 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private final TweetStoreConnection storeConnection;
     private final ValueFactory valueFactory;
     private final PersistenceContext persistenceContext;
-    private final CommonHttpClient httpClient;
     private final boolean persistUnannotatedTweets;
 
     public TweetPersister(final TweetStore store,
@@ -46,7 +45,6 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                           final boolean persistUnannotatedTweets) throws TweetStoreException {
         this.storeConnection = storeConnection;
         this.valueFactory = store.getSail().getValueFactory();
-        this.httpClient = httpClient;
         this.persistenceContext = new PersistenceContext(
                 storeConnection.getElmoManager());
         this.persistUnannotatedTweets = persistUnannotatedTweets;

@@ -7,6 +7,7 @@ import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.annotations.rdf;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.Set;
 
 /**
  * User: josh
@@ -45,4 +46,9 @@ public interface MicroblogPost extends Thing {
     User getAddressedTo();
 
     void setAddressedTo(User addressedTo);
+    
+    @rdf(SIOC.TOPIC)
+    Set<Thing> getTopic();
+
+    void setTopic(Set<Thing> topic);
 }

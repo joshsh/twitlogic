@@ -35,6 +35,7 @@ public class Tweet implements Resource {
     private String text;
     //private final Boolean truncated;
 
+    private final Collection<Hashtag> topics = new LinkedList<Hashtag>();
     private final Collection<Triple> annotations = new LinkedList<Triple>();
 
     /**
@@ -136,6 +137,10 @@ public class Tweet implements Resource {
         return Resource.Type.TWEET;
     }
 
+    public Collection<Hashtag> getTopics() {
+        return topics;
+    }
+    
     public Collection<Triple> getAnnotations() {
         return annotations;
     }
