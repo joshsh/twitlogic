@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.twitter;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.util.CommonHttpClient;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 
@@ -88,17 +89,28 @@ public class RateLimiter {
     }
 
     public void updateRateLimitStatus(final HttpResponse response) {
-        // Note: we assume that we actually get this response header.
-        remainingRequests = Integer.valueOf(
-                response.getHeaders("X-RateLimit-Remaining")[0].getValue());
-        if (0 == remainingRequests) {
-            // Reset time returned by Twitter is in seconds since the epoch.
-            resetTime = Long.valueOf(response.getHeaders("X-RateLimit-Reset")[0].getValue()) * 1000;
-            limit = Integer.valueOf(response.getHeaders("X-RateLimit-Limit")[0].getValue());
-        }
+        if (5 == response.getStatusLine().getStatusCode() / 100) {
+            LOGGER.fine("did not attempt to update rate limit status, due to "
+                    + response.getStatusLine().getStatusCode()
+                    + " response code");
+        } else {
+            try {
+                // Note: we assume that we actually get this response header.
+                remainingRequests = Integer.valueOf(
+                        response.getHeaders("X-RateLimit-Remaining")[0].getValue());
+                if (0 == remainingRequests) {
+                    // Reset time returned by Twitter is in seconds since the epoch.
+                    resetTime = Long.valueOf(response.getHeaders("X-RateLimit-Reset")[0].getValue()) * 1000;
+                    limit = Integer.valueOf(response.getHeaders("X-RateLimit-Limit")[0].getValue());
+                }
 
-        // FIXME: temporary
-        showRateLimitStatus(response);
+                // FIXME: temporary
+                showRateLimitStatus(response);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                LOGGER.warning("could not update rate limit status. See following response info");
+                CommonHttpClient.showResponseInfo(response);
+            }
+        }
     }
 
     private void showRateLimitStatus(final HttpResponse response) {

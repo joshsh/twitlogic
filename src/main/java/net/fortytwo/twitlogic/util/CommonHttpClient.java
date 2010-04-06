@@ -81,7 +81,7 @@ public abstract class CommonHttpClient {
         return client;
     }
 
-    protected void showResponseInfo(final HttpResponse response) {
+    public static void showResponseInfo(final HttpResponse response) {
         System.out.println("response code: " + response.getStatusLine().getStatusCode());
 
         HeaderIterator iter = response.headerIterator();
