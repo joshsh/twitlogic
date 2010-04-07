@@ -4,6 +4,7 @@ import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
@@ -75,6 +76,12 @@ public class PersistenceContext {
             topics.add(persist(t));
         }
         post.setTopic(topics);
+
+        Set<Thing> links = new HashSet<Thing>();
+        for (URIReference t : tweet.getLinks()) {
+            links.add(persist(t));
+        }
+        post.setLinksTo(links);
         
         /*
         if (null != tweet.getInReplyToUser()) {
@@ -151,6 +158,10 @@ public class PersistenceContext {
 
     public Thing persist(final Hashtag hashtag) {
         return designate(uriOf(hashtag), Thing.class);
+    }
+
+    public Thing persist(final URIReference uri) {
+        return designate(uri.getValue(), Thing.class);
     }
 
     public Agent persist(final net.fortytwo.twitlogic.model.Person tweetPerson) {

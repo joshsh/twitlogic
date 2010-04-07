@@ -27,7 +27,6 @@ import org.openrdf.rio.RDFFormat;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
@@ -246,7 +245,7 @@ public class TwitLogic {
 
                     Set<User> users = findFollowList(client);
 
-                    //*
+                    /*
                     {
                         GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
                         //GregorianCalendar cal = new GregorianCalendar(2010, 3, 1);

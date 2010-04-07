@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @rdf(SIOCT.MICROBLOGPOST)
 public interface MicroblogPost extends Thing {
-    
+
     @rdf(SIOC.EMBEDS_KNOWLEDGE)
     Graph getEmbedsKnowledge();
 
@@ -46,9 +46,14 @@ public interface MicroblogPost extends Thing {
     User getAddressedTo();
 
     void setAddressedTo(User addressedTo);
-    
+
     @rdf(SIOC.TOPIC)
     Set<Thing> getTopic();
 
     void setTopic(Set<Thing> topic);
+
+    @rdf(SIOC.LINKS_TO)
+    Set<Thing> getLinksTo();
+
+    void setLinksTo(Set<Thing> linksTo);
 }

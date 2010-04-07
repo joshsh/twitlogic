@@ -3,6 +3,7 @@ package net.fortytwo.twitlogic.syntax;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 
 import java.util.Collection;
@@ -24,6 +25,11 @@ public class TopicSniffer implements Handler<Tweet, TweetHandlerException> {
             Collection<Hashtag> topics = tweet.getTopics();
             for (String tag : TweetSyntax.findHashtags(tweet.getText())) {
                 topics.add(new Hashtag(tag));
+            }
+
+            Collection<URIReference> links = tweet.getLinks();
+            for (String s : TweetSyntax.findLinks(tweet.getText())) {
+                links.add(new URIReference(s));
             }
         }
 

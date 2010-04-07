@@ -30,7 +30,7 @@ public interface SIOC {
             EMAIL_SHA1 = NAMESPACE + "email_sha1",
             EMBEDS_KNOWLEDGE = NAMESPACE + "embeds_knowledge",
             FIRST_NAME = NAMESPACE + "first_name",
-            FOLLOWS = NAMESPACE + "follows",
+            FOLLOWS = NAMESPACE + "follows",  // TODO (maybe)
             FORUM = NAMESPACE + "Forum",
             FUNCTION_OF = NAMESPACE + "function_of",
             GROUP_OF = NAMESPACE + "group_of",
@@ -62,7 +62,7 @@ public interface SIOC {
             LAST_REPLY_DATE = NAMESPACE + "last_reply_date",
             LATER_VERSION = NAMESPACE + "later_version",
             LATEST_VERSION = NAMESPACE + "latest_version",
-            LINKS_TO = NAMESPACE + "links_to",
+            LINKS_TO = NAMESPACE + "links_to",  // TODO
             MEMBER_OF = NAMESPACE + "member_of",
             MODERATOR_OF = NAMESPACE + "moderator_of",
             MODIFIED_AT = NAMESPACE + "modified_at",

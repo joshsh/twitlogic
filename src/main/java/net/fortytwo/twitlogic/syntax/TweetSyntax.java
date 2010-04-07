@@ -38,4 +38,23 @@ public class TweetSyntax {
 
         return hashtags;
     }
+
+    public static Set<String> findLinks(final String text) {
+        Set<String> links = new HashSet<String>();
+
+        java.util.regex.Matcher m = URL_PATTERN.matcher(text);
+        while (m.find()) {
+            int start = m.start();
+            int end = m.end();
+            boolean goodLead = 0 == start
+                    || LEADCHAR.matcher(text.substring(start - 1, start)).matches();
+            boolean goodFollow = text.length() == end
+                    || FOLLOWCHAR.matcher(text.substring(end, end + 1)).matches();
+            if (goodLead && goodFollow) {
+                links.add(m.group());
+            }
+        }
+
+        return links;
+    }
 }

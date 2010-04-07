@@ -37,6 +37,7 @@ public class Tweet implements Resource {
 
     private final Collection<Hashtag> topics = new LinkedList<Hashtag>();
     private final Collection<Triple> annotations = new LinkedList<Triple>();
+    private final Collection<URIReference> links = new LinkedList<URIReference>();
 
     /**
      * Creates a new, empty tweet.
@@ -143,6 +144,10 @@ public class Tweet implements Resource {
     
     public Collection<Triple> getAnnotations() {
         return annotations;
+    }
+
+    public Collection<URIReference> getLinks() {
+        return links;
     }
 
     public String toString() {

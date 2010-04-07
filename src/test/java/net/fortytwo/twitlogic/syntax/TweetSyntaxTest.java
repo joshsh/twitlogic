@@ -39,7 +39,7 @@ public class TweetSyntaxTest extends TestCase {
         // TODO
     }
 
-    public void testfindHashtags() throws Exception {
+    public void testFindHashtags() throws Exception {
         // Match all
         assertContainsHashtags("#foo", "foo");
         assertContainsHashtags("blah #foo blah blah", "foo");
@@ -55,6 +55,31 @@ public class TweetSyntaxTest extends TestCase {
         assertContainsHashtags("asdf#foo");
         assertContainsHashtags("...)#foo");
         assertContainsHashtags("...#foo");
+        assertContainsHashtags("http://example.org/foo#bar");
+    }
+
+    public void testFindLinks() throws Exception {
+        assertContainsLinks("http://example.org/foo",
+                "http://example.org/foo");
+        assertContainsLinks("http://example.org/foo, http://example.org/bar",
+                "http://example.org/foo",
+                "http://example.org/bar");
+        assertContainsLinks("one two http://example.org/foo four",
+                "http://example.org/foo");
+        assertContainsLinks("http://example.org/foo#bar",
+                "http://example.org/foo#bar");
+        assertContainsLinks("http://example.org/foo (http://example.org/bar)...",
+                "http://example.org/foo",
+                "http://example.org/bar");
+
+        assertContainsLinks("");
+        assertContainsLinks("ftp://example.org/foo");
+        assertContainsLinks("ZZZhttp://example.org/foo");
+        assertContainsLinks("HTTP://example.org/foo");
+
+        // Dubious...
+        assertContainsLinks("http://example.org/foo/http://example.org/foo",
+                "http://example.org/foo/http");
     }
 
     private void assertContainsHashtags(final String text,
@@ -69,9 +94,30 @@ public class TweetSyntaxTest extends TestCase {
                 fail("expected hashtag not found: " + t);
             }
         }
+
         for (String t : actual) {
             if (!expected.contains(t)) {
                 fail("unexpected hashtag found: " + t);
+            }
+        }
+    }
+
+    private void assertContainsLinks(final String text,
+                                        final String... links) {
+        Set<String> expected = new HashSet<String>();
+        expected.addAll(Arrays.asList(links));
+
+        Set<String> actual = TweetSyntax.findLinks(text);
+
+        for (String t : expected) {
+            if (!actual.contains(t)) {
+                fail("expected link not found: " + t);
+            }
+        }
+
+        for (String t : actual) {
+            if (!expected.contains(t)) {
+                fail("unexpected link found: " + t);
             }
         }
     }
