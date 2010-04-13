@@ -19,7 +19,8 @@ import java.util.logging.Logger;
  */
 public class StatusStreamParser {
     public enum ExitReason {
-        END_OF_INPUT, HANDLER_QUIT, EXCEPTION_THROWN, NULL_RESPONSE
+        END_OF_INPUT, HANDLER_QUIT, EXCEPTION_THROWN, NULL_RESPONSE,
+        CONNECTION_REFUSED  // Note: this error actually occurs outside of the parser
     }
 
     private static final Logger LOGGER = TwitLogic.getLogger(StatusStreamParser.class);

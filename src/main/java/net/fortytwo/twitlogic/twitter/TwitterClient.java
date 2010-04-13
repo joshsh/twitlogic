@@ -16,6 +16,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,6 +85,9 @@ public class TwitterClient extends CommonHttpClient {
             public HttpResponse execute(HttpUriRequest request) throws TwitterClientException {
                 try {
                     return client.execute(request);
+                } catch (HttpHostConnectException e) {
+                    LOGGER.warning("failed to connect to host: " + e);
+                    throw new TwitterConnectionRefusedException(e);
                 } catch (IOException e) {
                     throw new TwitterClientException(e);
                 }
@@ -420,6 +424,10 @@ public class TwitterClient extends CommonHttpClient {
                     // TODO: should we ever be extra patient here?
                     wait = nextWait(lastWait, timeOfLastRequest, false);
                     break;
+                case CONNECTION_REFUSED:
+                    // If the connection is refused, try again, but patiently.
+                    wait = CONNECTION_REFUSED_WAIT;
+                    break;
                 default:
                     throw new IllegalStateException("unexpected exit state: " + exit);
             }
@@ -437,7 +445,14 @@ public class TwitterClient extends CommonHttpClient {
     private StatusStreamParser.ExitReason singleStreamRequest(final HttpUriRequest request,
                                                               final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
         sign(request);
-        HttpResponse response = makeSignedJSONRequest(request, streamingAPIClient);
+        HttpResponse response;
+
+        try {
+            response = makeSignedJSONRequest(request, streamingAPIClient);
+        } catch (TwitterConnectionRefusedException e) {
+            return StatusStreamParser.ExitReason.CONNECTION_REFUSED;
+        }
+
         if (null != response) {
             HttpEntity responseEntity = response.getEntity();
             try {

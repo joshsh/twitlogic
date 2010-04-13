@@ -39,9 +39,11 @@ public abstract class CommonHttpClient {
             ACCEPT = "Accept",
             USER_AGENT = "User-Agent";
 
-    private static final long
+    protected static final long
             MIN_WAIT = 10000,
-            MAX_WAIT = 320000;
+            MAX_WAIT = 320000,
+            CONNECTION_REFUSED_WAIT = 60000;
+
     private static final long
             PATIENCE_FACTOR = 3;
 
@@ -97,7 +99,6 @@ public abstract class CommonHttpClient {
 
         while (true) {
             long timeOfLastRequest = System.currentTimeMillis();
-            HttpResponse response;
 
             // Wait longer if the problem may be due to Twitter being down or overloaded.
             boolean beExtraPatient = true;
