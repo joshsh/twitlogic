@@ -44,7 +44,8 @@ public class TwitterCredentials {
     public TwitterCredentials() throws TwitterClientException {
         String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY, null);
         String consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET, null);
-        if (null == consumerKey || null == consumerSecret) {
+        if (true) {
+        //if (null == consumerKey || null == consumerSecret) {
             LOGGER.fine("no Twitter OAuth credentials have been supplied. Attempting to use basic authentication.");
             useOAuth = false;
             consumer = null;
