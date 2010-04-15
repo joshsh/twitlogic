@@ -97,11 +97,12 @@ public class TwitLogic {
     static {
         CONFIGURATION = new TypedProperties();
 
+        /*
         try {
             CONFIGURATION.load(TwitLogic.class.getResourceAsStream("twitlogic.properties"));
         } catch (IOException e) {
             throw new ExceptionInInitializerError(e);
-        }
+        }*/
 
         InputStream resourceAsStream = TwitLogic.class.getResourceAsStream("logging.properties");
 
