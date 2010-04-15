@@ -2,7 +2,6 @@ package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
-import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.rio.RDFFormat;
 
 import java.io.File;
@@ -13,34 +12,36 @@ import java.util.logging.Logger;
  * Date: Apr 1, 2010
  * Time: 8:11:35 PM
  */
+// TODO: add support for N-Quads
 public class PeriodicDumpfileGenerator implements Runnable {
     private static final Logger LOGGER = TwitLogic.getLogger(PeriodicDumpfileGenerator.class);
 
-    private final TypedProperties conf;
-    private final long dumpInterval;
     private TweetStore tweetStore;
+    private final long interval;
+    private final File file;
+    private final RDFFormat format;
+    private final boolean compressed;
 
     public PeriodicDumpfileGenerator(final TweetStore tweetStore,
-                                     final TypedProperties conf) throws PropertyException {
+                                     final File file,
+                                     final RDFFormat format,
+                                     final boolean compressed,
+                                     final long interval) throws PropertyException {
         this.tweetStore = tweetStore;
-        this.conf = conf;
-        dumpInterval = conf.getLong(TwitLogic.DUMPINTERVAL);
+        this.interval = interval;
+        this.file = file;
+        this.compressed = compressed;
+        this.format = format;
     }
 
     public void run() {
         while (true) {
             try {
-                // Note: this uncompressed file is generated only for the
-                // sake of the Linking Open Conference Tweets application
-                // (in case we put it back up)
-                File f1 = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
-                        "dump/twitlogic-full.rdf");
-                tweetStore.dumpToFile(f1, RDFFormat.RDFXML);
-
-                // TODO: use N-Quads instead of (or in addition to) TriG
-                File f2 = new File(conf.getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY),
-                        "dump/twitlogic-full.trig.gz");
-                tweetStore.dumpToCompressedFile(f2, RDFFormat.TRIG);
+                if (compressed) {
+                    tweetStore.dumpToCompressedFile(file, format);
+                } else {
+                    tweetStore.dumpToFile(file, format);
+                }
             } catch (Throwable t) {
                 LOGGER.severe("dumper runnable died with error: " + t);
                 t.printStackTrace();
@@ -48,7 +49,7 @@ public class PeriodicDumpfileGenerator implements Runnable {
             }
 
             try {
-                Thread.sleep(dumpInterval);
+                Thread.sleep(interval);
             } catch (InterruptedException e) {
                 LOGGER.severe("dumper runnable died with error: " + e);
                 e.printStackTrace();

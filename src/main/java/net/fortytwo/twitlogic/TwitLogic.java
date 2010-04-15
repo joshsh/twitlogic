@@ -1,30 +1,12 @@
 package net.fortytwo.twitlogic;
 
-import net.fortytwo.twitlogic.flow.Handler;
-import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.persistence.PeriodicDumpfileGenerator;
-import net.fortytwo.twitlogic.persistence.TweetPersister;
-import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
-import net.fortytwo.twitlogic.persistence.TweetStoreException;
-import net.fortytwo.twitlogic.persistence.UserRegistry;
-import net.fortytwo.twitlogic.server.TwitLogicServer;
-import net.fortytwo.twitlogic.syntax.Matcher;
-import net.fortytwo.twitlogic.syntax.MultiMatcher;
-import net.fortytwo.twitlogic.syntax.TopicSniffer;
-import net.fortytwo.twitlogic.syntax.TweetAnnotator;
-import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
-import net.fortytwo.twitlogic.twitter.CommandListener;
-import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.RDFFormat;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashSet;
@@ -48,7 +30,8 @@ public class TwitLogic {
             BITLY_APIKEY = "net.fortytwo.twitlogic.services.bitly.apiKey",
             NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
             SAIL_CLASS = "net.fortytwo.twitlogic.persistence.sailClass",
-            DUMPINTERVAL = "net.fortytwo.twitlogic.persistence.dumpInterval",
+            DUMP_FILE = "net.fortytwo.twitlogic.persistence.dump.file",
+            DUMP_INTERVAL = "net.fortytwo.twitlogic.persistence.dump.interval",
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
             COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",
             FOLLOWLIST = "net.fortytwo.twitlogic.followList",
@@ -190,93 +173,6 @@ public class TwitLogic {
 
     public static Logger getLogger(final Class c) {
         return Logger.getLogger(c.getName());
-    }
-
-    public static void main(final String[] args) throws Exception {
-        try {
-            // Create a persistent store.
-            TweetStore store = new TweetStore();
-            store.initialize();
-
-            // TODO: this is a hack
-            try {
-                new Thread(new PeriodicDumpfileGenerator(store, TwitLogic.getConfiguration())).start();
-            } catch (PropertyException e) {
-                throw new TweetStoreException(e);
-            }
-
-            try {
-                //store.dump(System.out);
-
-                store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
-//System.exit(0);
-//store.clear();
-//store.load(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
-//System.exit(0);
-
-                // Launch linked data server.
-                new TwitLogicServer(store);
-
-                TwitterClient client = new TwitterClient();
-                UserRegistry userRegistry = new UserRegistry(client);
-                //PersistenceContext pContext = new PersistenceContext(userRegistry, store);
-
-                TweetStoreConnection c = store.createConnection();
-                try {
-                    // Create the tweet persister.
-                    boolean persistUnannotatedTweets = true;
-                    TweetPersister persister = new TweetPersister(store, c, client, persistUnannotatedTweets);
-
-                    // Add a "topic sniffer".
-                    TopicSniffer topicSniffer = new TopicSniffer(persister);
-
-                    // Add a tweet annotator.
-                    Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
-                            new DemoAfterthoughtMatcher());
-                    Handler<Tweet, TweetHandlerException> annotator
-                            = new TweetAnnotator(matcher, topicSniffer);
-
-                    // Create an agent to listen for commands.
-                    // Also take the opportunity to memoize users we're following.
-                    TwitLogicAgent agent = new TwitLogicAgent(client);
-                    Handler<Tweet, TweetHandlerException> realtimeStatusHandler
-                            = userRegistry.createUserRegistryFilter(
-                            new CommandListener(agent, annotator));
-
-                    Set<User> users = findFollowList(client);
-
-                    /*
-                    {
-                        GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
-                        //GregorianCalendar cal = new GregorianCalendar(2010, 3, 1);
-
-
-                        // Note: don't run old tweets through the command listener, or
-                        // TwitLogic will respond, annoyingly, to old commands.
-                        client.processTimelineFrom(users, cal.getTime(), annotator);
-                    }
-                    //*/
-
-                    client.processFollowFilterStream(users, realtimeStatusHandler, 0);
-
-                    //client.requestUserTimeline(new User(71631722), statusHandler);
-                    //client.processFollowFilterStream(A_FEW_GOOD_USERS, statusHandler, 0);
-                    //client.processSampleStream(statusHandler);
-                    //client.processTrackFilterStream(new String[]{"twitter"}, new ExampleStatusHandler());
-                    //client.processTrackFilterStream(new String[]{"twit","logic","parkour","semantic","rpi"}, new ExampleStatusHandler());
-                    //client.processTrackFilterStream(new String[]{"#gold", "#oil", "$BAC", "$JPM", "$BA", "$MSFT", "$GOOG", "$GS", "$MS", "$XOM", "$WMT"}, new ExampleStatusHandler());
-                    //client.processTrackFilterStream(new String[]{"RT"}, new ExampleStatusHandler());
-                    //client.processFollowFilterStream(new String[]{"71631722","71089109","12","13","15","16","20","87"}, new ExampleStatusHandler());
-                    //*/
-                } finally {
-                    c.close();
-                }
-            } finally {
-                store.shutDown();
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
     }
 
     // Note: for now, lists are not persisted in any way

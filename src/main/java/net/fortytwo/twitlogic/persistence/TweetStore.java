@@ -101,7 +101,52 @@ public class TweetStore {
         elmoManagerFactory
                 = new SesameManagerFactory(adminElmoModule, repository);
         elmoManagerFactory.setQueryLanguage(QueryLanguage.SPARQL);
+
+        addPeriodicDump();
+
         initialized = true;
+    }
+
+    private void addPeriodicDump() throws TweetStoreException {
+        TypedProperties conf = TwitLogic.getConfiguration();
+        try {
+            File file = conf.getFile(TwitLogic.DUMP_FILE, null);
+            if (null == file) {
+                LOGGER.info("no dump file specified. Periodic data dumps will not be generated.");
+            } else {
+                long interval = conf.getLong(TwitLogic.DUMP_INTERVAL, -1);
+                if (-1 == interval) {
+                    LOGGER.warning("no dump interval specified. Periodic data dumps will not be generated.");
+                } else {
+                    boolean compressed = false;
+                    String s = file.getName();
+                    if (s.endsWith(".gz")) {
+                        compressed = true;
+                        s = s.substring(0, s.length() - ".gz".length());
+                    }
+
+                    int i = s.lastIndexOf('.');
+                    if (i <= 0) {
+                        LOGGER.warning("dump file name could not be parsed. Periodic data dumps will not be generated.");
+                    } else {
+                        String ext = s.substring(i + 1);
+                        RDFFormat format = SesameTools.rdfFormatByExtension(ext);
+                        if (null == format) {
+                            LOGGER.warning("dump file format not recognized. Periodic data dumps will not be generated.");
+                        } else {
+
+                            try {
+                                new Thread(new PeriodicDumpfileGenerator(this, file, format, compressed, interval)).start();
+                            } catch (PropertyException e) {
+                                throw new TweetStoreException(e);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (PropertyException e) {
+            throw new TweetStoreException(e);
+        }
     }
 
     public TweetStoreConnection createConnection() throws TweetStoreException {

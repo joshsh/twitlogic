@@ -5,12 +5,15 @@ import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.rio.RDFFormat;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -28,6 +31,8 @@ public class SesameTools {
             END_DATE = new URIImpl(TwitLogic.NAMESPACE + "endDate"),
             INTERVAL = new URIImpl(TwitLogic.NAMESPACE + "Interval");
 
+    private static final Map<String, RDFFormat> RDF_FORMAT_BY_EXTENSION;
+
     // Note: the implementation of this class is assumed to be thread-safe.
     private static final DatatypeFactory DATATYPE_FACTORY;
 
@@ -37,6 +42,16 @@ public class SesameTools {
         } catch (DatatypeConfigurationException e) {
             throw new ExceptionInInitializerError(e);
         }
+
+        RDF_FORMAT_BY_EXTENSION = new HashMap<String, RDFFormat>();
+        for (RDFFormat f : RDFFormat.values()) {
+            RDF_FORMAT_BY_EXTENSION.put(f.getDefaultFileExtension().toLowerCase(), f);
+        }
+        RDF_FORMAT_BY_EXTENSION.put("ntriples", RDFFormat.NTRIPLES);
+        RDF_FORMAT_BY_EXTENSION.put("ntriple", RDFFormat.NTRIPLES);
+        RDF_FORMAT_BY_EXTENSION.put("rdfxml", RDFFormat.RDFXML);
+        RDF_FORMAT_BY_EXTENSION.put("turtle", RDFFormat.TURTLE);
+        RDF_FORMAT_BY_EXTENSION.put("trix", RDFFormat.TRIX);
     }
 
     private SesameTools() {
@@ -76,5 +91,9 @@ public class SesameTools {
 
     public static String randomIdString() {
         return "" + RANDOM.nextInt(Integer.MAX_VALUE);
+    }
+
+    public static RDFFormat rdfFormatByExtension(final String ext) {
+        return RDF_FORMAT_BY_EXTENSION.get(ext.toLowerCase());
     }
 }
