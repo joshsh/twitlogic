@@ -6,14 +6,12 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
-import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
-import net.fortytwo.twitlogic.twitter.CommandListener;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 
@@ -82,11 +80,13 @@ public class TwitLogicDemo {
 
                 // Create an agent to listen for commands.
                 // Also take the opportunity to memoize users we're following.
+                /*
                 TwitLogicAgent agent = new TwitLogicAgent(client);
                 UserRegistry userRegistry = new UserRegistry(client);
                 Handler<Tweet, TweetHandlerException> realtimeStatusHandler
                         = userRegistry.createUserRegistryFilter(
                         new CommandListener(agent, annotator));
+                */
 
                 Set<User> users = TwitLogic.findFollowList(client);
 
@@ -102,7 +102,7 @@ public class TwitLogicDemo {
                 }
                 //*/
 
-                client.processFollowFilterStream(users, realtimeStatusHandler, 0);
+                client.processFollowFilterStream(users, annotator, 0);
             } finally {
                 c.close();
             }
