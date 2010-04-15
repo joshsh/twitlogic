@@ -134,9 +134,12 @@ public class TweetStore {
                         if (null == format) {
                             LOGGER.warning("dump file format not recognized. Periodic data dumps will not be generated.");
                         } else {
-
                             try {
-                                new Thread(new PeriodicDumpfileGenerator(this, file, format, compressed, interval)).start();
+                                try {
+                                    new Thread(new PeriodicDumpfileGenerator(this, file, format, compressed, interval)).start();
+                                } catch (IOException e) {
+                                    throw new TweetStoreException(e);
+                                }
                             } catch (PropertyException e) {
                                 throw new TweetStoreException(e);
                             }

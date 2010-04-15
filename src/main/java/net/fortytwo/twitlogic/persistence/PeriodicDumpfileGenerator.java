@@ -5,6 +5,7 @@ import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.rio.RDFFormat;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -26,12 +27,14 @@ public class PeriodicDumpfileGenerator implements Runnable {
                                      final File file,
                                      final RDFFormat format,
                                      final boolean compressed,
-                                     final long interval) throws PropertyException {
+                                     final long interval) throws PropertyException, IOException {
         this.tweetStore = tweetStore;
         this.interval = interval;
         this.file = file;
         this.compressed = compressed;
         this.format = format;
+
+        file.getParentFile().mkdirs();
     }
 
     public void run() {

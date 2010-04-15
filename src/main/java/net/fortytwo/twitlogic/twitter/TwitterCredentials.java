@@ -28,34 +28,49 @@ import java.util.logging.Logger;
 public class TwitterCredentials {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitterCredentials.class);
 
-    private static final boolean USE_OAUTH = false;
+    private final boolean useOAuth;
 
     private final OAuthConsumer consumer;
     private final OAuthProvider provider;
+
+    private final String userName;
+    private final String password;
 
     public static void main(final String[] args) throws Exception {
         TwitterCredentials c = new TwitterCredentials();
         c.deriveCredentials();
     }
 
-    public TwitterCredentials() {
-        String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY).trim();
-        String consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET).trim();
-
-        consumer = new CommonsHttpOAuthConsumer(
-                consumerKey,
-                consumerSecret,
-                SignatureMethod.HMAC_SHA1);
-        provider = new DefaultOAuthProvider(
-                consumer,
-                TwitterAPI.OAUTH_REQUEST_TOKEN_URL,
-                TwitterAPI.OAUTH_ACCESS_TOKEN_URL,
-                TwitterAPI.OAUTH_AUTHORIZE_URL);
+    public TwitterCredentials() throws TwitterClientException {
+        String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY, null);
+        String consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET, null);
+        if (null == consumerKey || null == consumerSecret) {
+            LOGGER.fine("no Twitter OAuth credentials have been supplied. Attempting to use basic authentication.");
+            useOAuth = false;
+            consumer = null;
+            provider = null;
+            Properties props = TwitLogic.getConfiguration();
+            userName = props.getProperty(TwitLogic.TWITTER_USERNAME);
+            password = props.getProperty(TwitLogic.TWITTER_PASSWORD);
+        } else {
+            useOAuth = true;
+            consumer = new CommonsHttpOAuthConsumer(
+                    consumerKey,
+                    consumerSecret,
+                    SignatureMethod.HMAC_SHA1);
+            provider = new DefaultOAuthProvider(
+                    consumer,
+                    TwitterAPI.OAUTH_REQUEST_TOKEN_URL,
+                    TwitterAPI.OAUTH_ACCESS_TOKEN_URL,
+                    TwitterAPI.OAUTH_AUTHORIZE_URL);
+            userName = null;
+            password = null;
+        }
     }
 
     public void sign(final HttpUriRequest request) throws OAuthExpectationFailedException, OAuthMessageSignerException {
         //request.getParams().s
-        if (USE_OAUTH) {
+        if (useOAuth) {
             consumer.sign(request);
         } else {
             useBasicAuthentication(request);
@@ -90,12 +105,14 @@ public class TwitterCredentials {
     }
 
     public void loadCredentials() {
-        String accessToken = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN).trim();
-        String tokenSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN_SECRET).trim();
+        if (useOAuth) {
+            String accessToken = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN).trim();
+            String tokenSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN_SECRET).trim();
 
-        // if not yet done, load the token and token secret for
-        // the current user and set them
-        consumer.setTokenWithSecret(accessToken, tokenSecret);
+            // if not yet done, load the token and token secret for
+            // the current user and set them
+            consumer.setTokenWithSecret(accessToken, tokenSecret);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -165,10 +182,7 @@ public class TwitterCredentials {
     }*/
 
     private void useBasicAuthentication(final HttpUriRequest request) {
-        Properties props = TwitLogic.getConfiguration();
-        String username = props.getProperty(TwitLogic.TWITTER_USERNAME);
-        String password = props.getProperty(TwitLogic.TWITTER_PASSWORD);
-        String auth = new String(Base64.encodeBase64((username + ":" + password).getBytes()));
+        String auth = new String(Base64.encodeBase64((userName + ":" + password).getBytes()));
         request.setHeader("Authorization", "Basic " + auth);
     }
 }

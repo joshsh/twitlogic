@@ -46,7 +46,7 @@ public class TwitterClient extends CommonHttpClient {
     private final RequestExecutor streamingAPIClient;
     private final RequestExecutor updateAPIClient;
 
-    public TwitterClient() {
+    public TwitterClient() throws TwitterClientException {
         /*
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
@@ -316,7 +316,9 @@ public class TwitterClient extends CommonHttpClient {
 
     private void sign(final HttpUriRequest request) throws TwitterClientException {
         try {
-            credentials.sign(request);
+            if (null != credentials) {
+                credentials.sign(request);
+            }
         } catch (OAuthExpectationFailedException e) {
             throw new TwitterClientException(e);
         } catch (OAuthMessageSignerException e) {

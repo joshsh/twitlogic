@@ -111,6 +111,7 @@ public abstract class CommonHttpClient {
                 // Try again.
                 // TODO: how to tell whether we're being rate limited or it is an eternally bad request?
             } catch (UnauthorizedException e) {
+                LOGGER.severe("HTTP request not authorized");
                 throw e;
             } catch (ForbiddenException e) {
                 throw e;
