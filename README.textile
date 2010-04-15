@@ -3,9 +3,8 @@ Welcome to the TwitLogic code base!
 !http://tinkerpop.com/Software_files/droppedImage.png!
 
 Some documentation:
-"Syntax conventions":syntax-conventions for embedding structured content in Twitter messages
-"Configuring and running TwitLogic":configuring-and-running-twitlogic
-"TwitLogic Linked Data":twitlogic-linked-data: crawling the knowledge base
+"Syntax conventions":http://wiki.github.com/joshsh/twitlogic/syntax-conventions for embedding structured content in Twitter messages
+"Configuring and running TwitLogic":http://wiki.github.com/joshsh/twitlogic/configuring-and-running-twitlogic
+"TwitLogic Linked Data":http://wiki.github.com/joshsh/twitlogic/twitlogic-linked-data: crawling the knowledge base
 
 Please feel free to "ask questions":mailto:josh@fortytwo.net or "raise issues":http://github.com/joshsh/twitlogic/issues.
-
