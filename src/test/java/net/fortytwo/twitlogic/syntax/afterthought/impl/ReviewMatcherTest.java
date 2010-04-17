@@ -41,7 +41,8 @@ public class ReviewMatcherTest extends MatcherTestBase {
                 new Triple(review, RATING, new PlainLiteral("3")),
                 new Triple(review, MAXRATING, new PlainLiteral("5")),
                 new Triple(review, MINRATING, new PlainLiteral("0")),
-                new Triple(review, REVIEWER, tweetContext.thisPerson()),
+                // FIXME: restore this once the corresponding statement is restored in ReviewMatcher
+          //      new Triple(review, REVIEWER, tweetContext.thisPerson()),
                 new Triple(review, TEXT, new PlainLiteral("IMHO, #thebestmovieever (3/5) is only so-so.")));
     }
 }
