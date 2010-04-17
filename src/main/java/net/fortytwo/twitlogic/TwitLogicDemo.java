@@ -17,6 +17,7 @@ import net.fortytwo.twitlogic.twitter.TwitterClient;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Set;
 
@@ -90,17 +91,16 @@ public class TwitLogicDemo {
 
                 Set<User> users = TwitLogic.findFollowList(client);
 
-                /*
                 // Gather historical tweets
                 {
-                    GregorianCalendar cal = new GregorianCalendar(2009, 10, 1);
-
+                    GregorianCalendar cal = new GregorianCalendar(2009, GregorianCalendar.OCTOBER, 1);
+                /*
 
                     // Note: don't run old tweets through the command listener, or
                     // TwitLogic will respond, annoyingly, to old commands.
                     client.processTimelineFrom(users, cal.getTime(), annotator);
-                }
                 //*/
+                }
 
                 client.processFollowFilterStream(users, annotator, 0);
             } finally {
