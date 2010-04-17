@@ -50,8 +50,10 @@ public class ReviewMatcher extends AfterthoughtMatcher {
             context.handle(new Triple(review, RATING, new PlainLiteral("" + rating)));
             context.handle(new Triple(review, MAXRATING, new PlainLiteral("" + maxRating)));
             context.handle(new Triple(review, MINRATING, new PlainLiteral("" + minRating)));
-            context.handle(new Triple(review, REVIEWER, context.thisPerson()));
             context.handle(new Triple(review, TEXT, new PlainLiteral(context.thisTweet().getText())));
+
+            // FIXME: restore this.  Currently, it causes a transaction to hang.
+            //context.handle(new Triple(review, REVIEWER, context.thisPerson()));
         }
     }
 }
