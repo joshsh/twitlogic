@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -68,13 +69,17 @@ public class TwitterClient extends CommonHttpClient {
                     throw new TwitterClientException(e);
                 }
 
+                HttpResponse response;
                 try {
-                    HttpResponse response = client.execute(request);
-                    rateLimiter.updateRateLimitStatus(response);
-                    return response;
+                    response = client.execute(request);
+                } catch (SocketException e) {
+                    throw new TwitterConnectionResetException(e);
                 } catch (IOException e) {
                     throw new TwitterClientException(e);
                 }
+
+                rateLimiter.updateRateLimitStatus(response);
+                return response;
             }
         };
 
@@ -87,7 +92,7 @@ public class TwitterClient extends CommonHttpClient {
                     return client.execute(request);
                 } catch (HttpHostConnectException e) {
                     LOGGER.warning("failed to connect to host: " + e);
-                    throw new TwitterConnectionRefusedException(e);
+                    throw new TwitterConnectionResetException(e);
                 } catch (IOException e) {
                     throw new TwitterClientException(e);
                 }
@@ -451,7 +456,7 @@ public class TwitterClient extends CommonHttpClient {
 
         try {
             response = makeSignedJSONRequest(request, streamingAPIClient);
-        } catch (TwitterConnectionRefusedException e) {
+        } catch (TwitterConnectionResetException e) {
             return StatusStreamParser.ExitReason.CONNECTION_REFUSED;
         }
 

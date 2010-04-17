@@ -4,6 +4,7 @@ import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.twitter.TwitterAPIException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
 import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.twitter.TwitterConnectionResetException;
 import net.fortytwo.twitlogic.twitter.errors.BadGatewayException;
 import net.fortytwo.twitlogic.twitter.errors.BadRequestException;
 import net.fortytwo.twitlogic.twitter.errors.EnhanceYourCalmException;
@@ -127,6 +128,9 @@ public abstract class CommonHttpClient {
                 // Try again.
                 beExtraPatient = true;
             } catch (ServiceUnavailableException e) {
+                // Try again.
+                beExtraPatient = true;
+            } catch (TwitterConnectionResetException e) {
                 // Try again.
                 beExtraPatient = true;
             }
