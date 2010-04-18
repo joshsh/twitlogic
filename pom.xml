@@ -64,6 +64,19 @@
             <version>3.1.0</version>
         </dependency>
 
+        <!-- Temporary, for Web demo -->
+        <!--
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet.ext.servlet</artifactId>
+            <version>1.1.9</version>
+        </dependency>-->
+
         <!-- Sesame RDF -->
         <dependency>
             <groupId>org.openrdf.sesame</groupId>

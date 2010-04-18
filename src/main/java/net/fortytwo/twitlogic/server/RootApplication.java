@@ -1,5 +1,7 @@
 package net.fortytwo.twitlogic.server;
 
+import edu.rpi.tw.twctwit.query.RelatedTweetsResource;
+import edu.rpi.tw.twctwit.query.SparqlResource;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.restlet.Application;
@@ -31,6 +33,9 @@ public class RootApplication extends Application {
         for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
             router.attach("/" + t.getUriPath() + "/", WebResource.class);
         }
+
+        router.attach("/sparql", SparqlResource.class);
+        router.attach("/stream/relatedTweets", RelatedTweetsResource.class);
 
         // Return the root router
         return router;

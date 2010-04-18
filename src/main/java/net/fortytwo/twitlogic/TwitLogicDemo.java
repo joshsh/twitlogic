@@ -36,7 +36,7 @@ public class TwitLogicDemo {
                 p.load(new FileInputStream(configFile));
                 TwitLogic.setConfiguration(p);
 
-                aggregate();
+                runDemo();
             } else {
                 printUsage();
                 System.exit(1);
@@ -52,7 +52,7 @@ public class TwitLogicDemo {
                 + "  <URL:http://wiki.github.com/joshsh/twitlogic/configuring-and-running-twitlogic>.");
     }
 
-    private static void aggregate() throws Exception {
+    private static void runDemo() throws Exception {
         // Create a persistent store.
         TweetStore store = new TweetStore();
         store.initialize();
