@@ -33,8 +33,8 @@ public abstract class QueryResource extends Resource {
     private static final String UTF_8 = "UTF-8";
 
     private static final int
-            MAX_LIMIT = 100,
-            DEFAULT_LIMIT = 20;
+            MAX_LIMIT = 200,
+            DEFAULT_LIMIT = 100;
 
     private static final String LIMIT_PARAM = "limit";
 
