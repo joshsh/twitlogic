@@ -29,14 +29,14 @@ h1#logo {
 }
 
 h1#logo a {
-    background: url(/img/logo.png) no-repeat scroll 0 0 transparent;
+    background: url(../img/logo.png) no-repeat scroll 0 0 transparent;
     display: block;
     width: 277px;
     height: 95px;
 }
 
 #about_us {
-    background: url(/img/aboutus-bg.gif) no-repeat scroll 0 0 transparent;
+    background: url(../img/aboutus-bg.gif) no-repeat scroll 0 0 transparent;
     float: right;
     height: 35px;
     width: 355px;
@@ -81,7 +81,7 @@ h1#logo a {
 }
 
 .sidebar_content {
-    background: url(/img/sidebar-bg.gif) repeat-y scroll 0 0 transparent;
+    background: url(../img/sidebar-bg.gif) repeat-y scroll 0 0 transparent;
     border: 1px solid #CBCCCB;
     padding: 12px 2px 0 14px;
     position: relative;
@@ -95,7 +95,7 @@ h1#logo a {
 }
 
 #sidebar h4.open_button {
-    background: url(/img/arrow-open.gif) no-repeat scroll 0 4px transparent;
+    background: url(../img/arrow-open.gif) no-repeat scroll 0 4px transparent;
     padding-left: 10px;
 }
 
@@ -116,7 +116,7 @@ h1#logo a {
 #sidebar ul li a {
     color: #1D1D1D;
     padding-left: 10px;
-    background: url(/img/arrow-closed.gif) no-repeat scroll 0 4px transparent;
+    background: url(../img/arrow-closed.gif) no-repeat scroll 0 4px transparent;
 }
 
 #sidebar .all_values {
@@ -130,7 +130,7 @@ h1#logo a {
 }
 
 .more_button {
-    background: url(/img/more.gif) no-repeat scroll 0 0 transparent;
+    background: url(../img/more.gif) no-repeat scroll 0 0 transparent;
     bottom: 0;
     float: right;
     height: 18px;
@@ -142,7 +142,7 @@ h1#logo a {
 }
 
 #content {
-    background: url(/img/content-bg.gif) repeat-y scroll 0 0 transparent;
+    background: url(../img/content-bg.gif) repeat-y scroll 0 0 transparent;
     border: 1px solid #CBCCCB;
     float: right;
     padding-bottom: 16px;

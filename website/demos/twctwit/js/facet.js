@@ -13,7 +13,8 @@ function build_facets(){
         success: function(data){
             var t = _valueHash(data);
             $.each(t, function(key, value){
-                var ln = _getLocalName(key);
+                //var ln = _getLocalName(key);
+                var ln = abbreviate(key);
                 _buildFacet(ln, value);
             });
             
@@ -49,6 +50,10 @@ function _valueHash(json){
     return hash;
 }
 
+function topicTweetsURL(topic) {
+    return "?topic=" + encodeURIComponent(topic);
+}
+
 /*
  * given an object of {$key, $value}, generate corresponding facet
  */
@@ -59,7 +64,8 @@ function _buildFacet(key, value){
     //static html
     var sb_start = "<div class=\"sidebar_content\">";
     var div_end = "<\/div>";
-    var h4_start = "<h4 class=\"open_button\"><a href=\"#\">" + _capitalize(key) + "<\/a><\/h4>";
+//    var h4_start = "<h4 class=\"open_button\"><a href=\"#zeroeth\">" + _capitalize(key) + "<\/a><\/h4>";
+    var h4_start = "<h4 class=\"open_button\"><a href=\"#zeroeth\">" + key + "<\/a><\/h4>";
     var allval_start = "<div class=\"all_values\">";
     
     textToInsert += sb_start;
@@ -72,24 +78,24 @@ function _buildFacet(key, value){
     if (length <= minItems) {
         textToInsert += "<ul>";
         $.each(value, function(count, item){
-            textToInsert += "<li><a href=\"#\">" + item + "<\/a><\/li>";
+            textToInsert += "<li><a href=\"" + topicTweetsURL(item) + "\">" + abbreviate(item) + "<\/a><\/li>";
         });
         textToInsert += "<\/ul>";
     }
     else {
         textToInsert += "<ul>";
         for (var i = 0; i < minItems; i += 1) {
-            textToInsert += "<li><a href=\"#\">" + value[i] + "<\/a><\/li>";
+            textToInsert += "<li><a href=\"" + topicTweetsURL(value[i]) + "\">" + abbreviate(value[i]) + "<\/a><\/li>";
         }
         textToInsert += "<\/ul>";
         textToInsert += "<ul class=\"more_values\" style=\"display: none;\">";
         for (var j = minItems; j < length; j += 1) {
-            textToInsert += "<li><a href=\"#\">" + value[j] + "<\/a><\/li>";
+            textToInsert += "<li><a href=\"" + topicTweetsURL(value[j]) + "\">" + abbreviate(value[j]) + "<\/a><\/li>";
         }
         textToInsert += "<\/ul>";
     }
     textToInsert += "<div class=\"cl\">&nbsp;<\/div>";
-    textToInsert += "<div class=\"more_button\"><a href=\"#\">More<\/a><\/div>";
+    textToInsert += "<div class=\"more_button\"><a href=\"#fourth\">More<\/a><\/div>";
     textToInsert += div_end; // end <div class="all_values">
     textToInsert += "<div class=\"cl\">&nbsp;<\/div>";
     textToInsert += div_end; // end <div class="sidebar_content">

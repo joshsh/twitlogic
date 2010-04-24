@@ -88,6 +88,7 @@ public class SparqlTools {
                                          final int limit) throws QueryException {
         SPARQLResultsJSONWriter w = new SPARQLResultsJSONWriter(out);
         List<String> columnHeaders = new LinkedList<String>();
+        // FIXME: *do* specify the column headers
         //columnHeaders.add("post");
         //columnHeaders.add("content");
         //columnHeaders.add("screen_name");
