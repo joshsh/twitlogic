@@ -1,0 +1,57 @@
+{
+	"head": {
+		"vars": [  ]
+	}, 
+	"results": {
+		"bindings": [
+		{
+				"timestamp": { "type": "typed-literal", "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#dateTime", "value": "2010-11-24T20:58:21.000Z" }, 
+				"content": { "type": "literal", "value": "Test tweet" }, 
+				"screen_name": { "type": "literal", "value": "baojie" }, 
+				"post": { "type": "uri", "value": "http:\/\/twitlogic.fortytwo.net\/post\/twitter\/5987324305" }, 
+				"depiction": { "type": "uri", "value": "http:\/\/a1.twimg.com\/profile_images\/73928050\/q624880777_7871_normal.jpg" }, 
+				"name": { "type": "literal", "value": "Zhenning Shangguan" }
+			}, 
+			{
+				"timestamp": { "type": "typed-literal", "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#dateTime", "value": "2009-11-23T20:58:21.000Z" }, 
+				"content": { "type": "literal", "value": "Twitter brain storming #3: use cases (find all #iswc2009 tweets; twits about don jones drop)" }, 
+				"screen_name": { "type": "literal", "value": "baojie" }, 
+				"post": { "type": "uri", "value": "http:\/\/twitlogic.fortytwo.net\/post\/twitter\/5987324305" }, 
+				"depiction": { "type": "uri", "value": "http:\/\/a1.twimg.com\/profile_images\/73928050\/q624880777_7871_normal.jpg" }, 
+				"name": { "type": "literal", "value": "Jie Bao" }
+			}, 
+			{
+				"timestamp": { "type": "typed-literal", "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#dateTime", "value": "2009-11-13T03:52:42.000Z" }, 
+				"content": { "type": "literal", "value": "@jahendler presented poem on #semanticweb layer cake, see video at http:\/\/bit.ly\/SsNvr in #iswc2009" }, 
+				"screen_name": { "type": "literal", "value": "lidingpku" }, 
+				"post": { "type": "uri", "value": "http:\/\/twitlogic.fortytwo.net\/post\/twitter\/5670163056" }, 
+				"depiction": { "type": "uri", "value": "http:\/\/a1.twimg.com\/profile_images\/111008402\/liding_normal.jpg" }, 
+				"name": { "type": "literal", "value": "Li Ding" }
+			}, 
+			{
+				"timestamp": { "type": "typed-literal", "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#dateTime", "value": "2009-11-05T18:28:18.000Z" }, 
+				"content": { "type": "literal", "value": "Rereading Pat's #ISWC2009 Invited Talk. Have to admit I didn't understand \"RDF redux\" properly on site, now do. http:\/\/slidesha.re\/2H7DNP" }, 
+				"screen_name": { "type": "literal", "value": "baojie" }, 
+				"post": { "type": "uri", "value": "http:\/\/twitlogic.fortytwo.net\/post\/twitter\/5456167395" }, 
+				"depiction": { "type": "uri", "value": "http:\/\/a1.twimg.com\/profile_images\/73928050\/q624880777_7871_normal.jpg" }, 
+				"name": { "type": "literal", "value": "Jie Bao" }
+			}, 
+			{
+				"timestamp": { "type": "typed-literal", "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#dateTime", "value": "2009-11-05T08:21:56.000Z" }, 
+				"content": { "type": "literal", "value": "@LeeFeigenbaum: good point, wifi at #iswc2009 was almost faultless. credit to mike dean et al for putting in so many extra lines." }, 
+				"screen_name": { "type": "literal", "value": "tommyh" }, 
+				"post": { "type": "uri", "value": "http:\/\/twitlogic.fortytwo.net\/post\/twitter\/5444998966" }, 
+				"depiction": { "type": "uri", "value": "http:\/\/a3.twimg.com\/profile_images\/51586959\/tom-heath-sssw05-thumb_normal.jpg" }, 
+				"name": { "type": "literal", "value": "Tom Heath" }
+			}, 
+			{
+				"timestamp": { "type": "typed-literal", "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#dateTime", "value": "2009-11-04T20:13:09.000Z" }, 
+				"content": { "type": "literal", "value": "enjoying the huge drop in email post- #fp7 and #iswc2009. keep it that way people, please!" }, 
+				"screen_name": { "type": "literal", "value": "tommyh" }, 
+				"post": { "type": "uri", "value": "http:\/\/twitlogic.fortytwo.net\/post\/twitter\/5429104058" }, 
+				"depiction": { "type": "uri", "value": "http:\/\/a3.twimg.com\/profile_images\/51586959\/tom-heath-sssw05-thumb_normal.jpg" }, 
+				"name": { "type": "literal", "value": "Tom Heath" }
+			}
+		]
+	}
+}

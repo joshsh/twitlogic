@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+        </script>
+        <script type="text/javascript" src="/js/facet.js">
+        </script>
+        <script type="text/javascript" src="/js/tweets.js">
+        </script>
+        <script type="text/javascript" src="/js/jquery.timeago.js">
+        </script>
+        <script type="text/javascript">
+        	var SPARQL_SERVICE_URL = ""; // URL of SPARQL service
+        	var RESOURCE_URI = "http://twitlogic.fortytwo.net/hashtag/iswc2009"; // URI for the subject resource
+            $(document).ready(function(){
+                init_facets();
+                init_tweets();
+            });
+        </script>
+		<link media="screen" type="text/css" href="css/style.css" rel="stylesheet" />
+        <title>Real-time Semantic Search on Twitter Streams</title>
+    </head>
+    <body>
+        <div class="shell">
+            <div id="header">
+                <div class="cl">
+                    &nbsp;
+                </div>
+                <h1 id="logo"><a href="#">TwitLogic Search</a></h1>
+                <div id="about_us">
+                    <ul>
+                        <li>
+                            <a href="http://twitlogic.fortytwo.net" target="_blank">About TwitLogic</a>
+                        </li>
+                        <li>
+                            <a href="http://tw.rpi.edu" target="_blank">About Us</a>
+                        </li>
+                        <li>
+                            <a href="http://fortytwo.net" target="_blank">Contact</a>
+                        </li>
+                        <li class="last">
+                            &nbsp;&nbsp;<a href="http://wiki.github.com/joshsh/twitlogic/syntax-conventions" target="_blank">Help</a>&nbsp;
+                        </li>
+                    </ul>
+                </div>
+                <div class="cl">
+                    &nbsp;
+                </div>
+            </div>
+            <div id="main">
+                <div class="cl">
+                    &nbsp;
+                </div>
+                <div id="sidebar">
+                </div>
+                <div id="content">
+                    <div id="content_wrapper">
+                    </div>
+                </div>
+                <div class="cl">
+                    &nbsp;
+                </div>
+            </div>
+            <div id="footer">
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,71 @@
+ {
+    "head": {
+        "vars": [
+            
+        ]
+    },
+    "results": {
+        "bindings": [
+            {
+                "o": {
+                    "type": "uri",
+                    "value": "http:\/\/www.w3.org\/2002\/07\/owl#Thing" 
+                },
+                "p": {
+                    "type": "uri",
+                    "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type" 
+                }
+            },
+            {
+                "o": {
+                    "type": "uri",
+                    "value": "http:\/\/twitlogic.fortytwo.net\/hashtag\/iswc2009" 
+                },
+                "p": {
+                    "type": "uri",
+                    "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs" 
+                }
+            },
+            {
+                "o": {
+                    "type": "uri",
+                    "value": "http:\/\/twitlogic.fortytwo.net\/hashtag\/iswc_2009" 
+                },
+                "p": {
+                    "type": "uri",
+                    "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs" 
+                }
+            },
+            {
+                "o": {
+                    "type": "uri",
+                    "value": "http:\/\/twitlogic.fortytwo.net\/hashtag\/iswc09" 
+                },
+                "p": {
+                    "type": "uri",
+                    "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs" 
+                }
+            },
+            {
+                "o": {
+                    "type": "uri",
+                    "value": "http:\/\/data.semanticweb.org\/conference\/iswc\/2009" 
+                },
+                "p": {
+                    "type": "uri",
+                    "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs" 
+                }
+            },
+            {
+                "o": {
+                    "type": "uri",
+                    "value": "http:\/\/twitlogic.fortytwo.net\/hashtag\/iswc" 
+                },
+                "p": {
+                    "type": "uri",
+                    "value": "http:\/\/www.w3.org\/2004\/02\/skos\/core#broaderTransitive" 
+                }
+            }
+        ]
+    }
+}
