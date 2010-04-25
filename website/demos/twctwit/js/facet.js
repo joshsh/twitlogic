@@ -11,12 +11,17 @@ function build_facets(){
         url: "../../sparql", // SPARQL service URL
 //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
-                "SELECT DISTINCT * WHERE { <" + findTopic() + "> ?p ?o . }"
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "SELECT DISTINCT * WHERE {\n" +
+                "  <" + findTopic() + "> ?p ?o .\n" +
+                "  OPTIONAL { ?o rdfs:label ?olabel . } .\n" +
+                "  OPTIONAL { ?p rdfs:label ?plabel . } .\n" +
+                "}"
                 ), // query parameter
         dataType: "json",
-        success: function(data){
+        success: function(data) {
             var t = _valueHash(data);
-            $.each(t, function(key, value){
+            $.each(t, function(key, value) {
                 //var ln = _getLocalName(key);
                 var ln = abbreviate(key);
                 _buildFacet(ln, value);
@@ -37,25 +42,37 @@ function _valueHash(json){
     var bindings = json.results.bindings;
     for (var i = 0; i < bindings.length; i++) {
         var predicate = bindings[i].p.value;
-        var object = bindings[i].o.value;
+        var object = [];
+        object.uri = bindings[i].o.value;
+        if (null != bindings[i].olabel) {
+            object.label = bindings[i].olabel.value;
+        }
         var flag = $.inArray(predicate, predicates);
-        if (flag > -1) {
-            var oldValues = hash[predicate];
-            oldValues.push(object);
-            hash[predicate] = oldValues;
-        }
-        else {
+        var values;
+        if (-1 == flag) {
             predicates.push(predicate);
-            var values = [];
-            values.push(object);
+            values = [];
             hash[predicate] = values;
+        } else {
+            values = hash[predicate];
         }
+        values.push(object);
     }
     return hash;
 }
 
 function topicTweetsURL(topic) {
     return "?topic=" + encodeURIComponent(topic);
+}
+
+function friendlyLink(item) {
+    var text;
+    if (null == item.label) {
+        text = abbreviate(item.uri);
+    } else {
+        text = item.label;
+    }
+    return "<a href=\"" + topicTweetsURL(item.uri) + "\">" + text + "<\/a>";
 }
 
 /*
@@ -82,19 +99,19 @@ function _buildFacet(key, value){
     if (length <= minItems) {
         textToInsert += "<ul>";
         $.each(value, function(count, item){
-            textToInsert += "<li><a href=\"" + topicTweetsURL(item) + "\">" + abbreviate(item) + "<\/a><\/li>";
+            textToInsert += "<li>" + friendlyLink(item) + "<\/li>";
         });
         textToInsert += "<\/ul>";
     }
     else {
         textToInsert += "<ul>";
         for (var i = 0; i < minItems; i += 1) {
-            textToInsert += "<li><a href=\"" + topicTweetsURL(value[i]) + "\">" + abbreviate(value[i]) + "<\/a><\/li>";
+            textToInsert += "<li>" + friendlyLink(value[i]) + "<\/li>";
         }
         textToInsert += "<\/ul>";
         textToInsert += "<ul class=\"more_values\" style=\"display: none;\">";
         for (var j = minItems; j < length; j += 1) {
-            textToInsert += "<li><a href=\"" + topicTweetsURL(value[j]) + "\">" + abbreviate(value[j]) + "<\/a><\/li>";
+            textToInsert += "<li>" + friendlyLink(value[j]) + "<\/li>";
         }
         textToInsert += "<\/ul>";
     }

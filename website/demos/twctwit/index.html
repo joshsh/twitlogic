@@ -4,12 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
     </script>
-    <script type="text/javascript" src="js/facet.js">
-    </script>
-    <script type="text/javascript" src="js/tweets.js">
-    </script>
-    <script type="text/javascript" src="js/jquery.timeago.js">
-    </script>
     <script type="text/javascript">
         function abbreviate(uri) {
             return uri
@@ -23,7 +17,14 @@
                     .replace("http://www.w3.org/2000/01/rdf-schema#", "rdfs:")
                     .replace("http://www.w3.org/2002/12/cal/ical#", "ical:");
         }
-
+    </script>
+    <script type="text/javascript" src="js/facet.js">
+    </script>
+    <script type="text/javascript" src="js/tweets.js">
+    </script>
+    <script type="text/javascript" src="js/jquery.timeago.js">
+    </script>
+    <script type="text/javascript">
         //alert('location = ' + location.href);
         var SPARQL_SERVICE_URL = "../../sparql"; // URL of SPARQL service
         var RESOURCE_URI = "http://twitlogic.fortytwo.net/hashtag/iswc2009"; // URI for the subject resource
