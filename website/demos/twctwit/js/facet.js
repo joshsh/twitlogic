@@ -11,7 +11,7 @@ function build_facets(){
         url: "../../sparql", // SPARQL service URL
 //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
-                "SELECT * WHERE { <" + findTopic() + "> ?p ?o . }"
+                "SELECT DISTINCT * WHERE { <" + findTopic() + "> ?p ?o . }"
                 ), // query parameter
         dataType: "json",
         success: function(data){
