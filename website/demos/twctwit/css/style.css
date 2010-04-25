@@ -29,10 +29,10 @@ h1#logo {
 }
 
 h1#logo a {
-    background: url(../img/logo.png) no-repeat scroll 0 0 transparent;
+    background: url(../../../images/TwitLogic_logo_small.png) no-repeat scroll 0 0 transparent;
     display: block;
-    width: 277px;
-    height: 95px;
+    width: 101px;
+    height: 132px;
 }
 
 #about_us {
