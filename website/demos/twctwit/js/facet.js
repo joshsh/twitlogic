@@ -1,3 +1,4 @@
+
 /**
  * @author Shangguan
  */
@@ -7,8 +8,11 @@
 function build_facets(){
     $.ajax({
         type: "GET",
-        url: "data/sample.json", // SPARQL service URL [todo: Josh, change this to SPARQL_SERVICE_URL]
-        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter [todo: Josh, chagne this to the actual SPARQL query]
+        url: "../../sparql", // SPARQL service URL
+//        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
+        data: "query=" + encodeURIComponent(
+                "SELECT * WHERE { <" + findTopic() + "> ?p ?o . }"
+                ), // query parameter
         dataType: "json",
         success: function(data){
             var t = _valueHash(data);
@@ -74,7 +78,7 @@ function _buildFacet(key, value){
     
     // dynamic html
     var length = value.length;
-    var minItems = 3;
+    var minItems = 10;
     if (length <= minItems) {
         textToInsert += "<ul>";
         $.each(value, function(count, item){
