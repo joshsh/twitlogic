@@ -271,6 +271,7 @@ public class TwitterClient extends CommonHttpClient {
 
     public void handleTimelineFrom(final User user,
                                    final Date minTimestamp,
+                                   final Date maxTimestamp,
                                    final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
         Handler<Tweet, TweetHandlerException> dateFilter = new Handler<Tweet, TweetHandlerException>() {
             private int statuses = 0;
@@ -281,9 +282,11 @@ public class TwitterClient extends CommonHttpClient {
                             + ") of statuses retrieved for user " + user.getScreenName());
                 }
 
+                Date t = tweet.getCreatedAt();
+
                 //System.out.println("\tcreated at: " + tweet.getCreatedAt());
-                return (tweet.getCreatedAt().compareTo(minTimestamp) >= 0)
-                        && handler.handle(tweet);
+                return t.compareTo(maxTimestamp) > 0
+                        || (t.compareTo(minTimestamp) >= 0 && handler.handle(tweet));
             }
         };
 
@@ -295,10 +298,11 @@ public class TwitterClient extends CommonHttpClient {
 
     public void processTimelineFrom(final Set<User> users,
                                     final Date minTimestamp,
+                                    final Date maxTimestamp,
                                     final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
         for (User u : users) {
             try {
-                handleTimelineFrom(u, minTimestamp, handler);
+                handleTimelineFrom(u, minTimestamp, maxTimestamp, handler);
             } catch (UnauthorizedException e) { // Soft fail here
                 LOGGER.warning("not authorized to get " + u.getScreenName() + "'s timeline");
             }

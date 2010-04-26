@@ -6,6 +6,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
+import net.fortytwo.twitlogic.persistence.TweetStoreException;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
@@ -14,12 +15,15 @@ import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.twitter.TwitterClient;
+import net.fortytwo.twitlogic.twitter.TwitterClientException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * User: josh
@@ -27,6 +31,7 @@ import java.util.Set;
  * Time: 7:45:53 PM
  */
 public class TwitLogicDemo {
+    private static final Logger LOGGER = TwitLogic.getLogger(TwitLogicDemo.class);
 
     public static void main(final String[] args) {
         try {
@@ -66,18 +71,8 @@ public class TwitLogicDemo {
 
             TweetStoreConnection c = store.createConnection();
             try {
-                // Create the tweet persister.
-                boolean persistUnannotatedTweets = true;
-                TweetPersister persister = new TweetPersister(store, c, client, persistUnannotatedTweets);
-
-                // Add a "topic sniffer".
-                TopicSniffer topicSniffer = new TopicSniffer(persister);
-
-                // Add a tweet annotator.
-                Matcher matcher = new MultiMatcher(//new TwipleMatcher(),
-                        new DemoAfterthoughtMatcher());
                 Handler<Tweet, TweetHandlerException> annotator
-                        = new TweetAnnotator(matcher, topicSniffer);
+                        = createAnnotator(store, c, client);
 
                 // Create an agent to listen for commands.
                 // Also take the opportunity to memoize users we're following.
@@ -91,16 +86,7 @@ public class TwitLogicDemo {
 
                 Set<User> users = TwitLogic.findFollowList(client);
 
-                // Gather historical tweets
-                {
-                    GregorianCalendar cal = new GregorianCalendar(2009, GregorianCalendar.OCTOBER, 1);
-                /*
-
-                    // Note: don't run old tweets through the command listener, or
-                    // TwitLogic will respond, annoyingly, to old commands.
-                    client.processTimelineFrom(users, cal.getTime(), annotator);
-                //*/
-                }
+                //gatherHistoricalTweets(store, client, users);
 
                 client.processFollowFilterStream(users, annotator, 0);
             } finally {
@@ -109,5 +95,48 @@ public class TwitLogicDemo {
         } finally {
             store.shutDown();
         }
+    }
+
+    private static void gatherHistoricalTweets(final TweetStore store,
+                                               final TwitterClient client,
+                                               final Set<User> users) throws TweetStoreException, TwitterClientException, TweetHandlerException {
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    TweetStoreConnection c = store.createConnection();
+                    try {
+                        GregorianCalendar cal = new GregorianCalendar(2009, GregorianCalendar.OCTOBER, 1);
+
+                        // Note: don't run old tweets through the command listener, or
+                        // TwitLogic will respond, annoyingly, to old commands.
+                        client.processTimelineFrom(users, cal.getTime(), new Date(), createAnnotator(store, c, client));
+                    } finally {
+                        c.close();
+                    }
+                } catch (Throwable t) {
+                    LOGGER.severe("historical tweets thread died with error: " + t);
+                    t.printStackTrace();
+                }
+            }
+        });
+
+        t.start();        
+    }
+
+    private static Handler<Tweet, TweetHandlerException> createAnnotator(final TweetStore store,
+                                                                         final TweetStoreConnection c,
+                                                                         final TwitterClient client) throws TweetStoreException {
+        // Create the tweet persister.
+        boolean persistUnannotatedTweets = true;
+        TweetPersister persister = new TweetPersister(store, c, client, persistUnannotatedTweets);
+
+        // Add a "topic sniffer".
+        TopicSniffer topicSniffer = new TopicSniffer(persister);
+
+        // Add a tweet annotator.
+        Matcher matcher = new MultiMatcher(
+                new DemoAfterthoughtMatcher());
+
+        return new TweetAnnotator(matcher, topicSniffer);
     }
 }
