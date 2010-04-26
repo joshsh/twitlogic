@@ -87,7 +87,7 @@ public class RelatedTweetsResource extends QueryResource {
                                  final Response response) throws Throwable {
         super(context, request, response);
 
-        try {
+        //try {
             String resource = arguments.get(RESOURCE_PARAM);
 
             String after = readAfter();
@@ -106,15 +106,18 @@ public class RelatedTweetsResource extends QueryResource {
             //System.out.println("query = " + query);
 
             result = new SparqlQueryRepresentation(query, sail, readLimit());
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw t;
-        }
+        //} catch (Throwable t) {
+        //    t.printStackTrace();
+        //    throw t;
+        //}
     }
 
     private String alternativesQuery(final Resource resource,
                                      final String after) throws SailException, PataException {
-        Sail baseSail = ((RewriterSail) sail).getBaseSail();
+        Sail baseSail = sail instanceof RewriterSail
+                ? ((RewriterSail) sail).getBaseSail()
+                : sail;
+
         //SailConnection sc = sail.getConnection();
         SailConnection sc = baseSail.getConnection();
         try {
