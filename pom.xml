@@ -167,6 +167,13 @@
             <version>1.1.5</version>
         </dependency>
 
+        <!-- temporary? -->
+        <dependency>
+            <groupId>edu.rpi.tw</groupId>
+            <artifactId>patadata</artifactId>
+            <version>0.1</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
