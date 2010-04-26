@@ -84,27 +84,32 @@ public class RelatedTweetsResource extends QueryResource {
 
     public RelatedTweetsResource(final Context context,
                                  final Request request,
-                                 final Response response) throws Exception {
+                                 final Response response) throws Throwable {
         super(context, request, response);
 
-        String resource = arguments.get(RESOURCE_PARAM);
+        try {
+            String resource = arguments.get(RESOURCE_PARAM);
 
-        String after = readAfter();
+            String after = readAfter();
 
-        //System.out.println("resource: " + resource);
-        //System.out.println("after: " + after);
+            //System.out.println("resource: " + resource);
+            //System.out.println("after: " + after);
 
-        if (null == resource) {
-            throw new IllegalArgumentException("missing '" + RESOURCE_PARAM + "' parameter");
+            if (null == resource) {
+                throw new IllegalArgumentException("missing '" + RESOURCE_PARAM + "' parameter");
+            }
+
+            /*String query = TWEETS_WITH_TOPIC_QUERY
+           .replace(TOPIC_PLACEHOLDER, resource)
+           .replace(MIN_TIMESTAMP_PLACEHOLDER, after);*/
+            String query = alternativesQuery(new URIImpl(resource), after);
+            //System.out.println("query = " + query);
+
+            result = new SparqlQueryRepresentation(query, sail, readLimit());
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw t;
         }
-
-        /*String query = TWEETS_WITH_TOPIC_QUERY
-                .replace(TOPIC_PLACEHOLDER, resource)
-                .replace(MIN_TIMESTAMP_PLACEHOLDER, after);*/
-        String query = alternativesQuery(new URIImpl(resource), after);
-        //System.out.println("query = " + query);
-
-        result = new SparqlQueryRepresentation(query, sail, readLimit());
     }
 
     private String alternativesQuery(final Resource resource,
