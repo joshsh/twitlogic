@@ -24,9 +24,35 @@ function build_facets(){
             $.each(t, function(key, value) {
                 //var ln = _getLocalName(key);
                 var ln = abbreviate(key);
-                _buildFacet(ln, value);
+                _buildFacet(ln, value, false);
             });
             
+        }
+    });
+}
+
+function build_inverse_facets(){
+    $.ajax({
+        type: "GET",
+        url: "../../sparql", // SPARQL service URL
+//        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
+        data: "query=" + encodeURIComponent(
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "SELECT DISTINCT * WHERE {\n" +
+                "  ?o ?p <" + findTopic() + "> .\n" +
+                "  OPTIONAL { ?o rdfs:label ?olabel . } .\n" +
+                "  OPTIONAL { ?p rdfs:label ?plabel . } .\n" +
+                "}"
+                ), // query parameter
+        dataType: "json",
+        success: function(data) {
+            var t = _valueHash(data);
+            $.each(t, function(key, value) {
+                //var ln = _getLocalName(key);
+                var ln = abbreviate(key);
+                _buildFacet(ln, value, true);
+            });
+
         }
     });
 }
@@ -78,7 +104,10 @@ function friendlyLink(item) {
 /*
  * given an object of {$key, $value}, generate corresponding facet
  */
-function _buildFacet(key, value){
+function _buildFacet(key, value, inverse){
+    if (inverse) {
+        key = "is " + key + " of";   
+    }
 
     var textToInsert = "";
     
@@ -180,6 +209,7 @@ function _collapse(){
 
 function init_facets(){
 	$('#sidebar').html('');
+    build_inverse_facets();
     build_facets();
     _more();
     _collapse();
