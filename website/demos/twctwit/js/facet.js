@@ -1,15 +1,14 @@
-
 /**
  * @author Shangguan
  */
 /*
  * generate series of facets using SPARQL query
  */
-function build_facets(){
+function build_facets() {
     $.ajax({
         type: "GET",
         url: "../../sparql", // SPARQL service URL
-//        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
+        //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                 "SELECT DISTINCT * WHERE {\n" +
@@ -26,16 +25,16 @@ function build_facets(){
                 var ln = abbreviate(key);
                 _buildFacet(ln, value, false);
             });
-            
+
         }
     });
 }
 
-function build_inverse_facets(){
+function build_inverse_facets() {
     $.ajax({
         type: "GET",
         url: "../../sparql", // SPARQL service URL
-//        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
+        //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                 "SELECT DISTINCT * WHERE {\n" +
@@ -62,7 +61,7 @@ function build_inverse_facets(){
  * $key: returned predicate URI
  * $value: returned values for the predicate in $key
  */
-function _valueHash(json){
+function _valueHash(json) {
     var hash = {};
     var predicates = [];
     var bindings = json.results.bindings;
@@ -104,30 +103,30 @@ function friendlyLink(item) {
 /*
  * given an object of {$key, $value}, generate corresponding facet
  */
-function _buildFacet(key, value, inverse){
+function _buildFacet(key, value, inverse) {
     if (inverse) {
-        key = "is " + key + " of";   
+        key = "is " + key + " of";
     }
 
     var textToInsert = "";
-    
+
     //static html
     var sb_start = "<div class=\"sidebar_content\">";
     var div_end = "<\/div>";
-//    var h4_start = "<h4 class=\"open_button\"><a href=\"#zeroeth\">" + _capitalize(key) + "<\/a><\/h4>";
+    //    var h4_start = "<h4 class=\"open_button\"><a href=\"#zeroeth\">" + _capitalize(key) + "<\/a><\/h4>";
     var h4_start = "<h4 class=\"open_button\"><a href=\"#zeroeth\">" + key + "<\/a><\/h4>";
     var allval_start = "<div class=\"all_values\">";
-    
+
     textToInsert += sb_start;
     textToInsert += h4_start;
     textToInsert += allval_start;
-    
+
     // dynamic html
     var length = value.length;
     var minItems = 10;
     if (length <= minItems) {
         textToInsert += "<ul>";
-        $.each(value, function(count, item){
+        $.each(value, function(count, item) {
             textToInsert += "<li>" + friendlyLink(item) + "<\/li>";
         });
         textToInsert += "<\/ul>";
@@ -145,32 +144,34 @@ function _buildFacet(key, value, inverse){
         textToInsert += "<\/ul>";
     }
     textToInsert += "<div class=\"cl\">&nbsp;<\/div>";
-    textToInsert += "<div class=\"more_button\"><a href=\"#fourth\">More<\/a><\/div>";
+    if (length > minItems) {
+        textToInsert += "<div class=\"more_button\"><a href=\"#fourth\">More<\/a><\/div>";
+    }
     textToInsert += div_end; // end <div class="all_values">
     textToInsert += "<div class=\"cl\">&nbsp;<\/div>";
     textToInsert += div_end; // end <div class="sidebar_content">
-    
+
     $('#sidebar').append(textToInsert);
 }
 
 /*
  * stripping out local name from a URI ($uri)
  */
-function _getLocalName(uri){
+function _getLocalName(uri) {
     var regex = /#(\w+)$/i;
     var localName = uri.split(regex);
     return localName[1];
 }
 
-function _capitalize(string){
+function _capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 /*
  * toggle to show more/less values in a facet
  */
-function _more(){
-    $('.more_button a').live('click', function(){
+function _more() {
+    $('.more_button a').live('click', function() {
         var more = $(this).parent().parent().find('ul.more_values:eq(0)');
         if (more.is(':hidden')) {
             more.slideDown(100);
@@ -191,8 +192,8 @@ function _more(){
 /*
  * toggle collapse a facet
  */
-function _collapse(){
-    $('.open_button a').live('click', function(){
+function _collapse() {
+    $('.open_button a').live('click', function() {
         var parent = $(this).parent();
         var all = parent.parent().find('div.all_values:eq(0)');
         if (all.is(':hidden')) {
@@ -207,8 +208,8 @@ function _collapse(){
     });
 }
 
-function init_facets(){
-	$('#sidebar').html('');
+function init_facets() {
+    $('#sidebar').html('');
     build_inverse_facets();
     build_facets();
     _more();
