@@ -30,7 +30,7 @@
     <script type="text/javascript">
         //alert('location = ' + location.href);
         var SPARQL_SERVICE_URL = "../../sparql"; // URL of SPARQL service
-        var RESOURCE_URI = "http://twitlogic.fortytwo.net/hashtag/iswc2009"; // URI for the subject resource
+        var RESOURCE_URI = "http://twitlogic.fortytwo.net/hashtag/www2010"; // URI for the subject resource
         $(document).ready(function() {
             var topic = findTopic();
             var a = document.createElement("a");
@@ -39,6 +39,7 @@
             var topicdiv = document.getElementById("topicdiv");
             topicdiv.appendChild(document.createTextNode("Tweets about "));
             topicdiv.appendChild(a);
+            topicdiv.appendChild(document.createElement("br"));
             init_facets();
             init_tweets();
         });
@@ -52,7 +53,7 @@
         <div class="cl">
             &nbsp;
         </div>
-        <h1 id="logo"><a href="../..">TwitLogic Search</a></h1>
+     <!--   <h1 id="logo"><a href="../..">TwitLogic Search</a></h1>    -->
         <div id="about_us">
             <ul>
                 <li>
@@ -73,7 +74,18 @@
             &nbsp;
         </div>
     </div>
+    <div style="text-align: left">
+        <table><tr><td>
+        <a href="http://twitlogic.fortytwo.net/">
+        <img src="../../images/TwitLogic_logo_small.png" style="border: none" alt="TwitLogic"/></a>
+    </td><td><div style="font-size: 20px">Semantic Conference Tweets</div>
+            <!--<div style="font-size: 15px">Real-time semantic search on the Twitter stream</div>-->
+            <div>A demo by Zhenning Shangguan, Joshua Shinavier and Jin Guang Zheng</div>
+        </td>
+        </tr></table></div>
+
     <div id="main">
+        <br/>
         <div id="topicdiv"></div>
         <div class="cl">
             &nbsp;
