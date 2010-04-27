@@ -113,7 +113,7 @@ public class User implements Resource {
 
     public static String getString(final JSONObject json,
                                    final TwitterAPI.Field key) throws JSONException {
-        String s = json.getString(key.toString());
+        String s = json.optString(key.toString());
         if (null != s && s.equals("null")) {
             s = null;
         }

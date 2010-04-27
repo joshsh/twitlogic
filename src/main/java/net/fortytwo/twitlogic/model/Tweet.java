@@ -71,10 +71,12 @@ public class Tweet implements Resource {
         id = json.getString(TwitterAPI.Field.ID.toString());
 
         // Evidently, these three fields are a unit.
-        String inReplyToUserId = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
-        String inReplyToScreenName = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
-        String inReplyToStatusId = stringValue(json.getString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
-        if (null != inReplyToUserId
+        String inReplyToUserId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
+        String inReplyToScreenName = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
+        String inReplyToStatusId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
+
+        // Note: a value of "" for inReplyToUserId was observed for a tweet retrieved from a friends list
+        if (null != inReplyToUserId && 0 < inReplyToUserId.length()
                 && null != inReplyToScreenName
                 && null != inReplyToStatusId) {
             User u = new User(inReplyToScreenName, Integer.valueOf(inReplyToUserId));
@@ -90,7 +92,7 @@ public class Tweet implements Resource {
                 ? null
                 : new Tweet(rt);
 
-        text = json.getString(TwitterAPI.Field.TEXT.toString());
+        text = json.optString(TwitterAPI.Field.TEXT.toString());
 
         // Parse the date provided by Twitter, rather than using the current date/time.
         // We may not have received this tweet in real time.

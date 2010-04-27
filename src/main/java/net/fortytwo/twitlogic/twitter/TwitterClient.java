@@ -309,6 +309,45 @@ public class TwitterClient extends CommonHttpClient {
         }
     }
 
+    public void processFollowers(final User user,
+                                 final Handler<User, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+        String cursor = "-1";
+
+        // Note: a null cursor doesn't appear to occur, but just to be safe...
+        while (null != cursor && !cursor.equals("0")) {
+            HttpGet request = new HttpGet(TwitterAPI.STATUSES_FRIENDS_URL
+                    + ".json"
+                    + (null == user.getId() ? "?screen_name=" + user.getScreenName() : "?id=" + user.getId())
+                    + "&cursor=" + cursor);
+            sign(request);
+
+            JSONObject users = requestJSONObject(request);
+            JSONArray array = null;
+            try {
+                array = users.getJSONArray("users");
+            } catch (JSONException e) {
+                throw new TwitterClientException(e);
+            }
+            //JSONArray array = requestJSONArray(request);
+            //System.out.println(json);
+
+            for (int i = 0; i < array.length(); i++) {
+                User u;
+                try {
+                    u = new User(array.getJSONObject(i));
+                } catch (JSONException e) {
+                    throw new TwitterClientException(e);
+                }
+
+                if (!handler.handle(u)) {
+                    return;
+                }
+            }
+
+            cursor = users.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));            
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private List<User> constructUserList(final JSONObject json) throws JSONException {
@@ -476,7 +515,6 @@ public class TwitterClient extends CommonHttpClient {
         } else {
             return StatusStreamParser.ExitReason.NULL_RESPONSE;
         }
-
     }
 
     private String commaDelimit(final String[] elements) {

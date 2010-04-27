@@ -32,6 +32,7 @@ public class TwitterAPI {
             STREAM_STATUSES_SAMPLE_URL = "http://stream.twitter.com/1/statuses/sample.json",
             STATUSES_USER_TIMELINE_URL = "http://twitter.com/statuses/user_timeline",
             STATUSES_UPDATE_URL = "http://twitter.com/statuses/update",
+            STATUSES_FRIENDS_URL = "http://api.twitter.com/1/statuses/friends",
             USER_TIMELINE_URL = "http://twitter.com/statuses/user_timeline",
             USERS_SHOW_URL = "http://twitter.com/users/show";
 
