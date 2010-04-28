@@ -11,10 +11,12 @@ function build_facets() {
         //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX sioc: <http://rdfs.org/sioc/ns#>\n" +
                 "SELECT DISTINCT * WHERE {\n" +
                 "  <" + findTopic() + "> ?p ?o .\n" +
                 "  OPTIONAL { ?o rdfs:label ?olabel . } .\n" +
                 "  OPTIONAL { ?p rdfs:label ?plabel . } .\n" +
+                "  FILTER( ?p != sioc:topic )\n" +
                 "}"
                 ), // query parameter
         dataType: "json",
@@ -37,10 +39,12 @@ function build_inverse_facets() {
         //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "PREFIX sioc: <http://rdfs.org/sioc/ns#>\n" +
                 "SELECT DISTINCT * WHERE {\n" +
                 "  ?o ?p <" + findTopic() + "> .\n" +
                 "  OPTIONAL { ?o rdfs:label ?olabel . } .\n" +
                 "  OPTIONAL { ?p rdfs:label ?plabel . } .\n" +
+                "  FILTER( ?p != sioc:topic )\n" +
                 "}"
                 ), // query parameter
         dataType: "json",
