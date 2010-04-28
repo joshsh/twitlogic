@@ -45,7 +45,7 @@ public class RelatedTweetsResource extends QueryResource {
             "PREFIX dc: <" + DCTerms.NAMESPACE + ">" +
             "PREFIX foaf: <" + FOAF.NAMESPACE + ">" +
             "PREFIX xsd: <" + XMLSchema.NAMESPACE + ">" +
-            "SELECT ?post ?content ?screen_name ?depiction ?name ?timestamp WHERE {" +
+            "SELECT DISTINCT ?post ?content ?screen_name ?depiction ?name ?timestamp WHERE {" +
             "  ?post rdf:type sioct:MicroblogPost ." +
             "  ?post sioc:content ?content ." +
             "  ?post sioc:has_creator ?user ." +
@@ -66,7 +66,7 @@ public class RelatedTweetsResource extends QueryResource {
             "PREFIX dc: <" + DCTerms.NAMESPACE + ">\n" +
             "PREFIX foaf: <" + FOAF.NAMESPACE + ">\n" +
             "PREFIX xsd: <" + XMLSchema.NAMESPACE + ">\n" +
-            "SELECT ?post ?content ?screen_name ?depiction ?name ?timestamp WHERE {\n" +
+            "SELECT DISTINCT ?post ?content ?screen_name ?depiction ?name ?timestamp WHERE {\n" +
             "  ?post rdf:type sioct:MicroblogPost .\n" +
             "  ?post sioc:content ?content .\n" +
             "  ?post sioc:has_creator ?user .\n" +
