@@ -208,6 +208,8 @@ function _popup_provenance() {
 
 function _value_row_element(r) {
     var row = document.createElement("tr");
+
+    // value
     var valueCell = document.createElement("td");
     row.appendChild(valueCell);
     valueCell.setAttribute("class", "value");
@@ -215,6 +217,8 @@ function _value_row_element(r) {
     valueCell.appendChild(a);
     a.setAttribute("href", topicTweetsURL(r.value));
     a.appendChild(document.createTextNode(r.label));
+
+    // Oh yeah?
     var ohyeahCell = document.createElement("td");
     row.appendChild(ohyeahCell);
     ohyeahCell.setAttribute("class", "ohyeah");

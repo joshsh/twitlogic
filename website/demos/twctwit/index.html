@@ -39,7 +39,6 @@
             var topicdiv = document.getElementById("topicdiv");
             topicdiv.appendChild(document.createTextNode("Tweets about "));
             topicdiv.appendChild(a);
-            topicdiv.appendChild(document.createElement("br"));
             init_facets();
             init_tweets();
         });
@@ -104,7 +103,9 @@
     <div id="main">
         <br/>
 
-        <div id="topicdiv"></div>
+        <div id="topicdiv" style="font-size: 15px;"></div>
+        <div style="color: #808080;">You can navigate to related events and topics in the pane on the left.  Click on the &quot;Oh yeah?&quot; buttons to see where these links came from.</div>
+        <br/>
         <div class="cl">
             &nbsp;
         </div>
