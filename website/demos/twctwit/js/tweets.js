@@ -10,7 +10,7 @@ function init_tweets() {
     TOTAL_TWEETS = 0;
     $('#content_wrapper').html('');
     _fetchTweets(LATEST_TIMESTAMP);
-    setInterval("_fetchTweets(LATEST_TIMESTAMP)", 10000); // update related tweets every 10 seconds
+    setInterval("_fetchTweets(LATEST_TIMESTAMP)", 30000); // update related tweets every 10 seconds
 }
 
 // Ensures that each GET request is unique (to discourage client-side caching).
