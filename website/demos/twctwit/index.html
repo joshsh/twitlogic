@@ -53,7 +53,7 @@
         <div class="cl">
             &nbsp;
         </div>
-     <!--   <h1 id="logo"><a href="../..">TwitLogic Search</a></h1>    -->
+        <!--   <h1 id="logo"><a href="../..">TwitLogic Search</a></h1>    -->
         <div id="about_us">
             <ul>
                 <li>
@@ -75,17 +75,35 @@
         </div>
     </div>
     <div style="text-align: left">
-        <table><tr><td>
-        <a href="http://twitlogic.fortytwo.net/">
-        <img src="../../images/TwitLogic_logo_small.png" style="border: none" alt="TwitLogic"/></a>
-    </td><td><div style="font-size: 20px">Semantic Conference Tweets</div>
-            <!--<div style="font-size: 15px">Real-time semantic search on the Twitter stream</div>-->
-            <div>A demo by Joshua Shinavier, Zhenning Shangguan, and Jin Guang Zheng</div>
-        </td>
-        </tr></table></div>
+        <table>
+            <tr>
+                <td>
+                    <a href="http://twitlogic.fortytwo.net/">
+                        <img src="../../images/TwitLogic_logo_small.png" style="border: none" alt="TwitLogic"/></a>
+                </td>
+                <td>
+                    <div style="font-size: 20px">Semantic Conference Tweets</div>
+                    <!--<div style="font-size: 15px">Real-time semantic search on the Twitter stream</div>-->
+                    <div>A demo by Joshua Shinavier, Zhenning Shangguan, and Jin Guang Zheng</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!--<div id="floatlayer" style="position:absolute; width:50%;background:#d0d0ff;border:solid black 1px;padding:5px">  -->
+    <div id="modaldiv">
+        <div style="text-align: right;" onclick="hide_provenance()">Close&nbsp;<img src="img/close.png" width="17" height="17" alt="close"/></div>
+        <div style="padding: 10px;">Below is the <span style="font-weight: bold;">provenance</span> of the information you've just clicked on.
+        The Twitter users below added this information to the Semantic Web by using <a href="http://wiki.github.com/joshsh/twitlogic/syntax-conventions" target="_blank">semantic nanoformats</a>
+        in their tweets, making things better for everyone!<br/>
+        The &quot;Oh yeah?&quot; feature is motivated by Tim Berners-Lee's <a href="http://www.w3.org/DesignIssues/UI.html" target="_blank">UI design issues</a> for the Web.</div>
+        <br/>
+        <div id="modaltweets"></div>
+    </div>
 
     <div id="main">
         <br/>
+
         <div id="topicdiv"></div>
         <div class="cl">
             &nbsp;
@@ -94,6 +112,8 @@
         </div>
         <div id="content">
             <div id="content_wrapper">
+                <!-- Just so we have something to insertBefore before. -->
+                <div></div>
             </div>
         </div>
         <div class="cl">

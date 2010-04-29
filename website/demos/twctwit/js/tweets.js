@@ -23,8 +23,9 @@ function findTopic() {
         s = s.substring(0, s.length - 1);
         s = decodeURIComponent(s);
         return s;
+    } else {
+        return RESOURCE_URI;
     }
-    return RESOURCE_URI;
 }
 
 function _fetchTweets(timestamp) {
@@ -47,7 +48,7 @@ function _fetchTweets(timestamp) {
             var num_of_tweets = data.results.bindings.length;
             if (0 == num_of_tweets) {
                 if (0 == TOTAL_TWEETS) {
-                     $('#content_wrapper').html('No related tweets.');
+                    $('#content_wrapper').html('No related tweets.');
                     return;
                 }
             } else {
@@ -65,32 +66,98 @@ function _fetchTweets(timestamp) {
             }
 
             for (var i = num_of_tweets - 1; i >= 0; i--) {
-                // TODO
-                var t = data.results.bindings[i].timestamp.value.split('.000Z')[0] + 'Z';
-                item_time = $.timeago(t) + '<br/>';
-
-                item_name = data.results.bindings[i].screen_name.value;
-                item_realname = data.results.bindings[i].name.value;
-                item_post = data.results.bindings[i].post.value;
-                item_post = _parse_post(item_post, item_name);
-                var user_url = 'http://twitter.com/' + item_name;
-                var depiction_url = data.results.bindings[i].depiction.value;
-
-                item_pic = '<a href="' + user_url + '"><img width="48" height="48" src="' + depiction_url + '"/></a>';
-                item_descr = data.results.bindings[i].content.value;
-
-                output = '<div class="item">' +
-                         '<div class="item-pic">' + item_pic + '</div>' +
-                         '<div class="item-descr">' +
-                         '<a href="' + user_url + '">' + item_realname + '</a>' +
-                         '<div id="tweet_content">' + item_descr + '</div>' +
-                         '<div class="item-time"><a href="' + item_post + '">' + item_time + '</a></div></div></div>';
-
-                $('#content_wrapper').prepend(output);
-                $('div.item:last-child').addClass("last_tweet");
+                var tweetEl = tweetElement(data.results.bindings[i]);
+                var content_wrapper = document.getElementById("content_wrapper");
+                content_wrapper.insertBefore(tweetEl, content_wrapper.firstChild);
             }
         }
     });
+}
+
+
+function tweetElement(tweet) {
+    var t = tweet.timestamp.value.split('.000Z')[0] + 'Z';
+    var item_time = $.timeago(t);
+
+    var item_name = tweet.screen_name.value;
+    var item_realname = tweet.name.value;
+    var item_post = tweet.post.value;
+    var item_post = _parse_post(item_post, item_name);
+    var item_descr = tweet.content.value;
+    var user_url = 'http://twitter.com/' + item_name;
+    var depiction_url = tweet.depiction.value;
+
+    // top-level element
+    var el = document.createElement("table");
+    el.setAttribute("class", "tweet");
+    var row = document.createElement("tr");
+    el.appendChild(row);
+
+    // profile picture
+    var pic = document.createElement("td");
+    row.appendChild(pic);
+    pic.setAttribute("style", "vertical-align: top; padding: 5px;");
+    var pic_a = document.createElement("a");
+    pic.appendChild(pic_a);
+    pic_a.setAttribute("href", item_post);
+    pic_a.setAttribute("target", "_blank");
+    var pic_img = document.createElement("img");
+    pic_a.appendChild(pic_img);
+    pic_img.setAttribute("class", "profile-image");
+    pic_img.setAttribute("width", "48");
+    pic_img.setAttribute("height", "48");
+    pic_img.setAttribute("src", depiction_url);
+
+    var body = document.createElement("td");
+    row.appendChild(body);
+    body.setAttribute("style", "vertical-align: top; text-align: left; padding: 5px; width: 100%;");
+
+    // name
+    var name = document.createElement("span");
+    body.appendChild(name);
+    var name_a = document.createElement("a");
+    name.appendChild(name_a);
+    name.setAttribute("target", "_blank");
+    name_a.setAttribute("href", user_url);
+    name_a.appendChild(document.createTextNode(item_realname));
+
+    body.appendChild(document.createElement("br"));
+
+    // text content
+    var content = document.createElement("span");
+    body.appendChild(content);
+    content.setAttribute("class", "tweet-content");
+    content.appendChild(document.createTextNode(item_descr));
+
+    body.appendChild(document.createElement("br"));
+
+    // timestamp element
+    var timestamp = document.createElement("div");
+    body.appendChild(timestamp);
+    timestamp.setAttribute("class", "item-time");
+    var timestamp_a = document.createElement("a");
+    timestamp.appendChild(timestamp_a);
+    timestamp_a.setAttribute("target", "_blank");
+    timestamp_a.setAttribute("href", item_post);
+    timestamp_a.appendChild(document.createTextNode(item_time));
+
+    //  var spacer = document.createElement("span");
+    //  footer.appendChild(spacer);
+    //  footer.setAttribute("style", "width: 100%;");
+
+    if (null != tweet.graph) {
+        var nanotated = document.createElement("div");
+        body.appendChild(nanotated);
+        nanotated.setAttribute("style", "width: 100%; text-align: right;");
+        var nanotated_a = document.createElement("a");
+        nanotated.appendChild(nanotated_a);
+        nanotated_a.setAttribute("style", "color: #FF0000; font-weight: bold;");
+        nanotated_a.setAttribute("href", "http://wiki.github.com/joshsh/twitlogic/syntax-conventions");
+        nanotated_a.setAttribute("target", "_blank");
+        nanotated_a.appendChild(document.createTextNode("Nanotated!"));
+    }
+
+    return el;
 }
 
 function _parse_post(post_uri, screen_name) {

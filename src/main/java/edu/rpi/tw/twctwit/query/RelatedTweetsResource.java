@@ -59,14 +59,13 @@ public class RelatedTweetsResource extends QueryResource {
             "}" +
             "ORDER BY DESC ( ?timestamp )";
     private static final String
-
             TWEETS_WITH_ALTERNATIVE_TOPICS_QUERY = "PREFIX rdf: <" + RDF.NAMESPACE + ">\n" +
             "PREFIX sioc: <" + SIOC.NAMESPACE + ">\n" +
             "PREFIX sioct: <" + SIOCT.NAMESPACE + ">\n" +
             "PREFIX dc: <" + DCTerms.NAMESPACE + ">\n" +
             "PREFIX foaf: <" + FOAF.NAMESPACE + ">\n" +
             "PREFIX xsd: <" + XMLSchema.NAMESPACE + ">\n" +
-            "SELECT DISTINCT ?post ?content ?screen_name ?depiction ?name ?timestamp WHERE {\n" +
+            "SELECT DISTINCT * WHERE {\n" +
             "  ?post rdf:type sioct:MicroblogPost .\n" +
             "  ?post sioc:content ?content .\n" +
             "  ?post sioc:has_creator ?user .\n" +
@@ -75,6 +74,7 @@ public class RelatedTweetsResource extends QueryResource {
             "  ?agent foaf:depiction ?depiction .\n" +
             "  ?agent foaf:name ?name .\n" +
             "  ?post dc:created ?timestamp .\n" +
+            "  OPTIONAL { ?post sioc:embeds_knowledge ?graph . }\n" +
             ALTERNATIVE_TOPICS_PLACEHOLDER +
             "  FILTER ( ?timestamp > xsd:dateTime(\"" + MIN_TIMESTAMP_PLACEHOLDER + "\") )\n" +
             "}\n" +

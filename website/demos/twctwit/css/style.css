@@ -83,50 +83,44 @@ h1#logo a {
 .sidebar_content {
     background: url(../img/sidebar-bg.gif) repeat-y scroll 0 0 transparent;
     border: 1px solid #CBCCCB;
-    padding: 12px 2px 0 14px;
+    padding: 5px 5px 5px 5px;
     position: relative;
     margin-bottom: 10px;
 }
 
-#sidebar h4 {
+#sidebar div.facet_predicate {
     font-size: 12px;
     padding-bottom: 5px;
     padding-left: 5px;
+    font-weight: bold;
 }
 
-#sidebar h4.open_button {
-    background: url(../img/arrow-open.gif) no-repeat scroll 0 4px transparent;
-    padding-left: 10px;
-}
-
-#sidebar h4.open_button a {
+#sidebar div.facet_predicate a {
     color: #000000;
 }
 
-#sidebar ul {
-    list-style-type: none;
-    padding-top: 5px;
-}
-
-#sidebar ul li {
-    line-height: 18px;
-    padding-left: 5px;
-}
-
-#sidebar ul li a {
-    color: #1D1D1D;
-    padding-left: 10px;
-    background: url(../img/arrow-closed.gif) no-repeat scroll 0 4px transparent;
+#sidebar td.value {
+    padding-left: 5px;    
 }
 
 #sidebar .all_values {
+    width: 100%;
     /*overflow: scroll;
      overflow-y: hidden;
      -ms-overflow-y: hidden;*/
 }
 
-#sidebar ul.more_values {
+#sidebar table.some_values {
+    width: 100%;    
+}
+
+#sidebar table.more_values {
     padding-top: 0;
+    width: 100%;
+}
+
+#sidebar td.ohyeah {
+    text-align: right;
 }
 
 .more_button {
@@ -155,13 +149,16 @@ h1#logo a {
     padding-right: 15px;
 }
 
-.item {
+.tweet {
     letter-spacing: 0.5px;
-    padding-bottom: 0;
-    padding-top: 20px;
-    width: 655px;
-    height: 95px;
+    padding-bottom: 5px;
+    padding-top: 5px;
     border-bottom: 1px solid #D8D8D8;
+    width: 100%;
+}
+
+span.tweet-body {
+    overflow:hidden;
 }
 
 .item-descr h3, .item-descr h3 a {
@@ -180,15 +177,14 @@ h1#logo a {
     font-weight: bold;
 }
 
-#tweet_content {
+span.tweet-content {
     font-family: Georgia, Times New Roman, serif;
     font-size: 1.2em;
     color: #000000;
 }
 
-.item-pic {
-    float: left;
-    width: 100px;
+img.profile-image {
+    border: 0px;
 }
 
 .item-time a {
@@ -197,11 +193,6 @@ h1#logo a {
     font-size: 0.9em;
     line-height: 1.2em;
     color: #999999;
-}
-
-#content_wrapper img {
-    width: 60px;
-    height: 60px;
 }
 
 .last_tweet {
@@ -213,4 +204,20 @@ h1#logo a {
     padding-bottom: 10px;
     padding-left: 18px;
     padding-top: 10px;
+}
+
+#modaldiv {
+    position:absolute;
+    height:50%;
+    left:25%;
+    top:25%;
+    background:#F0F0FF;
+    border:solid black 1px;
+    padding:5px;
+    z-index: 1;
+    visibility: hidden;
+}
+
+#modaltweets {
+    
 }
