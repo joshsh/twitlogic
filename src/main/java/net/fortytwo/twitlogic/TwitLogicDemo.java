@@ -85,10 +85,11 @@ public class TwitLogicDemo {
                 */
 
                 Set<User> users = TwitLogic.findFollowList(client);
+                Set<String> terms = TwitLogic.findTrackTerms();
 
                 //gatherHistoricalTweets(store, client, users);
 
-                client.processFollowFilterStream(users, annotator, 0);
+                client.processFollowFilterStream(users, terms, annotator, 0);
             } finally {
                 c.close();
             }

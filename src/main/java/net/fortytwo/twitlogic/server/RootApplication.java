@@ -1,5 +1,6 @@
 package net.fortytwo.twitlogic.server;
 
+import edu.rpi.tw.twctwit.query.RelatedHashtagsResource;
 import edu.rpi.tw.twctwit.query.RelatedTweetsResource;
 import edu.rpi.tw.twctwit.query.SparqlResource;
 import net.fortytwo.twitlogic.TwitLogic;
@@ -36,6 +37,7 @@ public class RootApplication extends Application {
 
         router.attach("/sparql", SparqlResource.class);
         router.attach("/stream/relatedTweets", RelatedTweetsResource.class);
+        router.attach("/stream/relatedTags", RelatedHashtagsResource.class);
 
         // Return the root router
         return router;

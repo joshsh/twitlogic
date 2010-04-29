@@ -25,10 +25,8 @@ public class SimpleInferencer implements Approximation<Set<Resource>, PataExcept
     private Queue<Resource> curGen;
     private Queue<Resource> nextGen;
     private final SailConnection sailConnection;
-    private final Resource[] seeds;
     private final URI[] inPredicates, outPredicates;
     private final Set<Resource> results;
-    //private final Set<Resource> alreadyHandled;
 
     public SimpleInferencer(final URI[] inPredicates,
                             final URI[] outPredicates,
@@ -37,7 +35,6 @@ public class SimpleInferencer implements Approximation<Set<Resource>, PataExcept
         this.inPredicates = inPredicates;
         this.outPredicates = outPredicates;
         this.sailConnection = sailConnection;
-        this.seeds = seeds;
 
         curGen = new LinkedList<Resource>();
         curGen.addAll(Arrays.asList(seeds));

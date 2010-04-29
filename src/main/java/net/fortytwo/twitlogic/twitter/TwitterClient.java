@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -154,6 +155,7 @@ public class TwitterClient extends CommonHttpClient {
     }
 
     public void processFollowFilterStream(final Collection<User> users,
+                                          final Collection<String> terms,
                                           final Handler<Tweet, TweetHandlerException> handler,
                                           final int previousStatusCount) throws TwitterClientException {
         if (users.size() > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
@@ -165,9 +167,21 @@ public class TwitterClient extends CommonHttpClient {
         HttpPost request = new HttpPost(TwitterAPI.STREAM_STATUSES_FILTER_URL);
 
         List<NameValuePair> formParams = new ArrayList<NameValuePair>();
-        String followList = commaDelimit(userIds(users));
-        LOGGER.fine("following: " + followList);
-        formParams.add(new BasicNameValuePair("follow", followList));
+
+        if (0 < users.size()) {
+            String followUsers = commaDelimit(userIds(users));
+            LOGGER.fine("following users: " + followUsers);
+            formParams.add(new BasicNameValuePair("follow", followUsers));
+        }
+
+        if (0 < terms.size()) {
+            String[] ta = new String[terms.size()];
+            terms.toArray(ta);
+            String trackTerms = commaDelimit(ta);
+            LOGGER.fine("tracking terms: " + trackTerms);
+            formParams.add(new BasicNameValuePair("track", trackTerms));
+        }
+
         if (previousStatusCount > 0) {
             formParams.add(new BasicNameValuePair("count", "" + previousStatusCount));
         }
@@ -344,7 +358,7 @@ public class TwitterClient extends CommonHttpClient {
                 }
             }
 
-            cursor = users.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));            
+            cursor = users.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
         }
     }
 

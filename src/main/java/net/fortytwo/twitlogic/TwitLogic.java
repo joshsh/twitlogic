@@ -36,6 +36,7 @@ public class TwitLogic {
             COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",
             FOLLOWLIST = "net.fortytwo.twitlogic.followList",
             FOLLOWUSER = "net.fortytwo.twitlogic.followUser",
+            TRACKTERMS = "net.fortytwo.twitlogic.trackTerms",
             SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",
             SERVER_PORT = "net.fortytwo.twitlogic.server.port",
             SERVER_STATICCONTENTDIRECTORY = "net.fortytwo.twitlogic.server.staticContentDirectory",
@@ -174,6 +175,28 @@ public class TwitLogic {
 
     public static Logger getLogger(final Class c) {
         return Logger.getLogger(c.getName());
+    }
+
+    public static Set<String> findTrackTerms() throws PropertyException {
+        TypedProperties props = TwitLogic.getConfiguration();
+
+        // Note: this doesn't really need to be an order-preserving collection,
+        // because Java properties are not order-preserving.
+        Set<String> terms = new LinkedHashSet<String>();
+        for (String key : props.stringPropertyNames()) {
+            if (key.startsWith(TwitLogic.TRACKTERMS)) {
+                String listVal = props.getString(key);
+                String[] these = listVal.split(",");
+                for (String t : these) {
+                    t = t.trim();
+                    if (0 < t.length()) {
+                        terms.add(t);
+                    }
+                }
+            }
+        }
+        
+        return terms;
     }
 
     // Note: for now, lists are not persisted in any way
