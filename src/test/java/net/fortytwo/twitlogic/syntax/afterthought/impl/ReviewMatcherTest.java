@@ -45,4 +45,11 @@ public class ReviewMatcherTest extends MatcherTestBase {
           //      new Triple(review, REVIEWER, tweetContext.thisPerson()),
                 new Triple(review, TEXT, new PlainLiteral("IMHO, #thebestmovieever (3/5) is only so-so.")));
     }
+
+    public void testOutOfRangeNumbers() throws Exception {
+        assertExpected("... #foo (3/6) ...");
+        assertExpected("... #foo (3/3) ...");
+        assertExpected("... #foo (5/4) ...");
+        assertExpected("... #foo (-1/5) ...");
+    }
 }
