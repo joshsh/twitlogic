@@ -57,6 +57,12 @@ public class AfterthoughtMatcherTest extends MatcherTestBase {
                 new Triple(JOSHSH_PERSON, PHONE, new PlainLiteral("+1 555 123 4567")));
     }
 
+    public void testMultipleParenBlocks() throws Exception {
+        assertExpected("@joshsh (who knows @xixiluo) (knows @joshsh) ...",
+                new Triple(JOSHSH_PERSON, KNOWS, XIXILUO_PERSON),
+                new Triple(JOSHSH_PERSON, KNOWS, JOSHSH_PERSON));
+    }
+
     public void noMatch() throws Exception {
         assertExpected("@joshsh ()");
         assertExpected("@joshsh (who done it?)");

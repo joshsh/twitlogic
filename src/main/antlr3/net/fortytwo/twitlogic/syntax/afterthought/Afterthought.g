@@ -30,13 +30,14 @@ tweet
 	;
 
 candidate
-	:	(nonstarter)* (r=subjectResource (s=PAREN_BLOCK
+	:	(nonstarter)* (r=subjectResource (p=parenBlocks
 			{
 				if (null != this.helper) {
 					Resource subject = $r.value;
-					String expression = $PAREN_BLOCK.text;
-					expression = expression.substring(1, expression.length() - 1);
-					this.helper.handleAfterthoughtCandidate(subject, expression);
+					for (String expression : $p.value) {
+  					    expression = expression.substring(1, expression.length() - 1);
+					    this.helper.handleAfterthoughtCandidate(subject, expression);
+					}
 				}
 			})? candidate)?
 	;
@@ -69,6 +70,17 @@ url returns [TypedLiteral value]
 quotedString returns [PlainLiteral value]
 	:	QUOTED_STRING {$value = new PlainLiteral($QUOTED_STRING.text.substring(1, $QUOTED_STRING.text.length() - 1));}
 	;
+
+parenBlocks returns [List<String> value]
+    :   PAREN_BLOCK {$value = null;} (p=parenBlocks {$value = $p.value;})?
+        {
+            if (null == $value) {
+                $value = new LinkedList<String>();
+            }
+
+            $value.add($PAREN_BLOCK.text);
+        }
+    ;
 
 WS 
 	:	(' '|'\t'|'\n'|'\r')+ {skip();} ;
