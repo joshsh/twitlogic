@@ -31,7 +31,7 @@ public class User implements Resource {
     //private final String profileSidebarBorderColor;
     //private final String profileSidebarFillColor;
     private final String profileTextColor;
-    private final Boolean isProtected; // Note: field name is "protected"
+    //private final Boolean isProtected; // Note: field name is "protected"
     private final String screenName;
     //private final Tweet status;
     //private final Integer statusesCount;
@@ -53,7 +53,7 @@ public class User implements Resource {
         profileBackgroundColor = null;
         profileImageUrl = null;
         profileTextColor = null;
-        isProtected = null;
+        //isProtected = null;
         url = null;
 
         heldBy = new Person(this);
@@ -70,7 +70,7 @@ public class User implements Resource {
         profileBackgroundColor = null;
         profileImageUrl = null;
         profileTextColor = null;
-        isProtected = null;
+        //isProtected = null;
         url = null;
 
         heldBy = new Person(this);
@@ -87,7 +87,7 @@ public class User implements Resource {
         profileBackgroundColor = null;
         profileImageUrl = null;
         profileTextColor = null;
-        isProtected = null;
+        //isProtected = null;
         url = null;
 
         heldBy = new Person(this);
@@ -104,7 +104,12 @@ public class User implements Resource {
         profileBackgroundColor = getString(json, TwitterAPI.Field.PROFILE_BACKGROUND_COLOR);
         profileImageUrl = getString(json, TwitterAPI.Field.PROFILE_IMAGE_URL);
         profileTextColor = getString(json, TwitterAPI.Field.PROFILE_TEXT_COLOR);
-        isProtected = json.getBoolean(TwitterAPI.Field.PROTECTED.toString());
+
+        // Note: this field has been disabled in TwitLogic, as it is currently not used and because of some strange
+        // JSON from Twitter: in at least one status element received from the Streaming API, a value of "null" was
+        // given, instead of "true" or "false".
+        //isProtected = json.getBoolean(TwitterAPI.Field.PROTECTED.toString());
+
         screenName = getString(json, TwitterAPI.Field.SCREEN_NAME);
         url = getString(json, TwitterAPI.Field.URL);
 
@@ -152,10 +157,6 @@ public class User implements Resource {
         return profileTextColor;
     }
 
-    public Boolean isProtected() {
-        return isProtected;
-    }
-
     public String getScreenName() {
         return screenName;
     }
@@ -185,11 +186,7 @@ public class User implements Resource {
             User otherUser = (User) other;
             if (null != screenName && null != otherUser.screenName) {
                 return screenName.equals(otherUser.screenName);
-            } else if (null != id && null != otherUser.id) {
-                return id.equals(otherUser.id);
-            } else {
-                return false;
-            }
+            } else return null != id && null != otherUser.id && id.equals(otherUser.id);
         } else {
             return false;
         }
