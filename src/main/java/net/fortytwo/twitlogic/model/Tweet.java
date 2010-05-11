@@ -58,54 +58,58 @@ public class Tweet implements Resource {
     /**
      * Parses a tweet in Twitter's status element JSON format.  Some fields are required.
      *
-     * @param json
-     * @throws JSONException
+     * @param json a JSON-formatted status element
+     * @throws TweetParseException if parsing fails
      */
-    public Tweet(final JSONObject json) throws JSONException {
-        TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.STATUS);
-
-        geo = User.getString(json, TwitterAPI.Field.GEO);
-        if (null != geo) {
-            LOGGER.info("geo: " + geo);
-        }
-        id = json.getString(TwitterAPI.Field.ID.toString());
-
-        // Evidently, these three fields are a unit.
-        String inReplyToUserId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
-        String inReplyToScreenName = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
-        String inReplyToStatusId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
-
-        // Note: a value of "" for inReplyToUserId was observed for a tweet retrieved from a friends list
-        if (null != inReplyToUserId && 0 < inReplyToUserId.length()
-                && null != inReplyToScreenName
-                && null != inReplyToStatusId) {
-            User u = new User(inReplyToScreenName, Integer.valueOf(inReplyToUserId));
-            inReplyToTweet = new Tweet(inReplyToStatusId);
-            inReplyToTweet.setUser(u);
-        } else {
-            inReplyToTweet = null;
-        }
-
-        JSONObject rt = json.optJSONObject(TwitterAPI.Field.RETWEETED_STATUS.toString());
-        //System.out.println("retweet: " + rt);
-        retweetOf = null == rt
-                ? null
-                : new Tweet(rt);
-
-        text = json.optString(TwitterAPI.Field.TEXT.toString());
-
-        // Parse the date provided by Twitter, rather than using the current date/time.
-        // We may not have received this tweet in real time.
-        String dateString = User.getString(json, TwitterAPI.Field.CREATED_AT);
+    public Tweet(final JSONObject json) throws TweetParseException {
         try {
-            createdAt = TwitterAPI.parseTwitterDateString(dateString);
-        } catch (ParseException e) {
-            // FIXME: this shouldn't really be a JSONException
-            throw new JSONException(e);
-        }
+            TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.STATUS);
 
-        JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
-        user = new User(userJSON);
+            geo = TwitterAPI.getString(json, TwitterAPI.Field.GEO);
+            if (null != geo) {
+                LOGGER.info("geo: " + geo);
+            }
+            id = json.getString(TwitterAPI.Field.ID.toString());
+
+            // Evidently, these three fields are a unit.
+            String inReplyToUserId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
+            String inReplyToScreenName = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
+            String inReplyToStatusId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
+
+            // Note: a value of "" for inReplyToUserId was observed for a tweet retrieved from a friends list
+            if (null != inReplyToUserId && 0 < inReplyToUserId.length()
+                    && null != inReplyToScreenName
+                    && null != inReplyToStatusId) {
+                User u = new User(inReplyToScreenName, Integer.valueOf(inReplyToUserId));
+                inReplyToTweet = new Tweet(inReplyToStatusId);
+                inReplyToTweet.setUser(u);
+            } else {
+                inReplyToTweet = null;
+            }
+
+            JSONObject rt = json.optJSONObject(TwitterAPI.Field.RETWEETED_STATUS.toString());
+            //System.out.println("retweet: " + rt);
+            retweetOf = null == rt
+                    ? null
+                    : new Tweet(rt);
+
+            text = json.optString(TwitterAPI.Field.TEXT.toString());
+
+            // Parse the date provided by Twitter, rather than using the current date/time.
+            // We may not have received this tweet in real time.
+            String dateString = TwitterAPI.getString(json, TwitterAPI.Field.CREATED_AT);
+            try {
+                createdAt = TwitterAPI.parseTwitterDateString(dateString);
+            } catch (ParseException e) {
+                // FIXME: this shouldn't really be a JSONException
+                throw new TweetParseException(e);
+            }
+
+            JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
+            user = new User(userJSON);
+        } catch (JSONException e) {
+            throw new TweetParseException(e);
+        }
     }
 
     public User getUser() {
@@ -143,7 +147,7 @@ public class Tweet implements Resource {
     public Collection<Hashtag> getTopics() {
         return topics;
     }
-    
+
     public Collection<Triple> getAnnotations() {
         return annotations;
     }

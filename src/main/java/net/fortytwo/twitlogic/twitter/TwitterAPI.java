@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.twitter;
 
 import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -212,6 +213,15 @@ public class TwitterAPI {
     public static Date parseTwitterDateString(final String dateStr) throws ParseException {
         //DATE_FORMAT.setLenient(false);
         return DATE_FORMAT.parse(dateStr);
+    }
+
+    public static String getString(final JSONObject json,
+                                   final TwitterAPI.Field key) throws JSONException {
+        String s = json.optString(key.toString());
+        if (null != s && s.equals("null")) {
+            s = null;
+        }
+        return s;
     }
 
     public static void main(final String[] args) {

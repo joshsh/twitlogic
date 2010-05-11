@@ -3,6 +3,7 @@ package net.fortytwo.twitlogic.twitter;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.flow.NullHandler;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.TweetParseException;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.twitter.errors.UnauthorizedException;
 import net.fortytwo.twitlogic.util.CommonHttpClient;
@@ -219,7 +220,7 @@ public class TwitterClient extends CommonHttpClient {
         JSONObject object = requestJSONObject(request);
         try {
             return new User(object);
-        } catch (JSONException e) {
+        } catch (TweetParseException e) {
             throw new TwitterClientException(e);
         }
     }
@@ -240,11 +241,7 @@ public class TwitterClient extends CommonHttpClient {
             JSONObject json = requestJSONObject(request);
             //System.out.println(json);
 
-            try {
-                users.addAll(constructUserList(json));
-            } catch (JSONException e) {
-                throw new TwitterClientException(e);
-            }
+            users.addAll(constructUserList(json));
 
             cursor = json.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
         }
@@ -270,6 +267,8 @@ public class TwitterClient extends CommonHttpClient {
             Tweet t;
             try {
                 t = new Tweet(array.getJSONObject(i));
+            } catch (TweetParseException e) {
+                throw new TwitterClientException(e);
             } catch (JSONException e) {
                 throw new TwitterClientException(e);
             }
@@ -348,6 +347,8 @@ public class TwitterClient extends CommonHttpClient {
                 User u;
                 try {
                     u = new User(array.getJSONObject(i));
+                } catch (TweetParseException e) {
+                    throw new TwitterClientException(e);
                 } catch (JSONException e) {
                     throw new TwitterClientException(e);
                 }
@@ -363,15 +364,22 @@ public class TwitterClient extends CommonHttpClient {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private List<User> constructUserList(final JSONObject json) throws JSONException {
+    private List<User> constructUserList(final JSONObject json) throws TwitterClientException {
         TwitterAPI.checkUserListJSON(json);
 
         List<User> users = new LinkedList<User>();
-        JSONArray array = json.getJSONArray(TwitterAPI.Field.USERS.toString());
-        for (int i = 0; i < array.length(); i++) {
-            users.add(new User(array.getJSONObject(i)));
+        try {
+            JSONArray array = json.getJSONArray(TwitterAPI.Field.USERS.toString());
+            for (int i = 0; i < array.length(); i++) {
+                try {
+                    users.add(new User(array.getJSONObject(i)));
+                } catch (TweetParseException e) {
+                    throw new TwitterClientException(e);
+                }
+            }
+        } catch (JSONException e) {
+            throw new TwitterClientException(e);
         }
-
         return users;
     }
 

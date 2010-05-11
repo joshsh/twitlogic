@@ -93,36 +93,31 @@ public class User implements Resource {
         heldBy = new Person(this);
     }
 
-    public User(final JSONObject json) throws JSONException {
-        TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.USER);
+    public User(final JSONObject json) throws TweetParseException {
+        try {
+            TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.USER);
 
-        id = json.getInt(TwitterAPI.Field.ID.toString());
-        geoEnabled = json.getBoolean(TwitterAPI.Field.GEO_ENABLED.toString());
-        location = getString(json, TwitterAPI.Field.LOCATION);
-        description = getString(json, TwitterAPI.Field.DESCRIPTION);
-        name = getString(json, TwitterAPI.Field.NAME);
-        profileBackgroundColor = getString(json, TwitterAPI.Field.PROFILE_BACKGROUND_COLOR);
-        profileImageUrl = getString(json, TwitterAPI.Field.PROFILE_IMAGE_URL);
-        profileTextColor = getString(json, TwitterAPI.Field.PROFILE_TEXT_COLOR);
+            id = json.getInt(TwitterAPI.Field.ID.toString());
+            geoEnabled = json.getBoolean(TwitterAPI.Field.GEO_ENABLED.toString());
+            location = TwitterAPI.getString(json, TwitterAPI.Field.LOCATION);
+            description = TwitterAPI.getString(json, TwitterAPI.Field.DESCRIPTION);
+            name = TwitterAPI.getString(json, TwitterAPI.Field.NAME);
+            profileBackgroundColor = TwitterAPI.getString(json, TwitterAPI.Field.PROFILE_BACKGROUND_COLOR);
+            profileImageUrl = TwitterAPI.getString(json, TwitterAPI.Field.PROFILE_IMAGE_URL);
+            profileTextColor = TwitterAPI.getString(json, TwitterAPI.Field.PROFILE_TEXT_COLOR);
 
-        // Note: this field has been disabled in TwitLogic, as it is currently not used and because of some strange
-        // JSON from Twitter: in at least one status element received from the Streaming API, a value of "null" was
-        // given, instead of "true" or "false".
-        //isProtected = json.getBoolean(TwitterAPI.Field.PROTECTED.toString());
+            // Note: this field has been disabled in TwitLogic, as it is currently not used and because of some strange
+            // JSON from Twitter: in at least one status element received from the Streaming API, a value of "null" was
+            // given, instead of "true" or "false".
+            //isProtected = json.getBoolean(TwitterAPI.Field.PROTECTED.toString());
 
-        screenName = getString(json, TwitterAPI.Field.SCREEN_NAME);
-        url = getString(json, TwitterAPI.Field.URL);
+            screenName = TwitterAPI.getString(json, TwitterAPI.Field.SCREEN_NAME);
+            url = TwitterAPI.getString(json, TwitterAPI.Field.URL);
 
-        heldBy = new Person(this);
-    }
-
-    public static String getString(final JSONObject json,
-                                   final TwitterAPI.Field key) throws JSONException {
-        String s = json.optString(key.toString());
-        if (null != s && s.equals("null")) {
-            s = null;
+            heldBy = new Person(this);
+        } catch (JSONException e) {
+            throw new TweetParseException(e);
         }
-        return s;
     }
 
     public boolean getGeoEnabled() {

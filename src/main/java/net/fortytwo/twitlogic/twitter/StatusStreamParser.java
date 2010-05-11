@@ -3,6 +3,7 @@ package net.fortytwo.twitlogic.twitter;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.TweetParseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,7 +108,7 @@ public class StatusStreamParser {
         Tweet status;
         try {
             status = new Tweet(el);
-        } catch (JSONException e) {
+        } catch (TweetParseException e) {
             throw new TweetHandlerException(e);
         }
 
