@@ -527,7 +527,8 @@ public class TwitterClient extends CommonHttpClient {
         if (null != response) {
             HttpEntity responseEntity = response.getEntity();
             try {
-                return new StatusStreamParser(handler).parse(responseEntity.getContent());
+                boolean recoverFromErrors = true;
+                return new StatusStreamParser(handler, recoverFromErrors).parse(responseEntity.getContent());
             } catch (IOException e) {
                 throw new TwitterClientException(e);
             } catch (TweetHandlerException e) {

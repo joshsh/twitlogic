@@ -27,9 +27,12 @@ public class StatusStreamParser {
     private static final Logger LOGGER = TwitLogic.getLogger(StatusStreamParser.class);
 
     private final Handler<Tweet, TweetHandlerException> statusHandler;
+    private final boolean recoverFromErrors;
 
-    public StatusStreamParser(final Handler<Tweet, TweetHandlerException> statusHandler) {
+    public StatusStreamParser(final Handler<Tweet, TweetHandlerException> statusHandler,
+                              final boolean recoverFromErrors) {
         this.statusHandler = statusHandler;
+        this.recoverFromErrors = recoverFromErrors;
     }
 
     public ExitReason parse(final InputStream is) throws IOException, TweetHandlerException {
@@ -58,9 +61,18 @@ public class StatusStreamParser {
                             throw new TweetHandlerException("Could not parse status element as JSON: \"" + line + "\"", e);
                         }
 
-                        if (!handleStatusElement(json)) {
-                            exitReason = ExitReason.HANDLER_QUIT;
-                            break;
+                        try {
+                            if (!handleStatusElement(json)) {
+                                exitReason = ExitReason.HANDLER_QUIT;
+                                break;
+                            }
+                        } catch (TweetParseException e) {
+                            if (recoverFromErrors) {
+                                LOGGER.severe("failed to parse status element: " + e);
+                                e.printStackTrace(System.err);
+                            } else {
+                                throw new TweetHandlerException(e);
+                            }
                         }
                     } else {
                         //LOGGER.fine("empty line");
@@ -80,7 +92,7 @@ public class StatusStreamParser {
         return exitReason;
     }
 
-    private boolean handleStatusElement(final JSONObject el) throws TweetHandlerException {
+    private boolean handleStatusElement(final JSONObject el) throws TweetParseException, TweetHandlerException {
         if (null != el.opt(TwitterAPI.Field.DELETE.toString())) {
             return handleDeleteStatusElement(el);
         } else if (null != el.opt(TwitterAPI.Field.LIMIT.toString())) {
@@ -100,17 +112,13 @@ public class StatusStreamParser {
         return true;
     }
 
-    private boolean handleNormalStatusElement(final JSONObject el) throws TweetHandlerException {
+    private boolean handleNormalStatusElement(final JSONObject el) throws TweetHandlerException, TweetParseException {
         // Note: a reasonable optimization would be to perform a
         // check on the generated JSON object to see whether it is
         // an "interesting" status update (and discarding it if not)
         // before going on to parse all of its fields.
         Tweet status;
-        try {
-            status = new Tweet(el);
-        } catch (TweetParseException e) {
-            throw new TweetHandlerException(e);
-        }
+        status = new Tweet(el);
 
         return statusHandler.handle(status);
     }
