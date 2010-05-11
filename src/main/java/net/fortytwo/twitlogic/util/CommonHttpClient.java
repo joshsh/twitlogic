@@ -84,6 +84,16 @@ public abstract class CommonHttpClient {
         return client;
     }
 
+    public static void showRequestInfo(final HttpUriRequest request) {
+        System.out.println("" + request.getMethod() + " <" + request.getURI() + ">");
+
+        HeaderIterator iter = request.headerIterator();
+        while (iter.hasNext()) {
+            Header h = iter.nextHeader();
+            System.out.println(h.getName() + ": " + h.getValue());
+        }
+    }
+
     public static void showResponseInfo(final HttpResponse response) {
         System.out.println("response code: " + response.getStatusLine().getStatusCode());
 
@@ -191,6 +201,7 @@ public abstract class CommonHttpClient {
                     case 404:
                         throw new NotFoundException();
                     case 406:
+                        showRequestInfo(request);
                         throw new NotAcceptableException();
                     case 420:
                         throw new EnhanceYourCalmException();

@@ -179,6 +179,10 @@ public class TwitterAPI {
             LONG = "long",
             USER_ID = "user_id";
 
+    // E.g.  Tue Nov 11 17:41:37 +0000 2008
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+            "EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+
     /**
      * Checks for unknown keys in status element JSON.  If the Twitter API
      * is ever extended to include new keys (e.g. for geolocation), this check
@@ -205,13 +209,9 @@ public class TwitterAPI {
         }
     }
 
-    // E.g.  Tue Nov 11 17:41:37 +0000 2008
     public static Date parseTwitterDateString(final String dateStr) throws ParseException {
-        // parse Twitter date
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "EEE MMM dd HH:mm:ss ZZZZZ yyyy");
-        dateFormat.setLenient(false);
-        return dateFormat.parse(dateStr);
+        //DATE_FORMAT.setLenient(false);
+        return DATE_FORMAT.parse(dateStr);
     }
 
     public static void main(final String[] args) {
