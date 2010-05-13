@@ -3,9 +3,9 @@ package net.fortytwo.twitlogic.persistence;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.twitter.TweetHandlerException;
-import net.fortytwo.twitlogic.twitter.TwitterClient;
-import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 
 import java.util.HashMap;
 import java.util.Map;

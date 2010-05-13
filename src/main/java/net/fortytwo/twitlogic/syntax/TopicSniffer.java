@@ -4,7 +4,7 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
-import net.fortytwo.twitlogic.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 
 import java.util.Collection;
 

@@ -6,8 +6,8 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.PersistenceContext;
 import net.fortytwo.twitlogic.services.bitly.BitlyClient;
 import net.fortytwo.twitlogic.services.bitly.BitlyClientException;
-import net.fortytwo.twitlogic.twitter.TwitterClient;
-import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
 
 /**

@@ -1,6 +1,6 @@
 package net.fortytwo.twitlogic.model;
 
-import net.fortytwo.twitlogic.twitter.TwitterAPI;
+import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 

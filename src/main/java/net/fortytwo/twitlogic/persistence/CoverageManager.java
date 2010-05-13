@@ -2,7 +2,7 @@ package net.fortytwo.twitlogic.persistence;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.util.intervals.Interval;
 import net.fortytwo.twitlogic.util.intervals.IntervalSequence;

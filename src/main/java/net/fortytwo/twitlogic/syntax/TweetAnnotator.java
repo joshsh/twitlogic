@@ -4,7 +4,7 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.persistence.SimpleTweetContext;
-import net.fortytwo.twitlogic.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 
 /**
  * User: josh

@@ -1,7 +1,7 @@
 package net.fortytwo.twitlogic;
 
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;

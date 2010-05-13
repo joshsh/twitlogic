@@ -11,7 +11,7 @@ import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
-import net.fortytwo.twitlogic.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 
 import java.util.Collections;
 import java.util.Comparator;
