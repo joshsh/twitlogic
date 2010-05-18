@@ -26,8 +26,12 @@ public class TypedProperties extends Properties {
                                final boolean required) throws PropertyException {
         String s = getProperty(name);
 
-        if (null == s && required) {
-            throw new PropertyValueNotFoundException(name);
+        if (null == s) {
+            if (required) {
+                throw new PropertyValueNotFoundException(name);
+            }
+        } else {
+            s = s.trim();
         }
 
         return s;

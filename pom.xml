@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo</groupId>
     <artifactId>twitlogic</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <packaging>jar</packaging>
     <name>TwitLogic</name>
     <description>real-time #SemanticWeb in &lt;= 140 chars</description>
@@ -167,6 +167,13 @@
             <version>1.1.5</version>
         </dependency>
 
+        <!-- Additional Sails -->
+        <dependency>
+            <groupId>com.franz.ag</groupId>
+            <artifactId>agsail</artifactId>
+            <version>3.3</version>
+        </dependency>
+        
         <!-- temporary? -->
         <dependency>
             <groupId>edu.rpi.tw</groupId>

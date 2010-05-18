@@ -1,5 +1,6 @@
 package net.fortytwo.twitlogic.persistence;
 
+import com.knowledgereefsystems.agsail.AllegroSail;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
@@ -8,6 +9,9 @@ import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
+import net.fortytwo.twitlogic.persistence.sail.AllegroSailFactory;
+import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
+import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
@@ -315,49 +319,25 @@ public class TweetStore {
                             final TypedProperties props) throws TweetStoreException {
         System.out.println("creating Sail of type: " + sailType);
         Sail sail;
+        SailFactory factory;
 
         if (sailType.equals(MemoryStore.class.getName())) {
-            sail = createMemoryStore(props);
+            factory = new MemoryStoreFactory(props);
         } else if (sailType.equals(NativeStore.class.getName())) {
-            sail = createNativeStore(props);
+            factory = new NativeStoreFactory(props);
+        } else if (sailType.equals(AllegroSail.class.getName())) {
+            factory = new AllegroSailFactory(props);
         } else {
             throw new TweetStoreException("unhandled Sail type: " + sailType);
         }
 
-        return sail;
-    }
-
-    private Sail createMemoryStore(final TypedProperties conf) throws TweetStoreException {
-        LOGGER.info("instantiating MemoryStore");
-
-        Sail sail = new MemoryStore();
         try {
-            sail.initialize();
+            return factory.makeSail();
         } catch (SailException e) {
             throw new TweetStoreException(e);
-        }
-
-        return sail;
-    }
-
-    private Sail createNativeStore(final TypedProperties conf) throws TweetStoreException {
-        File dir;
-
-        try {
-            dir = conf.getFile(TwitLogic.NATIVESTORE_DIRECTORY);
         } catch (PropertyException e) {
             throw new TweetStoreException(e);
         }
-
-        LOGGER.info("instantiating NativeStore in directory: " + dir);
-        Sail sail = new NativeStore(dir);
-        try {
-            sail.initialize();
-        } catch (SailException e) {
-            throw new TweetStoreException(e);
-        }
-
-        return sail;
     }
 
     private void refreshKnowledgeBaseMetadata(final Repository repository) throws TweetStoreException {
