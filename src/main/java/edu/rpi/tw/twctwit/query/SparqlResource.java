@@ -34,11 +34,25 @@ public class SparqlResource extends QueryResource {
                           final Response response) throws Exception {
         super(context, request, response);
 
-        getVariants().addAll(SparqlTools.SparqlResultFormat.getVariants());
-
         query = arguments.get("query");
         if (null == query) {
             throw new IllegalArgumentException("no query argument specified");
+        }
+
+        String output = arguments.get("output");
+
+        // Humor those clients which use an "output" argument, instead of content
+        // negotation, to specify an output format.
+        if (null != output) {
+            if (output.equals("json")) {
+                getVariants().add(new Variant(SparqlTools.SparqlResultFormat.JSON.getMediaType()));
+            } else if (output.equals("xml")) {
+                getVariants().add(new Variant(SparqlTools.SparqlResultFormat.XML.getMediaType()));
+            } else {
+                throw new IllegalArgumentException("bad value for 'output' parameter: " + output);
+            }
+        } else {
+            getVariants().addAll(SparqlTools.SparqlResultFormat.getVariants());
         }
     }
 
