@@ -56,6 +56,9 @@ function select_ohyeah_tweets(r) {
         url: "../../sparql", // SPARQL service URL
         //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: sparql_query(tweets_query(r.graphs)), // query parameter
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Accept", "application/sparql-results+json");
+        },
         dataType: "json",
         success: function(data) {
             var modaltweets = document.getElementById("modaltweets");
@@ -102,6 +105,9 @@ function build_facets() {
                 "  FILTER( ?p != sioc:topic )\n" +
                 "}"
                 ), // query parameter
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Accept", "application/sparql-results+json");
+        },
         dataType: "json",
         success: function(data) {
             var t = _valueHash(data);
@@ -132,6 +138,9 @@ function build_inverse_facets() {
                 "  FILTER( ?p != sioc:topic )\n" +
                 "}"
                 ), // query parameter
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Accept", "application/sparql-results+json");
+        },
         dataType: "json",
         success: function(data) {
             var t = _valueHash(data);

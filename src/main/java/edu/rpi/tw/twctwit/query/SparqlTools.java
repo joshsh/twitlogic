@@ -37,9 +37,9 @@ import java.util.Properties;
  */
 public class SparqlTools {
     public enum SparqlResultFormat {
-        // Note: the JSON format is defined first, so that it is the default format.
-        JSON("application/sparql-results+json"),
-        XML("application/sparql-results+xml");
+        // Note: the XML format is defined first, so that it is the default format.
+        XML("application/sparql-results+xml"),
+        JSON("application/sparql-results+json");
 
         private static List<Variant> VARIANTS;
 
