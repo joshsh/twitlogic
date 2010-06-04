@@ -16,9 +16,13 @@ import org.openrdf.query.TupleQueryResultHandlerException;
 import org.openrdf.query.impl.MapBindingSet;
 import org.openrdf.query.parser.ParsedQuery;
 import org.openrdf.query.parser.sparql.SPARQLParser;
+import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.sparqljson.SPARQLResultsJSONWriter;
+import org.openrdf.query.resultio.sparqlxml.SPARQLResultsXMLWriter;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
+import org.restlet.data.MediaType;
+import org.restlet.resource.Variant;
 
 import java.io.FileInputStream;
 import java.io.OutputStream;
@@ -32,6 +36,45 @@ import java.util.Properties;
  * Time: 10:13:36 PM
  */
 public class SparqlTools {
+    public enum SparqlResultFormat {
+        // Note: the JSON format is defined first, so that it is the default format.
+        JSON("application/sparql-results+json"),
+        XML("application/sparql-results+xml");
+
+        private static List<Variant> VARIANTS;
+
+        private final MediaType mediaType;
+
+        private SparqlResultFormat(final String mimeType) {
+            mediaType = new MediaType(mimeType);
+        }
+
+        public MediaType getMediaType() {
+            return mediaType;
+        }
+
+        public static SparqlResultFormat lookup(final MediaType mediaType) {
+            for (SparqlResultFormat f : SparqlResultFormat.values()) {
+                if (f.mediaType.equals(mediaType)) {
+                    return f;
+                }
+            }
+
+            return null;
+        }
+
+        public static List<Variant> getVariants() {
+            if (null == VARIANTS) {
+                VARIANTS = new LinkedList<Variant>();
+                for (SparqlResultFormat f : SparqlResultFormat.values()) {
+                    VARIANTS.add(new Variant(f.mediaType));
+                }
+            }
+
+            return VARIANTS;
+        }
+    }
+
     private static final String BASE_URI = "http://example.org/bogusBaseURI";
 
     private static final String
@@ -85,8 +128,20 @@ public class SparqlTools {
     public static void queryAndWriteJSON(final String queryStr,
                                          final SailConnection sc,
                                          final OutputStream out,
-                                         final int limit) throws QueryException {
-        SPARQLResultsJSONWriter w = new SPARQLResultsJSONWriter(out);
+                                         final int limit,
+                                         final SparqlResultFormat format) throws QueryException {
+        TupleQueryResultWriter w;
+
+        switch (format) {
+            case JSON:
+                w = new SPARQLResultsJSONWriter(out);
+                break;
+            case XML:
+                w = new SPARQLResultsXMLWriter(out);
+                break;
+            default:
+                throw new QueryException(new Throwable("bad query result format: " + format));
+        }
         List<String> columnHeaders = new LinkedList<String>();
         // FIXME: *do* specify the column headers
         //columnHeaders.add("post");
@@ -134,7 +189,7 @@ public class SparqlTools {
                 try {
                     SailConnection sc = c.getSailConnection();
 
-                    queryAndWriteJSON(GOLD_TWEETS_QUERY, sc, System.out, 100);
+                    queryAndWriteJSON(GOLD_TWEETS_QUERY, sc, System.out, 100, SparqlResultFormat.JSON);
                     //queryAndWriteJSON(ISWC_STATEMENTS_QUERY, sc, System.out);
                 } finally {
                     c.close();

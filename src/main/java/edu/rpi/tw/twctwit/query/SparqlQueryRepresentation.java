@@ -15,14 +15,16 @@ import java.io.OutputStream;
  * Time: 2:51:46 PM
  */
 public class SparqlQueryRepresentation extends OutputRepresentation {
+
     private final String query;
     private final Sail sail;
     private final int limit;
 
     public SparqlQueryRepresentation(final String query,
                                      final Sail sail,
-                                     final int limit) {
-        super(MediaType.APPLICATION_JSON);
+                                     final int limit,
+                                     final MediaType format) {
+        super(format);
 
         this.query = query;
         this.sail = sail;
@@ -30,11 +32,15 @@ public class SparqlQueryRepresentation extends OutputRepresentation {
     }
 
     public void write(final OutputStream out) throws IOException {
+        //try {
         try {
             SailConnection sc = sail.getConnection();
             try {
                 try {
-                    SparqlTools.queryAndWriteJSON(query, sc, out, limit);
+                    //System.out.println("media type: " + this.getMediaType());
+                    SparqlTools.SparqlResultFormat format
+                            = SparqlTools.SparqlResultFormat.lookup(this.getMediaType());
+                    SparqlTools.queryAndWriteJSON(query, sc, out, limit, format);
                 } catch (QueryException e) {
                     e.printStackTrace();
                     throw new IOException(e);
@@ -46,5 +52,8 @@ public class SparqlQueryRepresentation extends OutputRepresentation {
             e.printStackTrace();
             throw new IOException(e);
         }
+        //} catch (Throwable t) {
+        //    t.printStackTrace();
+        //}
     }
 }

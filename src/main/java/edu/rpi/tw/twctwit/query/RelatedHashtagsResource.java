@@ -35,6 +35,8 @@ public class RelatedHashtagsResource extends QueryResource {
                                        final Response response) throws Throwable {
         super(context, request, response);
 
+        getVariants().add(new Variant(MediaType.APPLICATION_JSON));
+
         //try {
         String resource = arguments.get(RESOURCE_PARAM);
 

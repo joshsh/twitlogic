@@ -14,6 +14,7 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.restlet.Context;
+import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Representation;
@@ -87,6 +88,8 @@ public class RelatedTweetsResource extends QueryResource {
                                  final Response response) throws Throwable {
         super(context, request, response);
 
+        getVariants().add(new Variant(MediaType.APPLICATION_JSON));
+
         //try {
             String resource = arguments.get(RESOURCE_PARAM);
 
@@ -105,7 +108,7 @@ public class RelatedTweetsResource extends QueryResource {
             String query = alternativesQuery(new URIImpl(resource), after);
             //System.out.println("query = " + query);
 
-            result = new SparqlQueryRepresentation(query, sail, readLimit());
+            result = new SparqlQueryRepresentation(query, sail, readLimit(), SparqlTools.SparqlResultFormat.JSON.getMediaType());
         //} catch (Throwable t) {
         //    t.printStackTrace();
         //    throw t;

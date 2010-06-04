@@ -27,23 +27,23 @@ public class SparqlResource extends QueryResource {
     private static final Logger LOGGER
             = TwitLogic.getLogger(SparqlResource.class);
 
-    private final Representation result;
+    private final String query;
 
     public SparqlResource(final Context context,
                           final Request request,
                           final Response response) throws Exception {
         super(context, request, response);
 
-        String query = arguments.get("query");
+        getVariants().addAll(SparqlTools.SparqlResultFormat.getVariants());
+
+        query = arguments.get("query");
         if (null == query) {
             throw new IllegalArgumentException("no query argument specified");
         }
-
-        result = new SparqlQueryRepresentation(query, sail, readLimit());
     }
 
     @Override
     public Representation represent(final Variant variant) {
-        return result;
+        return new SparqlQueryRepresentation(query, sail, readLimit(), variant.getMediaType());
     }
 }

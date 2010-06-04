@@ -1,14 +1,14 @@
 package net.fortytwo.twitlogic.server;
 
 import org.openrdf.rio.RDFFormat;
-import org.restlet.resource.Variant;
 import org.restlet.data.MediaType;
+import org.restlet.resource.Variant;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: josh
@@ -19,7 +19,6 @@ public class RDFStuff {
     private static final Map<RDFFormat, MediaType> rdfFormatToMediaTypeMap;
     private static final Map<MediaType, RDFFormat> mediaTypeToRdfFormatMap;
     private static final List<Variant> rdfVariants;
-
 
     private static final Map<String, RDFFormat> SUFFIX_TO_FORMAT;
     private static final Map<RDFFormat, String> FORMAT_TO_SUFFIX;

@@ -1,14 +1,12 @@
 package edu.rpi.tw.twctwit.query;
 
-import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.server.TwitLogicServer;
 import org.openrdf.sail.Sail;
 import org.restlet.Context;
-import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.Resource;
-import org.restlet.resource.Variant;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -48,8 +46,8 @@ public abstract class QueryResource extends Resource {
     //private final String query;
 
     public QueryResource(final Context context,
-                                   final Request request,
-                                   final Response response) throws Exception {
+                         final Request request,
+                         final Response response) throws Exception {
         super(context, request, response);
 
         selfURI = request.getResourceRef().toString();
@@ -65,7 +63,7 @@ public abstract class QueryResource extends Resource {
 
         sail = TwitLogicServer.getServer(context).getSail(request);
 
-        getVariants().add(new Variant(MediaType.APPLICATION_JSON));
+        //getVariants().add(new Variant(MediaType.APPLICATION_JSON));
 
         int i = selfURI.lastIndexOf("?");
         arguments = new HashMap<String, String>();

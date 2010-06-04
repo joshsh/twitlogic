@@ -116,6 +116,11 @@
         <!-- Note: this one is specifically for the WWW2010 conference tweets application -->
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-queryresultio-sparqlxml</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-sparqljson</artifactId>
             <version>2.2.4</version>
         </dependency>
