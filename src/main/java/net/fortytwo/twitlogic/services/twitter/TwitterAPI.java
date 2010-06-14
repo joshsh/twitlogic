@@ -101,6 +101,7 @@ public class TwitterAPI {
     }
 
     public enum Field {
+        ANNOTATIONS("annotations"),
         CONTRIBUTORS("contributors"),
         CONTRIBUTORS_ENABLED("contributors_enabled"),
         COORDINATES("coordinates"),

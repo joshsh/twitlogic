@@ -2,14 +2,15 @@ package net.fortytwo.twitlogic.model;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Logger;
-import java.text.ParseException;
 
 /**
  * User: josh
@@ -34,6 +35,7 @@ public class Tweet implements Resource {
     //private final String source;
     private String text;
     //private final Boolean truncated;
+    private JSONArray twannotations;
 
     private final Collection<Hashtag> topics = new LinkedList<Hashtag>();
     private final Collection<Triple> annotations = new LinkedList<Triple>();
@@ -107,6 +109,8 @@ public class Tweet implements Resource {
 
             JSONObject userJSON = json.getJSONObject(TwitterAPI.Field.USER.toString());
             user = new User(userJSON);
+
+            twannotations = json.optJSONArray(TwitterAPI.Field.ANNOTATIONS.toString());
         } catch (JSONException e) {
             throw new TweetParseException(e);
         }
@@ -138,6 +142,10 @@ public class Tweet implements Resource {
 
     public String getText() {
         return text;
+    }
+
+    public JSONArray getTwannotations() {
+        return twannotations;
     }
 
     public Resource.Type getType() {
