@@ -11,10 +11,12 @@ import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.EmailAddressMatch
 import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.FaxMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.contact.PhoneMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafDepictionMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafHomepageMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafInterestMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafKnowsMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafMadeMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafMakerMatcher;
+import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.FoafPageMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.foaf.SelfInterestMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.miscellaneous.MentionedBy;
 import net.fortytwo.twitlogic.syntax.afterthought.impl.openvocab.OVCategoryMatcher;
@@ -56,12 +58,15 @@ public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
                 new SkosBroaderMatcher(),
                 new SkosNarrowerMatcher(),
                 new SkosRelatedMatcher(),
-                // Miscellaneous
+                // FOAF
                 new FoafDepictionMatcher(),
+                new FoafHomepageMatcher(),
                 new FoafInterestMatcher(),
                 new FoafKnowsMatcher(),
                 new FoafMadeMatcher(),
                 new FoafMakerMatcher(),
+                new FoafPageMatcher(),
+                // Miscellaneous
                 new RdfsSeeAlsoMatcher(),
                 new ReviewMatcher(),
                 new SelfInterestMatcher(),
