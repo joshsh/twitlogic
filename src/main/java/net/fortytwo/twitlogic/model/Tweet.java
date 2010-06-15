@@ -74,7 +74,7 @@ public class Tweet implements Resource {
 
             JSONObject geoObj = TwitterAPI.getJSONObject(json, TwitterAPI.Field.GEO);
             if (null != geoObj) {
-                LOGGER.info("geo: " + geo);
+                LOGGER.info("geo: " + geoObj);
                 String type = TwitterAPI.getString(geoObj, TwitterAPI.Field.TYPE);
                 if (null == type) {
                     LOGGER.warning("no 'type' for geo object");
@@ -88,6 +88,8 @@ public class Tweet implements Resource {
                     geo.latitude = coords.getDouble(0);
                     geo.longitude = coords.getDouble(1);
                 }
+
+                // TODO: look for unrecognized attributes
             }
 
             id = json.getString(TwitterAPI.Field.ID.toString());

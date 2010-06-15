@@ -7,6 +7,7 @@ import net.fortytwo.twitlogic.persistence.beans.Document;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
+import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.persistence.sail.AllegroSailFactory;
@@ -99,6 +100,7 @@ public class TweetStore {
         adminElmoModule.addConcept(Graph.class);
         adminElmoModule.addConcept(Image.class);
         adminElmoModule.addConcept(MicroblogPost.class);
+        adminElmoModule.addConcept(Point.class);
         adminElmoModule.addConcept(SpatialThing.class);
         adminElmoModule.addConcept(User.class);
 
