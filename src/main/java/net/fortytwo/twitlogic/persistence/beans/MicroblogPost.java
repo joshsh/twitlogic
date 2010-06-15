@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.persistence.beans;
 
 import net.fortytwo.twitlogic.vocabs.DCTerms;
+import net.fortytwo.twitlogic.vocabs.Geo;
 import net.fortytwo.twitlogic.vocabs.SIOC;
 import net.fortytwo.twitlogic.vocabs.SIOCT;
 import org.openrdf.concepts.owl.Thing;
@@ -56,4 +57,9 @@ public interface MicroblogPost extends Thing {
     Set<Thing> getLinksTo();
 
     void setLinksTo(Set<Thing> linksTo);
+
+    @rdf(Geo.LOCATION)
+    Point getLocation();
+
+    void setLocation(Point location);
 }

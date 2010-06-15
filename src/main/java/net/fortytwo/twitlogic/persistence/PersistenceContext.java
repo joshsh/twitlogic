@@ -10,6 +10,7 @@ import net.fortytwo.twitlogic.persistence.beans.Document;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
+import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
@@ -170,6 +171,13 @@ public class PersistenceContext {
         return user.getAccountOf();
     }
 
+    public Point persist(final net.fortytwo.twitlogic.model.Tweet.Point point) {
+        Point p = point();
+        p.setLong(point.longitude);
+        p.setLat(point.latitude);
+        return p;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private User userForUser(final net.fortytwo.twitlogic.model.User user) {
@@ -183,6 +191,11 @@ public class PersistenceContext {
     private SpatialThing spatialThing() {
         String uri = TwitLogic.LOCATIONS_BASEURI + SesameTools.randomIdString();
         return designate(uri, SpatialThing.class);
+    }
+
+    private Point point() {
+        String uri = TwitLogic.LOCATIONS_BASEURI + SesameTools.randomIdString();
+        return designate(uri, Point.class);
     }
 
     private MicroblogPost postForTweet(final Tweet tweet) {

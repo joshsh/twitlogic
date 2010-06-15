@@ -142,6 +142,7 @@ public class TwitterAPI {
         TEXT("text"),
         TIME_ZONE("time_zone"),
         TRUNCATED("truncated"),
+        TYPE("type"),
         URL("url"),
         USER("user"),
         USERS("users"),
@@ -223,6 +224,11 @@ public class TwitterAPI {
             s = null;
         }
         return s;
+    }
+
+    public static JSONObject getJSONObject(final JSONObject json,
+                                           final TwitterAPI.Field key) throws JSONException {
+        return json.optJSONObject(key.toString());
     }
 
     public static void main(final String[] args) {

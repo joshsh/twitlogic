@@ -12,6 +12,7 @@ import net.fortytwo.twitlogic.model.TypedLiteral;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
+import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.util.CommonHttpClient;
@@ -67,6 +68,11 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                 storeConnection.commit();
             } catch (TweetStoreException e) {
                 throw new TweetHandlerException(e);
+            }
+
+            if (null != tweet.getGeo()) {
+                Point p = persistenceContext.persist(tweet.getGeo());
+                currentMicroblogPost.setLocation(p);
             }
 
             // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle

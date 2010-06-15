@@ -20,13 +20,18 @@ import java.util.logging.Logger;
 public class Tweet implements Resource {
     private static final Logger LOGGER = TwitLogic.getLogger(Tweet.class);
 
+    public class Point {
+        public double longitude;
+        public double latitude;
+    }
+
     private User user;
 
     // private final List<User> contributors;
     // private final ??? coordinates;
     private Date createdAt;
     //private final Boolean favorited;
-    private String geo;
+    private Point geo;
     private String id;
     //private User inReplyToUser;
     private Tweet inReplyToTweet;
@@ -67,10 +72,24 @@ public class Tweet implements Resource {
         try {
             TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.STATUS);
 
-            geo = TwitterAPI.getString(json, TwitterAPI.Field.GEO);
-            if (null != geo) {
+            JSONObject geoObj = TwitterAPI.getJSONObject(json, TwitterAPI.Field.GEO);
+            if (null != geoObj) {
                 LOGGER.info("geo: " + geo);
+                String type = TwitterAPI.getString(geoObj, TwitterAPI.Field.TYPE);
+                if (null == type) {
+                    LOGGER.warning("no 'type' for geo object");
+                } else if (!type.equals("Point")) {
+                    LOGGER.warning("unfamiliar geo type: " + type);
+                } else {
+                    geo = new Point();
+                    JSONArray coords = geoObj.getJSONArray(TwitterAPI.Field.COORDINATES.toString());
+
+                    // Note: in the Twitter API 2.0, the order of longitude and latitude will be reversed.
+                    geo.latitude = coords.getDouble(0);
+                    geo.longitude = coords.getDouble(1);
+                }
             }
+
             id = json.getString(TwitterAPI.Field.ID.toString());
 
             // Evidently, these three fields are a unit.
@@ -124,7 +143,7 @@ public class Tweet implements Resource {
         return createdAt;
     }
 
-    public String getGeo() {
+    public Point getGeo() {
         return geo;
     }
 
@@ -185,7 +204,7 @@ public class Tweet implements Resource {
         this.createdAt = createdAt;
     }
 
-    public void setGeo(String geo) {
+    public void setGeo(Point geo) {
         this.geo = geo;
     }
 
