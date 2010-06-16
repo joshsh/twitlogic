@@ -16,7 +16,6 @@ import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
-import net.fortytwo.twitlogic.vocabs.DBpediaResource;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManager;
 
@@ -221,12 +220,7 @@ public class PersistenceContext {
     ////////////////////////////////////////////////////////////////////////////
 
     private org.openrdf.concepts.rdfs.Class classForPlaceType(final Place.PlaceType type) {
-        switch (type) {
-            case CITY:
-                return designate(DBpediaResource.CITY, org.openrdf.concepts.rdfs.Class.class);
-            default:
-                return null;
-        }
+        return designate(type.getUri(), org.openrdf.concepts.rdfs.Class.class);
     }
 
     private User userForUser(final net.fortytwo.twitlogic.model.User user) {

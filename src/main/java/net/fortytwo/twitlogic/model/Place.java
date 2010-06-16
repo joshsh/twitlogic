@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.model;
 
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.vocabs.DBpediaResource;
 import org.json.JSONObject;
 import org.json.JSONException;
 
@@ -24,12 +25,16 @@ public class Place {
     }
 
     public enum PlaceType {
-        CITY("city");
+        CITY("city", DBpediaResource.CITY),
+        NEIGHBORHOOD("neighborhood", DBpediaResource.NEIGHBORHOOD);
 
         private final String name;
+        private final String uri;
 
-        private PlaceType(final String name) {
+        private PlaceType(final String name,
+                          final String uri) {
             this.name = name;
+            this.uri = uri;
         }
 
         public static PlaceType lookup(final String name) {
@@ -40,6 +45,10 @@ public class Place {
             }
 
             return null;
+        }
+
+        public String getUri() {
+            return uri;
         }
     }
 

@@ -31,6 +31,10 @@ public class Tweet implements Resource {
     public class Point {
         public double longitude;
         public double latitude;
+
+        public String toString() {
+            return "(" + longitude + ", " + latitude + ")";
+        }
     }
 
     private User user;
