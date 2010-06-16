@@ -238,8 +238,9 @@ public class TwitLogic {
         }
 
         if (0 == users.size()) {
-            throw new Exception("no users to follow!  Set the " + TwitLogic.FOLLOWLIST + " property of your configuration to a non-empty list");
+            LOGGER.info("following 0 users");
         }
+
         return users;
     }
 }

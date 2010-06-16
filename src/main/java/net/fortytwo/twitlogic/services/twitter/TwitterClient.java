@@ -1,5 +1,6 @@
 package net.fortytwo.twitlogic.services.twitter;
 
+import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.flow.NullHandler;
 import net.fortytwo.twitlogic.model.Tweet;
@@ -158,11 +159,20 @@ public class TwitterClient extends CommonHttpClient {
                                           final Collection<String> terms,
                                           final Handler<Tweet, TweetHandlerException> handler,
                                           final int previousStatusCount) throws TwitterClientException {
-        // TODO: make this a soft error
+        if (0 == users.size() && 0 == terms.size()) {
+            throw new TwitterClientException("no users to follow and no keywords to track!  Set " + TwitLogic.FOLLOWLIST + " and related properties in your configuration");
+        }
+
         if (users.size() > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
-            throw new IllegalArgumentException("the default access level allows up to "
+            LOGGER.warning("the default access level allows up to "
                     + TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT
-                    + " follow userids (you have tried to use " + users.size() + ")");
+                    + " follow userids (you are attempting to use " + users.size() + ")");
+        }
+
+        if (terms.size() > TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT) {
+            LOGGER.warning("the default access level allows up to "
+            + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
+            + " tracked keywords (you are attempting to use " + terms.size() + ")");
         }
 
         HttpPost request = new HttpPost(TwitterAPI.STREAM_STATUSES_FILTER_URL);
