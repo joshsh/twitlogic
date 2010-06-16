@@ -3,10 +3,12 @@ package net.fortytwo.twitlogic.persistence;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
+import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
+import net.fortytwo.twitlogic.persistence.beans.Feature;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
@@ -14,6 +16,7 @@ import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
+import net.fortytwo.twitlogic.vocabs.DBpediaResource;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManager;
 
@@ -83,7 +86,7 @@ public class PersistenceContext {
             links.add(persist(t));
         }
         post.setLinksTo(links);
-        
+
         /*
         if (null != tweet.getInReplyToUser()) {
             User user = userForUser(tweet.getInReplyToUser());
@@ -178,7 +181,53 @@ public class PersistenceContext {
         return p;
     }
 
+    public Feature persist(final Place place) {
+        Feature f = designate(uriOf(place), Feature.class);
+
+        if (null != place.getName()) {
+            f.setRdfsLabel(place.getName());
+        }
+
+        // TODO
+        //if (null != place.getFullName()) {
+        //}
+
+        if (null != place.getUrl()) {
+            Thing t = designate(place.getUrl(), Thing.class);
+            // FIXME: I'm not sure how this Object Set is handled
+            Set<Object> s = f.getRdfsSeeAlso();
+            s.add(t);
+            f.setRdfsSeeAlso(s);
+        }
+
+        // TODO: link into DBPedia and/or GeoNames
+        if (null != place.getCountryCode()) {
+            f.setCountryCode(place.getCountryCode());
+        }
+
+        if (null != place.getPlaceType()) {
+            org.openrdf.concepts.rdfs.Class c = classForPlaceType(place.getPlaceType());
+
+            if (null != c) {
+                Set<org.openrdf.concepts.rdfs.Class> types = f.getRdfTypes();
+                types.add(c);
+                f.setRdfTypes(types);
+            }
+        }
+
+        return f;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
+
+    private org.openrdf.concepts.rdfs.Class classForPlaceType(final Place.PlaceType type) {
+        switch (type) {
+            case CITY:
+                return designate(DBpediaResource.CITY, org.openrdf.concepts.rdfs.Class.class);
+            default:
+                return null;
+        }
+    }
 
     private User userForUser(final net.fortytwo.twitlogic.model.User user) {
         return designate(uriOf(user), User.class);
@@ -231,5 +280,9 @@ public class PersistenceContext {
     public static String uriOf(final Hashtag hashtag) {
         // FIXME: assumes normalized hash tags
         return TwitLogic.HASHTAGS_BASEURI + hashtag.getName();
+    }
+
+    public static String uriOf(final Place place) {
+        return TwitLogic.TWITTER_PLACE_BASEURI + place.getId();
     }
 }

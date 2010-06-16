@@ -11,8 +11,10 @@ import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.TypedLiteral;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.persistence.beans.Feature;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.Point;
+import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.util.CommonHttpClient;
@@ -25,6 +27,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.SailException;
 
 import javax.xml.namespace.QName;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -72,7 +75,16 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
             if (null != tweet.getGeo()) {
                 Point p = persistenceContext.persist(tweet.getGeo());
-                currentMicroblogPost.setLocation(p);
+                Set<SpatialThing> s = currentMicroblogPost.getLocation();
+                s.add(p);
+                currentMicroblogPost.setLocation(s);
+            }
+
+            if (null != tweet.getPlace()) {
+                Feature f = persistenceContext.persist(tweet.getPlace());
+                Set<SpatialThing> s = currentMicroblogPost.getLocation();
+                s.add(f);
+                currentMicroblogPost.setLocation(s);
             }
 
             // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle

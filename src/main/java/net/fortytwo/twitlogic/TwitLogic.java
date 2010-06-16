@@ -79,6 +79,7 @@ public class TwitLogic {
             MISCELLANEOUS_BASEURI = BASE_URI + "miscellaneous/",
             PERSONS_BASEURI = BASE_URI + "person/",
             TWEETS_BASEURI = BASE_URI + "post/twitter/",
+            TWITTER_PLACE_BASEURI = BASE_URI + "location/twitter/",
             USERS_BASEURI = BASE_URI + "user/twitter/";
 
     // This graph contains all of TwitLogic's authoritative metadata about

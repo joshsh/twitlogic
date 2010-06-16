@@ -59,7 +59,7 @@ public interface MicroblogPost extends Thing {
     void setLinksTo(Set<Thing> linksTo);
 
     @rdf(Geo.LOCATION)
-    Point getLocation();
+    Set<SpatialThing> getLocation();
 
-    void setLocation(Point location);
+    void setLocation(Set<SpatialThing> location);
 }

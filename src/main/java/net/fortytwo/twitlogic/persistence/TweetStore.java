@@ -4,6 +4,7 @@ import com.knowledgereefsystems.agsail.AllegroSail;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
+import net.fortytwo.twitlogic.persistence.beans.Feature;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
@@ -62,6 +63,11 @@ public class TweetStore {
     private SesameManagerFactory elmoManagerFactory;
     private boolean initialized = false;
 
+    /**
+     * The Sesame storage and inference layer (Sail) will be constructed according to configuration properties.
+     * 
+     * @throws TweetStoreException
+     */
     public TweetStore() throws TweetStoreException {
         configuration = TwitLogic.getConfiguration();
         String sailType;
@@ -73,6 +79,10 @@ public class TweetStore {
         sail = createSail(sailType, configuration);
     }
 
+    /**
+     *
+     * @param sail a Sesame storage and inference layer
+     */
     public TweetStore(final Sail sail) {
         this.sail = sail;
         this.configuration = TwitLogic.getConfiguration();
@@ -97,6 +107,7 @@ public class TweetStore {
         // TwitLogic-specific classes
         adminElmoModule.addConcept(Agent.class);
         adminElmoModule.addConcept(Document.class);
+        adminElmoModule.addConcept(Feature.class);
         adminElmoModule.addConcept(Graph.class);
         adminElmoModule.addConcept(Image.class);
         adminElmoModule.addConcept(MicroblogPost.class);

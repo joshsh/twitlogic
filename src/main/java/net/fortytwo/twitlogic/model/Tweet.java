@@ -20,6 +20,14 @@ import java.util.logging.Logger;
 public class Tweet implements Resource {
     private static final Logger LOGGER = TwitLogic.getLogger(Tweet.class);
 
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
     public class Point {
         public double longitude;
         public double latitude;
@@ -28,14 +36,13 @@ public class Tweet implements Resource {
     private User user;
 
     // private final List<User> contributors;
-    // private final ??? coordinates;
     private Date createdAt;
     //private final Boolean favorited;
     private Point geo;
     private String id;
     //private User inReplyToUser;
     private Tweet inReplyToTweet;
-    // private final ??? place;
+    private Place place;
     private Tweet retweetOf;
     //private final String source;
     private String text;
@@ -90,6 +97,11 @@ public class Tweet implements Resource {
                 }
 
                 // TODO: look for unrecognized attributes
+            }
+
+            JSONObject placeObj = TwitterAPI.getJSONObject(json, TwitterAPI.Field.PLACE);
+            if (null != placeObj) {
+                place = new Place(placeObj);
             }
 
             id = json.getString(TwitterAPI.Field.ID.toString());

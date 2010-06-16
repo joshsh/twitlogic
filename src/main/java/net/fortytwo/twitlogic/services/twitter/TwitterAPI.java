@@ -100,6 +100,38 @@ public class TwitterAPI {
         }
     }
 
+    public enum PlaceField {
+        COUNTRY_CODE("country_code"),
+        FULL_NAME("full_name"),
+        ID("id"),
+        NAME("name"),
+        PLACE_TYPE("place_type"),
+        URL("url");
+
+        private static final Map<String, Field> fieldsByName;
+
+        static {
+            fieldsByName = new HashMap<String, Field>();
+            for (Field f : Field.values()) {
+                fieldsByName.put(f.name, f);
+            }
+        }
+
+        private final String name;
+
+        private PlaceField(final String name) {
+            this.name = name;
+        }
+
+        public static Field valueByName(final String name) {
+            return fieldsByName.get(name);
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
+
     public enum Field {
         ANNOTATIONS("annotations"),
         CONTRIBUTORS("contributors"),

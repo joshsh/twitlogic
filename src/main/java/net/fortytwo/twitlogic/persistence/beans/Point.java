@@ -1,7 +1,6 @@
 package net.fortytwo.twitlogic.persistence.beans;
 
 import net.fortytwo.twitlogic.vocabs.Geo;
-import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.annotations.rdf;
 
 /**
@@ -10,7 +9,7 @@ import org.openrdf.elmo.annotations.rdf;
  * Time: 6:39:46 PM
  */
 @rdf(Geo.POINT)
-public interface Point extends Thing {
+public interface Point extends SpatialThing {
     @rdf(Geo.LONG)
     double getLong();
     void setLong(double l);
