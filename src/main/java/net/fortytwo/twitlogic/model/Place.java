@@ -25,6 +25,7 @@ public class Place {
     }
 
     public enum PlaceType {
+        ADMINISTRATIVE_DIVISION("admin", DBpediaResource.ADMINISTRATIVE_DIVISION),
         CITY("city", DBpediaResource.CITY),
         NEIGHBORHOOD("neighborhood", DBpediaResource.NEIGHBORHOOD);
 

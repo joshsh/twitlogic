@@ -9,6 +9,7 @@ public interface DBpediaResource {
     public static final String BASE_URI = "http://dbpedia.org/resource/";
 
     public static final String
+            ADMINISTRATIVE_DIVISION = BASE_URI + "Administrative_division",
             CITY = BASE_URI + "City",
             NEIGHBORHOOD = BASE_URI + "Neighbourhood";  // Note: spelled with 'ou'
 }
