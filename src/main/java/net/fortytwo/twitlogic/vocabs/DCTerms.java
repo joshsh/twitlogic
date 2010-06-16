@@ -9,5 +9,7 @@ public interface DCTerms {
     public static final String NAMESPACE = "http://purl.org/dc/terms/";
 
     public static final String
-            CREATED = NAMESPACE + "created";
+            CREATED = NAMESPACE + "created",
+            TITLE = NAMESPACE + "title";
+            // TODO: other terms
 }

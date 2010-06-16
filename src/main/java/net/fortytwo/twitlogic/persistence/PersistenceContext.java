@@ -188,9 +188,9 @@ public class PersistenceContext {
             f.setRdfsLabel(place.getName());
         }
 
-        // TODO
-        //if (null != place.getFullName()) {
-        //}
+        if (null != place.getFullName()) {
+            f.setTitle(place.getFullName());
+        }
 
         if (null != place.getUrl()) {
             Thing t = designate(place.getUrl(), Thing.class);

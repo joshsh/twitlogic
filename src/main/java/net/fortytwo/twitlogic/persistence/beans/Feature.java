@@ -1,5 +1,6 @@
 package net.fortytwo.twitlogic.persistence.beans;
 
+import net.fortytwo.twitlogic.vocabs.DCTerms;
 import net.fortytwo.twitlogic.vocabs.GeoNames;
 import org.openrdf.elmo.annotations.rdf;
 
@@ -14,4 +15,9 @@ public interface Feature extends SpatialThing {
     String getCountryCode();
 
     void setCountryCode(String countryCode);
+
+    @rdf(DCTerms.TITLE)
+    String getTitle();
+
+    void setTitle(String title);
 }
