@@ -158,6 +158,7 @@ public class TwitterClient extends CommonHttpClient {
                                           final Collection<String> terms,
                                           final Handler<Tweet, TweetHandlerException> handler,
                                           final int previousStatusCount) throws TwitterClientException {
+        // TODO: make this a soft error
         if (users.size() > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
             throw new IllegalArgumentException("the default access level allows up to "
                     + TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT

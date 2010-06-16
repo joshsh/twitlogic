@@ -106,6 +106,7 @@ public class TweetStore {
 
         // TwitLogic-specific classes
         adminElmoModule.addConcept(Agent.class);
+        adminElmoModule.addConcept(org.openrdf.concepts.rdfs.Class.class);
         adminElmoModule.addConcept(Document.class);
         adminElmoModule.addConcept(Feature.class);
         adminElmoModule.addConcept(Graph.class);
