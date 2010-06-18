@@ -26,7 +26,7 @@ public class NativeStoreFactory extends SailFactory {
 
     public Sail makeSail() throws SailException, PropertyException {
         File dir = conf.getFile(TwitLogic.NATIVESTORE_DIRECTORY);
-        String indexes = conf.getString(TwitLogic.NATIVESTORE_INDEXES);
+        String indexes = conf.getString(TwitLogic.NATIVESTORE_INDEXES, null);
 
         LOGGER.info("instantiating NativeStore in directory: " + dir);
         Sail sail = (null == indexes)
