@@ -9,7 +9,7 @@
 <http://twitlogic.fortytwo.net/dataset/twitlogic-full> rdf:type void:Dataset ;
     foaf:homepage <http://twitlogic.fortytwo.net> ;
     dcterms:title "the TwitLogic knowledge base" ;
-    dcterms:description "this is a nanotation data set which contains structured data extracted from Twitter posts. Each nanotation is associated with source and attribution metadata using Named Graphs. For best results, browse the data set in the TriX or TriG format." ;
+    dcterms:description "this is an annotation data set which contains structured data extracted from Twitter posts. Each annotation is associated with source and attribution metadata using Named Graphs.  This provenance metadata is available in the TriX and TriG documents for the post." ;
     dcterms:publisher <http://fortytwo.net/foaf#josh> ;
     dcterms:source <http://twitter.com> ;
     dcterms:license <http://www.opendatacommons.org/licenses/pddl/1.0/> ;
@@ -29,7 +29,7 @@
     void:vocabulary <http://purl.org/dc/terms/> ;
     void:vocabulary <http://rdfs.org/sioc/types#> ;
     void:vocabulary <http://purl.org/dc/terms/> ;
-    void:exampleResource <http://twitlogic.fortytwo.net/hashtag/twitlogic> ;
+    void:exampleResource <http://twitlogic.fortytwo.net/hashtag/www2010> ;
     void:exampleResource <http://twitlogic.fortytwo.net/user/twitter/7083182> ;
     void:subset <http://twitlogic.fortytwo.net/dataset/semantictweet-linkset1> .
 
