@@ -31,6 +31,7 @@ public class User implements Resource {
     //private final String profileSidebarBorderColor;
     //private final String profileSidebarFillColor;
     private final String profileTextColor;
+    //private final boolean? profileUseBackgroundImage;
     //private final Boolean isProtected; // Note: field name is "protected"
     private final String screenName;
     //private final Tweet status;

@@ -165,6 +165,7 @@ public class TwitterAPI {
         PROFILE_SIDEBAR_BORDER_COLOR("profile_sidebar_border_color"),
         PROFILE_SIDEBAR_COLOR("profile_sidebar_fill_color"),
         PROFILE_TEXT_COLOR("profile_text_color"),
+        PROFILE_USE_BACKGROUND_IMAGE("profile_use_background_image"),
         PROTECTED("protected"),
         RETWEETED_STATUS("retweeted_status"),
         SCREEN_NAME("screen_name"),
