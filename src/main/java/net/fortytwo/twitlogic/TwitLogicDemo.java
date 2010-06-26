@@ -8,19 +8,18 @@ import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
 import net.fortytwo.twitlogic.server.TwitLogicServer;
+import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
-import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -87,7 +86,8 @@ public class TwitLogicDemo {
                 Set<User> users = TwitLogic.findFollowList(client);
                 Set<String> terms = TwitLogic.findTrackTerms();
 
-                //gatherHistoricalTweets(store, client, users);
+                //GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
+                //gatherHistoricalTweets(store, client, users, cal.getTime());
 
                 client.processFollowFilterStream(users, terms, annotator, 0);
             } finally {
@@ -100,17 +100,16 @@ public class TwitLogicDemo {
 
     private static void gatherHistoricalTweets(final TweetStore store,
                                                final TwitterClient client,
-                                               final Set<User> users) throws TweetStoreException, TwitterClientException, TweetHandlerException {
+                                               final Set<User> users,
+                                               final Date startTime) throws TweetStoreException, TwitterClientException, TweetHandlerException {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
                     TweetStoreConnection c = store.createConnection();
                     try {
-                        GregorianCalendar cal = new GregorianCalendar(2009, GregorianCalendar.OCTOBER, 1);
-
                         // Note: don't run old tweets through the command listener, or
                         // TwitLogic will respond, annoyingly, to old commands.
-                        client.processTimelineFrom(users, cal.getTime(), new Date(), createAnnotator(store, c, client));
+                        client.processTimelineFrom(users, startTime, new Date(), createAnnotator(store, c, client));
                     } finally {
                         c.close();
                     }
