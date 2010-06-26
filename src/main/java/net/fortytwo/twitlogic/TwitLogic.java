@@ -37,6 +37,7 @@ public class TwitLogic {
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
             DUMP_FILE = "net.fortytwo.twitlogic.persistence.dump.file",
             DUMP_INTERVAL = "net.fortytwo.twitlogic.persistence.dump.interval",
+            FOLLOWFOLLOWED = "net.fortytwo.twitlogic.followFollowed",
             FOLLOWLIST = "net.fortytwo.twitlogic.followList",
             FOLLOWUSER = "net.fortytwo.twitlogic.followUser",
             NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
@@ -235,6 +236,17 @@ public class TwitLogic {
                 // Twitter requires user IDs (as opposed to screen names) for follow filters.
                 User u = client.findUserInfo(screenName);
                 users.add(u);
+            } else if (key.startsWith(TwitLogic.FOLLOWFOLLOWED)) {
+                String screenName = props.getString(key);
+                if (!CONFIG_USERNAME_PATTERN.matcher(screenName).matches()) {
+                    throw new PropertyException("invalid screen name: " + screenName);
+                }
+
+                // Twitter requires user IDs (as opposed to screen names) for follow filters.
+                User u = client.findUserInfo(screenName);
+
+                List<User> l = client.getFollowedUsers(u);
+                users.addAll(l);
             }
         }
 

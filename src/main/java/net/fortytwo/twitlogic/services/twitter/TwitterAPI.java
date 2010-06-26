@@ -25,6 +25,7 @@ public class TwitterAPI {
             STATUSES_LIMIT = 3200;  // At most this many statuses may be retrieved from a timeline via the 'page' and 'count' REST parameters.
 
     public static final String
+            API_FRIENDS_URL = "http://api.twitter.com/1/friends/ids",
             API_LISTS_URL = "http://api.twitter.com/1",
             OAUTH_REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
             OAUTH_ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
@@ -148,6 +149,7 @@ public class TwitterAPI {
         GEO("geo"),
         GEO_ENABLED("geo_enabled"),
         ID("id"), // Note: used in multiple contexts
+        IDS("ids"),
         IN_REPLY_TO_SCREEN_NAME("in_reply_to_screen_name"),
         IN_REPLY_TO_STATUS_ID("in_reply_to_status_id"),
         IN_REPLY_TO_USER_ID("in_reply_to_user_id"),
@@ -236,6 +238,7 @@ public class TwitterAPI {
         }
     }
 
+    /*
     public static void checkUserListJSON(final JSONObject json) {
         for (Iterator iter = json.keys(); iter.hasNext();) {
             Object key = iter.next();
@@ -243,7 +246,7 @@ public class TwitterAPI {
                 System.err.println("unexpected field in user list: " + key);
             }
         }
-    }
+    }*/
 
     public static Date parseTwitterDateString(final String dateStr) throws ParseException {
         //DATE_FORMAT.setLenient(false);

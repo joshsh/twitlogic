@@ -2,7 +2,6 @@ package net.fortytwo.twitlogic.services.twitter;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
-import net.fortytwo.twitlogic.flow.NullHandler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.TweetParseException;
 import net.fortytwo.twitlogic.model.User;
@@ -27,6 +26,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.io.FileInputStream;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Properties;
 
 /**
  * User: josh
@@ -171,8 +172,8 @@ public class TwitterClient extends CommonHttpClient {
 
         if (terms.size() > TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT) {
             LOGGER.warning("the default access level allows up to "
-            + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
-            + " tracked keywords (you are attempting to use " + terms.size() + ")");
+                    + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
+                    + " tracked keywords (you are attempting to use " + terms.size() + ")");
         }
 
         HttpPost request = new HttpPost(TwitterAPI.STREAM_STATUSES_FILTER_URL);
@@ -252,7 +253,43 @@ public class TwitterClient extends CommonHttpClient {
             JSONObject json = requestJSONObject(request);
             //System.out.println(json);
 
-            users.addAll(constructUserList(json));
+            JSONArray array;
+            try {
+                array = json.getJSONArray(TwitterAPI.Field.USERS.toString());
+            } catch (JSONException e) {
+                throw new TwitterClientException(e);
+            }
+
+            users.addAll(constructUserList(array));
+
+            cursor = json.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
+        }
+
+        return users;
+    }
+
+    public List<User> getFollowedUsers(final User user) throws TwitterClientException {
+        List<User> users = new LinkedList<User>();
+
+        String cursor = "-1";
+
+        // Note: a null cursor doesn't appear to occur, but just to be safe...
+        while (null != cursor && !cursor.equals("0")) {
+            HttpGet request = new HttpGet(TwitterAPI.API_FRIENDS_URL
+                    + "/" + user.getScreenName() + ".json"
+                    + "?cursor=" + cursor);
+            sign(request);
+
+            JSONObject json = requestJSONObject(request);
+            System.out.println(json);
+
+            JSONArray array;
+            try {
+                array = json.getJSONArray(TwitterAPI.Field.IDS.toString());
+            } catch (JSONException e) {
+                throw new TwitterClientException(e);
+            }
+            users.addAll(constructUserListFromIDs(array));
 
             cursor = json.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
         }
@@ -375,18 +412,29 @@ public class TwitterClient extends CommonHttpClient {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private List<User> constructUserList(final JSONObject json) throws TwitterClientException {
-        TwitterAPI.checkUserListJSON(json);
+    private List<User> constructUserList(final JSONArray array) throws TwitterClientException {
+        //TwitterAPI.checkUserListJSON(json);
 
         List<User> users = new LinkedList<User>();
         try {
-            JSONArray array = json.getJSONArray(TwitterAPI.Field.USERS.toString());
             for (int i = 0; i < array.length(); i++) {
                 try {
                     users.add(new User(array.getJSONObject(i)));
                 } catch (TweetParseException e) {
                     throw new TwitterClientException(e);
                 }
+            }
+        } catch (JSONException e) {
+            throw new TwitterClientException(e);
+        }
+        return users;
+    }
+
+    private List<User> constructUserListFromIDs(final JSONArray array) throws TwitterClientException {
+        List<User> users = new LinkedList<User>();
+        try {
+            for (int i = 0; i < array.length(); i++) {
+                users.add(new User(array.getInt(i)));
             }
         } catch (JSONException e) {
             throw new TwitterClientException(e);
@@ -567,7 +615,16 @@ public class TwitterClient extends CommonHttpClient {
     }
 
     public static void main(final String[] args) throws Exception {
+        Properties props = new Properties();
+        props.load(new FileInputStream("/Users/josh/projects/fortytwo/twitlogic/config/twitlogic.properties"));
+        TwitLogic.setConfiguration(props);
+
         TwitterClient client = new TwitterClient();
-        client.processSampleStream(new NullHandler<Tweet, TweetHandlerException>());
+        //client.processSampleStream(new NullHandler<Tweet, TweetHandlerException>());
+
+        List<User> l = client.getFollowedUsers(new User("joshsh", 7083182));
+        for (User u : l) {
+            System.out.println("" + u);
+        }
     }
 }
