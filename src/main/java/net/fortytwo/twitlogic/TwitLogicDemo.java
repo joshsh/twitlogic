@@ -20,6 +20,7 @@ import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -86,7 +87,7 @@ public class TwitLogicDemo {
                 Set<User> users = TwitLogic.findFollowList(client);
                 Set<String> terms = TwitLogic.findTrackTerms();
 
-                //GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
+                GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
                 //gatherHistoricalTweets(store, client, users, cal.getTime());
 
                 client.processFollowFilterStream(users, terms, annotator, 0);

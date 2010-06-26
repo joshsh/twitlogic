@@ -15,6 +15,7 @@ public class PmlIsPartOfMatcher extends ObjectPropertyAfterthoughtMatcher {
 
     protected boolean predicateMatches(final String predicate) {
         String p = predicate.toLowerCase();
-        return p.equals("part of");
+        return p.equals("part of")
+                | p.equals("partof");
     }
 }
