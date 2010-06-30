@@ -200,7 +200,7 @@ public class WebResource extends Resource {
         }
 
         for (URI r : describedResources) {
-            statements.add(vf.createStatement(graph, RDFS.SEEALSO, r, TwitLogic.AUTHORITATIVE_GRAPH));
+            statements.add(vf.createStatement(graph, RDFS.SEEALSO, r, TwitLogic.CORE_GRAPH));
         }
     }
 
@@ -219,7 +219,7 @@ public class WebResource extends Resource {
                                      final ValueFactory vf) throws SailException {
         // Metadata about the document itself
         URI docURI = vf.createURI(selfURI);
-        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT), TwitLogic.AUTHORITATIVE_GRAPH));
+        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT), TwitLogic.CORE_GRAPH));
         statements.add(vf.createStatement(docURI, RDFS.LABEL,
                 vf.createLiteral("" + format.getName() + " description of "
                         + resourceDescriptor() + " '" + typeSpecificId + "'")));

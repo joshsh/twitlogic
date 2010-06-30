@@ -23,8 +23,6 @@ import org.openrdf.elmo.ElmoManagerFactory;
 import org.openrdf.elmo.ElmoModule;
 import org.openrdf.elmo.sesame.SesameManagerFactory;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -96,7 +94,7 @@ public class TweetStore {
         LOGGER.info("initializing TwitLogic local store");
 
         repository = new SailRepository(sail);
-        refreshKnowledgeBaseMetadata(repository);
+        refreshCoreMetadata(repository);
 
         // Elmo setup.
         adminElmoModule = new ElmoModule();
@@ -354,36 +352,25 @@ public class TweetStore {
         }
     }
 
-    private void refreshKnowledgeBaseMetadata(final Repository repository) throws TweetStoreException {
+    private void refreshCoreMetadata(final Repository repository) throws TweetStoreException {
+        LOGGER.info("adding/refreshing core metadata");
+
         try {
             RepositoryConnection rc = repository.getConnection();
             try {
-                ValueFactory vf = repository.getValueFactory();
 
-                // Remove all authoritative statements about these resources
-                // from the knowledge base.  All resources must be listed here,
-                // else we may end up with messy, superfluous metadata.
-                String[] metaResources = {
-                        TwitLogic.TWITLOGIC_DATASET,
-                        TwitLogic.SEMANTICTWEET_DATASET,
-                        TwitLogic.SEMANTICTWEET_LINKSET1};
-
-                for (String r : metaResources) {
-                    URI u = vf.createURI(r);
-                    rc.remove(u, null, null, TwitLogic.AUTHORITATIVE_GRAPH);
-                    rc.remove((Resource) null, null, u, TwitLogic.AUTHORITATIVE_GRAPH);
-                }
-
+                rc.remove((Resource) null, null, null, TwitLogic.CORE_GRAPH);
                 rc.clearNamespaces();
 
-                //if (rc.isEmpty()) {
-                LOGGER.info("adding seed data");
                 String baseURI = "http://example.org/baseURI/";
-                rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"), baseURI, RDFFormat.TURTLE);
-                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.ttl"), baseURI, RDFFormat.TURTLE);
-
+                rc.add(TwitLogic.class.getResourceAsStream("namespaces.ttl"),
+                        baseURI, RDFFormat.TURTLE, TwitLogic.CORE_GRAPH);
+                rc.add(TwitLogic.class.getResourceAsStream("twitlogic-void.ttl"),
+                        baseURI, RDFFormat.TURTLE, TwitLogic.CORE_GRAPH);
+                rc.add(TwitLogic.class.getResourceAsStream("twitterplaces.ttl"),
+                        baseURI, RDFFormat.TURTLE, TwitLogic.CORE_GRAPH);
+                
                 rc.commit();
-                //}
             } finally {
                 rc.close();
             }

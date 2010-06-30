@@ -88,7 +88,7 @@ public class TwitLogic {
     // named graphs, microblog posts, microblog authors, etc., as well as
     // voiD metadata about the knowledge base itself.
     public static final URI
-            AUTHORITATIVE_GRAPH = null;
+            CORE_GRAPH = new URIImpl(GRAPHS_BASEURI + "core");
 
     // Other special resources
     public static final String

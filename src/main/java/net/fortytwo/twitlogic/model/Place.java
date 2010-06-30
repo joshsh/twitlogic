@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 public class Place {
     private static final Logger LOGGER = TwitLogic.getLogger(Place.class);
 
+    private final JSONObject json;
+
     public String getId() {
         return id;
     }
@@ -61,6 +63,8 @@ public class Place {
     private PlaceType placeType;
 
     public Place(final JSONObject json) throws TweetParseException {
+        this.json = json;
+
         // id is required, as it determines the URI of the place
         try {
             id = json.getString(TwitterAPI.PlaceField.ID.toString());
@@ -79,6 +83,10 @@ public class Place {
                 LOGGER.warning("unfamiliar place type: '" + t + "'");
             }
         }
+    }
+
+    public JSONObject getJson() {
+        return json;
     }
 
     public String getCountryCode() {

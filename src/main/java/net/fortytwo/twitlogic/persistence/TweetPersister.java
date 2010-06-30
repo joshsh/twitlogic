@@ -78,6 +78,13 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
         if (null != tweet.getPlace()) {
             Feature f = persistenceContext.persist(tweet.getPlace());
+
+            if (0 == f.getOwlSameAs().size()) {
+                LOGGER.warning("unknown " + tweet.getPlace().getPlaceType().name() + ": " + tweet.getPlace().getJson());
+            } else {
+                LOGGER.fine("familiar " + tweet.getPlace().getPlaceType().name() + ": " + tweet.getPlace().getJson());
+            }
+
             Set<SpatialThing> s = currentMicroblogPost.getLocation();
             s.add(f);
             currentMicroblogPost.setLocation(s);

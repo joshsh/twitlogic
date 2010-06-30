@@ -85,7 +85,7 @@ public class Tweet implements Resource {
 
             JSONObject geoObj = TwitterAPI.getJSONObject(json, TwitterAPI.Field.GEO);
             if (null != geoObj) {
-                LOGGER.info("geo: " + geoObj);
+                //LOGGER.info("geo: " + geoObj);
                 String type = TwitterAPI.getString(geoObj, TwitterAPI.Field.TYPE);
                 if (null == type) {
                     LOGGER.warning("no 'type' for geo object");
@@ -105,7 +105,7 @@ public class Tweet implements Resource {
 
             JSONObject placeObj = TwitterAPI.getJSONObject(json, TwitterAPI.Field.PLACE);
             if (null != placeObj) {
-                LOGGER.info("place: " + placeObj);
+                //LOGGER.info("place: " + placeObj);
                 place = new Place(placeObj);
             }
 
