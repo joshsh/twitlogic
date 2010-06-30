@@ -128,8 +128,7 @@ public class TwitLogicDemo {
                                                                          final TweetStoreConnection c,
                                                                          final TwitterClient client) throws TweetStoreException {
         // Create the tweet persister.
-        boolean persistUnannotatedTweets = true;
-        TweetPersister persister = new TweetPersister(store, c, client, persistUnannotatedTweets);
+        TweetPersister persister = new TweetPersister(store, c, client);
 
         // Add a "topic sniffer".
         TopicSniffer topicSniffer = new TopicSniffer(persister);

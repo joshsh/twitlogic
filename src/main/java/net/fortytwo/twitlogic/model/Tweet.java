@@ -105,6 +105,7 @@ public class Tweet implements Resource {
 
             JSONObject placeObj = TwitterAPI.getJSONObject(json, TwitterAPI.Field.PLACE);
             if (null != placeObj) {
+                LOGGER.info("place: " + placeObj);
                 place = new Place(placeObj);
             }
 

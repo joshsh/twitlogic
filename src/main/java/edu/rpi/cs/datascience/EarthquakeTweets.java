@@ -85,8 +85,7 @@ public class EarthquakeTweets {
                 UserRegistry userRegistry = new UserRegistry(client);
                 TweetStoreConnection c = store.createConnection();
                 try {
-                    boolean persistUnannotatedTweets = true;
-                    TweetPersister baseStatusHandler = new TweetPersister(store, c, client, persistUnannotatedTweets);
+                    TweetPersister baseStatusHandler = new TweetPersister(store, c, client);
 
                     // Create an agent to listen for commands.
                     // Also take the opportunity to memoize users we're following.
