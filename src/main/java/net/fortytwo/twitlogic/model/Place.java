@@ -28,6 +28,7 @@ public class Place {
 
     public enum PlaceType {
         ADMINISTRATIVE_DIVISION("admin", DBpediaResource.ADMINISTRATIVE_DIVISION),
+        COUNTRY("country", DBpediaResource.COUNTRY),
         CITY("city", DBpediaResource.CITY),
         NEIGHBORHOOD("neighborhood", DBpediaResource.NEIGHBORHOOD);
 
@@ -127,5 +128,9 @@ public class Place {
 
     public void setPlaceType(PlaceType placeType) {
         this.placeType = placeType;
+    }
+
+    public String toString() {
+        return name;
     }
 }
