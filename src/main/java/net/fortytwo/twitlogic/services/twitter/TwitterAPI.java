@@ -1,14 +1,16 @@
 package net.fortytwo.twitlogic.services.twitter;
 
-import org.json.JSONObject;
+import net.fortytwo.twitlogic.TwitLogic;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * User: josh
@@ -16,6 +18,8 @@ import java.util.Map;
  * Time: 10:07:42 PM
  */
 public class TwitterAPI {
+    private static final Logger LOGGER = TwitLogic.getLogger(TwitterAPI.class);
+
     // See http://apiwiki.twitter.com/Streaming-API-Documentation#statuses/filter
     public static final int
             TIMELINE_PAGE_COUNT_LIMIT = 200,
@@ -27,6 +31,7 @@ public class TwitterAPI {
     public static final String
             API_FRIENDS_URL = "http://api.twitter.com/1/friends/ids",
             API_LISTS_URL = "http://api.twitter.com/1",
+            API_PLACES_URL = "http://api.twitter.com/1/geo/id/",
             OAUTH_REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
             OAUTH_ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
             OAUTH_AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
@@ -102,6 +107,7 @@ public class TwitterAPI {
     }
 
     public enum PlaceField {
+        CONTAINED_WITHIN("contained_within"),
         COUNTRY_CODE("country_code"),
         FULL_NAME("full_name"),
         ID("id"),
@@ -233,7 +239,7 @@ public class TwitterAPI {
         for (Iterator iter = json.keys(); iter.hasNext();) {
             Object key = iter.next();
             if (!(key instanceof String) || null == Field.valueByName((String) key)) {
-                System.err.println("unexpected field in " + fieldContext + ": " + key);
+                LOGGER.warning("unexpected field '" + key + "' in " + fieldContext + ": " + json);
             }
         }
     }

@@ -16,8 +16,8 @@ import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
-import net.fortytwo.twitlogic.util.CommonHttpClient;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -41,14 +41,19 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private final TweetStoreConnection storeConnection;
     private final ValueFactory valueFactory;
     private final PersistenceContext persistenceContext;
+    private final PlacePersistenceHelper placeHelper;
 
     public TweetPersister(final TweetStore store,
-                          final TweetStoreConnection storeConnection,
-                          final CommonHttpClient httpClient) throws TweetStoreException {
-        this.storeConnection = storeConnection;
+                          final TwitterClient client) throws TweetStoreException {
+        this.storeConnection = store.createConnection();
         this.valueFactory = store.getSail().getValueFactory();
         this.persistenceContext = new PersistenceContext(
                 storeConnection.getElmoManager());
+        this.placeHelper = new PlacePersistenceHelper(persistenceContext, client);
+    }
+
+    public void close() throws TweetStoreException {
+        storeConnection.close();
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
@@ -57,20 +62,29 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                 + " by @" + tweet.getUser().getScreenName()
                 + ": " + tweet.getText());
 
-        boolean hasAnnotations = 0 < tweet.getAnnotations().size();
+        //System.out.println("beginning transaction...");
         storeConnection.begin();
 
-        MicroblogPost currentMicroblogPost = persistenceContext.persist(tweet, hasAnnotations);
-        persistenceContext.persist(tweet.getUser());
+        // begin Elmo operations
 
+        // Since Elmo is not thread-safe, Elmo operations to be carried out by
+        // placeHelper are queued until they can be executed here, in the main
+        // transaction.
         try {
-            storeConnection.commit();
+            placeHelper.flush();
         } catch (TweetStoreException e) {
             throw new TweetHandlerException(e);
         }
 
+        boolean hasAnnotations = 0 < tweet.getAnnotations().size();
+
+        MicroblogPost currentMicroblogPost = persistenceContext.persist(tweet, hasAnnotations);
+        
+        persistenceContext.persist(tweet.getUser());
+
         if (null != tweet.getGeo()) {
             Point p = persistenceContext.persist(tweet.getGeo());
+
             Set<SpatialThing> s = currentMicroblogPost.getLocation();
             s.add(p);
             currentMicroblogPost.setLocation(s);
@@ -78,16 +92,19 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
         if (null != tweet.getPlace()) {
             Feature f = persistenceContext.persist(tweet.getPlace());
-
-            if (0 == f.getOwlSameAs().size()) {
-                LOGGER.info("unknown " + tweet.getPlace().getPlaceType() + ": " + tweet.getPlace().getJson());
-            } else {
-                LOGGER.fine("familiar " + tweet.getPlace().getPlaceType() + ": " + tweet.getPlace().getJson());
-            }
+            placeHelper.checkHierarchy(tweet.getPlace(), f);
 
             Set<SpatialThing> s = currentMicroblogPost.getLocation();
             s.add(f);
             currentMicroblogPost.setLocation(s);
+        }
+
+        // end Elmo operations
+
+        try {
+            storeConnection.commit();
+        } catch (TweetStoreException e) {
+            throw new TweetHandlerException(e);
         }
 
         // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
@@ -99,6 +116,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         if (null != tweet.getRetweetOf()) {
             this.handle(tweet.getRetweetOf());
         }
+
+        //System.out.println("    ...ending transaction");
 
         // Note: these Sail operations are performed outside of the Elmo transaction.  If they were to be
         // carried out inside the transaction, apparently Sesame would kill the thread without throwing
@@ -216,4 +235,5 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         QName q = thing.getQName();
         return valueFactory.createURI(q.getNamespaceURI() + q.getLocalPart());
     }
+
 }

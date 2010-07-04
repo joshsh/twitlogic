@@ -19,6 +19,8 @@ public class TweetStoreConnection {
     private final SailConnection sailConnection;
     private ElmoManager elmoManager;
 
+    private boolean closed;
+
     public TweetStoreConnection(final TweetStore tweetStore) throws TweetStoreException {
         this.tweetStore = tweetStore;
 
@@ -40,7 +42,7 @@ public class TweetStoreConnection {
 
         // Use an active transaction (rather than using auto-commit mode).
         // We will explicitly call commit() and rollback().
-    //    elmoManager.getTransaction().begin();
+        //    elmoManager.getTransaction().begin();
     }
 
     private void closeElmoManager() {
@@ -61,7 +63,7 @@ public class TweetStoreConnection {
                 LOGGER.warning("Elmo transaction is not active.  Creating a new Elmo manager.");
                 createElmoManager();
             }
-            
+
             elmoManager.getTransaction().commit();
         } finally {
             try {
@@ -74,7 +76,7 @@ public class TweetStoreConnection {
 
     public void rollback() throws TweetStoreException {
         try {
-        elmoManager.getTransaction().rollback();
+            elmoManager.getTransaction().rollback();
         } finally {
             try {
                 sailConnection.rollback();
@@ -85,14 +87,20 @@ public class TweetStoreConnection {
     }
 
     public void close() throws TweetStoreException {
-        try {
-            closeElmoManager();
-        } finally {
+        if (!closed) {
+            closed = true;
+
             try {
-                sailConnection.close();
-            } catch (SailException e) {
-                throw new TweetStoreException(e);
+                closeElmoManager();
+            } finally {
+                try {
+                    sailConnection.close();
+                } catch (SailException e) {
+                    throw new TweetStoreException(e);
+                }
             }
+
+            tweetStore.notifyClosed(this);
         }
     }
 }

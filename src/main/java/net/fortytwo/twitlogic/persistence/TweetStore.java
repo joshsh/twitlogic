@@ -43,6 +43,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
@@ -60,6 +65,7 @@ public class TweetStore {
     private ElmoModule adminElmoModule;
     private SesameManagerFactory elmoManagerFactory;
     private boolean initialized = false;
+    final Set<TweetStoreConnection> openConnections;
 
     /**
      * The Sesame storage and inference layer (Sail) will be constructed according to configuration properties.
@@ -75,6 +81,8 @@ public class TweetStore {
             throw new TweetStoreException(e);
         }
         sail = createSail(sailType, configuration);
+
+        openConnections = Collections.synchronizedSet(new HashSet<TweetStoreConnection>());
     }
 
     /**
@@ -84,6 +92,8 @@ public class TweetStore {
     public TweetStore(final Sail sail) {
         this.sail = sail;
         this.configuration = TwitLogic.getConfiguration();
+
+        openConnections = Collections.synchronizedSet(new HashSet<TweetStoreConnection>());
     }
 
     public void initialize() throws TweetStoreException {
@@ -172,6 +182,10 @@ public class TweetStore {
         return new TweetStoreConnection(this);
     }
 
+    void notifyClosed(final TweetStoreConnection c) {
+        openConnections.remove(c);
+    }
+
     public Sail getSail() {
         if (!initialized) {
             throw new IllegalStateException("not yet initialized");
@@ -209,6 +223,13 @@ public class TweetStore {
 //        new Exception().printStackTrace();
 
         // Note: elmoModule doesn't need to be closed or shutDown.
+
+        // Make sure all connections are closed before shutting down the Sail.
+        Collection<TweetStoreConnection> cons = new LinkedList<TweetStoreConnection>();
+        cons.addAll(openConnections);
+        for (TweetStoreConnection c : cons) {
+            c.close();
+        }
 
         try {
             sail.shutDown();

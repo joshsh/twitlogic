@@ -1,11 +1,13 @@
 package net.fortytwo.twitlogic.model;
 
-import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.vocabs.DBpediaResource;
-import org.json.JSONObject;
+import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
@@ -18,50 +20,13 @@ public class Place {
 
     private final JSONObject json;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public enum PlaceType {
-        ADMINISTRATIVE_DIVISION("admin", DBpediaResource.ADMINISTRATIVE_DIVISION),
-        COUNTRY("country", DBpediaResource.COUNTRY),
-        CITY("city", DBpediaResource.CITY),
-        NEIGHBORHOOD("neighborhood", DBpediaResource.NEIGHBORHOOD);
-
-        private final String name;
-        private final String uri;
-
-        private PlaceType(final String name,
-                          final String uri) {
-            this.name = name;
-            this.uri = uri;
-        }
-
-        public static PlaceType lookup(final String name) {
-            for (PlaceType pt : PlaceType.values()) {
-                if (pt.name.equals(name)) {
-                    return pt;
-                }
-            }
-
-            return null;
-        }
-
-        public String getUri() {
-            return uri;
-        }
-    }
-
     private String countryCode;
     private String fullName;
     private String name;
     private String url;
     private String id;
     private PlaceType placeType;
+    private Collection<Place> containedWithin;
 
     public Place(final JSONObject json) throws TweetParseException {
         this.json = json;
@@ -84,10 +49,30 @@ public class Place {
                 LOGGER.warning("unfamiliar place type: '" + t + "'");
             }
         }
+
+        containedWithin = new LinkedList<Place>();
+        JSONArray cw = json.optJSONArray(TwitterAPI.PlaceField.CONTAINED_WITHIN.toString());
+        if (null != cw) {
+            for (int i = 0; i < cw.length(); i++) {
+                try {
+                    containedWithin.add(new Place(cw.getJSONObject(i)));
+                } catch (JSONException e) {
+                    throw new TweetParseException(e);
+                }
+            }
+        }
     }
 
     public JSONObject getJson() {
         return json;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCountryCode() {
@@ -130,7 +115,19 @@ public class Place {
         this.placeType = placeType;
     }
 
-    public String toString() {
-        return name;
+    public Collection<Place> getContainedWithin() {
+        return containedWithin;
+    }
+
+    public void setContainedWithin(Collection<Place> containedWithin) {
+        this.containedWithin = containedWithin;
+    }
+
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    public boolean equals(Object o) {
+        return o instanceof Place && ((Place) o).id.equals(id);
     }
 }

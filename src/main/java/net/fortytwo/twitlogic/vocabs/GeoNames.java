@@ -10,6 +10,7 @@ public interface GeoNames {
 
     public static final String
             COUNTRYCODE = NAMESPACE + "countryCode",
-            FEATURE = NAMESPACE + "Feature";
+            FEATURE = NAMESPACE + "Feature",
+            PARENTFEATURE = NAMESPACE + "parentFeature";
             // TODO: other terms
 }

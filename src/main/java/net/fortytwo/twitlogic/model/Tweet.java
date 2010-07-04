@@ -109,7 +109,11 @@ public class Tweet implements Resource {
                 place = new Place(placeObj);
             }
 
-            id = json.getString(TwitterAPI.Field.ID.toString());
+            id = json.optString(TwitterAPI.Field.ID.toString());
+            // Note: this has happened at least twice before
+            if (null == id) {
+                LOGGER.severe("received a tweet without an ID: " + json);
+            }
 
             // Evidently, these three fields are a unit.
             String inReplyToUserId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));

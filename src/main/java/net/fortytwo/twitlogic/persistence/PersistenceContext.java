@@ -6,6 +6,7 @@ import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.model.PlaceType;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
 import net.fortytwo.twitlogic.persistence.beans.Feature;
@@ -219,7 +220,7 @@ public class PersistenceContext {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private org.openrdf.concepts.rdfs.Class classForPlaceType(final Place.PlaceType type) {
+    private org.openrdf.concepts.rdfs.Class classForPlaceType(final PlaceType type) {
         return designate(type.getUri(), org.openrdf.concepts.rdfs.Class.class);
     }
 

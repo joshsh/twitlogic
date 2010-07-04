@@ -83,24 +83,20 @@ public class EarthquakeTweets {
 
                 TwitterClient client = new TwitterClient();
                 UserRegistry userRegistry = new UserRegistry(client);
-                TweetStoreConnection c = store.createConnection();
-                try {
-                    TweetPersister baseStatusHandler = new TweetPersister(store, c, client);
 
-                    // Create an agent to listen for commands.
-                    // Also take the opportunity to memoize users we're following.
-                    TwitLogicAgent agent = new TwitLogicAgent(client);
-                    Handler<Tweet, TweetHandlerException> statusHandler
-                            = userRegistry.createUserRegistryFilter(
-                            new CommandListener(agent, baseStatusHandler));
+                TweetPersister baseStatusHandler = new TweetPersister(store, client);
 
-                    String[] keywords = {"earthquake"};
-                    client.processTrackFilterStream(keywords, statusHandler);
+                // Create an agent to listen for commands.
+                // Also take the opportunity to memoize users we're following.
+                TwitLogicAgent agent = new TwitLogicAgent(client);
+                Handler<Tweet, TweetHandlerException> statusHandler
+                        = userRegistry.createUserRegistryFilter(
+                        new CommandListener(agent, baseStatusHandler));
 
-                    System.out.println("Done.");
-                } finally {
-                    c.close();
-                }
+                String[] keywords = {"earthquake"};
+                client.processTrackFilterStream(keywords, statusHandler);
+
+                System.out.println("Done.");
             } finally {
                 store.shutDown();
             }

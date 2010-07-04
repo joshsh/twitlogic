@@ -4,6 +4,8 @@ import net.fortytwo.twitlogic.vocabs.DCTerms;
 import net.fortytwo.twitlogic.vocabs.GeoNames;
 import org.openrdf.elmo.annotations.rdf;
 
+import java.util.Set;
+
 /**
  * User: josh
  * Date: Jun 15, 2010
@@ -15,6 +17,11 @@ public interface Feature extends SpatialThing {
     String getCountryCode();
 
     void setCountryCode(String countryCode);
+
+    @rdf(GeoNames.PARENTFEATURE)
+    Set<Feature> getParentFeature();
+
+    void setParentFeature(Set<Feature> parentFeature);
 
     @rdf(DCTerms.TITLE)
     String getTitle();

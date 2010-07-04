@@ -69,31 +69,26 @@ public class TwitLogicDemo {
             // Create a client for communication with Twitter.
             TwitterClient client = new TwitterClient();
 
-            TweetStoreConnection c = store.createConnection();
-            try {
-                Handler<Tweet, TweetHandlerException> annotator
-                        = createAnnotator(store, c, client);
+            Handler<Tweet, TweetHandlerException> annotator
+                    = createAnnotator(store, client);
 
-                // Create an agent to listen for commands.
-                // Also take the opportunity to memoize users we're following.
-                /*
-                TwitLogicAgent agent = new TwitLogicAgent(client);
-                UserRegistry userRegistry = new UserRegistry(client);
-                Handler<Tweet, TweetHandlerException> realtimeStatusHandler
-                        = userRegistry.createUserRegistryFilter(
-                        new CommandListener(agent, annotator));
-                */
+            // Create an agent to listen for commands.
+            // Also take the opportunity to memoize users we're following.
+            /*
+            TwitLogicAgent agent = new TwitLogicAgent(client);
+            UserRegistry userRegistry = new UserRegistry(client);
+            Handler<Tweet, TweetHandlerException> realtimeStatusHandler
+                    = userRegistry.createUserRegistryFilter(
+                    new CommandListener(agent, annotator));
+            */
 
-                Set<User> users = TwitLogic.findFollowList(client);
-                Set<String> terms = TwitLogic.findTrackTerms();
+            Set<User> users = TwitLogic.findFollowList(client);
+            Set<String> terms = TwitLogic.findTrackTerms();
 
-                GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
-                //gatherHistoricalTweets(store, client, users, cal.getTime());
+            GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
+            //gatherHistoricalTweets(store, client, users, cal.getTime());
 
-                client.processFollowFilterStream(users, terms, annotator, 0);
-            } finally {
-                c.close();
-            }
+            client.processFollowFilterStream(users, terms, annotator, 0);
         } finally {
             store.shutDown();
         }
@@ -110,7 +105,7 @@ public class TwitLogicDemo {
                     try {
                         // Note: don't run old tweets through the command listener, or
                         // TwitLogic will respond, annoyingly, to old commands.
-                        client.processTimelineFrom(users, startTime, new Date(), createAnnotator(store, c, client));
+                        client.processTimelineFrom(users, startTime, new Date(), createAnnotator(store, client));
                     } finally {
                         c.close();
                     }
@@ -121,14 +116,13 @@ public class TwitLogicDemo {
             }
         });
 
-        t.start();        
+        t.start();
     }
 
     private static Handler<Tweet, TweetHandlerException> createAnnotator(final TweetStore store,
-                                                                         final TweetStoreConnection c,
                                                                          final TwitterClient client) throws TweetStoreException {
         // Create the tweet persister.
-        TweetPersister persister = new TweetPersister(store, c, client);
+        TweetPersister persister = new TweetPersister(store, client);
 
         // Add a "topic sniffer".
         TopicSniffer topicSniffer = new TopicSniffer(persister);

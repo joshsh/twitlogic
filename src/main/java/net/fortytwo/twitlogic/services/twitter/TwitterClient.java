@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.services.twitter;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.TweetParseException;
 import net.fortytwo.twitlogic.model.User;
@@ -24,17 +25,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.io.FileInputStream;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * User: josh
@@ -104,6 +105,17 @@ public class TwitterClient extends CommonHttpClient {
 
         // TODO: rate limiting
         updateAPIClient = new DefaultRequestExecutor();
+    }
+
+    public Place fetchPlace(final String id) throws TwitterClientException {
+        HttpGet request = new HttpGet(TwitterAPI.API_PLACES_URL + id + ".json");
+
+        JSONObject object = requestJSONObject(request);
+        try {
+            return new Place(object);
+        } catch (TweetParseException e) {
+            throw new TwitterClientException(e);
+        }
     }
 
     public void requestUserTimeline(final User user,
