@@ -12,5 +12,6 @@ public interface DBpediaResource {
             ADMINISTRATIVE_DIVISION = BASE_URI + "Administrative_division",
             CITY = BASE_URI + "City",
             COUNTRY = BASE_URI + "Country",
-            NEIGHBORHOOD = BASE_URI + "Neighbourhood";  // Note: spelled with 'ou'
+            NEIGHBORHOOD = BASE_URI + "Neighbourhood",  // Note: spelled with 'ou'
+            POINT_OF_INTEREST = BASE_URI + "Point_of_interest";
 }

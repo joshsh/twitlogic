@@ -40,7 +40,7 @@ public class SparqlQueryRepresentation extends OutputRepresentation {
                     //System.out.println("media type: " + this.getMediaType());
                     SparqlTools.SparqlResultFormat format
                             = SparqlTools.SparqlResultFormat.lookup(this.getMediaType());
-                    SparqlTools.queryAndWriteJSON(query, sc, out, limit, format);
+                    SparqlTools.executeQuery(query, sc, out, limit, format);
                 } catch (QueryException e) {
                     e.printStackTrace();
                     throw new IOException(e);

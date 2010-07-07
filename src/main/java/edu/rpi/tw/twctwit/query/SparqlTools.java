@@ -125,11 +125,11 @@ public class SparqlTools {
         }
     }
 
-    public static void queryAndWriteJSON(final String queryStr,
-                                         final SailConnection sc,
-                                         final OutputStream out,
-                                         final int limit,
-                                         final SparqlResultFormat format) throws QueryException {
+    public static void executeQuery(final String queryStr,
+                                    final SailConnection sc,
+                                    final OutputStream out,
+                                    final int limit,
+                                    final SparqlResultFormat format) throws QueryException {
         TupleQueryResultWriter w;
 
         switch (format) {
@@ -189,7 +189,7 @@ public class SparqlTools {
                 try {
                     SailConnection sc = c.getSailConnection();
 
-                    queryAndWriteJSON(GOLD_TWEETS_QUERY, sc, System.out, 100, SparqlResultFormat.JSON);
+                    executeQuery(GOLD_TWEETS_QUERY, sc, System.out, 100, SparqlResultFormat.JSON);
                     //queryAndWriteJSON(ISWC_STATEMENTS_QUERY, sc, System.out);
                 } finally {
                     c.close();
