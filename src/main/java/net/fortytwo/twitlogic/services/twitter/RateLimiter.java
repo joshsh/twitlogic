@@ -21,51 +21,14 @@ public class RateLimiter {
     // Note: should be greater than 0.
     private static final long MINIMUM_WAIT = 2000;
 
-    private static final long HOUR = 3600000;
-
-    private final long[] timestamps;
-    private int currentIndex;
     private int remainingRequests = -1;
-    private long timeOfLastRequest;
+    private long timeOfLastRequest = 0;
     private long resetTime;
     private int limit;
 
-    public RateLimiter() {
-        timestamps = new long[TwitterAPI.DEFAULT_REST_API_REQUESTS_PER_HOUR_LIMIT];
-        for (int i = 0; i < timestamps.length; i++) {
-            timestamps[i] = 0;
-        }
-
-        currentIndex = 0;
-    }
-
-    // Enforce a wait of at least MINIMUM_WAIT between subsequent requests,
-    // and make no more than the specified limit of requests per hour.
-    public void throttleRequestOld() throws InterruptedException {
-        long last = timestamps[currentIndex];
-        currentIndex = (currentIndex + 1) % timestamps.length;
-        long then = timestamps[currentIndex];
-        long now = new Date().getTime();
-
-        long wait = HOUR - (now - then);
-        if (wait > 0) {
-            LOGGER.info("rate limit of " + TwitterAPI.DEFAULT_REST_API_REQUESTS_PER_HOUR_LIMIT
-                    + " requests/hour reached. Waiting " + wait + "ms");
-            Thread.sleep(wait);
-            now += wait;
-        } else if (now - last < MINIMUM_WAIT) {
-            wait = MINIMUM_WAIT;
-            LOGGER.fine("waiting " + wait + "ms before issuing this request");
-            Thread.sleep(wait);
-            now += wait;
-        }
-
-        timestamps[currentIndex] = now;
-    }
-
     // Enforce a wait of at least MINIMUM_WAIT between subsequent requests,
     // and observe the number of remaining requests allowed by Twitter.
-    public void throttleRequest() throws InterruptedException {
+    public synchronized void throttleRequest() throws InterruptedException {
         long now = new Date().getTime();
 
         if (0 == remainingRequests) {
@@ -88,7 +51,7 @@ public class RateLimiter {
         timeOfLastRequest = now;
     }
 
-    public void updateRateLimitStatus(final HttpResponse response) {
+    public synchronized void updateRateLimitStatus(final HttpResponse response) {
         if (5 == response.getStatusLine().getStatusCode() / 100) {
             LOGGER.fine("did not attempt to update rate limit status, due to "
                     + response.getStatusLine().getStatusCode()
