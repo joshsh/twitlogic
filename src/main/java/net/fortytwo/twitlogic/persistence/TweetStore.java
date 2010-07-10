@@ -11,9 +11,9 @@ import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
-import net.fortytwo.twitlogic.persistence.sail.AllegroSailFactory;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
+import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
 import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
@@ -359,7 +359,8 @@ public class TweetStore {
         } else if (sailType.equals(NativeStore.class.getName())) {
             factory = new NativeStoreFactory(props);
         } else if (sailType.equals(AllegroSail.class.getName())) {
-            factory = new AllegroSailFactory(props);
+            //factory = new AllegroSailFactory(props);
+            factory = new NewAllegroSailFactory(props);
         } else {
             throw new TweetStoreException("unhandled Sail type: " + sailType);
         }

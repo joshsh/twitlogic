@@ -178,7 +178,12 @@
             <artifactId>agsail</artifactId>
             <version>3.3</version>
         </dependency>
-        
+        <dependency>
+            <groupId>com.franz.ag</groupId>
+            <artifactId>agrepo</artifactId>
+            <version>4.0.5</version> 
+        </dependency>
+                         
         <!-- temporary? -->
         <dependency>
             <groupId>edu.rpi.tw</groupId>
