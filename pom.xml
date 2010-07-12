@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
     <name>TwitLogic</name>
     <description>real-time #SemanticWeb in &lt;= 140 chars</description>
-                                  
+
     <repositories>
         <repository>
             <id>fortytwo</id>
@@ -78,6 +78,17 @@
         </dependency>-->
 
         <!-- Sesame RDF -->
+        <dependency>
+            <groupId>net.fortytwo.sesametools</groupId>
+            <artifactId>reposail</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!-- temporary -->
+        <dependency>
+            <groupId>net.fortytwo.sesametools</groupId>
+            <artifactId>replay</artifactId>
+            <version>1.0</version>
+        </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-ntriples</artifactId>
@@ -181,9 +192,9 @@
         <dependency>
             <groupId>com.franz.ag</groupId>
             <artifactId>agrepo</artifactId>
-            <version>4.0.5</version> 
+            <version>4.0.5</version>
         </dependency>
-                         
+
         <!-- temporary? -->
         <dependency>
             <groupId>edu.rpi.tw</groupId>

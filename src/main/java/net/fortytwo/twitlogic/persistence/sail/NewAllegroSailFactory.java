@@ -3,14 +3,19 @@ package net.fortytwo.twitlogic.persistence.sail;
 import com.franz.agraph.repository.AGCatalog;
 import com.franz.agraph.repository.AGRepository;
 import com.franz.agraph.repository.AGServer;
+import net.fortytwo.sesametools.replay.RecorderSail;
+import net.fortytwo.sesametools.reposail.RepositorySail;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.SailFactory;
-import net.fortytwo.twitlogic.persistence.sail.reposail.RepositorySail;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.repository.Repository;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailException;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 
 /**
  * User: josh
@@ -41,6 +46,15 @@ public class NewAllegroSailFactory extends SailFactory {
         Sail sail = new RepositorySail(repo);
         sail.initialize();
 
-        return sail;
+        File logFile = new File("/tmp/twitlogic-ag-sail.log");
+        Sail recorderSail;
+        try {
+            recorderSail = new RecorderSail(sail, new FileOutputStream(logFile));
+        } catch (FileNotFoundException e) {
+            throw new SailException(e);
+        }
+
+        //return sail;
+        return recorderSail;
     }
 }
