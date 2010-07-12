@@ -151,6 +151,7 @@ public class TwitterAPI {
         FAVORITES_COUNT("favourites_count"),
         FOLLOWERS_COUNT("followers_count"),
         FOLLOWING("following"),
+        FOLLOW_REQUEST_SENT("follow_request_sent"),
         FRIENDS_COUNT("friends_count"),
         GEO("geo"),
         GEO_ENABLED("geo_enabled"),

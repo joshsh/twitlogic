@@ -16,6 +16,7 @@ public class User implements Resource {
     private final String description;
     //private final Integer favoritesCount;
     //private final Integer followersCount;
+    //private final Integer followRequestSent;
     //private final Integer friendsCount;
     private final boolean geoEnabled;
     private final Integer id;
