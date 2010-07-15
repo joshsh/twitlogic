@@ -53,7 +53,7 @@ function hide_provenance() {
 function select_ohyeah_tweets(r) {
     $.ajax({
         type: "GET",
-        url: "../../sparql", // SPARQL service URL
+        url: SPARQL_SERVICE_URL, // SPARQL service URL
         //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: sparql_query(tweets_query(r.graphs)), // query parameter
         beforeSend: function(xhr) {
@@ -91,7 +91,7 @@ function select_ohyeah_tweets(r) {
 function build_facets() {
     $.ajax({
         type: "GET",
-        url: "../../sparql", // SPARQL service URL
+        url: SPARQL_SERVICE_URL, // SPARQL service URL
         //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
@@ -124,7 +124,7 @@ function build_facets() {
 function build_inverse_facets() {
     $.ajax({
         type: "GET",
-        url: "../../sparql", // SPARQL service URL
+        url: SPARQL_SERVICE_URL, // SPARQL service URL
         //        data: "query=" + encodeURIComponent(RESOURCE_URI), // query parameter
         data: "query=" + encodeURIComponent(
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +

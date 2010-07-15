@@ -9,13 +9,12 @@ import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.SailFactory;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
-import org.openrdf.repository.Repository;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailException;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 /**
  * User: josh
@@ -41,7 +40,7 @@ public class NewAllegroSailFactory extends SailFactory {
 
         AGCatalog cat = new AGCatalog(server, catName);
 
-        Repository repo = new AGRepository(cat, name);
+        AGRepository repo = new AGRepository(cat, name);
 
         Sail sail = new RepositorySail(repo);
         sail.initialize();

@@ -19,7 +19,6 @@ public class TweetSyntax {
             LEADCHAR = Pattern.compile("[\\s\"\'\\(\\{\\{]"),
             FOLLOWCHAR = Pattern.compile("[\\s.,?!:;\"\'\\)\\}\\]]");
 
-
     public static Set<String> findHashtags(final String text) {
         Set<String> hashtags = new HashSet<String>();
 
