@@ -1,10 +1,13 @@
 package edu.rpi.tw.twctwit.query;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import org.openrdf.sail.SailException;
 import org.restlet.Context;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.resource.Representation;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 
 import java.util.logging.Logger;
@@ -40,6 +43,7 @@ public class SparqlResource extends QueryResource {
             = TwitLogic.getLogger(SparqlResource.class);
 
     private final String query;
+    private Representation representation;
 
     public SparqlResource(final Context context,
                           final Request request,
@@ -69,7 +73,13 @@ public class SparqlResource extends QueryResource {
     }
 
     @Override
-    public Representation represent(final Variant variant) {
-        return new SparqlQueryRepresentation(query, sail, readLimit(), variant.getMediaType());
+    public Representation represent(final Variant variant) throws ResourceException {
+        try {
+            return new SparqlQueryRepresentation(query, sail, readLimit(), variant.getMediaType());
+        }  catch (QueryException e) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
+        } catch (SailException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        }
     }
 }

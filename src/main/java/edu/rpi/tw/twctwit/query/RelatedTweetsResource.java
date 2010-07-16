@@ -17,7 +17,9 @@ import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.resource.Representation;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 
 import java.util.Collection;
@@ -81,7 +83,7 @@ public class RelatedTweetsResource extends QueryResource {
             "}\n" +
             "ORDER BY DESC ( ?timestamp )";
 
-    private final Representation result;
+    private final String query;
 
     public RelatedTweetsResource(final Context context,
                                  final Request request,
@@ -91,24 +93,23 @@ public class RelatedTweetsResource extends QueryResource {
         getVariants().add(new Variant(MediaType.APPLICATION_JSON));
 
         //try {
-            String resource = arguments.get(RESOURCE_PARAM);
+        String resource = arguments.get(RESOURCE_PARAM);
 
-            String after = readAfter();
+        String after = readAfter();
 
-            //System.out.println("resource: " + resource);
-            //System.out.println("after: " + after);
+        //System.out.println("resource: " + resource);
+        //System.out.println("after: " + after);
 
-            if (null == resource) {
-                throw new IllegalArgumentException("missing '" + RESOURCE_PARAM + "' parameter");
-            }
+        if (null == resource) {
+            throw new IllegalArgumentException("missing '" + RESOURCE_PARAM + "' parameter");
+        }
 
-            /*String query = TWEETS_WITH_TOPIC_QUERY
-           .replace(TOPIC_PLACEHOLDER, resource)
-           .replace(MIN_TIMESTAMP_PLACEHOLDER, after);*/
-            String query = alternativesQuery(new URIImpl(resource), after);
-            //System.out.println("query = " + query);
+        /*String query = TWEETS_WITH_TOPIC_QUERY
+       .replace(TOPIC_PLACEHOLDER, resource)
+       .replace(MIN_TIMESTAMP_PLACEHOLDER, after);*/
+        query = alternativesQuery(new URIImpl(resource), after);
+        //System.out.println("query = " + query);
 
-            result = new SparqlQueryRepresentation(query, sail, readLimit(), SparqlTools.SparqlResultFormat.JSON.getMediaType());
         //} catch (Throwable t) {
         //    t.printStackTrace();
         //    throw t;
@@ -168,7 +169,13 @@ public class RelatedTweetsResource extends QueryResource {
     }
 
     @Override
-    public Representation represent(final Variant variant) {
-        return result;
+    public Representation represent(final Variant variant) throws ResourceException {
+        try {
+            return new SparqlQueryRepresentation(query, sail, readLimit(), SparqlTools.SparqlResultFormat.JSON.getMediaType());
+        } catch (QueryException e) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
+        } catch (SailException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        }
     }
 }
