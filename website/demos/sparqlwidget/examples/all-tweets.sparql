@@ -1,0 +1,23 @@
+# The widget will replace the LIMIT and the time filter with appropriate values.
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX sioc: <http://rdfs.org/sioc/ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+# Add more namespace definitions as needed
+
+SELECT DISTINCT ?tweet ?createdAt ?text ?screenName ?profileImage ?place ?placeName WHERE {
+### begin application-specific patterns ###
+
+#### end application-specific patterns ####
+    ?tweet dc:created ?createdAt .
+    ?tweet sioc:content ?text .
+    ?tweet sioc:has_creator ?account .
+    ?account sioc:id ?screenName .
+    ?account sioc:account_of ?agent .
+    OPTIONAL { ?agent foaf:depiction ?profileImage . } .
+    OPTIONAL { ?tweet geo:location ?place .
+               ?place dc:title ?placeName . } .
+    # TIME FILTER #
+} ORDER BY DESC(?createdAt)
+# LIMIT #

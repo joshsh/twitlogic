@@ -82,8 +82,8 @@ TwitLogic.SparqlWidget = function(settings) {
         el.appendChild(wrapperEl);
         wrapperEl.setAttribute("class", "tl-tweet-contents");
         el.setAttribute("style", 0 == totalTweets % 2
-                ? "background: " + settings.appearance.alternateColor1
-                : "background: " + settings.appearance.alternateColor2);
+                ? "background: " + settings.appearance.tweet.backgroundColor1
+                : "background: " + settings.appearance.tweet.backgroundColor2);
 
         var avatarEl = document.createElement("div");
         wrapperEl.appendChild(avatarEl);
@@ -277,8 +277,8 @@ TwitLogic.SparqlWidget = function(settings) {
 
     function updateTweets() {
         var q = settings.query.sparqlQuery
-                .replace("[LASTTIME]", latestTimestamp)
-                .replace("[LIMIT]", settings.appearance.maxVisibleTweets);
+                .replace("# TIME FILTER #", "FILTER(?createdAt > \"" + latestTimestamp + "\"^^xsd:dateTime) .")
+                .replace("# LIMIT #", "LIMIT " + settings.appearance.maxVisibleTweets);
         //alert("issuing query: " + q);
         queryForTweets(q);
     }
@@ -332,7 +332,11 @@ TwitLogic.SparqlWidget = function(settings) {
         if (4 == code / 100) {
             status.appendChild(document.createTextNode("Client error"));
         } else if (5 == code / 100) {
-            status.appendChild(document.createTextNode("Server error"));
+            if (503 == code) {
+                status.appendChild(document.createTextNode("Server unavailable"));
+            } else {
+                status.appendChild(document.createTextNode("Server error"));
+            }
         } else {
             status.appendChild(document.createTextNode("Error code " + code));
         }
@@ -344,7 +348,7 @@ TwitLogic.SparqlWidget = function(settings) {
         errorLink.setAttribute("class", "tl-error-link");
         errorLink.setAttribute("href", "#");
         errorLink.onclick = function() {
-            alert("Error response " + request.status + " from server:\n\n" + request.responseText);
+            alert("Error response " + request.status + " from server.\n\n" + request.responseText);
         };
         errorLink.appendChild(document.createTextNode("click for details"));
 
@@ -356,10 +360,16 @@ TwitLogic.SparqlWidget = function(settings) {
     function buildWidget() {
         var widget = document.createElement("div");
         widget.setAttribute("class", "tl-widget");
+        widget.style.color = settings.appearance.shell.textColor;
+        widget.style.width = "" + settings.appearance.width + "px";
 
         var doc = document.createElement("div");
         widget.appendChild(doc);
         doc.setAttribute("class", "tl-widget-contents");
+        if (null != settings.appearance.shell.headerImage) {
+            doc.style.backgroundImage = "url(" + settings.appearance.shell.headerImage + ")";
+        }
+        doc.style.backgroundColor = settings.appearance.shell.backgroundColor;
 
         var header = document.createElement("div");
         doc.appendChild(header);
@@ -389,6 +399,8 @@ TwitLogic.SparqlWidget = function(settings) {
         body.appendChild(timeline);
         timeline.setAttribute("class", "tl-tweet-container");
         timeline.style.overflowY = settings.appearance.scroll ? "auto" : "hidden";
+        timeline.style.height = "" + settings.appearance.height + "px";
+        timeline.style.backgroundColor = settings.appearance.tweet.backgroundColor1;
 
         tweetStack = document.createElement("div");
         timeline.appendChild(tweetStack);
@@ -397,6 +409,10 @@ TwitLogic.SparqlWidget = function(settings) {
         var footer = document.createElement("div");
         doc.appendChild(footer);
         footer.setAttribute("class", "tl-footer");
+        if (null != settings.appearance.shell.footerImage) {
+            footer.style.backgroundImage = "url(" + settings.appearance.shell.footerImage + ")";
+        }
+        footer.style.backgroundColor = settings.appearance.shell.backgroundColor;
 
         //        <a href="http://twitter.com" target="_blank">
         //            <img id="twitlogic-logo" height="14" src="images/twitlogic-minilogo.png" alt="TwitLogic">
@@ -408,11 +424,11 @@ TwitLogic.SparqlWidget = function(settings) {
         var aboutLink = document.createElement("a");
         about.appendChild(aboutLink);
         aboutLink.setAttribute("class", "tl-about-link");
-        // FIXME
-        aboutLink.setAttribute("href", "http://www.w3.org/TR/rdf-sparql-query/");
+        aboutLink.setAttribute("href", "http://twitlogic.fortytwo.net");
         aboutLink.setAttribute("target", "_blank");
         aboutLink.appendChild(document.createTextNode("TwitLogic"));
-
+        aboutLink.style.backgroundColor = settings.appearance.shell.backgroundColor;
+        
         return widget;
     }
 
@@ -425,8 +441,13 @@ TwitLogic.SparqlWidget = function(settings) {
         start: function() {
             latestTimestamp = "2000-01-01T00:00:00.000Z";
             totalTweets = 0;
-            updateTweets();
-            setInterval(updateTweets, settings.query.updateInterval);
+
+            $.get(settings.query.sparqlQueryUrl, '', function(data) {
+                //alert(data);
+                settings.query.sparqlQuery = data;
+                updateTweets();
+                setInterval(updateTweets, settings.query.updateInterval);
+            });
         }
     };
 }

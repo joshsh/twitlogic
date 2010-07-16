@@ -10,8 +10,6 @@
 
 .tl-widget {
     font-family: "lucida grande", lucida, tahoma, helvetica, arial, sans-serif;
-    color: #FFFFFF;
-    width: 400px;
 }
 
 .tl-widget h3 {
@@ -30,7 +28,7 @@
 }
 
 .tl-widget-contents {
-    background: url("../images/header-sparkly-blue.png") repeat-x scroll 0 0 #0031E2;
+    background: repeat-x scroll 0 0;
     padding: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -49,9 +47,7 @@
 }
 
 .tl-tweet-container {
-    background: #FFFFFF;
     overflow-x: hidden;
-    height: 300px;
     padding: 0;
     margin: 0;
 }
@@ -62,7 +58,7 @@
 }
 
 .tl-footer {
-    background: url("../images/footer-sparkly-blue.png") repeat-x scroll 0 0 #0031E2;
+    background: repeat-x scroll 0 0;
     position: relative;
     padding-top: 5px;
     height: 10px;
@@ -76,7 +72,6 @@
     font-weight: bold;
     text-decoration: none;
     color: #FFFFFF;
-    background: #0031E2;
 }
 
 .tl-about-link:hover {
