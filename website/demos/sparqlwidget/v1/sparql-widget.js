@@ -411,7 +411,7 @@ TwitLogic.SparqlWidget = function(settings) {
         // FIXME
         aboutLink.setAttribute("href", "http://www.w3.org/TR/rdf-sparql-query/");
         aboutLink.setAttribute("target", "_blank");
-        aboutLink.appendChild(document.createTextNode("SPARQL powered"));
+        aboutLink.appendChild(document.createTextNode("TwitLogic"));
 
         return widget;
     }

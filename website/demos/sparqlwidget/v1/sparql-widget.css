@@ -10,22 +10,8 @@
 
 .tl-widget {
     font-family: "lucida grande", lucida, tahoma, helvetica, arial, sans-serif;
-    width: 500px;
-}
-
-.tl-widget-contents {
-    background: url("../images/header-sparkly-blue.png") repeat-x scroll 0 0 #0031E2;
-    padding: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
-}
-
-.tl-header {
     color: #FFFFFF;
-    padding-top: 0;
-    padding-bottom: 5px;
-    position: relative;
+    width: 400px;
 }
 
 .tl-widget h3 {
@@ -43,8 +29,23 @@
     width: auto !important;
 }
 
+.tl-widget-contents {
+    background: url("../images/header-sparkly-blue.png") repeat-x scroll 0 0 #0031E2;
+    padding: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.tl-header {
+    padding-top: 0;
+    padding-bottom: 5px;
+    position: relative;
+}
+
 .tl-body {
     padding: 0;
+    color: #000000;
 }
 
 .tl-tweet-container {
@@ -71,10 +72,10 @@
     position: absolute;
     top: 5px;
     right: 0;
-    color: #FFFFFF;
     font-size: 10px;
     font-weight: bold;
     text-decoration: none;
+    color: #FFFFFF;
     background: #0031E2;
 }
 
