@@ -1,6 +1,5 @@
 package net.fortytwo.twitlogic.persistence;
 
-import com.knowledgereefsystems.agsail.AllegroSail;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
@@ -358,7 +357,7 @@ public class TweetStore {
             factory = new MemoryStoreFactory(props);
         } else if (sailType.equals(NativeStore.class.getName())) {
             factory = new NativeStoreFactory(props);
-        } else if (sailType.equals(AllegroSail.class.getName())) {
+        } else if (sailType.equals("com.knowledgereefsystems.agsail.AllegroSail")) {
             //factory = new AllegroSailFactory(props);
             factory = new NewAllegroSailFactory(props);
         } else {

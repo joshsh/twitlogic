@@ -26,12 +26,9 @@ public class TwitLogic {
 
     // Configuration property keys
     public static final String
-            ALLEGROSAIL_DIRECTORY = "net.fortytwo.twitlogic.persistence.allegroSailDirectory",
             ALLEGROSAIL_HOST = "net.fortytwo.twitlogic.persistence.allegroSailHost",
             ALLEGROSAIL_NAME = "net.fortytwo.twitlogic.persistence.allegroSailName",
             ALLEGROSAIL_CATALOG_NAME = "net.fortytwo.twitlogic.persistence.allegroSailCatalogName",
-            ALLEGROSAIL_PORT = "net.fortytwo.twitlogic.persistence.allegroSailPort",
-            ALLEGROSAIL_START = "net.fortytwo.twitlogic.persistence.allegroSailStart",
             ALLEGROSAIL_USERNAME = "net.fortytwo.twitlogic.persistence.allegroSailUserName",
             ALLEGROSAIL_PASSWORD = "net.fortytwo.twitlogic.persistence.allegroSailPassword",
             BITLY_APIKEY = "net.fortytwo.twitlogic.services.bitly.apiKey",

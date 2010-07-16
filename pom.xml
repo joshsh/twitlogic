@@ -184,11 +184,11 @@
         </dependency>
 
         <!-- Additional Sails -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.franz.ag</groupId>
             <artifactId>agsail</artifactId>
             <version>3.3</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.franz.ag</groupId>
             <artifactId>agrepo</artifactId>

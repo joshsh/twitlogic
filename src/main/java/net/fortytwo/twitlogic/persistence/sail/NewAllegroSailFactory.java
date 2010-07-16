@@ -15,6 +15,7 @@ import org.openrdf.sail.SailException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.logging.Logger;
 
 /**
  * User: josh
@@ -22,6 +23,8 @@ import java.io.FileOutputStream;
  * Time: 8:39:35 PM
  */
 public class NewAllegroSailFactory extends SailFactory {
+    private static final Logger LOGGER = TwitLogic.getLogger(NewAllegroSailFactory.class);
+
     /**
      * @param conf configuration properties for the Sail
      */
@@ -36,6 +39,9 @@ public class NewAllegroSailFactory extends SailFactory {
         String userName = conf.getString(TwitLogic.ALLEGROSAIL_USERNAME);
         String password = conf.getString(TwitLogic.ALLEGROSAIL_PASSWORD);
 
+        LOGGER.info("connecting to AllegroGraph triple store \"" + name + "\""
+                + " in catalog \"" + catName + "\""
+                + " on host " + host);
         AGServer server = new AGServer(host, userName, password);
 
         AGCatalog cat = new AGCatalog(server, catName);
