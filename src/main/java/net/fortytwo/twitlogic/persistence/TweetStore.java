@@ -126,6 +126,7 @@ public class TweetStore {
         elmoManagerFactory
                 = new SesameManagerFactory(adminElmoModule, repository);
         elmoManagerFactory.setQueryLanguage(QueryLanguage.SPARQL);
+        elmoManagerFactory.setInferencingEnabled(false);
 
         addPeriodicDump();
 
