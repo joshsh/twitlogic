@@ -6,6 +6,8 @@ import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
+import net.fortytwo.twitlogic.logging.TweetReceivedLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,14 +56,17 @@ public class PlacesDemo {
             TwitterClient client = new TwitterClient();
 
             TweetPersister p = new TweetPersister(store, client);
-
+            TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), p);
+            
             TweetFilterCriterion crit = new TweetFilterCriterion();
             crit.setAllowsTweetsWithPlace(true);
-            Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, p);
+            Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, pLogger);
 
-            client.processSampleStream(f);
+            TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), f);
+            client.processSampleStream(rLogger);
         } finally {
             store.shutDown();
         }
     }
+
 }

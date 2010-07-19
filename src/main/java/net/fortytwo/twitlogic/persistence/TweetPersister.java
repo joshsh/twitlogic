@@ -42,6 +42,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private final ValueFactory valueFactory;
     private final PersistenceContext persistenceContext;
     private final PlacePersistenceHelper placeHelper;
+    private final TwitterClient client;
 
     public TweetPersister(final TweetStore store,
                           final TwitterClient client) throws TweetStoreException {
@@ -50,6 +51,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         this.persistenceContext = new PersistenceContext(
                 storeConnection.getElmoManager());
         this.placeHelper = new PlacePersistenceHelper(persistenceContext, client);
+        this.client = client;
     }
 
     public void close() throws TweetStoreException {

@@ -46,6 +46,7 @@ public class TwitLogic {
             SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",
             SERVER_PORT = "net.fortytwo.twitlogic.server.port",
             SERVER_STATICCONTENTDIRECTORY = "net.fortytwo.twitlogic.server.staticContentDirectory",
+            LOGGING_STATSINTERVAL = "net.fortytwo.twitlogic.logging.statsInterval",
             TRACKTERMS = "net.fortytwo.twitlogic.trackTerms",
             TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitter.accessToken",
             TWITTER_ACCESS_TOKEN_SECRET = "net.fortytwo.twitlogic.twitter.accessTokenSecret",

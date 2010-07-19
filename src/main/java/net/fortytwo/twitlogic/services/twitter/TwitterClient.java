@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.services.twitter;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.logging.TweetStatistics;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Tweet;
@@ -8,6 +9,7 @@ import net.fortytwo.twitlogic.model.TweetParseException;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.errors.UnauthorizedException;
 import net.fortytwo.twitlogic.util.CommonHttpClient;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import org.apache.http.HttpEntity;
@@ -36,6 +38,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * User: josh
@@ -50,6 +54,7 @@ public class TwitterClient extends CommonHttpClient {
     private final RequestExecutor restAPIClient;
     private final RequestExecutor streamingAPIClient;
     private final RequestExecutor updateAPIClient;
+    private final TweetStatistics statistics;
 
     public TwitterClient() throws TwitterClientException {
         /*
@@ -58,6 +63,25 @@ public class TwitterClient extends CommonHttpClient {
         System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
         System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
         //*/
+
+        statistics = new TweetStatistics();
+        TimerTask logStatistics = new TimerTask() {
+            public void run() {
+                statistics.logAndClear();
+            }
+        };
+        long l;
+        try {
+            l = TwitLogic.getConfiguration().getLong(TwitLogic.LOGGING_STATSINTERVAL, 0);
+        } catch (PropertyException e) {
+            throw new TwitterClientException(e);
+        }
+        if (0 == l) {
+            LOGGER.warning("no value given for stats logging interval. Statistics will not be generated");
+        } else {
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(logStatistics, l, l);
+        }
 
         credentials = new TwitterCredentials();
         credentials.loadCredentials();
@@ -105,6 +129,10 @@ public class TwitterClient extends CommonHttpClient {
 
         // TODO: rate limiting
         updateAPIClient = new DefaultRequestExecutor();
+    }
+
+    public TweetStatistics getStatistics() {
+        return statistics;
     }
 
     public Place fetchPlace(final String id) throws TwitterClientException {

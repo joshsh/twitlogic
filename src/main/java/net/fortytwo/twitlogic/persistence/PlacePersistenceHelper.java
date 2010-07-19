@@ -22,12 +22,16 @@ public class PlacePersistenceHelper {
 
     private final PlaceMappingQueue<TweetStoreException> placeMappingQueue;
     private final ConcurrentBuffer<Place, TweetStoreException> buffer;
+    private final TwitterClient client;
 
     public PlacePersistenceHelper(final PersistenceContext pContext,
                                   final TwitterClient client) throws TweetStoreException {
+        this.client = client;
+
         Handler<Place, TweetStoreException> placeMappingHandler = new Handler<Place, TweetStoreException>() {
             public boolean handle(final Place p) throws TweetStoreException {
                 //System.out.println("received this place: " + p.getJson());
+                client.getStatistics().placeDereferenced(p);
 
                 if (0 < p.getContainedWithin().size()) {
                     Feature f = pContext.persist(p);
@@ -59,6 +63,8 @@ public class PlacePersistenceHelper {
         if (0 == f.getOwlSameAs().size()
                 && 0 == f.getParentFeature().size()) {
             LOGGER.info("queueing unknown " + p.getPlaceType() + ": " + p.getJson());
+            client.getStatistics().placeQueued(p);
+
             return placeMappingQueue.offer(p.getId());
         } else {
             LOGGER.fine("familiar " + p.getPlaceType() + ": " + p.getJson());
