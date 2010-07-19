@@ -48,7 +48,8 @@ public class NewAllegroSailFactory extends SailFactory {
 
         AGRepository repo = new AGRepository(cat, name);
 
-        Sail sail = new RepositorySail(repo);
+        RepositorySail sail = new RepositorySail(repo);
+        sail.disableInference();
         sail.initialize();
 
         File logFile = new File("/tmp/twitlogic-ag-sail.log");
