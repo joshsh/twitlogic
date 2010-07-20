@@ -43,7 +43,7 @@ public class TweetStatistics {
 
     public void placeDereferenced(final Place place) {
         placesDereferenced++;
-        placesByType[PlaceType.CITY.ordinal()]++;
+        placesByType[place.getPlaceType().ordinal()]++;
     }
 
     public void clear() {
