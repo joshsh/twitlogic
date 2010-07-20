@@ -1,8 +1,8 @@
 package net.fortytwo.twitlogic.services.twitter;
 
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.logging.TweetStatistics;
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.logging.TweetStatistics;
 import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.TweetParseException;
@@ -240,7 +240,8 @@ public class TwitterClient extends CommonHttpClient {
 
         setEntity(request, formParams);
 
-        continuousStream(request, handler);
+        StatusStreamParser.ExitReason r = continuousStream(request, handler);
+        LOGGER.fine("done processing stream (" + r + ")");
     }
 
     ////////////////////////////////////////////////////////////////////////////

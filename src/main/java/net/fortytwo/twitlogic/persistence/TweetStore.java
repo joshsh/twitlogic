@@ -47,6 +47,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Timer;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
@@ -68,7 +69,7 @@ public class TweetStore {
 
     /**
      * The Sesame storage and inference layer (Sail) will be constructed according to configuration properties.
-     * 
+     *
      * @throws TweetStoreException
      */
     public TweetStore() throws TweetStoreException {
@@ -85,7 +86,6 @@ public class TweetStore {
     }
 
     /**
-     *
      * @param sail a Sesame storage and inference layer
      */
     public TweetStore(final Sail sail) {
@@ -148,7 +148,7 @@ public class TweetStore {
                     String s = file.getName();
                     if (s.endsWith(".gz")) {
                         compressed = true;
-                        s = s.substring(0, s.length() - ".gz".length());
+                        s = s.substring(0, s.length() - ".gz" .length());
                     }
 
                     int i = s.lastIndexOf('.');
@@ -160,15 +160,9 @@ public class TweetStore {
                         if (null == format) {
                             LOGGER.warning("dump file format not recognized. Periodic data dumps will not be generated.");
                         } else {
-                            try {
-                                try {
-                                    new Thread(new PeriodicDumpfileGenerator(this, file, format, compressed, interval)).start();
-                                } catch (IOException e) {
-                                    throw new TweetStoreException(e);
-                                }
-                            } catch (PropertyException e) {
-                                throw new TweetStoreException(e);
-                            }
+                            new Timer().schedule(
+                                    new DumpFileGeneratorTask(this, file, format, compressed),
+                                    interval, interval);
                         }
                     }
                 }
@@ -220,7 +214,7 @@ public class TweetStore {
         }
 
         LOGGER.info("shutting down TwitLogic local store");
-//        new Exception().printStackTrace();
+        //new Exception().printStackTrace();
 
         // Note: elmoModule doesn't need to be closed or shutDown.
 
@@ -391,7 +385,7 @@ public class TweetStore {
                         baseURI, RDFFormat.TURTLE, TwitLogic.CORE_GRAPH);
                 rc.add(TwitLogic.class.getResourceAsStream("twitterplaces.ttl"),
                         baseURI, RDFFormat.TURTLE, TwitLogic.CORE_GRAPH);
-                
+
                 rc.commit();
             } finally {
                 rc.close();
