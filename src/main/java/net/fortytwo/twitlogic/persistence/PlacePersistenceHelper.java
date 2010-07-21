@@ -4,6 +4,7 @@ import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.ConcurrentBuffer;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Place;
+import net.fortytwo.twitlogic.model.PlaceType;
 import net.fortytwo.twitlogic.persistence.beans.Feature;
 import net.fortytwo.twitlogic.services.twitter.PlaceMappingQueue;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
@@ -60,8 +61,9 @@ public class PlacePersistenceHelper {
     public boolean checkHierarchy(final Place p,
                                   final Feature f) {
         // Note: for now, links in the hierarchy are established once, and never updated.
-        if (0 == f.getOwlSameAs().size()
-                && 0 == f.getParentFeature().size()) {
+        if (0 == f.getParentFeature().size() && PlaceType.COUNTRY != p.getPlaceType()) {
+        //if (0 == f.getOwlSameAs().size()
+        //        && 0 == f.getParentFeature().size()) {
             LOGGER.info("queueing unknown " + p.getPlaceType() + ": " + p.getJson());
             client.getStatistics().placeQueued(p);
 
