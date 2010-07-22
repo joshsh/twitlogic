@@ -162,6 +162,7 @@ public class TwitterAPI {
         IN_REPLY_TO_USER_ID("in_reply_to_user_id"),
         LANG("lang"),
         LIMIT("limit"),
+        LISTED_COUNT("listed_count"),
         LOCATION("location"),
         NAME("name"),
         NOTIFICATIONS("notifications"),

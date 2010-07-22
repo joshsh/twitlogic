@@ -21,6 +21,7 @@ public class User implements Resource {
     private final boolean geoEnabled;
     private final Integer id;
     //private final String language;
+    //private final String listedCount;
     private final String location;
     private final String name;
     //private final String notifications; // Appropriate data type unknown.
