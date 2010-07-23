@@ -3,6 +3,7 @@ package net.fortytwo.twitlogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
@@ -88,7 +89,8 @@ public class TwitLogicDemo {
             GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
             //gatherHistoricalTweets(store, client, users, cal.getTime());
 
-            client.processFollowFilterStream(users, terms, annotator, 0);
+            TweetDeleter d = new TweetDeleter(store);
+            client.processFollowFilterStream(users, terms, annotator, d, 0);
         } finally {
             store.shutDown();
         }

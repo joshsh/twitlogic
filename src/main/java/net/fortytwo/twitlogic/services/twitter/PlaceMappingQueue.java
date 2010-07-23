@@ -60,7 +60,7 @@ public class PlaceMappingQueue<E extends Exception> {
                     }
                 }
             }
-        });
+        }, "place mapping queue");
         t.start();
     }
 

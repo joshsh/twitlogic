@@ -5,6 +5,7 @@ import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.TwitLogicAgent;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
@@ -85,6 +86,7 @@ public class EarthquakeTweets {
                 UserRegistry userRegistry = new UserRegistry(client);
 
                 TweetPersister baseStatusHandler = new TweetPersister(store, client);
+                TweetDeleter d = new TweetDeleter(store);
 
                 // Create an agent to listen for commands.
                 // Also take the opportunity to memoize users we're following.
@@ -94,7 +96,7 @@ public class EarthquakeTweets {
                         new CommandListener(agent, baseStatusHandler));
 
                 String[] keywords = {"earthquake"};
-                client.processTrackFilterStream(keywords, statusHandler);
+                client.processTrackFilterStream(keywords, statusHandler, d);
 
                 System.out.println("Done.");
             } finally {

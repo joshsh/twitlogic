@@ -26,12 +26,30 @@ public class StatusStreamParser {
 
     private static final Logger LOGGER = TwitLogic.getLogger(StatusStreamParser.class);
 
-    private final Handler<Tweet, TweetHandlerException> statusHandler;
+    private final Handler<Tweet, TweetHandlerException> addHandler;
+    private final Handler<Tweet, TweetHandlerException> deleteHandler;
     private final boolean recoverFromErrors;
 
-    public StatusStreamParser(final Handler<Tweet, TweetHandlerException> statusHandler,
+    /*
+    public StatusStreamParser(final Handler<Tweet, TweetHandlerException> addHandler,
                               final boolean recoverFromErrors) {
-        this.statusHandler = statusHandler;
+        this.addHandler = addHandler;
+        this.deleteHandler = null;
+        this.recoverFromErrors = recoverFromErrors;
+    }*/
+
+    /**
+     * A streaming parser to receive and handle incoming status updates from Twitter
+     *
+     * @param addHandler        a handler for normal status updates
+     * @param deleteHandler     a handler for "delete" requests
+     * @param recoverFromErrors whether to tolerate per-tweet errors (e.g. badly-formatted status updates)
+     */
+    public StatusStreamParser(final Handler<Tweet, TweetHandlerException> addHandler,
+                              final Handler<Tweet, TweetHandlerException> deleteHandler,
+                              final boolean recoverFromErrors) {
+        this.addHandler = addHandler;
+        this.deleteHandler = deleteHandler;
         this.recoverFromErrors = recoverFromErrors;
     }
 
@@ -102,9 +120,25 @@ public class StatusStreamParser {
         }
     }
 
-    private boolean handleDeleteStatusElement(final JSONObject el) {
-        LOGGER.info("skipping 'delete' status element");
-        return true;
+    private boolean handleDeleteStatusElement(final JSONObject el) throws TweetParseException, TweetHandlerException {
+        if (null == deleteHandler) {
+            LOGGER.info("skipping 'delete' status element");
+            return true;
+        } else {
+            Tweet status;
+            try {
+                status = new Tweet(el
+                        .getJSONObject(TwitterAPI.Field.DELETE.toString())
+                        .getJSONObject(TwitterAPI.Field.STATUS.toString())
+                        .getString(TwitterAPI.Field.ID.toString()));
+            } catch (JSONException e) {
+                throw new TweetParseException(e);
+            } catch (NullPointerException e) {
+                throw new TweetParseException(e);
+            }
+            
+            return deleteHandler.handle(status);
+        }
     }
 
     private boolean handleLimitStatusElement(final JSONObject el) {
@@ -117,9 +151,6 @@ public class StatusStreamParser {
         // check on the generated JSON object to see whether it is
         // an "interesting" status update (and discarding it if not)
         // before going on to parse all of its fields.
-        Tweet status;
-        status = new Tweet(el);
-
-        return statusHandler.handle(status);
+        return addHandler.handle(new Tweet(el));
     }
 }

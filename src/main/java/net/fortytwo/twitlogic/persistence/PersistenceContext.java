@@ -18,6 +18,7 @@ import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManager;
+import org.openrdf.elmo.Entity;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;
@@ -216,6 +217,17 @@ public class PersistenceContext {
         }*/
 
         return f;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public MicroblogPost find(final Tweet tweet) {
+        Entity e = manager.find(new QName(uriOf(tweet)));
+        return null == e
+                ? null
+                : e instanceof MicroblogPost
+                ? (MicroblogPost) e
+                : null;
     }
 
     ////////////////////////////////////////////////////////////////////////////

@@ -79,7 +79,7 @@ public class TwitterClient extends CommonHttpClient {
         if (0 == l) {
             LOGGER.warning("no value given for stats logging interval. Statistics will not be generated");
         } else {
-            Timer timer = new Timer();
+            Timer timer = new Timer("tweet statistics logger");
             timer.scheduleAtFixedRate(logStatistics, l, l);
         }
 
@@ -162,13 +162,16 @@ public class TwitterClient extends CommonHttpClient {
         requestStatusArray(request, handler);
     }
 
-    public void processSampleStream(final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+    public void processSampleStream(final Handler<Tweet, TweetHandlerException> addHandler,
+                                    final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
         HttpGet request = new HttpGet(TwitterAPI.STREAM_STATUSES_SAMPLE_URL);
 
-        continuousStream(request, handler);
+        continuousStream(request, addHandler, deleteHandler);
     }
 
-    public void processTrackFilterStream(final String[] keywords, final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+    public void processTrackFilterStream(final String[] keywords,
+                                         final Handler<Tweet, TweetHandlerException> addHandler,
+                                         final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
         if (keywords.length > TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT) {
             throw new IllegalArgumentException("the default access level allows up to "
                     + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
@@ -182,7 +185,7 @@ public class TwitterClient extends CommonHttpClient {
 
         setEntity(request, formParams);
 
-        continuousStream(request, handler);
+        continuousStream(request, addHandler, deleteHandler);
     }
 
 
@@ -198,7 +201,8 @@ public class TwitterClient extends CommonHttpClient {
 
     public void processFollowFilterStream(final Collection<User> users,
                                           final Collection<String> terms,
-                                          final Handler<Tweet, TweetHandlerException> handler,
+                                          final Handler<Tweet, TweetHandlerException> addHandler,
+                                          final Handler<Tweet, TweetHandlerException> deleteHandler,
                                           final int previousStatusCount) throws TwitterClientException {
         if (0 == users.size() && 0 == terms.size()) {
             throw new TwitterClientException("no users to follow and no keywords to track!  Set " + TwitLogic.FOLLOWLIST + " and related properties in your configuration");
@@ -240,7 +244,7 @@ public class TwitterClient extends CommonHttpClient {
 
         setEntity(request, formParams);
 
-        StatusStreamParser.ExitReason r = continuousStream(request, handler);
+        StatusStreamParser.ExitReason r = continuousStream(request, addHandler, deleteHandler);
         LOGGER.fine("done processing stream (" + r + ")");
     }
 
@@ -576,11 +580,12 @@ public class TwitterClient extends CommonHttpClient {
     }
 
     private StatusStreamParser.ExitReason continuousStream(final HttpUriRequest request,
-                                                           final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+                                                           final Handler<Tweet, TweetHandlerException> addHandler,
+                                                           final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
         long lastWait = 0;
         while (true) {
             long timeOfLastRequest = System.currentTimeMillis();
-            StatusStreamParser.ExitReason exit = singleStreamRequest(request, handler);
+            StatusStreamParser.ExitReason exit = singleStreamRequest(request, addHandler, deleteHandler);
             long wait;
             switch (exit) {
                 case END_OF_INPUT:
@@ -614,7 +619,8 @@ public class TwitterClient extends CommonHttpClient {
     }
 
     private StatusStreamParser.ExitReason singleStreamRequest(final HttpUriRequest request,
-                                                              final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+                                                              final Handler<Tweet, TweetHandlerException> addHandler,
+                                                              final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
         sign(request);
         HttpResponse response;
 
@@ -628,7 +634,7 @@ public class TwitterClient extends CommonHttpClient {
             HttpEntity responseEntity = response.getEntity();
             try {
                 boolean recoverFromErrors = true;
-                return new StatusStreamParser(handler, recoverFromErrors).parse(responseEntity.getContent());
+                return new StatusStreamParser(addHandler, deleteHandler, recoverFromErrors).parse(responseEntity.getContent());
             } catch (IOException e) {
                 throw new TwitterClientException(e);
             } catch (TweetHandlerException e) {
