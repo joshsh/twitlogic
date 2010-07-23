@@ -1,6 +1,10 @@
 package net.fortytwo.twitlogic.model;
 
-import net.fortytwo.twitlogic.vocabs.DBpediaResource;
+import net.fortytwo.twitlogic.persistence.beans.AdministrativeDivision;
+import net.fortytwo.twitlogic.persistence.beans.City;
+import net.fortytwo.twitlogic.persistence.beans.Country;
+import net.fortytwo.twitlogic.persistence.beans.Neighborhood;
+import net.fortytwo.twitlogic.persistence.beans.PointOfInterest;
 
 /**
  * User: josh
@@ -8,19 +12,21 @@ import net.fortytwo.twitlogic.vocabs.DBpediaResource;
  * Time: 2:57:07 PM
  */
 public enum PlaceType {
-    ADMINISTRATIVE_DIVISION("admin", DBpediaResource.ADMINISTRATIVE_DIVISION),
-    COUNTRY("country", DBpediaResource.COUNTRY),
-    CITY("city", DBpediaResource.CITY),
-    NEIGHBORHOOD("neighborhood", DBpediaResource.NEIGHBORHOOD),
-    POINT_OF_INTEREST("poi", DBpediaResource.POINT_OF_INTEREST);
+    ADMINISTRATIVE_DIVISION("admin", AdministrativeDivision.class),
+    COUNTRY("country", Country.class),
+    CITY("city", City.class),
+    NEIGHBORHOOD("neighborhood", Neighborhood.class),
+    POINT_OF_INTEREST("poi", PointOfInterest.class);
 
     private final String name;
-    private final String uri;
+    private Class elmoClass;
+    //private final String uri;
 
     PlaceType(final String name,
-              final String uri) {
+              final Class elmoClass) {
         this.name = name;
-        this.uri = uri;
+        this.elmoClass = elmoClass;
+        //this.uri = uri;
     }
 
     public static PlaceType lookup(final String name) {
@@ -33,7 +39,11 @@ public enum PlaceType {
         return null;
     }
 
-    public String getUri() {
-        return uri;
+    public Class getElmoClass() {
+        return elmoClass;
     }
+
+    //public String getUri() {
+    //    return uri;
+    //}
 }

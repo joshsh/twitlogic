@@ -1,13 +1,18 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.persistence.beans.AdministrativeDivision;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
+import net.fortytwo.twitlogic.persistence.beans.City;
+import net.fortytwo.twitlogic.persistence.beans.Country;
 import net.fortytwo.twitlogic.persistence.beans.Document;
 import net.fortytwo.twitlogic.persistence.beans.Feature;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
+import net.fortytwo.twitlogic.persistence.beans.Neighborhood;
 import net.fortytwo.twitlogic.persistence.beans.Point;
+import net.fortytwo.twitlogic.persistence.beans.PointOfInterest;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
@@ -112,16 +117,21 @@ public class TweetStore {
         adminElmoModule.addConcept(ObjectProperty.class);  // Dunno why this is necessary, but Elmo logs warnings without it
 
         // TwitLogic-specific classes
+        adminElmoModule.addConcept(AdministrativeDivision.class);
         adminElmoModule.addConcept(Agent.class);
-        adminElmoModule.addConcept(org.openrdf.concepts.rdfs.Class.class);
+        adminElmoModule.addConcept(City.class);
+        adminElmoModule.addConcept(Country.class);
         adminElmoModule.addConcept(Document.class);
         adminElmoModule.addConcept(Feature.class);
         adminElmoModule.addConcept(Graph.class);
         adminElmoModule.addConcept(Image.class);
         adminElmoModule.addConcept(MicroblogPost.class);
+        adminElmoModule.addConcept(Neighborhood.class);
         adminElmoModule.addConcept(Point.class);
+        adminElmoModule.addConcept(PointOfInterest.class);
         adminElmoModule.addConcept(SpatialThing.class);
         adminElmoModule.addConcept(User.class);
+        adminElmoModule.addConcept(org.openrdf.concepts.rdfs.Class.class);
 
         elmoManagerFactory
                 = new SesameManagerFactory(adminElmoModule, repository);

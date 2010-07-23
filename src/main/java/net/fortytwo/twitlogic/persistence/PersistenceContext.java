@@ -6,7 +6,6 @@ import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
-import net.fortytwo.twitlogic.model.PlaceType;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
 import net.fortytwo.twitlogic.persistence.beans.Feature;
@@ -182,7 +181,7 @@ public class PersistenceContext {
     }
 
     public Feature persist(final Place place) {
-        Feature f = designate(uriOf(place), Feature.class);
+        Feature f = (Feature) designate(uriOf(place), place.getPlaceType().getElmoClass());
 
         if (null != place.getName()) {
             f.setRdfsLabel(place.getName());
@@ -205,6 +204,7 @@ public class PersistenceContext {
             f.setCountryCode(place.getCountryCode());
         }
 
+        /*
         if (null != place.getPlaceType()) {
             org.openrdf.concepts.rdfs.Class c = classForPlaceType(place.getPlaceType());
 
@@ -213,16 +213,16 @@ public class PersistenceContext {
                 types.add(c);
                 f.setRdfTypes(types);
             }
-        }
+        }*/
 
         return f;
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private org.openrdf.concepts.rdfs.Class classForPlaceType(final PlaceType type) {
-        return designate(type.getUri(), org.openrdf.concepts.rdfs.Class.class);
-    }
+    //private org.openrdf.concepts.rdfs.Class classForPlaceType(final PlaceType type) {
+    //    return designate(type.getUri(), org.openrdf.concepts.rdfs.Class.class);
+    //}
 
     private User userForUser(final net.fortytwo.twitlogic.model.User user) {
         return designate(uriOf(user), User.class);
