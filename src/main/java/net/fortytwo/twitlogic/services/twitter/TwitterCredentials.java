@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -37,6 +38,10 @@ public class TwitterCredentials {
     private final String password;
 
     public static void main(final String[] args) throws Exception {
+        Properties props = new Properties();
+        props.load(new FileInputStream("/tmp/twitlogic.properties"));
+        TwitLogic.setConfiguration(props);
+
         TwitterCredentials c = new TwitterCredentials();
         c.deriveCredentials();
     }
@@ -44,9 +49,9 @@ public class TwitterCredentials {
     public TwitterCredentials() throws TwitterClientException {
         String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY, null);
         String consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET, null);
-        if (true) {
-        //if (null == consumerKey || null == consumerSecret) {
-            LOGGER.fine("no Twitter OAuth credentials have been supplied. Attempting to use basic authentication.");
+
+        if (null == consumerKey || null == consumerSecret) {
+            LOGGER.warning("no Twitter OAuth credentials have been supplied. Attempting to use basic authentication.");
             useOAuth = false;
             consumer = null;
             provider = null;

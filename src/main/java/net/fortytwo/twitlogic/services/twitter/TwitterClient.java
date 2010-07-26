@@ -46,7 +46,6 @@ import java.util.TimerTask;
  * Date: Oct 2, 2009
  * Time: 2:54:04 PM
  */
-// TODO: keep track of # of requests, for reasons of rate-limiting
 public class TwitterClient extends CommonHttpClient {
     private final TwitterCredentials credentials;
 
