@@ -36,6 +36,7 @@ public class User implements Resource {
     //private final boolean? profileUseBackgroundImage;
     //private final Boolean isProtected; // Note: field name is "protected"
     private final String screenName;
+    //private final boolean showAllInlineMedia;
     //private final Tweet status;
     //private final Integer statusesCount;
     //private final String timeZone;

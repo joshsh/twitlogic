@@ -179,6 +179,7 @@ public class TwitterAPI {
         PROTECTED("protected"),
         RETWEETED_STATUS("retweeted_status"),
         SCREEN_NAME("screen_name"),
+        SHOW_ALL_INLINE_MEDIA("show_all_inline_media"),
         SOURCE("source"),
         STATUS("status"),
         STATUSES_COUNT("statuses_count"),

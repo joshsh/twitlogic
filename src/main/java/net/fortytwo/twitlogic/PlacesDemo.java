@@ -9,6 +9,7 @@ import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.server.TwitLogicServer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,6 +54,8 @@ public class PlacesDemo {
 
         //store.dumpToFile(new File("/tmp/places-demo-dump.nt"), RDFFormat.NTRIPLES);
 
+        new TwitLogicServer(store);
+        
         try {
             TwitterClient client = new TwitterClient();
 
