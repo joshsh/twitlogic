@@ -5,6 +5,7 @@ import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.TwitLogicAgent;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
@@ -29,7 +30,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * User: josh
@@ -95,8 +98,10 @@ public class EarthquakeTweets {
                         = userRegistry.createUserRegistryFilter(
                         new CommandListener(agent, baseStatusHandler));
 
-                String[] keywords = {"earthquake"};
-                client.processTrackFilterStream(keywords, statusHandler, d);
+                Set<User> users = new HashSet<User>();
+                Set<String> terms = new HashSet<String>();
+                terms.add("earthquake");
+                client.processFilterStream(users, terms, statusHandler, d, 0);
 
                 System.out.println("Done.");
             } finally {

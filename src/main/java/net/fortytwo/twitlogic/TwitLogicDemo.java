@@ -90,7 +90,7 @@ public class TwitLogicDemo {
             //gatherHistoricalTweets(store, client, users, cal.getTime());
 
             TweetDeleter d = new TweetDeleter(store);
-            client.processFollowFilterStream(users, terms, annotator, d, 0);
+            client.processFilterStream(users, terms, annotator, d, 0);
         } finally {
             store.shutDown();
         }

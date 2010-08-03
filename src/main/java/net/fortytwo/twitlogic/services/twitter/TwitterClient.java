@@ -168,26 +168,6 @@ public class TwitterClient extends CommonHttpClient {
         continuousStream(request, addHandler, deleteHandler);
     }
 
-    public void processTrackFilterStream(final String[] keywords,
-                                         final Handler<Tweet, TweetHandlerException> addHandler,
-                                         final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
-        if (keywords.length > TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT) {
-            throw new IllegalArgumentException("the default access level allows up to "
-                    + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
-                    + " track keywords (you have tried to use " + keywords.length + ")");
-        }
-
-        HttpPost request = new HttpPost(TwitterAPI.STREAM_STATUSES_FILTER_URL);
-
-        List<NameValuePair> formParams = new ArrayList<NameValuePair>();
-        formParams.add(new BasicNameValuePair("track", commaDelimit(keywords)));
-
-        setEntity(request, formParams);
-
-        continuousStream(request, addHandler, deleteHandler);
-    }
-
-
     private static String[] userIds(final Collection<User> users) {
         String[] ids = new String[users.size()];
         int i = 0;
@@ -198,11 +178,11 @@ public class TwitterClient extends CommonHttpClient {
         return ids;
     }
 
-    public void processFollowFilterStream(final Collection<User> users,
-                                          final Collection<String> terms,
-                                          final Handler<Tweet, TweetHandlerException> addHandler,
-                                          final Handler<Tweet, TweetHandlerException> deleteHandler,
-                                          final int previousStatusCount) throws TwitterClientException {
+    public void processFilterStream(final Collection<User> users,
+                                    final Collection<String> terms,
+                                    final Handler<Tweet, TweetHandlerException> addHandler,
+                                    final Handler<Tweet, TweetHandlerException> deleteHandler,
+                                    final int previousStatusCount) throws TwitterClientException {
         if (0 == users.size() && 0 == terms.size()) {
             throw new TwitterClientException("no users to follow and no keywords to track!  Set " + TwitLogic.FOLLOWLIST + " and related properties in your configuration");
         }
