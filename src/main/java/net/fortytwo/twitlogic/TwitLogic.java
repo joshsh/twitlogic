@@ -119,9 +119,9 @@ public class TwitLogic {
         try {
             LogManager.getLogManager().readConfiguration(resourceAsStream);
         } catch (SecurityException e) {
-            e.printStackTrace();
+            throw new ExceptionInInitializerError(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ExceptionInInitializerError(e);
         }
 
         LOGGER = getLogger(TwitLogic.class);
@@ -171,7 +171,7 @@ public class TwitLogic {
     }
 
     public static String getVersion() {
-        return "0.1";
+        return "0.6";
     }
 
     public static TypedProperties getConfiguration() {
