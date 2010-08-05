@@ -34,7 +34,7 @@ public class PlaceMappingQueue<E extends Exception> {
         this.inQueue = new LinkedBlockingQueue<String>(capacity);
         this.placeIdsSet = Collections.synchronizedSet(new HashSet<String>());
 
-        Thread t = new Thread(new Runnable() {
+        Runnable r = new Runnable() {
             public void run() {
                 try {
                     while (!closed) {
@@ -49,7 +49,12 @@ public class PlaceMappingQueue<E extends Exception> {
                         }
 
                         try {
-                            if (!resultHandler.handle(client.fetchPlace(id))) {
+                            // Make an HTTP request for the place
+                            Place p = client.fetchPlace(id);
+
+                            // Handle the result
+                            if (!resultHandler.handle(p)) {
+                                LOGGER.fine("closing place mapping queue");
                                 closed = true;
                             }
                         } catch (TwitterClientException e) {
@@ -62,14 +67,14 @@ public class PlaceMappingQueue<E extends Exception> {
                     e.printStackTrace(System.err);
                 }
             }
-        }
+        };
 
-                , "place mapping queue");
-        t.start();
+        new Thread(r, "place mapping queue").start();
     }
 
     public boolean offer(final String id) {
         if (closed) {
+            LOGGER.warning("place mapping queue is closed. Discarding current item.");
             return false;
         } else if (placeIdsSet.size() >= capacity) {
             LOGGER.fine("place mapping queue is full. Discarding current item.");
