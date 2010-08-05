@@ -19,7 +19,8 @@ public class RateLimiter {
     private static final Logger LOGGER = TwitLogic.getLogger(RateLimiter.class);
 
     // Note: should be greater than 0.
-    private static final long MINIMUM_WAIT = 2000;
+    // For a whitelisted client, Twitter allows 20,000 requests per hour, or one request every 180ms.
+    private static final long MINIMUM_WAIT = 180;
 
     private int remainingRequests = -1;
     private long timeOfLastRequest = 0;
