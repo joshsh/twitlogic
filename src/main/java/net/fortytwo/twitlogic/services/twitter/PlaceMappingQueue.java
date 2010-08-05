@@ -20,7 +20,7 @@ public class PlaceMappingQueue<E extends Exception> {
     protected static final Logger LOGGER = TwitLogic.getLogger(PlaceMappingQueue.class);
 
     // Don't monopolize the Twitter API request quota.
-    private static final int CAPACITY = TwitterAPI.DEFAULT_REST_API_REQUESTS_PER_HOUR_LIMIT / 2;
+    private final int capacity;
 
     private final BlockingQueue<String> inQueue;
 
@@ -30,44 +30,48 @@ public class PlaceMappingQueue<E extends Exception> {
 
     public PlaceMappingQueue(final TwitterClient client,
                              final Handler<Place, E> resultHandler) {
-        this.inQueue = new LinkedBlockingQueue<String>(CAPACITY);
+        capacity = client.getLimits().getRestApiRequestsPerHourLimit() / 2;
+        this.inQueue = new LinkedBlockingQueue<String>(capacity);
         this.placeIdsSet = Collections.synchronizedSet(new HashSet<String>());
 
         Thread t = new Thread(new Runnable() {
             public void run() {
-                while (!closed) {
-                    String id;
-                    
-                    try {
-                        id = dequeue();
-                    } catch (InterruptedException e) {
-                        LOGGER.severe("runnable was interrupted. Queue will quit. ");
-                        closed = true;
-                        continue;
-                    }
+                try {
+                    while (!closed) {
+                        String id;
 
-                    try {
-                        if (!resultHandler.handle(client.fetchPlace(id))) {
+                        try {
+                            id = dequeue();
+                        } catch (InterruptedException e) {
+                            LOGGER.severe("runnable was interrupted. Queue will quit. ");
                             closed = true;
+                            continue;
                         }
-                    } catch (TwitterClientException e) {
-                        LOGGER.warning("caught Twitter client error, will attempt to recover. Stack trace follows.");
-                        e.printStackTrace(System.err);
-                    } catch (Exception e) {
-                        LOGGER.severe("caught error. Queue will quit. Stack trace follows.");
-                        e.printStackTrace(System.err);
-                        closed = true;
+
+                        try {
+                            if (!resultHandler.handle(client.fetchPlace(id))) {
+                                closed = true;
+                            }
+                        } catch (TwitterClientException e) {
+                            LOGGER.warning("caught Twitter client error, will attempt to recover. Stack trace follows.");
+                            e.printStackTrace(System.err);
+                        }
                     }
+                } catch (Throwable e) {
+                    LOGGER.severe("caught error. Queue will quit. Stack trace follows.");
+                    e.printStackTrace(System.err);
                 }
             }
-        }, "place mapping queue");
+        }
+
+                , "place mapping queue");
         t.start();
     }
 
-    public boolean offer(String id) {
+    public boolean offer(final String id) {
         if (closed) {
             return false;
-        } else if (placeIdsSet.size() >= CAPACITY) {
+        } else if (placeIdsSet.size() >= capacity) {
             LOGGER.fine("place mapping queue is full. Discarding current item.");
             return false;
         } else return placeIdsSet.add(id) && inQueue.add(id);

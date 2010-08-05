@@ -92,7 +92,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
         if (null != tweet.getPlace()) {
             Feature f = persistenceContext.persist(tweet.getPlace());
-            placeHelper.checkHierarchy(tweet.getPlace(), f);
+            placeHelper.submit(tweet.getPlace(), f);
 
             Set<SpatialThing> s = currentMicroblogPost.getLocation();
             s.add(f);

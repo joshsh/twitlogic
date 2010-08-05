@@ -55,7 +55,25 @@ public class TwitterClient extends CommonHttpClient {
     private final RequestExecutor updateAPIClient;
     private final TweetStatistics statistics;
 
+    private final TwitterAPILimits limits;
+
     public TwitterClient() throws TwitterClientException {
+        this(getWhitelisted());
+    }
+
+    private static boolean getWhitelisted() throws TwitterClientException {
+        try {
+            return TwitLogic.getConfiguration().getBoolean(TwitLogic.TWITTER_WHITELISTED, false);
+        } catch (PropertyException e) {
+            throw new TwitterClientException(e);
+        }
+    }
+
+    private TwitterClient(final boolean whitelisted) throws TwitterClientException {
+        LOGGER.info("instantiating "
+                + (whitelisted ? "whitelisted" : "default")
+                + " Twitter client");
+
         /*
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
@@ -85,8 +103,12 @@ public class TwitterClient extends CommonHttpClient {
         credentials = new TwitterCredentials();
         credentials.loadCredentials();
 
+        limits = whitelisted
+                ? TwitterAPILimits.WHITELIST_LIMITS
+                : TwitterAPILimits.DEFAULT_LIMITS;
+
         restAPIClient = new RequestExecutor() {
-            private final RateLimiter rateLimiter = new RateLimiter();
+            private final RateLimiter rateLimiter = new RateLimiter(limits);
             private final HttpClient client = createClient(false);
 
             public HttpResponse execute(HttpUriRequest request) throws TwitterClientException {
@@ -128,6 +150,10 @@ public class TwitterClient extends CommonHttpClient {
 
         // TODO: rate limiting
         updateAPIClient = new DefaultRequestExecutor();
+    }
+
+    public TwitterAPILimits getLimits() {
+        return limits;
     }
 
     public TweetStatistics getStatistics() {
@@ -187,15 +213,15 @@ public class TwitterClient extends CommonHttpClient {
             throw new TwitterClientException("no users to follow and no keywords to track!  Set " + TwitLogic.FOLLOWLIST + " and related properties in your configuration");
         }
 
-        if (users.size() > TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT) {
+        if (users.size() > limits.getFollowUserIdsLimit()) {
             LOGGER.warning("the default access level allows up to "
-                    + TwitterAPI.DEFAULT_FOLLOW_USERIDS_LIMIT
+                    + limits.getFollowUserIdsLimit()
                     + " follow userids (you are attempting to use " + users.size() + ")");
         }
 
-        if (terms.size() > TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT) {
+        if (terms.size() > limits.getTrackKeywordsLimit()) {
             LOGGER.warning("the default access level allows up to "
-                    + TwitterAPI.DEFAULT_TRACK_KEYWORDS_LIMIT
+                    + limits.getTrackKeywordsLimit()
                     + " tracked keywords (you are attempting to use " + terms.size() + ")");
         }
 
@@ -331,7 +357,7 @@ public class TwitterClient extends CommonHttpClient {
         // Note: no need to authenticate
         HttpGet request = new HttpGet(TwitterAPI.USER_TIMELINE_URL
                 + "/" + user.getScreenName() + ".json"
-                + "?page=" + page + "&count=" + TwitterAPI.TIMELINE_PAGE_COUNT_LIMIT);
+                + "?page=" + page + "&count=" + limits.getTimelinePageCountLimit());
 
         JSONArray array = requestJSONArray(request);
         //System.out.println(array);
@@ -361,8 +387,8 @@ public class TwitterClient extends CommonHttpClient {
             private int statuses = 0;
 
             public boolean handle(final Tweet tweet) throws TweetHandlerException {
-                if (++statuses >= TwitterAPI.STATUSES_LIMIT) {
-                    LOGGER.warning("maximum number (" + TwitterAPI.STATUSES_LIMIT
+                if (++statuses >= limits.getStatusesLimit()) {
+                    LOGGER.warning("maximum number (" + limits.getStatusesLimit()
                             + ") of statuses retrieved for user " + user.getScreenName());
                 }
 

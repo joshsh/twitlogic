@@ -27,6 +27,12 @@ public class RateLimiter {
     private long resetTime;
     private int limit;
 
+    private final TwitterAPILimits limits;
+
+    public RateLimiter(TwitterAPILimits limits) {
+        this.limits = limits;
+    }
+
     // Enforce a wait of at least MINIMUM_WAIT between subsequent requests,
     // and observe the number of remaining requests allowed by Twitter.
     public synchronized void throttleRequest() throws InterruptedException {
@@ -93,7 +99,6 @@ public class RateLimiter {
         int limit = h_lim.length == 1 ? Integer.valueOf(h_lim[0].getValue()) : -1;
         int rem = h_rem.length == 1 ? Integer.valueOf(h_rem[0].getValue()) : -1;
         long res = h_res.length == 1 ? Long.valueOf(h_res[0].getValue()) : -1;
-        LOGGER.info("rate limit: " + limit + ", remaining: " + rem + ", resets at: " + new Date(res * 1000));
+        LOGGER.fine("rate limit: " + limit + ", remaining: " + rem + ", resets at: " + new Date(res * 1000));
     }
-
 }

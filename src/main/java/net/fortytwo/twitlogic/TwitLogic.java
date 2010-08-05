@@ -41,7 +41,7 @@ public class TwitLogic {
             FOLLOWLIST = "net.fortytwo.twitlogic.followList",
             FOLLOWUSER = "net.fortytwo.twitlogic.followUser",
             NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
-            NATIVESTORE_INDEXES   = "net.fortytwo.twitlogic.persistence.nativeStoreIndexes",
+            NATIVESTORE_INDEXES = "net.fortytwo.twitlogic.persistence.nativeStoreIndexes",
             SAIL_CLASS = "net.fortytwo.twitlogic.persistence.sailClass",
             SERVER_BASEURI = "net.fortytwo.twitlogic.server.baseURI",
             SERVER_PORT = "net.fortytwo.twitlogic.server.port",
@@ -54,6 +54,7 @@ public class TwitLogic {
             TWITTER_CONSUMER_SECRET = "net.fortytwo.twitlogic.twitter.consumerSecret",
             TWITTER_PASSWORD = "net.fortytwo.twitlogic.twitter.password",
             TWITTER_USERNAME = "net.fortytwo.twitlogic.twitter.username",
+            TWITTER_WHITELISTED = "net.fortytwo.twitlogic.twitter.whitelisted",
             XMPP_PORT = "net.fortytwo.twitlogic.xmpp.port",
             XMPP_REASONER_PASSWORD = "net.fortytwo.twitlogic.xmpp.reasonerPassword",
             XMPP_REASONER_USERNAME = "net.fortytwo.twitlogic.xmpp.reasonerUsername",
@@ -204,7 +205,7 @@ public class TwitLogic {
                 }
             }
         }
-        
+
         return terms;
     }
 

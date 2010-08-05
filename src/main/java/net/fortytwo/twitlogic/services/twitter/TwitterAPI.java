@@ -20,14 +20,6 @@ import java.util.logging.Logger;
 public class TwitterAPI {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitterAPI.class);
 
-    // See http://apiwiki.twitter.com/Streaming-API-Documentation#statuses/filter
-    public static final int
-            TIMELINE_PAGE_COUNT_LIMIT = 200,
-            DEFAULT_TRACK_KEYWORDS_LIMIT = 200,
-            DEFAULT_FOLLOW_USERIDS_LIMIT = 400,
-            DEFAULT_REST_API_REQUESTS_PER_HOUR_LIMIT = 150,
-            STATUSES_LIMIT = 3200;  // At most this many statuses may be retrieved from a timeline via the 'page' and 'count' REST parameters.
-
     public static final String
             API_FRIENDS_URL = "http://api.twitter.com/1/friends/ids",
             API_LISTS_URL = "http://api.twitter.com/1",
@@ -179,6 +171,7 @@ public class TwitterAPI {
         PROTECTED("protected"),
         RETWEETED_STATUS("retweeted_status"),
         SCREEN_NAME("screen_name"),
+        SCRUB_GEO("scrub_geo"),
         SHOW_ALL_INLINE_MEDIA("show_all_inline_media"),
         SOURCE("source"),
         STATUS("status"),

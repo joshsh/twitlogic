@@ -44,7 +44,7 @@ public class PlacePersistenceHelper {
 
                         Feature parf = pContext.persist(par);
                         parents.add(parf);
-                        checkHierarchy(par, parf);
+                        submit(par, parf);
                     }
 
                     f.setParentFeature(parents);
@@ -58,12 +58,12 @@ public class PlacePersistenceHelper {
         placeMappingQueue = new PlaceMappingQueue<TweetStoreException>(client, buffer);
     }
 
-    public boolean checkHierarchy(final Place p,
-                                  final Feature f) {
+    public boolean submit(final Place p,
+                          final Feature f) {
         // Note: for now, links in the hierarchy are established once, and never updated.
         if (0 == f.getParentFeature().size() && PlaceType.COUNTRY != p.getPlaceType()) {
-        //if (0 == f.getOwlSameAs().size()
-        //        && 0 == f.getParentFeature().size()) {
+            //if (0 == f.getOwlSameAs().size()
+            //        && 0 == f.getParentFeature().size()) {
             LOGGER.info("queueing unknown " + p.getPlaceType() + ": " + p.getJson());
             client.getStatistics().placeQueued(p);
 

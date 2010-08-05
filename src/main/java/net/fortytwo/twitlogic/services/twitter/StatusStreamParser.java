@@ -115,6 +115,8 @@ public class StatusStreamParser {
             return handleDeleteStatusElement(el);
         } else if (null != el.opt(TwitterAPI.Field.LIMIT.toString())) {
             return handleLimitStatusElement(el);
+        } else if (null != el.opt(TwitterAPI.Field.SCRUB_GEO.toString())) {
+            return handleScrubGeoStatusElement(el);
         } else {
             return handleNormalStatusElement(el);
         }
@@ -136,13 +138,18 @@ public class StatusStreamParser {
             } catch (NullPointerException e) {
                 throw new TweetParseException(e);
             }
-            
+
             return deleteHandler.handle(status);
         }
     }
 
     private boolean handleLimitStatusElement(final JSONObject el) {
         LOGGER.warning("skipping 'limit' status element");
+        return true;
+    }
+
+    private boolean handleScrubGeoStatusElement(final JSONObject el) {
+        LOGGER.warning("skipping 'scrub_geo' status element");
         return true;
     }
 
