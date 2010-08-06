@@ -24,12 +24,15 @@ import java.util.logging.Logger;
  */
 public class NewAllegroSailFactory extends SailFactory {
     private static final Logger LOGGER = TwitLogic.getLogger(NewAllegroSailFactory.class);
+    private final boolean enableLogging;
 
     /**
      * @param conf configuration properties for the Sail
      */
-    public NewAllegroSailFactory(final TypedProperties conf) {
+    public NewAllegroSailFactory(final TypedProperties conf,
+                                 final boolean enableLogging) {
         super(conf);
+        this.enableLogging = enableLogging;
     }
 
     public Sail makeSail() throws SailException, PropertyException {
@@ -52,15 +55,19 @@ public class NewAllegroSailFactory extends SailFactory {
         sail.disableInference();
         sail.initialize();
 
-        File logFile = new File("/tmp/twitlogic-ag-sail.log");
-        Sail recorderSail;
-        try {
-            recorderSail = new RecorderSail(sail, new FileOutputStream(logFile));
-        } catch (FileNotFoundException e) {
-            throw new SailException(e);
-        }
+        if (enableLogging) {
+            File logFile = new File("/tmp/twitlogic-ag-sail.log");
+            Sail recorderSail;
+            try {
+                recorderSail = new RecorderSail(sail, new FileOutputStream(logFile));
+            } catch (FileNotFoundException e) {
+                throw new SailException(e);
+            }
 
-        //return sail;
-        return recorderSail;
+            //return sail;
+            return recorderSail;
+        } else {
+            return sail;
+        }
     }
 }

@@ -220,7 +220,7 @@ public class TwitterAPI {
             USER_ID = "user_id";
 
     // E.g.  Tue Nov 11 17:41:37 +0000 2008
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
             "EEE MMM dd HH:mm:ss ZZZZZ yyyy");
 
     /**

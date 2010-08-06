@@ -49,7 +49,9 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         this.valueFactory = store.getSail().getValueFactory();
         this.persistenceContext = new PersistenceContext(
                 storeConnection.getElmoManager());
-        this.placeHelper = new PlacePersistenceHelper(persistenceContext, client);
+        this.placeHelper = null == client
+                ? null
+                : new PlacePersistenceHelper(persistenceContext, client);
     }
 
     public void close() throws TweetStoreException {
@@ -57,29 +59,31 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
-        LOGGER.fine("tweet " + tweet.getId()
-                + (null != tweet.getGeo() ? (" at \"" + tweet.getGeo() + "\"") : "")
-                + " by @" + tweet.getUser().getScreenName()
-                + ": " + tweet.getText());
+//        LOGGER.fine("tweet " + tweet.getId()
+//                + (null != tweet.getGeo() ? (" at \"" + tweet.getGeo() + "\"") : "")
+//                + " by @" + tweet.getUser().getScreenName()
+//                + ": " + tweet.getText());
 
         //System.out.println("beginning transaction...");
         storeConnection.begin();
 
         // begin Elmo operations
 
-        // Since Elmo is not thread-safe, Elmo operations to be carried out by
-        // placeHelper are queued until they can be executed here, in the main
-        // transaction.
-        try {
-            placeHelper.flush();
-        } catch (TweetStoreException e) {
-            throw new TweetHandlerException(e);
+        if (null != placeHelper) {
+            // Since Elmo is not thread-safe, Elmo operations to be carried out by
+            // placeHelper are queued until they can be executed here, in the main
+            // transaction.
+            try {
+                placeHelper.flush();
+            } catch (TweetStoreException e) {
+                throw new TweetHandlerException(e);
+            }
         }
 
         boolean hasAnnotations = 0 < tweet.getAnnotations().size();
 
         MicroblogPost currentMicroblogPost = persistenceContext.persist(tweet, hasAnnotations);
-        
+
         persistenceContext.persist(tweet.getUser());
 
         if (null != tweet.getGeo()) {
@@ -92,7 +96,9 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
         if (null != tweet.getPlace()) {
             Feature f = persistenceContext.persist(tweet.getPlace());
-            placeHelper.submit(tweet.getPlace(), f);
+            if (null != placeHelper) {
+                placeHelper.submit(tweet.getPlace(), f);
+            }
 
             Set<SpatialThing> s = currentMicroblogPost.getLocation();
             s.add(f);
