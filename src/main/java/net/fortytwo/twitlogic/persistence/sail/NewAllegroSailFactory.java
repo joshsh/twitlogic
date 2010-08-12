@@ -9,6 +9,7 @@ import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.SailFactory;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailException;
 
@@ -36,24 +37,16 @@ public class NewAllegroSailFactory extends SailFactory {
     }
 
     public Sail makeSail() throws SailException, PropertyException {
-        String host = conf.getString(TwitLogic.ALLEGROSAIL_HOST);
-        String name = conf.getString(TwitLogic.ALLEGROSAIL_NAME);
-        String catName = conf.getString(TwitLogic.ALLEGROSAIL_CATALOG_NAME);
-        String userName = conf.getString(TwitLogic.ALLEGROSAIL_USERNAME);
-        String password = conf.getString(TwitLogic.ALLEGROSAIL_PASSWORD);
+        AGRepository repo;
+        try {
+            repo = makeAGRepository();
+        } catch (RepositoryException e) {
+            throw new SailException(e);
+        }
 
-        LOGGER.info("connecting to AllegroGraph triple store \"" + name + "\""
-                + " in catalog \"" + catName + "\""
-                + " on host " + host);
-        AGServer server = new AGServer(host, userName, password);
-
-        AGCatalog cat = new AGCatalog(server, catName);
-
-        AGRepository repo = new AGRepository(cat, name);
-
-        RepositorySail sail = new RepositorySail(repo);
+        boolean autoCommit = false;
+        RepositorySail sail = new RepositorySail(repo, autoCommit);
         sail.disableInference();
-        sail.initialize();
 
         if (enableLogging) {
             File logFile = new File("/tmp/twitlogic-ag-sail.log");
@@ -69,5 +62,24 @@ public class NewAllegroSailFactory extends SailFactory {
         } else {
             return sail;
         }
+    }
+
+    public AGRepository makeAGRepository() throws PropertyException, RepositoryException {
+        String host = conf.getString(TwitLogic.ALLEGROSAIL_HOST);
+        String name = conf.getString(TwitLogic.ALLEGROSAIL_NAME);
+        String catName = conf.getString(TwitLogic.ALLEGROSAIL_CATALOG_NAME);
+        String userName = conf.getString(TwitLogic.ALLEGROSAIL_USERNAME);
+        String password = conf.getString(TwitLogic.ALLEGROSAIL_PASSWORD);
+
+        LOGGER.info("connecting to AllegroGraph triple store \"" + name + "\""
+                + " in catalog \"" + catName + "\""
+                + " on host " + host);
+        AGServer server = new AGServer(host, userName, password);
+
+        AGCatalog cat = new AGCatalog(server, catName);
+
+        AGRepository repo = new AGRepository(cat, name);
+        repo.initialize();
+        return repo;
     }
 }

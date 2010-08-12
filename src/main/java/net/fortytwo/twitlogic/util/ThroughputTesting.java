@@ -1,5 +1,9 @@
 package net.fortytwo.twitlogic.util;
 
+import com.franz.agraph.repository.AGRepository;
+import com.franz.agraph.repository.AGRepositoryConnection;
+import net.fortytwo.sesametools.rdftransaction.RDFTransactionSail;
+import net.fortytwo.sesametools.replay.RecorderSail;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.flow.NullHandler;
@@ -11,14 +15,26 @@ import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
+import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
+import org.apache.commons.httpclient.methods.RequestEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.sail.Sail;
+import org.openrdf.sail.SailConnection;
+import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -36,11 +52,16 @@ public class ThroughputTesting {
         Properties props = new Properties();
         props.load(new FileInputStream("/tmp/twitlogic-throughput-testing.properties"));
         TwitLogic.setConfiguration(props);
+        ThroughputTesting t = new ThroughputTesting();
 
         //testNullHandler();
         //testMemoryPersister();
+        //testTransientMemoryPersister();
+        //testLoggingTransientMemoryPersister();
         //testNativeStorePersister();
-        testAllegroGraphPersister();
+        //testAllegroGraphPersister();
+        //t.testSocketBasedLoggingTransientMemoryPersister();
+        t.testRdfTransactionPersister();
 
 /*
         //System.out.println("" + Integer.MAX_VALUE);
@@ -83,6 +104,220 @@ public class ThroughputTesting {
         }
     }
 
+    // Reaches a peak of around 2,100 t/s and remains there indefinitely
+    private static void testTransientMemoryPersister() throws Exception {
+        Sail sail = new MemoryStore();
+        sail.initialize();
+
+        try {
+            TweetStore store = new TweetStore(sail);
+            store.initialize();
+            try {
+                final SailConnection sc = sail.getConnection();
+                try {
+                    final TweetPersister p = new TweetPersister(store, null);
+
+                    Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
+                        public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                            try {
+                                sc.clear();
+                                sc.commit();
+                            } catch (SailException e) {
+                                throw new TweetHandlerException(e);
+                            }
+                            return p.handle(tweet);
+                        }
+                    };
+
+                    stressTest(h, 1000);
+                } finally {
+                    sc.close();
+                }
+            } finally {
+                store.shutDown();
+            }
+        } finally {
+            sail.shutDown();
+        }
+    }
+
+    // Around 900 t/s (up from 500 t/s before omitting read-operation logging)
+    private static void testLoggingTransientMemoryPersister() throws Exception {
+        Sail baseSail = new MemoryStore();
+        baseSail.initialize();
+
+        OutputStream out = new FileOutputStream(new File("/tmp/throughput-test.log"));
+        RecorderSail sail = new RecorderSail(baseSail, out);
+        sail.getConfiguration().logReadOperations = false;
+        //sail.getConfiguration().logTransactions = false;
+
+        try {
+            TweetStore store = new TweetStore(sail);
+            store.initialize();
+            try {
+                final SailConnection sc = baseSail.getConnection();
+                try {
+                    final TweetPersister p = new TweetPersister(store, null);
+
+                    Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
+                        public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                            try {
+                                sc.clear();
+                                sc.commit();
+                            } catch (SailException e) {
+                                throw new TweetHandlerException(e);
+                            }
+                            return p.handle(tweet);
+                        }
+                    };
+
+                    stressTest(h, 1000);
+                } finally {
+                    sc.close();
+                }
+            } finally {
+                store.shutDown();
+            }
+        } finally {
+            sail.shutDown();
+        }
+    }
+
+    private class AGTransactionSail extends RDFTransactionSail {
+        private final AGRepositoryConnection connection;
+
+        public AGTransactionSail(Sail sail,
+                                 final AGRepositoryConnection connection) {
+            super(sail);
+            this.connection = connection;
+        }
+
+        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
+            try {
+                //System.out.println("uploading!");
+                connection.getHttpRepoClient().upload(entity, null, false, null, null, null);
+            } catch (IOException e) {
+                throw new SailException(e);
+            } catch (RDFParseException e) {
+                throw new SailException(e);
+            } catch (RepositoryException e) {
+                throw new SailException(e);
+            }
+        }
+    }
+
+    // Over the LAN: 60 t/s
+    private void testRdfTransactionPersister() throws Exception {
+        AGRepository repo = new NewAllegroSailFactory(TwitLogic.getConfiguration(), false).makeAGRepository();
+        repo.initialize();
+        try {
+            AGRepositoryConnection rc = repo.getConnection();
+            try {
+
+
+                Sail tSail = new MemoryStore();
+                tSail.initialize();
+
+                try {
+                    Sail sail = new AGTransactionSail(tSail, rc);
+                    try {
+
+                        TweetStore store = new TweetStore(sail);
+                        store.initialize();
+                        try {
+                            final SailConnection tc = tSail.getConnection();
+                            try {
+                                final TweetPersister p = new TweetPersister(store, null);
+
+                                Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
+                                    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                                        try {
+                                            tc.clear();
+                                            tc.commit();
+                                        } catch (SailException e) {
+                                            throw new TweetHandlerException(e);
+                                        }
+                                        boolean b = p.handle(tweet);
+
+
+                                        return b;
+                                    }
+                                };
+
+                                stressTest(h, 10);
+                            } finally {
+                                tc.close();
+                            }
+                        } finally {
+                            store.shutDown();
+                        }
+                    } finally {
+                        sail.shutDown();
+                    }
+                } finally {
+                    tSail.shutDown();
+                }
+
+
+            } finally {
+                rc.close();
+            }
+        } finally {
+            repo.shutDown();
+        }
+    }
+
+    private void testSocketBasedLoggingTransientMemoryPersister() throws Exception {
+        Sail baseSail = new MemoryStore();
+        baseSail.initialize();
+
+        DatagramSocket s = new DatagramSocket();
+
+        String msg = "15663\tADD_STATEMENT\t<http://twitlogic.fortytwo.net/post/twitter/-1129589402>\t<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>\t<http://rdfs.org/sioc/types#MicroblogPost>\t{}";
+        byte[] buf = msg.getBytes();
+        InetAddress address = InetAddress.getByName("foray");
+        for (int i = 0; i < 50; i++)
+            s.send(new DatagramPacket(buf, buf.length, address, 9999));
+
+        /*
+   OutputStream out = new FileOutputStream(new File("/tmp/throughput-test.log"));
+   RecorderSail sail = new RecorderSail(baseSail, out);
+   sail.getConfiguration().logReadOperations = false;
+   //sail.getConfiguration().logTransactions = false;
+
+   try {
+       TweetStore store = new TweetStore(sail);
+       store.initialize();
+       try {
+           final SailConnection sc = baseSail.getConnection();
+           try {
+               final TweetPersister p = new TweetPersister(store, null);
+
+               Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
+                   public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                       try {
+                           sc.clear();
+                           sc.commit();
+                       } catch (SailException e) {
+                           throw new TweetHandlerException(e);
+                       }
+                       return p.handle(tweet);
+                   }
+               };
+
+               stressTest(h, 1000);
+           } finally {
+               sc.close();
+           }
+       } finally {
+           store.shutDown();
+       }
+   } finally {
+       sail.shutDown();
+   }     */
+    }
+
     // Around 300 t/s for a small store.
     private static void testNativeStorePersister() throws Exception {
         File dir = new File("/tmp/twitlogic-stresstest-ns");
@@ -109,6 +344,7 @@ public class ThroughputTesting {
     }
 
     // Over the LAN: 6 t/s
+    // Locally: 7 t/s
     private static void testAllegroGraphPersister() throws Exception {
         SailFactory f = new NewAllegroSailFactory(TwitLogic.getConfiguration(), false);
         Sail sail = f.makeSail();
@@ -189,7 +425,7 @@ public class ThroughputTesting {
         String screenName = randomString(5, 20);
         String url = randomUrl();
         String name = randomString(10, 30);
-        int userId = randomInteger(1000000, 100000000);
+        int userId = randomInteger(0, Integer.MAX_VALUE - 1);
         long tweetId = RANDOM.nextInt();
 
         StringBuilder sb = new StringBuilder();
