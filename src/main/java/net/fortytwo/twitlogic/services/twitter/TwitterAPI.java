@@ -169,6 +169,7 @@ public class TwitterAPI {
         PROFILE_TEXT_COLOR("profile_text_color"),
         PROFILE_USE_BACKGROUND_IMAGE("profile_use_background_image"),
         PROTECTED("protected"),
+        RETWEETED("retweeted"),
         RETWEETED_STATUS("retweeted_status"),
         SCREEN_NAME("screen_name"),
         SCRUB_GEO("scrub_geo"),

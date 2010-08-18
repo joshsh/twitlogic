@@ -35,6 +35,8 @@ import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -49,9 +51,9 @@ public class ThroughputTesting {
     private static final Date REFERENCE_DATE = new Date();
 
     public static void main(final String[] args) throws Exception {
-        Properties props = new Properties();
-        props.load(new FileInputStream("/tmp/twitlogic-throughput-testing.properties"));
-        TwitLogic.setConfiguration(props);
+        Properties config = new Properties();
+        config.load(new FileInputStream("/tmp/twitlogic-throughput-testing.properties"));
+        TwitLogic.setConfiguration(config);
         ThroughputTesting t = new ThroughputTesting();
 
         //testNullHandler();
@@ -59,9 +61,11 @@ public class ThroughputTesting {
         //testTransientMemoryPersister();
         //testLoggingTransientMemoryPersister();
         //testNativeStorePersister();
-        //testAllegroGraphPersister();
+        //t.testAllegroGraphPersister();
         //t.testSocketBasedLoggingTransientMemoryPersister();
-        t.testRdfTransactionPersister();
+        //t.testRdfTransactionPersister();
+        //t.testTrivialRdfTransactionPersister();
+        t.testUdpTransactionPersister();
 
 /*
         //System.out.println("" + Integer.MAX_VALUE);
@@ -79,13 +83,13 @@ public class ThroughputTesting {
 
     // Around 14,000 t/s on the reference machine.
 
-    private static void testNullHandler() throws Exception {
+    private void testNullHandler() throws Exception {
         Handler<Tweet, TweetHandlerException> h = new NullHandler<Tweet, TweetHandlerException>();
         stressTest(h, 10000);
     }
 
     // Quickly reaches a peak of around 1,900 t/s before slowing down and failing due to lack of memory.
-    private static void testMemoryPersister() throws Exception {
+    private void testMemoryPersister() throws Exception {
         Sail sail = new MemoryStore();
         sail.initialize();
 
@@ -105,7 +109,7 @@ public class ThroughputTesting {
     }
 
     // Reaches a peak of around 2,100 t/s and remains there indefinitely
-    private static void testTransientMemoryPersister() throws Exception {
+    private void testTransientMemoryPersister() throws Exception {
         Sail sail = new MemoryStore();
         sail.initialize();
 
@@ -142,7 +146,7 @@ public class ThroughputTesting {
     }
 
     // Around 900 t/s (up from 500 t/s before omitting read-operation logging)
-    private static void testLoggingTransientMemoryPersister() throws Exception {
+    private void testLoggingTransientMemoryPersister() throws Exception {
         Sail baseSail = new MemoryStore();
         baseSail.initialize();
 
@@ -183,30 +187,6 @@ public class ThroughputTesting {
         }
     }
 
-    private class AGTransactionSail extends RDFTransactionSail {
-        private final AGRepositoryConnection connection;
-
-        public AGTransactionSail(Sail sail,
-                                 final AGRepositoryConnection connection) {
-            super(sail);
-            this.connection = connection;
-        }
-
-        public void uploadTransactionEntity(byte[] bytes) throws SailException {
-            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
-            try {
-                //System.out.println("uploading!");
-                connection.getHttpRepoClient().upload(entity, null, false, null, null, null);
-            } catch (IOException e) {
-                throw new SailException(e);
-            } catch (RDFParseException e) {
-                throw new SailException(e);
-            } catch (RepositoryException e) {
-                throw new SailException(e);
-            }
-        }
-    }
-
     // Over the LAN: 60 t/s
     private void testRdfTransactionPersister() throws Exception {
         AGRepository repo = new NewAllegroSailFactory(TwitLogic.getConfiguration(), false).makeAGRepository();
@@ -214,8 +194,6 @@ public class ThroughputTesting {
         try {
             AGRepositoryConnection rc = repo.getConnection();
             try {
-
-
                 Sail tSail = new MemoryStore();
                 tSail.initialize();
 
@@ -238,10 +216,8 @@ public class ThroughputTesting {
                                         } catch (SailException e) {
                                             throw new TweetHandlerException(e);
                                         }
-                                        boolean b = p.handle(tweet);
 
-
-                                        return b;
+                                        return p.handle(tweet);
                                     }
                                 };
 
@@ -265,6 +241,50 @@ public class ThroughputTesting {
             }
         } finally {
             repo.shutDown();
+        }
+    }
+
+    // Around 1000 t/s on the reference machine.  No network requests are made.
+    private void testTrivialRdfTransactionPersister() throws Exception {
+        Sail transientSail = new MemoryStore();
+        transientSail.initialize();
+
+        try {
+            Sail sail = new TrivialTransactionSail(transientSail);
+            try {
+                TweetStore store = new TweetStore(sail);
+                store.initialize();
+
+                try {
+                    final SailConnection tc = transientSail.getConnection();
+
+                    try {
+                        final TweetPersister p = new TweetPersister(store, null);
+
+                        Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
+                            public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                                try {
+                                    tc.clear();
+                                    tc.commit();
+                                } catch (SailException e) {
+                                    throw new TweetHandlerException(e);
+                                }
+                                return p.handle(tweet);
+                            }
+                        };
+
+                        stressTest(h, 1000);
+                    } finally {
+                        tc.close();
+                    }
+                } finally {
+                    store.shutDown();
+                }
+            } finally {
+                sail.shutDown();
+            }
+        } finally {
+            transientSail.shutDown();
         }
     }
 
@@ -319,7 +339,7 @@ public class ThroughputTesting {
     }
 
     // Around 300 t/s for a small store.
-    private static void testNativeStorePersister() throws Exception {
+    private void testNativeStorePersister() throws Exception {
         File dir = new File("/tmp/twitlogic-stresstest-ns");
         if (dir.exists()) {
             deleteDirectory(dir);
@@ -345,7 +365,7 @@ public class ThroughputTesting {
 
     // Over the LAN: 6 t/s
     // Locally: 7 t/s
-    private static void testAllegroGraphPersister() throws Exception {
+    private void testAllegroGraphPersister() throws Exception {
         SailFactory f = new NewAllegroSailFactory(TwitLogic.getConfiguration(), false);
         Sail sail = f.makeSail();
         sail.initialize();
@@ -356,7 +376,7 @@ public class ThroughputTesting {
             try {
                 TweetPersister p = new TweetPersister(store, null);
 
-                stressTest(p, 1000);
+                stressTest(p, 10);
             } finally {
                 store.shutDown();
             }
@@ -364,6 +384,140 @@ public class ThroughputTesting {
             sail.shutDown();
         }
     }
+
+    // Around 1000 t/s on (my MacBook Pro)-->(AG foray)
+    private void testUdpTransactionPersister() throws Exception {
+        Sail transientSail = new MemoryStore();
+        transientSail.initialize();
+
+        try {
+            InetAddress address = InetAddress.getByName("foray");
+            int port = 9999;
+            Sail sail = new UdpTransactionSail(transientSail, address, port);
+
+            try {
+                TweetStore store = new TweetStore(sail);
+                store.doNotRefreshCoreMetadata();
+                store.initialize();
+
+                try {
+                    final SailConnection tc = transientSail.getConnection();
+
+                    try {
+                        final TweetPersister p = new TweetPersister(store, null);
+
+                        Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
+                            public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                                try {
+                                    tc.clear();
+                                    tc.commit();
+                                } catch (SailException e) {
+                                    throw new TweetHandlerException(e);
+                                }
+                                return p.handle(tweet);
+                            }
+                        };
+
+                        stressTest(h, 1000);
+                    } finally {
+                        tc.close();
+                    }
+                } finally {
+                    store.shutDown();
+                }
+            } finally {
+                sail.shutDown();
+            }
+        } finally {
+            transientSail.shutDown();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    private class AGTransactionSail extends RDFTransactionSail {
+        private final AGRepositoryConnection connection;
+
+        public AGTransactionSail(final Sail sail,
+                                 final AGRepositoryConnection connection) {
+            super(sail);
+            this.connection = connection;
+        }
+
+        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
+            try {
+                //System.out.println("uploading!");
+                connection.getHttpRepoClient().upload(entity, null, false, null, null, null);
+            } catch (IOException e) {
+                throw new SailException(e);
+            } catch (RDFParseException e) {
+                throw new SailException(e);
+            } catch (RepositoryException e) {
+                throw new SailException(e);
+            }
+        }
+    }
+
+    private class TrivialTransactionSail extends RDFTransactionSail {
+        public TrivialTransactionSail(final Sail sail) {
+            super(sail);
+        }
+
+        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+            // Generate the entity, but do nothing with it.
+            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
+        }
+    }
+
+    private class MultithreadedTrivialTransactionSail extends RDFTransactionSail {
+        public MultithreadedTrivialTransactionSail(final Sail sail,
+                                                   final int threads) {
+            super(sail);
+        }
+
+        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+            // Generate the entity, but do nothing with it.
+            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
+        }
+    }
+
+    /*
+   Note: typical size of a packet based on one of these test tweets is 6000 bytes.
+
+   Note: "The limit on a UDP datagram payload is 65535-28=65507 bytes, and the practical limit is the MTU of the path
+   which is more like 1460 bytes if you're lucky."
+
+   See:
+       http://stackoverflow.com/questions/3396813/message-too-long-for-udp-socket-after-setting-sendbuffersize
+    */
+    private class UdpTransactionSail extends RDFTransactionSail {
+        private final DatagramSocket socket;
+        private final InetAddress address;
+        private final int port;
+
+        public UdpTransactionSail(final Sail sail,
+                                  final InetAddress address,
+                                  final int port) throws SocketException, UnknownHostException {
+            super(sail);
+
+            this.socket = new DatagramSocket();
+            this.address = address;
+            this.port = port;
+        }
+
+        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+            //System.out.println("message length: " + bytes.length);
+            //*
+            try {
+                socket.send(new DatagramPacket(bytes, bytes.length, address, port));
+            } catch (IOException e) {
+                throw new SailException(e);
+            }//*/
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     private static boolean deleteDirectory(final File dir) {
         if (dir.exists()) {
@@ -378,8 +532,6 @@ public class ThroughputTesting {
         }
         return (dir.delete());
     }
-
-    ////////////////////////////////////////////////////////////////////////////
 
     private static int randomInteger(final int min,
                                      final int max) {

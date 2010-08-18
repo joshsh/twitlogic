@@ -4,6 +4,7 @@ import net.fortytwo.twitlogic.flow.Filter;
 import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
 import net.fortytwo.twitlogic.logging.TweetReceivedLogger;
 import net.fortytwo.twitlogic.model.Tweet;
+import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
@@ -13,6 +14,7 @@ import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -54,20 +56,26 @@ public class PlacesDemo {
         //store.dumpToFile(new File("/tmp/places-demo-dump.nt"), RDFFormat.NTRIPLES);
 
         //new TwitLogicServer(store);
-        
+
         try {
             TwitterClient client = new TwitterClient();
 
             TweetPersister p = new TweetPersister(store, client);
             TweetDeleter d = new TweetDeleter(store);
-            TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), p);
-            
-            TweetFilterCriterion crit = new TweetFilterCriterion();
-            crit.setAllowsTweetsWithPlace(true);
-            Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, pLogger);
 
+            TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), p);
+            TweetFilterCriterion crit = new TweetFilterCriterion(TwitLogic.getConfiguration());
+            Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, pLogger);
             TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), f);
-            client.processSampleStream(rLogger, d);
+
+            Set<User> users = TwitLogic.findFollowList(client);
+            Set<String> terms = TwitLogic.findTrackTerms();
+
+            if (0 < users.size() || 0 < terms.size()) {
+                client.processFilterStream(users, terms, rLogger, d, 0);
+            } else {
+                client.processSampleStream(rLogger, d);
+            }
         } finally {
             store.shutDown();
         }

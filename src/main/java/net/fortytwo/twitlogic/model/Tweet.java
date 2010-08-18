@@ -47,6 +47,7 @@ public class Tweet implements Resource {
     //private User inReplyToUser;
     private Tweet inReplyToTweet;
     private Place place;
+    // private boolean retweeted;
     private Tweet retweetOf;
     //private final String source;
     private String text;

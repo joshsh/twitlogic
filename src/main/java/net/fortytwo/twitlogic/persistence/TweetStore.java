@@ -66,6 +66,8 @@ public class TweetStore {
 
     private final Sail sail;
     private final TypedProperties configuration;
+    private boolean doNotRefreshCoreMetadata = false;
+
     private Repository repository;
     private ElmoModule adminElmoModule;
     private SesameManagerFactory elmoManagerFactory;
@@ -108,7 +110,9 @@ public class TweetStore {
         LOGGER.info("initializing TwitLogic local store");
 
         repository = new SailRepository(sail);
-        refreshCoreMetadata(repository);
+        if (!doNotRefreshCoreMetadata) {
+            refreshCoreMetadata(repository);
+        }
 
         // Elmo setup.
         adminElmoModule = new ElmoModule();
@@ -158,7 +162,7 @@ public class TweetStore {
                     String s = file.getName();
                     if (s.endsWith(".gz")) {
                         compressed = true;
-                        s = s.substring(0, s.length() - ".gz" .length());
+                        s = s.substring(0, s.length() - ".gz".length());
                     }
 
                     int i = s.lastIndexOf('.');
@@ -407,5 +411,9 @@ public class TweetStore {
         } catch (RepositoryException e) {
             throw new TweetStoreException(e);
         }
+    }
+
+    public void doNotRefreshCoreMetadata() {
+        this.doNotRefreshCoreMetadata = true;
     }
 }
