@@ -254,6 +254,40 @@ public class TwitterClient extends CommonHttpClient {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    
+    // FIXME: the search API produces search result objects, not status elements
+    // TODO: paging
+    public void search(final String term,
+                       final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+        HttpGet request = new HttpGet(TwitterAPI.SEARCH_URL + ".json"
+                + "?q=" + term);
+
+        JSONObject r = requestJSONObject(request);
+        //System.out.println(r);
+
+        try {
+            JSONArray results = r.getJSONArray("results");
+            for (int i = 0; i < results.length(); i++) {
+                Tweet t;
+                try {
+                    t = new Tweet(results.getJSONObject(i));
+                } catch (TweetParseException e) {
+                    throw new TwitterClientException(e);
+                }
+                try {
+                    if (!handler.handle(t)) {
+                        return;
+                    }
+                } catch (TweetHandlerException e) {
+                    throw new TwitterClientException(e);
+                }
+            }
+        } catch (JSONException e) {
+            throw new TwitterClientException(e);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     public void updateStatus(final Tweet tweet) throws TwitterClientException {
         HttpPost request = new HttpPost(TwitterAPI.STATUSES_UPDATE_URL + ".json");

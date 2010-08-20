@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic;
+package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Person;
@@ -12,6 +12,7 @@ import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.TweetContext;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,10 +24,10 @@ import java.util.List;
  * Date: Sep 8, 2009
  * Time: 10:37:05 PM
  */
-class ExampleStatusHandler implements Handler<Tweet, TweetHandlerException> {
+class ExampleTweetHandler implements Handler<Tweet, TweetHandlerException> {
     private final Matcher matcher;
 
-    public ExampleStatusHandler() {
+    public ExampleTweetHandler() {
         matcher = new MultiMatcher(new TwipleMatcher(),
                 new DemoAfterthoughtMatcher());
     }

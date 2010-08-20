@@ -27,6 +27,7 @@ public class TwitterAPI {
             OAUTH_REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",
             OAUTH_ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
             OAUTH_AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
+            SEARCH_URL = "http://search.twitter.com/search",
             STREAM_STATUSES_FILTER_URL = "http://stream.twitter.com/1/statuses/filter.json",
             STREAM_STATUSES_SAMPLE_URL = "http://stream.twitter.com/1/statuses/sample.json",
             STATUSES_USER_TIMELINE_URL = "http://twitter.com/statuses/user_timeline",

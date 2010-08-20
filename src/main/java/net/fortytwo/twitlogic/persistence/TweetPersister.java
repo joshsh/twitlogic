@@ -59,10 +59,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
-//        LOGGER.fine("tweet " + tweet.getId()
-//                + (null != tweet.getGeo() ? (" at \"" + tweet.getGeo() + "\"") : "")
-//                + " by @" + tweet.getUser().getScreenName()
-//                + ": " + tweet.getText());
+        //LOGGER.fine(tweet.describe());
 
         //System.out.println("beginning transaction...");
         storeConnection.begin();

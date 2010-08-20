@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic;
+package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.twitlogic.flow.Filter;
 import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
@@ -10,6 +10,8 @@ import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.TweetFilterCriterion;
 
 import java.io.File;
 import java.io.FileInputStream;

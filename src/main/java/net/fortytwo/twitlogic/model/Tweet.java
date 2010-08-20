@@ -212,6 +212,13 @@ public class Tweet implements Resource {
         return "[tweet #" + id + "]";
     }
 
+    public String describe() {
+        return "tweet " + this.getId()
+                + (null != this.getGeo() ? (" at \"" + this.getGeo() + "\"") : "")
+                + " by @" + this.getUser().getScreenName()
+                + ": " + this.getText();
+    }
+
     public boolean equals(final Object other) {
         return other instanceof Tweet
                 && id.equals(((Tweet) other).id);
@@ -244,16 +251,6 @@ public class Tweet implements Resource {
     public void setText(String text) {
         this.text = text;
     }
+
 }
 
-/*
-    "created_at":"Thu Sep 03 22:58:51 +0000 2009",
-    "favorited":false,
-    "id":3744161500,
-    "in_reply_to_screen_name":"hannahmendonsa",
-    "in_reply_to_status_id":3743565780,
-    "in_reply_to_user_id":70044174,
-    "source":"web"
-    "text":"@hannahmendonsa I wanna see a kid who looks like Maika!\nI don't have any of those, haha. I've got like two that look like Brendon Urie.",
-    "truncated":false,
- */
