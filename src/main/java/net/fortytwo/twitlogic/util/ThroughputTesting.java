@@ -19,6 +19,8 @@ import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.sail.Sail;
@@ -56,6 +58,8 @@ public class ThroughputTesting {
         TwitLogic.setConfiguration(config);
         ThroughputTesting t = new ThroughputTesting();
 
+        //rdfTransactionStuff();
+
         //testNullHandler();
         //testMemoryPersister();
         //testTransientMemoryPersister();
@@ -77,6 +81,28 @@ public class ThroughputTesting {
 //            System.out.println(randomTweet());
         }
         //*/
+    }
+
+    private static void rdfTransactionStuff() throws Exception {
+        Sail baseSail = new MemoryStore();
+        baseSail.initialize();
+
+        RDFTransactionSail sail = new RDFTransactionSail(baseSail){
+            public void uploadTransactionEntity(byte[] bytes) throws SailException {
+                System.out.println(new String(bytes));
+            }
+        };
+
+        SailConnection sc = sail.getConnection();
+        try {
+            sc.removeStatements(RDF.TYPE, null, null, (URI) null);
+            sc.commit();
+        } finally {
+            sc.close();
+        }
+
+        sail.shutDown();
+        baseSail.shutDown();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -391,7 +417,8 @@ public class ThroughputTesting {
         transientSail.initialize();
 
         try {
-            InetAddress address = InetAddress.getByName("foray");
+            InetAddress address = InetAddress.getByName("fluxdmz");
+//            InetAddress address = InetAddress.getByName("foray");
             int port = 9999;
             Sail sail = new UdpTransactionSail(transientSail, address, port);
 
