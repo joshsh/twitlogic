@@ -31,6 +31,7 @@ public class Polygon {
                 throw new TweetParseException(e);
             }
         }
+        this.points[N] = points[0];
     }
 
     private Polygon(Point[] points) {
