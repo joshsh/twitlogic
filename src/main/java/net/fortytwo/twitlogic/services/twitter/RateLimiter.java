@@ -27,10 +27,7 @@ public class RateLimiter {
     private long resetTime;
     private int limit;
 
-    private final TwitterAPILimits limits;
-
-    public RateLimiter(TwitterAPILimits limits) {
-        this.limits = limits;
+    public RateLimiter() {
     }
 
     // Enforce a wait of at least MINIMUM_WAIT between subsequent requests,

@@ -8,7 +8,6 @@ import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.TweetParseException;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.errors.UnauthorizedException;
-import net.fortytwo.twitlogic.util.CommonHttpClient;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
@@ -30,7 +29,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -46,11 +44,10 @@ import java.util.TimerTask;
  * Date: Oct 2, 2009
  * Time: 2:54:04 PM
  */
-public class TwitterClient extends CommonHttpClient {
+public class TwitterClient extends RestfulJSONClient {
     private final TwitterCredentials credentials;
 
     // Separate clients for separate rate-limiting policies.
-    private final RequestExecutor restAPIClient;
     private final RequestExecutor streamingAPIClient;
     private final RequestExecutor updateAPIClient;
     private final TweetStatistics statistics;
@@ -106,31 +103,6 @@ public class TwitterClient extends CommonHttpClient {
         limits = whitelisted
                 ? TwitterAPILimits.WHITELIST_LIMITS
                 : TwitterAPILimits.DEFAULT_LIMITS;
-
-        restAPIClient = new RequestExecutor() {
-            private final RateLimiter rateLimiter = new RateLimiter(limits);
-            private final HttpClient client = createClient(false);
-
-            public HttpResponse execute(HttpUriRequest request) throws TwitterClientException {
-                try {
-                    rateLimiter.throttleRequest();
-                } catch (InterruptedException e) {
-                    throw new TwitterClientException(e);
-                }
-
-                HttpResponse response;
-                try {
-                    response = client.execute(request);
-                } catch (SocketException e) {
-                    throw new TwitterConnectionResetException(e);
-                } catch (IOException e) {
-                    throw new TwitterClientException(e);
-                }
-
-                rateLimiter.updateRateLimitStatus(response);
-                return response;
-            }
-        };
 
         // TODO: rate limiting
         streamingAPIClient = new RequestExecutor() {
@@ -466,7 +438,7 @@ public class TwitterClient extends CommonHttpClient {
             sign(request);
 
             JSONObject users = requestJSONObject(request);
-            JSONArray array = null;
+            JSONArray array;
             try {
                 array = users.getJSONArray("users");
             } catch (JSONException e) {
@@ -547,36 +519,6 @@ public class TwitterClient extends CommonHttpClient {
             throw new TwitterClientException(e);
         }
         request.setEntity(entity);
-    }
-
-    private void checkForTwitterAPIException(final JSONObject json) throws TwitterAPIException {
-        String msg = json.optString(TwitterAPI.ErrorField.ERROR.toString());
-
-        if (null != msg && 0 < msg.length()) {
-            System.out.println(json);
-            if (msg.equals("Not authorized")) {
-                throw new UnauthorizedException();
-            } else {
-                throw new TwitterAPIException(msg);
-            }
-        }
-    }
-
-    private JSONObject requestJSONObject(final HttpUriRequest request) throws TwitterClientException {
-        try {
-            HttpResponse response = requestUntilSucceed(request, restAPIClient);
-            HttpEntity responseEntity = response.getEntity();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            responseEntity.writeTo(bos);
-            JSONObject object = new JSONObject(bos.toString());
-            bos.close();
-            checkForTwitterAPIException(object);
-            return object;
-        } catch (IOException e) {
-            throw new TwitterClientException(e);
-        } catch (JSONException e) {
-            throw new TwitterClientException(e);
-        }
     }
 
     private JSONArray requestJSONArray(final HttpUriRequest request) throws TwitterClientException {
