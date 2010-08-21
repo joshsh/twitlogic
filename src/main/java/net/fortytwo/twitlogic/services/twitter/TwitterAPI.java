@@ -100,7 +100,9 @@ public class TwitterAPI {
     }
 
     public enum PlaceField {
+        BOUNDING_BOX("bounding_box"),
         CONTAINED_WITHIN("contained_within"),
+        COORDINATES("coordinates"),
         COUNTRY_CODE("country_code"),
         FULL_NAME("full_name"),
         ID("id"),

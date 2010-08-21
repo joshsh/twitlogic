@@ -6,13 +6,13 @@ import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.model.geo.Point;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
 import net.fortytwo.twitlogic.persistence.beans.Feature;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
-import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
@@ -174,10 +174,11 @@ public class PersistenceContext {
         return user.getAccountOf();
     }
 
-    public Point persist(final net.fortytwo.twitlogic.model.Tweet.Point point) {
-        Point p = point();
-        p.setLong(point.longitude);
-        p.setLat(point.latitude);
+    public net.fortytwo.twitlogic.persistence.beans.Point persist(final Point point) {
+        // TODO: create a URI based on longitude and latitude. It won't be unique due to varying precision, but close enough.
+        net.fortytwo.twitlogic.persistence.beans.Point p = point();
+        p.setLong(point.getLongitude());
+        p.setLat(point.getLatitude());
         return p;
     }
 
@@ -216,6 +217,16 @@ public class PersistenceContext {
             }
         }*/
 
+        // Note: double-typing the feature as a Point is cheating (but it works...)
+        if (null != place.getCentroid()) {
+            Point c = place.getCentroid();
+            net.fortytwo.twitlogic.persistence.beans.Point p
+                    = designate(uriOf(place), net.fortytwo.twitlogic.persistence.beans.Point.class);
+
+            p.setLong(c.getLongitude());
+            p.setLat(c.getLatitude());
+        }
+        
         return f;
     }
 
@@ -249,9 +260,9 @@ public class PersistenceContext {
         return designate(uri, SpatialThing.class);
     }
 
-    private Point point() {
+    private net.fortytwo.twitlogic.persistence.beans.Point point() {
         String uri = TwitLogic.LOCATIONS_BASEURI + SesameTools.randomIdString();
-        return designate(uri, Point.class);
+        return designate(uri, net.fortytwo.twitlogic.persistence.beans.Point.class);
     }
 
     private MicroblogPost postForTweet(final Tweet tweet) {

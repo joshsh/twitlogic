@@ -1,6 +1,8 @@
 package net.fortytwo.twitlogic.model;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.model.geo.Point;
+import net.fortytwo.twitlogic.model.geo.Polygon;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +30,9 @@ public class Place {
     private PlaceType placeType;
     private Collection<Place> containedWithin;
 
+    // Note: this is a simplified data member; Twitter provides a *bounding polygon*
+    private Point centroid;
+    
     public Place(final JSONObject json) throws TweetParseException {
         this.json = json;
 
@@ -60,6 +65,26 @@ public class Place {
                     throw new TweetParseException(e);
                 }
             }
+        }
+
+        JSONObject box = json.optJSONObject(TwitterAPI.PlaceField.BOUNDING_BOX.toString());
+        if (null != box) {
+            JSONArray coords = box.optJSONArray(TwitterAPI.Field.COORDINATES.toString());
+            if (null == coords) {
+                throw new TweetParseException("no coordinates for bounding box: " + box);
+            }
+
+            if (1 != coords.length()) {
+                throw new TweetParseException("wrong number of coordinate components for bounding box: " + box);
+            }
+
+            Polygon p = null;
+            try {
+                p = new Polygon(coords.getJSONArray(1));
+            } catch (JSONException e) {
+                throw new TweetParseException(e);
+            }
+            centroid = p.findCentroid();
         }
     }
 
@@ -129,5 +154,9 @@ public class Place {
 
     public boolean equals(Object o) {
         return o instanceof Place && ((Place) o).id.equals(id);
+    }
+
+    public Point getCentroid() {
+        return centroid;
     }
 }

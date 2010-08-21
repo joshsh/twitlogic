@@ -1,7 +1,5 @@
 package net.fortytwo.twitlogic.model;
 
-import net.fortytwo.twitlogic.model.Resource;
-
 /**
  * Created by IntelliJ IDEA.
  * User: josh
@@ -36,4 +34,5 @@ public class PlainLiteral implements Resource {
     public int hashCode() {
         return label.hashCode();
     }
+
 }

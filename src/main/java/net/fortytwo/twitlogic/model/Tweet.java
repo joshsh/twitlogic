@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.model;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.model.geo.Point;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,15 +27,6 @@ public class Tweet implements Resource {
 
     public void setPlace(Place place) {
         this.place = place;
-    }
-
-    public class Point {
-        public double longitude;
-        public double latitude;
-
-        public String toString() {
-            return "(" + longitude + ", " + latitude + ")";
-        }
     }
 
     private User user;
@@ -94,12 +86,10 @@ public class Tweet implements Resource {
                 } else if (!type.equals("Point")) {
                     LOGGER.warning("unfamiliar geo type: " + type);
                 } else {
-                    geo = new Point();
                     JSONArray coords = geoObj.getJSONArray(TwitterAPI.Field.COORDINATES.toString());
 
                     // Note: in the Twitter API 2.0, the order of longitude and latitude will be reversed.
-                    geo.latitude = coords.getDouble(0);
-                    geo.longitude = coords.getDouble(1);
+                    geo = new Point(coords.getDouble(1), coords.getDouble(0));
                 }
 
                 // TODO: look for unrecognized attributes
