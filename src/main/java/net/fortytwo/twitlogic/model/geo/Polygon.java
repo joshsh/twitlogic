@@ -8,6 +8,7 @@ import org.json.JSONException;
  * A planar polygon (which approximates a small spherical polygon reasonably well)
  * <p/>
  * Source: http://www.cs.princeton.edu/introcs/35purple/Polygon.java.html
+ * 
  * User: josh
  * Date: Aug 20, 2010
  * Time: 7:57:58 PM
@@ -41,12 +42,12 @@ public class Polygon {
         this.points[N] = points[0];
     }
 
-    private double area() {
+    private double signedArea() {
         double sum = 0.0;
         for (int i = 0; i < N; i++) {
             sum = sum + (points[i].getLongitude() * points[i + 1].getLatitude()) - (points[i].getLatitude() * points[i + 1].getLongitude());
         }
-        return 0.5 * Math.abs(sum);
+        return 0.5 * sum;
     }
 
     public Point findCentroid() {
@@ -55,8 +56,21 @@ public class Polygon {
             cx = cx + (points[i].getLongitude() + points[i + 1].getLongitude()) * (points[i].getLatitude() * points[i + 1].getLongitude() - points[i].getLongitude() * points[i + 1].getLatitude());
             cy = cy + (points[i].getLatitude() + points[i + 1].getLatitude()) * (points[i].getLatitude() * points[i + 1].getLongitude() - points[i].getLongitude() * points[i + 1].getLatitude());
         }
-        cx /= (6 * area());
-        cy /= (6 * area());
+        cx /= (6 * -signedArea());
+        cy /= (6 * -signedArea());
         return new Point(cx, cy);
+    }
+
+    public static void main(final String[] args) {
+        Point[][] polys = new Point[][]{
+                {new Point(0,0), new Point(0, 1), new Point(1, 1), new Point(1, 0)},
+                {new Point(0,0), new Point(1, 0), new Point(1, 1), new Point(0, 1)},
+                {new Point(1,1), new Point(1, 0), new Point(0, 0), new Point(0, 1)},
+                {new Point(0,1), new Point(1, 1), new Point(1, 0), new Point(0, 0)}
+        };
+
+        for (Point[] ps : polys) {
+            System.out.println(new Polygon(ps).findCentroid());
+        }
     }
 }
