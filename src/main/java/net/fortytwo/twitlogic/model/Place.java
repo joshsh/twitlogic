@@ -80,7 +80,7 @@ public class Place {
 
             Polygon p = null;
             try {
-                p = new Polygon(coords.getJSONArray(1));
+                p = new Polygon(coords.getJSONArray(0));
             } catch (JSONException e) {
                 throw new TweetParseException(e);
             }
