@@ -1,5 +1,7 @@
 package net.fortytwo.twitlogic.util;
 
+import net.fortytwo.twitlogic.TweetFilterCriterion;
+import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Filter;
 import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
 import net.fortytwo.twitlogic.logging.TweetReceivedLogger;
@@ -8,10 +10,9 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
+import net.fortytwo.twitlogic.server.TwitLogicServer;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
-import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.TweetFilterCriterion;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,7 +58,7 @@ public class PlacesDemo {
 
         //store.dumpToFile(new File("/tmp/places-demo-dump.nt"), RDFFormat.NTRIPLES);
 
-        //new TwitLogicServer(store);
+        new TwitLogicServer(store);
 
         try {
             TwitterClient client = new TwitterClient();
