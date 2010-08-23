@@ -112,5 +112,5 @@ PAREN_BLOCK options { greedy = false; }
 
 // Anything not matched by previous rules.	   
 CRUFT
-	:	('\u0000'..'\uFFFF') ;
+	:	('\u0000'..'\uFFFF')+ ;
 

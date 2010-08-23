@@ -49,6 +49,7 @@ public class TwitLogicDemo {
             }
         } catch (Throwable t) {
             t.printStackTrace();
+            System.exit(1);
         }
     }
 

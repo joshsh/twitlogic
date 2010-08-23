@@ -36,6 +36,14 @@ public class AfterthoughtMatcherTest extends MatcherTestBase {
         assertClausesEqual("@joshsh (who knows @xixiluo)", "@joshsh (  \n who   knows@xixiluo\t)");
     }
 
+    public void testFalseStart() throws Exception {
+        // The "ht" will cause the lexer to expect a URL beginning with
+        // "http://", and it will emit an error message.  However, parsing will
+        // still succeed.
+        assertExpected("ht -- @joshsh (Who knows @xixiluo)",
+                new Triple(JOSHSH_PERSON, KNOWS, XIXILUO_PERSON));
+    }
+
     public void testCaseSensitivity() throws Exception {
         // Relative pronouns are not case-sensitive
         assertExpected("@joshsh (Who knows @xixiluo)",

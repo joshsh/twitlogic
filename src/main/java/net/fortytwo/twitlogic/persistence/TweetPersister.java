@@ -43,6 +43,11 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private final PersistenceContext persistenceContext;
     private final PlacePersistenceHelper placeHelper;
 
+    /**
+     * @param store the knowledge base
+     * @param client an optional Twitter client for building the Places hierarchy
+     * @throws TweetStoreException
+     */
     public TweetPersister(final TweetStore store,
                           final TwitterClient client) throws TweetStoreException {
         this.storeConnection = store.createConnection();

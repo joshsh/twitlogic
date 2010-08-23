@@ -63,10 +63,10 @@ public class PlacesDemo {
         try {
             TwitterClient client = new TwitterClient();
 
-            TweetPersister p = new TweetPersister(store, client);
+            TweetPersister persister = new TweetPersister(store, client);
             TweetDeleter d = new TweetDeleter(store);
 
-            TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), p);
+            TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
             TweetFilterCriterion crit = new TweetFilterCriterion(TwitLogic.getConfiguration());
             Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, pLogger);
             TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), f);

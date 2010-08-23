@@ -37,8 +37,6 @@ import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -87,7 +85,7 @@ public class ThroughputTesting {
         Sail baseSail = new MemoryStore();
         baseSail.initialize();
 
-        RDFTransactionSail sail = new RDFTransactionSail(baseSail){
+        RDFTransactionSail sail = new RDFTransactionSail(baseSail) {
             public void uploadTransactionEntity(byte[] bytes) throws SailException {
                 System.out.println(new String(bytes));
             }
@@ -413,50 +411,58 @@ public class ThroughputTesting {
 
     // Around 1000 t/s on (my MacBook Pro)-->(AG foray)
     private void testUdpTransactionPersister() throws Exception {
-        Sail transientSail = new MemoryStore();
-        transientSail.initialize();
+        InetAddress address = InetAddress.getByName("fluxdmz");
+//            InetAddress address = InetAddress.getByName("foray");
+        int port = 9999;
+
+        Sail workingSail = new MemoryStore();
+        workingSail.initialize();
 
         try {
-            InetAddress address = InetAddress.getByName("fluxdmz");
-//            InetAddress address = InetAddress.getByName("foray");
-            int port = 9999;
-            Sail sail = new UdpTransactionSail(transientSail, address, port);
+            Sail streamingSail = new UdpTransactionSail(workingSail, address, port);
 
             try {
-                TweetStore store = new TweetStore(sail);
+                TweetStore store = new TweetStore(streamingSail);
                 store.doNotRefreshCoreMetadata();
                 store.initialize();
 
                 try {
-                    final SailConnection tc = transientSail.getConnection();
+                    // A connection with which to repeatedly clear the working store
+                    final SailConnection c = workingSail.getConnection();
 
                     try {
+                        // Offline persister
                         final TweetPersister p = new TweetPersister(store, null);
 
-                        Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
-                            public boolean handle(final Tweet tweet) throws TweetHandlerException {
-                                try {
-                                    tc.clear();
-                                    tc.commit();
-                                } catch (SailException e) {
-                                    throw new TweetHandlerException(e);
-                                }
-                                return p.handle(tweet);
-                            }
-                        };
+                        try {
+                            Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
+                                public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                                    try {
+                                        c.clear();
+                                        c.commit();
+                                    } catch (SailException e) {
+                                        throw new TweetHandlerException(e);
+                                    }
 
-                        stressTest(h, 1000);
+                                    return p.handle(tweet);
+                                }
+                            };
+
+                            stressTest(h, 1000);
+                        } finally {
+                            p.close();
+                        }
                     } finally {
-                        tc.close();
+                        c.close();
                     }
                 } finally {
                     store.shutDown();
                 }
             } finally {
-                sail.shutDown();
+                streamingSail.shutDown();
             }
         } finally {
-            transientSail.shutDown();
+            workingSail.shutDown();
         }
     }
 
@@ -506,41 +512,6 @@ public class ThroughputTesting {
         public void uploadTransactionEntity(byte[] bytes) throws SailException {
             // Generate the entity, but do nothing with it.
             RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
-        }
-    }
-
-    /*
-   Note: typical size of a packet based on one of these test tweets is 6000 bytes.
-
-   Note: "The limit on a UDP datagram payload is 65535-28=65507 bytes, and the practical limit is the MTU of the path
-   which is more like 1460 bytes if you're lucky."
-
-   See:
-       http://stackoverflow.com/questions/3396813/message-too-long-for-udp-socket-after-setting-sendbuffersize
-    */
-    private class UdpTransactionSail extends RDFTransactionSail {
-        private final DatagramSocket socket;
-        private final InetAddress address;
-        private final int port;
-
-        public UdpTransactionSail(final Sail sail,
-                                  final InetAddress address,
-                                  final int port) throws SocketException, UnknownHostException {
-            super(sail);
-
-            this.socket = new DatagramSocket();
-            this.address = address;
-            this.port = port;
-        }
-
-        public void uploadTransactionEntity(byte[] bytes) throws SailException {
-            //System.out.println("message length: " + bytes.length);
-            //*
-            try {
-                socket.send(new DatagramPacket(bytes, bytes.length, address, port));
-            } catch (IOException e) {
-                throw new SailException(e);
-            }//*/
         }
     }
 
