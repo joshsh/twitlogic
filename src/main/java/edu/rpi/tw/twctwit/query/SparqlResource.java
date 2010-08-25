@@ -79,6 +79,8 @@ public class SparqlResource extends QueryResource {
         }  catch (QueryException e) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         } catch (SailException e) {
+            // TODO: use logging instead
+            e.printStackTrace(System.err);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
         }
     }
