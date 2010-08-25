@@ -68,8 +68,8 @@ public class ThroughputTesting {
         //t.testSocketBasedLoggingTransientMemoryPersister();
         //t.testRdfTransactionPersister();
         //t.testTrivialRdfTransactionPersister();
-        //t.testAllegroGraphPersister();
-        t.testUdpTransactionPersister();
+        t.testAllegroGraphPersister();
+        //t.testUdpTransactionPersister();
 
 /*
         //System.out.println("" + Integer.MAX_VALUE);

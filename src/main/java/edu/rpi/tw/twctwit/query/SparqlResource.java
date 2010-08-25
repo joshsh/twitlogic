@@ -50,25 +50,31 @@ public class SparqlResource extends QueryResource {
                           final Response response) throws Exception {
         super(context, request, response);
 
-        query = arguments.get("query");
-        if (null == query) {
-            throw new IllegalArgumentException("no query argument specified");
-        }
-
-        String output = arguments.get("output");
-
-        // Humor those clients which use an "output" argument, instead of content
-        // negotation, to specify an output format.
-        if (null != output) {
-            if (output.equals("json")) {
-                getVariants().add(new Variant(SparqlTools.SparqlResultFormat.JSON.getMediaType()));
-            } else if (output.equals("xml")) {
-                getVariants().add(new Variant(SparqlTools.SparqlResultFormat.XML.getMediaType()));
-            } else {
-                throw new IllegalArgumentException("bad value for 'output' parameter: " + output);
+        try {
+            query = arguments.get("query");
+            if (null == query) {
+                throw new IllegalArgumentException("no query argument specified");
             }
-        } else {
-            getVariants().addAll(SparqlTools.SparqlResultFormat.getVariants());
+
+            String output = arguments.get("output");
+
+            // Humor those clients which use an "output" argument, instead of content
+            // negotation, to specify an output format.
+            if (null != output) {
+                if (output.equals("json")) {
+                    getVariants().add(new Variant(SparqlTools.SparqlResultFormat.JSON.getMediaType()));
+                } else if (output.equals("xml")) {
+                    getVariants().add(new Variant(SparqlTools.SparqlResultFormat.XML.getMediaType()));
+                } else {
+                    throw new IllegalArgumentException("bad value for 'output' parameter: " + output);
+                }
+            } else {
+                getVariants().addAll(SparqlTools.SparqlResultFormat.getVariants());
+            }
+        } catch (Throwable t) {
+            // TODO: use logging instead
+            t.printStackTrace(System.err);
+            throw new Exception(t);
         }
     }
 
@@ -76,9 +82,13 @@ public class SparqlResource extends QueryResource {
     public Representation represent(final Variant variant) throws ResourceException {
         try {
             return new SparqlQueryRepresentation(query, sail, readLimit(), variant.getMediaType());
-        }  catch (QueryException e) {
+        } catch (QueryException e) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         } catch (SailException e) {
+            // TODO: use logging instead
+            e.printStackTrace(System.err);
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        } catch (Throwable e) {
             // TODO: use logging instead
             e.printStackTrace(System.err);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
