@@ -47,6 +47,8 @@ import java.util.Random;
  * Time: 3:10:06 PM
  */
 public class ThroughputTesting {
+    private final int udpOutputPorts[] = {9990, 9991, 9992, 9993, 9994, 9995};//, 9996, 9997};
+
     private static final Random RANDOM = new Random();
     private static final Date REFERENCE_DATE = new Date();
 
@@ -63,10 +65,10 @@ public class ThroughputTesting {
         //testTransientMemoryPersister();
         //testLoggingTransientMemoryPersister();
         //testNativeStorePersister();
-        //t.testAllegroGraphPersister();
         //t.testSocketBasedLoggingTransientMemoryPersister();
         //t.testRdfTransactionPersister();
         //t.testTrivialRdfTransactionPersister();
+        //t.testAllegroGraphPersister();
         t.testUdpTransactionPersister();
 
 /*
@@ -413,13 +415,13 @@ public class ThroughputTesting {
     private void testUdpTransactionPersister() throws Exception {
         InetAddress address = InetAddress.getByName("fluxdmz");
 //            InetAddress address = InetAddress.getByName("foray");
-        int port = 9999;
+        //int port = 9999;
 
         Sail workingSail = new MemoryStore();
         workingSail.initialize();
 
         try {
-            Sail streamingSail = new UdpTransactionSail(workingSail, address, port);
+            Sail streamingSail = new UdpTransactionSail(workingSail, address, udpOutputPorts);
 
             try {
                 TweetStore store = new TweetStore(streamingSail);

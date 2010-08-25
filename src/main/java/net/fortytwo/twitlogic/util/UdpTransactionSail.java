@@ -27,23 +27,30 @@ import java.net.UnknownHostException;
 public class UdpTransactionSail extends RDFTransactionSail {
     private final DatagramSocket socket;
     private final InetAddress address;
-    private final int port;
+    private final int ports[];
+    private int portIndex = 0;
 
+    /**
+     * @param baseSail base Sail
+     * @param address address of the remote host
+     * @param ports receiving ports of the remote host. This Sail will load-balance evenly across those ports.
+     */
     public UdpTransactionSail(final Sail baseSail,
                               final InetAddress address,
-                              final int port) throws SocketException, UnknownHostException {
+                              final int... ports) throws SocketException, UnknownHostException {
         super(baseSail);
 
         this.socket = new DatagramSocket();
         this.address = address;
-        this.port = port;
+        this.ports = ports;
     }
 
     public void uploadTransactionEntity(byte[] bytes) throws SailException {
         //System.out.println("message length: " + bytes.length);
         //*
         try {
-            socket.send(new DatagramPacket(bytes, bytes.length, address, port));
+            socket.send(new DatagramPacket(bytes, bytes.length, address, ports[portIndex]));
+            portIndex = (portIndex + 1) % ports.length;
         } catch (IOException e) {
             throw new SailException(e);
         }//*/
