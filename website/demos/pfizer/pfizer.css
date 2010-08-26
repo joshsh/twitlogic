@@ -1,0 +1,223 @@
+/*
+
+ TwitLogic SPARQL widget
+ Copyright (C) 2010 by Joshua Shinavier
+ http://twitlogic.fortytwo.net
+
+ */
+
+/* widget structure *******************/
+
+.tl-widget {
+    font-family: "lucida grande", lucida, tahoma, helvetica, arial, sans-serif;
+}
+
+.tl-widget h3 {
+    font-size: 11px !important;
+    font-weight: normal !important;
+}
+
+.tl-widget h4 {
+    font-size: 16px !important;
+}
+
+.tl-widget h3, .tl-widget h4 {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+.tl-widget-contents {
+    background: repeat-x scroll 0 0;
+    padding: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.tl-header {
+    padding-top: 0;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+.tl-body {
+    padding: 0;
+    color: #000000;
+}
+
+.tl-tweet-container {
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.tl-tweet-stack {
+    margin: 0;
+    padding: 0;
+}
+
+.tl-footer {
+    background: repeat-x scroll 0 0;
+    position: relative;
+    padding-top: 5px;
+    height: 10px;
+}
+
+.tl-about-link {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    font-size: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.tl-about-link:hover {
+    text-decoration: underline;
+}
+
+/* tweets *****************************/
+
+.tl-tweet {
+    margin: 0;
+    padding: 5px 5px 1px;
+}
+
+.tl-tweet-contents {
+}
+
+div.tl-tweet-contents:hover a {
+    visibility: visible;
+}
+
+.tl-profile-image {
+    width: 40px;
+    height: 40px;
+    float: left;
+    overflow: hidden;
+    display: block;
+}
+
+.tl-tweet-text {
+    margin-left: 40px;
+    margin-top: 0;
+}
+
+.tl-img {
+
+}
+
+.tl-img img {
+    width: 30px;
+    height: 30px;
+    border-style: none;
+}
+
+.tl-img-a {
+
+}
+
+.tl-img-img {
+
+}
+
+.tl-tweet-text-p {
+    margin-top: 0;
+    font-size: 12px;
+}
+
+.tl-user {
+    text-decoration: none;
+}
+
+.tl-user:hover {
+    text-decoration: underline;
+}
+
+.tl-footnotes {
+    font-size: 9px;
+}
+
+.tl-timestamp {
+    color: #444444;
+    text-decoration: none;
+}
+
+.tl-timestamp:hover {
+    text-decoration: underline;
+}
+
+.tl-reply {
+    color: #444444;
+    visibility: hidden;
+    text-decoration: none;
+}
+
+.tl-reply:hover {
+    text-decoration: underline;
+}
+
+.tl-place-link {
+    text-decoration: none;
+}
+
+.tl-place-link:hover {
+    text-decoration: underline;
+}
+
+/* status *****************************/
+
+.tl-busy-animation {
+    width: 16px;
+    height: 16px;
+    background: url(../images/busy-bouncing-white-14x14.gif) no-repeat;
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
+}
+
+.tl-status-message {
+    font-size: 8px;
+    text-align: center;
+    height: 10px;
+}
+
+.tl-error-link {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.tl-error-link:hover {
+    text-decoration: underline;
+}
+
+/* Pfizer demo ************************/
+
+.pf-map {
+    float: left;
+    /*background-color: #F0F0FF;*/
+    width: 600px;
+    height: 500px;
+}
+
+.pf-controls {
+    /*background-color: #FF0000; */
+    float: right;
+}
+
+.pf-spacer {
+    height: 10px;
+}
+
+
+
+
+
+
+
+
+
+
