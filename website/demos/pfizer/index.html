@@ -15,6 +15,302 @@
     <script type="text/javascript" src="lib/timeago/0.8.2/jquery.timeago.js"></script>
     <script type="text/javascript" src="pfizer.js"></script>
     <script type="text/javascript">
+        var results = {
+  "head" : {
+    "vars" : ["tweet", "lon", "lat", "placeName", "text", "createdAt", "screenName", "profileImage"]
+  },
+  "results" : {
+    "bindings" : [
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22212320072"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-9.11115959998441E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.046016699994796E1"},
+         "placeName":{"type":"literal","value":"Baton Rouge, LA"},
+         "text":{"type":"literal","value":"lately ive been getting up and going hard .. dont need no life Viagra"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T21:53:19Z"},
+         "screenName":{"type":"literal","value":"ThatGuyBrennen"},
+         "profileImage":{"type":"uri","value":"http://a0.twimg.com/profile_images/1090478828/00004_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22205383785"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.76254665E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.1895719300000006E1"},
+         "text":{"type":"literal","value":"Looking for food and cougar lol (@ Viagra triangle) http://4sq.com/a2VWJE"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T20:02:25Z"},
+         "screenName":{"type":"literal","value":"dj_zerocool"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/771828178/23420_373899682615_295153752615_3745727_2145640_n_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22205383785"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.763474453943221E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.1891299010170663E1"},
+         "placeName":{"type":"literal","value":"River North, Chicago"},
+         "text":{"type":"literal","value":"Looking for food and cougar lol (@ Viagra triangle) http://4sq.com/a2VWJE"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T20:02:25Z"},
+         "screenName":{"type":"literal","value":"dj_zerocool"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/771828178/23420_373899682615_295153752615_3745727_2145640_n_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22193441773"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.439095600000001E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.0539423999999996E1"},
+         "text":{"type":"literal","value":"The side effects of chantix are supposed to be suicide quit smoking and insomnia--- why is it that I wanna get it in 4 times a day now??"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T16:54:04Z"},
+         "screenName":{"type":"literal","value":"NJCHOPPINBLOCK"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/1110604742/Picture0062_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22193441773"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.437802499961699E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.053814949978953E1"},
+         "placeName":{"type":"literal","value":"Edison, NJ"},
+         "text":{"type":"literal","value":"The side effects of chantix are supposed to be suicide quit smoking and insomnia--- why is it that I wanna get it in 4 times a day now??"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T16:54:04Z"},
+         "screenName":{"type":"literal","value":"NJCHOPPINBLOCK"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/1110604742/Picture0062_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22186671017"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.701457599993577E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.8893596499967564E1"},
+         "placeName":{"type":"literal","value":"Washington, DC"},
+         "text":{"type":"literal","value":"@NikiLuv73 Lol, sounds like Viagra for women - gurl you betta get you some of that \"Vajazzling...\""},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T15:27:02Z"},
+         "screenName":{"type":"literal","value":"Ghostwriter28"},
+         "profileImage":{"type":"uri","value":"http://a1.twimg.com/profile_images/1069815081/me_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22180924379"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.399300463E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.075858373E1"},
+         "text":{"type":"literal","value":"Viagra falls ...It's a wonderful place to vacation"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T14:15:04Z"},
+         "screenName":{"type":"literal","value":"GeoffreydMiller"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/569979823/10621_1157190984287_1663121154_374470_6722913_n_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22180924379"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.399900253393469E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.07578785186752E1"},
+         "placeName":{"type":"literal","value":"Hell's Kitchen, New York"},
+         "text":{"type":"literal","value":"Viagra falls ...It's a wonderful place to vacation"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T14:15:04Z"},
+         "screenName":{"type":"literal","value":"GeoffreydMiller"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/569979823/10621_1157190984287_1663121154_374470_6722913_n_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22172847449"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.377859200000001E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.0593566000000003E1"},
+         "text":{"type":"literal","value":"Last nite was good for me but I didn't cum I take all nite. She was mad at me y baby I don't take Viagra http://myloc.me/b5mBX"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T12:22:47Z"},
+         "screenName":{"type":"literal","value":"humanX"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/342522694/pic2_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22172847449"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.377642050405191E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.0598563002223376E1"},
+         "placeName":{"type":"literal","value":"Edgemere, New York"},
+         "text":{"type":"literal","value":"Last nite was good for me but I didn't cum I take all nite. She was mad at me y baby I don't take Viagra http://myloc.me/b5mBX"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T12:22:47Z"},
+         "screenName":{"type":"literal","value":"humanX"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/342522694/pic2_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22171468647"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.438900807E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.381037594E1"},
+         "text":{"type":"literal","value":"It's seriously time I quit smoking. Any recommendations for things like chantix, commit, nicoret, etc? Leave the carrots / celery out of it."},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T12:00:34Z"},
+         "screenName":{"type":"literal","value":"mfacenet"},
+         "profileImage":{"type":"uri","value":"http://a1.twimg.com/profile_images/1104267729/user578865_pic1531_1219002858_thumb_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22171468647"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.438372641935838E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.380805450774881E1"},
+         "placeName":{"type":"literal","value":"Brookwood Hills, Atlanta"},
+         "text":{"type":"literal","value":"It's seriously time I quit smoking. Any recommendations for things like chantix, commit, nicoret, etc? Leave the carrots / celery out of it."},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T12:00:34Z"},
+         "screenName":{"type":"literal","value":"mfacenet"},
+         "profileImage":{"type":"uri","value":"http://a1.twimg.com/profile_images/1104267729/user578865_pic1531_1219002858_thumb_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22157744424"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.093745500011992E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.403742000005076E1"},
+         "placeName":{"type":"literal","value":"Columbia, SC"},
+         "text":{"type":"literal","value":"Ok the verdict is in!! Viagra aint got nothin on raw fruits and vegetables!!! Whoa! Supa Man!!!!!!"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T07:06:27Z"},
+         "screenName":{"type":"literal","value":"mrwillgreen"},
+         "profileImage":{"type":"uri","value":"http://a0.twimg.com/profile_images/449925808/Will_s_Album_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22151151673"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.762818694000001E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.190178195E1"},
+         "text":{"type":"literal","value":"Love this neighborhood. (@ The Viagra Triangle) http://4sq.com/9VW78D"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T04:50:06Z"},
+         "screenName":{"type":"literal","value":"GOchris"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/1100009335/111_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22151151673"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.762859291761552E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.190570551799526E1"},
+         "placeName":{"type":"literal","value":"Gold Coast, Chicago"},
+         "text":{"type":"literal","value":"Love this neighborhood. (@ The Viagra Triangle) http://4sq.com/9VW78D"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T04:50:06Z"},
+         "screenName":{"type":"literal","value":"GOchris"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/1100009335/111_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22151106216"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.013415899999999E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"2.5777047E1"},
+         "text":{"type":"literal","value":"My email got hacked.. People asking if I sent a viagra link! SMH http://tweetphoto.com/41408475"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T04:49:17Z"},
+         "screenName":{"type":"literal","value":"MissDisla"},
+         "profileImage":{"type":"uri","value":"http://a0.twimg.com/profile_images/890698592/IMG_DISLA_TAN_normal.JPG"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22151106216"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.013475602060196E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"2.578193896518359E1"},
+         "placeName":{"type":"literal","value":"Flamingo / Lummus, Miami Beach"},
+         "text":{"type":"literal","value":"My email got hacked.. People asking if I sent a viagra link! SMH http://tweetphoto.com/41408475"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T04:49:17Z"},
+         "screenName":{"type":"literal","value":"MissDisla"},
+         "profileImage":{"type":"uri","value":"http://a0.twimg.com/profile_images/890698592/IMG_DISLA_TAN_normal.JPG"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22142254648"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.702258229000001E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.892825663E1"},
+         "text":{"type":"literal","value":"@MeSoDC you probably right....viagra on deck lls."},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T02:31:27Z"},
+         "screenName":{"type":"literal","value":"timah27"},
+         "profileImage":{"type":"uri","value":"http://a0.twimg.com/profile_images/112590588/weddingme1__3__normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22142254648"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.702289800862957E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.892916100927131E1"},
+         "placeName":{"type":"literal","value":"Pleasant Plains, Washington"},
+         "text":{"type":"literal","value":"@MeSoDC you probably right....viagra on deck lls."},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T02:31:27Z"},
+         "screenName":{"type":"literal","value":"timah27"},
+         "profileImage":{"type":"uri","value":"http://a0.twimg.com/profile_images/112590588/weddingme1__3__normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22137131705"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-6.8013289E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"1.0201480999999998E1"},
+         "text":{"type":"literal","value":"RT @laucruces: Impotencia??? #Vota26S o toma viagra ;) http://myloc.me/b48hj"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-26T01:28:18Z"},
+         "screenName":{"type":"literal","value":"guerreroho"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/945369543/IMAGE_097_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22116732874"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-1.1172265349628899E2"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.3428162498840147E1"},
+         "placeName":{"type":"literal","value":"Stonecrest, Mesa"},
+         "text":{"type":"literal","value":"@BeauManley Erections for more that 4 hours??? Too much Viagra? Lucky!"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T20:23:15Z"},
+         "screenName":{"type":"literal","value":"BigDawg9578"},
+         "profileImage":{"type":"uri","value":"http://a0.twimg.com/profile_images/1100691868/27431_1220811962_4987_q_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22107487679"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.502855366E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.008122491E1"},
+         "text":{"type":"literal","value":"@marriedmanshow if warm taffy \"won't be up for it\" then get him some Viagra"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T17:53:46Z"},
+         "screenName":{"type":"literal","value":"cwernick"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/62505067/DSCN2890_normal.JPG"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22107487679"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-7.504256500184718E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"4.0094156000987935E1"},
+         "placeName":{"type":"literal","value":"Bustleton, Philadelphia"},
+         "text":{"type":"literal","value":"@marriedmanshow if warm taffy \"won't be up for it\" then get him some Viagra"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T17:53:46Z"},
+         "screenName":{"type":"literal","value":"cwernick"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/62505067/DSCN2890_normal.JPG"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22099952282"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-3.488367581E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-8.095649950000001E0"},
+         "text":{"type":"literal","value":"A rapadura Ž o Viagra do sertanejo!! Modelo: @Rautemberg http://twitpic.com/2i2hdu"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T16:03:10Z"},
+         "screenName":{"type":"literal","value":"chicoh1981"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/1106743094/4908437585_70eef30b00_o_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22099500275"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-9.557287100224257E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"2.9751678500697065E1"},
+         "placeName":{"type":"literal","value":"Briarforest, Houston"},
+         "text":{"type":"literal","value":"@billmaher I wished Republicans past out viagra, instead of fear and hate ."},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T15:57:12Z"},
+         "screenName":{"type":"literal","value":"Ew_Tex"},
+         "profileImage":{"type":"uri","value":"http://s.twimg.com/a/1282351897/images/default_profile_2_normal.png"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22094102880"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-9.546358867E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"2.980434567E1"},
+         "text":{"type":"literal","value":"@LizzXXXTayler Well its always good to be \"up\", no matter what that warning from Viagra says.  :P"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T14:46:38Z"},
+         "screenName":{"type":"literal","value":"TitanTexan"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/1103856819/Titan_Texan_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22094102880"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-9.547437099864449E1"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"2.980227649957691E1"},
+         "placeName":{"type":"literal","value":"Spring Branch East, Houston"},
+         "text":{"type":"literal","value":"@LizzXXXTayler  Well its always good to be \"up\", no matter what that warning from Viagra says.  :P"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T14:46:38Z"},
+         "screenName":{"type":"literal","value":"TitanTexan"},
+         "profileImage":{"type":"uri","value":"http://a3.twimg.com/profile_images/1103856819/Titan_Texan_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22086950721"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-1.1722479167E2"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.381006944E1"},
+         "text":{"type":"literal","value":"Up like Viagra -_-"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T13:11:03Z"},
+         "screenName":{"type":"literal","value":"Twit3rGangorDie"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/1013916498/image_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22086950721"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-1.1722104149955329E2"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.379200149986943E1"},
+         "placeName":{"type":"literal","value":"Perris, CA"},
+         "text":{"type":"literal","value":"Up like Viagra -_-"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T13:11:03Z"},
+         "screenName":{"type":"literal","value":"Twit3rGangorDie"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/1013916498/image_normal.jpg"}
+      },
+      {
+         "tweet":{"type":"uri","value":"http://twitlogic.fortytwo.net/post/twitter/22067433467"},
+         "lon":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"-1.11737746500072E2"},
+         "lat":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#double", "value":"3.339550000002181E1"},
+         "placeName":{"type":"literal","value":"Mesa, AZ"},
+         "text":{"type":"literal","value":"Bill Maher -  even Viagra won't help someone with your affliction. You should take traditional martial arts and learn what respect means"},
+         "createdAt":{"type":"literal", "datatype":"http://www.w3.org/2001/XMLSchema#dateTime", "value":"2010-08-25T06:31:01Z"},
+         "screenName":{"type":"literal","value":"ArizonaKarate"},
+         "profileImage":{"type":"uri","value":"http://a2.twimg.com/profile_images/821063902/ShorinvGreen_normal.jpg"}
+      }
+    ]
+  }
+};
 
         // Note: beware of the same-origin policy.  The SPARQL endpoint must
         // reside in the same URI space as this web page.
@@ -75,12 +371,11 @@
                 tweets.removeChild(tweets.firstChild);
             }
 
-            queryForTweets(sparqlEndpoint, query, 10000);
+//            queryForTweets(sparqlEndpoint, query, 10000);
+drawMap(results.results.bindings);
         }
 
         function drawMap(bindings) {
-            //var bindings = results.results.bindings;
-
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'Lat');
             data.addColumn('number', 'Lon');
