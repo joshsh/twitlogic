@@ -175,7 +175,7 @@ function queryForTweets(sparqlEndpoint, query, connectionTimeout) {
         url: sparqlEndpoint,
         type: "GET",
         data: "query=" + encodeURIComponent(query),
-        dataType: "json",
+        dataType: "text",
         cache: false,
         timeout: connectionTimeout,
         beforeSend: function(request) {
@@ -185,6 +185,7 @@ function queryForTweets(sparqlEndpoint, query, connectionTimeout) {
             //alert("issuing query: " + query);
         },
         success: function(data, textStatus, request) {
+data = JSON.parse(data);
             //alert("data: " + data + ", textStatus: " + textStatus + ", request: " + request);
             var statusCode = parseInt(request.status);
 
@@ -218,7 +219,6 @@ function queryForTweets(sparqlEndpoint, query, connectionTimeout) {
                 alert("Connection timeout. Double-check query and data source.");
             } else {
                 alert("Client error: check query, data source and connection: " + errorThrown + ", " + textStatus);
-                //alert(request, textStatus, errorThrown);
             }
         },
         complete: function(request, textStatus) {
