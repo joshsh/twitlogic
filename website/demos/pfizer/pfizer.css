@@ -198,7 +198,7 @@ div.tl-tweet-contents:hover a {
 
 .pf-map {
     float: left;
-    /*background-color: #F0F0FF;*/
+    background-color: #F0F0FF;
     width: 600px;
     height: 500px;
 }
