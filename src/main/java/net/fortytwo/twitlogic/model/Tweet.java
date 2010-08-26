@@ -21,6 +21,14 @@ import java.util.logging.Logger;
 public class Tweet implements Resource {
     private static final Logger LOGGER = TwitLogic.getLogger(Tweet.class);
 
+    public Entities getEntities() {
+        return entities;
+    }
+
+    public void setEntities(Entities entities) {
+        this.entities = entities;
+    }
+
     public Place getPlace() {
         return place;
     }
@@ -33,6 +41,7 @@ public class Tweet implements Resource {
 
     // private final List<User> contributors;
     private Date createdAt;
+    private Entities entities;
     //private final Boolean favorited;
     private Point geo;
     private String id;
@@ -47,9 +56,7 @@ public class Tweet implements Resource {
     //private final Boolean truncated;
     private JSONArray twannotations;
 
-    private final Collection<Hashtag> topics = new LinkedList<Hashtag>();
     private final Collection<Triple> annotations = new LinkedList<Triple>();
-    private final Collection<URIReference> links = new LinkedList<URIReference>();
 
     /**
      * Creates a new, empty tweet.
@@ -145,6 +152,11 @@ public class Tweet implements Resource {
             user = new User(userJSON);
 
             twannotations = json.optJSONArray(TwitterAPI.Field.ANNOTATIONS.toString());
+
+            JSONObject ent = json.optJSONObject(TwitterAPI.Field.ENTITIES.toString());
+            if (null != ent) {
+                entities = new Entities(ent);
+            }
         } catch (JSONException e) {
             throw new TweetParseException(e);
         }
@@ -186,16 +198,8 @@ public class Tweet implements Resource {
         return Resource.Type.TWEET;
     }
 
-    public Collection<Hashtag> getTopics() {
-        return topics;
-    }
-
     public Collection<Triple> getAnnotations() {
         return annotations;
-    }
-
-    public Collection<URIReference> getLinks() {
-        return links;
     }
 
     public String toString() {

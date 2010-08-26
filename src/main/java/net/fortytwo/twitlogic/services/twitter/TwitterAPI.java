@@ -134,6 +134,35 @@ public class TwitterAPI {
         }
     }
 
+    public enum EntitiesField {
+        URLS("urls"),
+        HASHTAGS("hashtags"),
+        USER_MENTIONS("user_mentions");
+
+        private static final Map<String, EntitiesField> fieldsByName;
+
+        static {
+            fieldsByName = new HashMap<String, EntitiesField>();
+            for (EntitiesField f : EntitiesField.values()) {
+                fieldsByName.put(f.name, f);
+            }
+        }
+
+        private final String name;
+
+        private EntitiesField(final String name) {
+            this.name = name;
+        }
+
+        public static EntitiesField valueByName(final String name) {
+            return fieldsByName.get(name);
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
+
     public enum Field {
         ANNOTATIONS("annotations"),
         CONTRIBUTORS("contributors"),
@@ -142,6 +171,7 @@ public class TwitterAPI {
         CREATED_AT("created_at"), // Note: used in multiple contexts
         DESCRIPTION("description"),
         DELETE("delete"),
+        ENTITIES("entities"),
         FAVORITED("favorited"),
         FAVORITES_COUNT("favourites_count"),
         FOLLOWERS_COUNT("followers_count"),

@@ -217,8 +217,8 @@ function queryForTweets(sparqlEndpoint, query, connectionTimeout) {
             if ("timeout" == textStatus) {
                 alert("Connection timeout. Double-check query and data source.");
             } else {
-                //setStatus("Client error: check query, data source and connection: " + errorThrown + ", " + textStatus);
-                alert(request, textStatus, errorThrown);
+                alert("Client error: check query, data source and connection: " + errorThrown + ", " + textStatus);
+                //alert(request, textStatus, errorThrown);
             }
         },
         complete: function(request, textStatus) {

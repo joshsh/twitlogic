@@ -4,6 +4,7 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.model.Entities;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 
 import java.util.Collection;
@@ -21,16 +22,20 @@ public class TopicSniffer implements Handler<Tweet, TweetHandlerException> {
     }
 
     public boolean handle(final Tweet tweet) throws TweetHandlerException {
-        if (null != tweet.getText()) {
-            Collection<Hashtag> topics = tweet.getTopics();
+        if (null == tweet.getEntities() && null != tweet.getText()) {
+            Entities entities = new Entities();
+
+            Collection<Hashtag> topics = entities.getTopics();
             for (String tag : TweetSyntax.findHashtags(tweet.getText())) {
                 topics.add(new Hashtag(tag));
             }
 
-            Collection<URIReference> links = tweet.getLinks();
+            Collection<URIReference> links = entities.getLinks();
             for (String s : TweetSyntax.findLinks(tweet.getText())) {
                 links.add(new URIReference(s));
             }
+
+            tweet.setEntities(entities);
         }
 
         return baseHandler.handle(tweet);

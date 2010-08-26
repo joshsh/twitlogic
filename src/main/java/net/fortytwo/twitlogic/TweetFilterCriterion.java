@@ -66,8 +66,8 @@ public class TweetFilterCriterion implements Filter.Criterion<Tweet> {
                 | (allowTweetsWithAnnotations && null != tweet.getTwannotations())
                 | (allowTweetsWithNanostatements && 0 != tweet.getAnnotations().size())
                 | (allowTweetsWithPlace && null != tweet.getPlace())
-                | (allowTweetsWithTopics && 0 != tweet.getTopics().size())
-                | (allowTweetsWithLinks && 0 != tweet.getLinks().size())
+                | (allowTweetsWithTopics && null != tweet.getEntities() && 0 != tweet.getEntities().getTopics().size())
+                | (allowTweetsWithLinks && null != tweet.getEntities() && 0 != tweet.getEntities().getLinks().size())
                 | (allowTweetsWithLocation && null != tweet.getGeo());
     }
 }

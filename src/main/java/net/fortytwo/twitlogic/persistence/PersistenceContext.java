@@ -76,14 +76,18 @@ public class PersistenceContext {
         }
 
         Set<Thing> topics = new HashSet<Thing>();
-        for (Hashtag t : tweet.getTopics()) {
-            topics.add(persist(t));
+        if (null != tweet.getEntities()) {
+            for (Hashtag t : tweet.getEntities().getTopics()) {
+                topics.add(persist(t));
+            }
         }
         post.setTopic(topics);
 
         Set<Thing> links = new HashSet<Thing>();
-        for (URIReference t : tweet.getLinks()) {
-            links.add(persist(t));
+        if (null != tweet.getEntities()) {
+            for (URIReference t : tweet.getEntities().getLinks()) {
+                links.add(persist(t));
+            }
         }
         post.setLinksTo(links);
 
@@ -226,7 +230,7 @@ public class PersistenceContext {
             p.setLong(c.getLongitude());
             p.setLat(c.getLatitude());
         }
-        
+
         return f;
     }
 
