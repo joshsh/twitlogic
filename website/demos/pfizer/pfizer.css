@@ -197,14 +197,14 @@ div.tl-tweet-contents:hover a {
 /* Pfizer demo ************************/
 
 .pf-panel {
-    height: 500px;
+    height: 450px;
 }
 
 .pf-map {
     float: left;
     background-color: #F0F0FF;
     width: 600px;
-    height: 500px;
+    height: 450px;
 }
 
 .pf-controls {

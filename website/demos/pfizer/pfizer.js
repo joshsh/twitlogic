@@ -141,7 +141,8 @@ function valueOfType(resource, property, required, type) {
         return null;
     }
     if (t != type) {
-        error("wrong type '" + t + "' for value of property '" + property + "' (should be '" + type + "')");
+        // TODO: restore me
+        //        error("wrong type '" + t + "' for value of property '" + property + "' (should be '" + type + "')");
     }
 
     var v = json.value;
@@ -185,7 +186,7 @@ function queryForTweets(sparqlEndpoint, query, connectionTimeout) {
             //alert("issuing query: " + query);
         },
         success: function(data, textStatus, request) {
-data = JSON.parse(data);
+            data = JSON.parse(data);
             //alert("data: " + data + ", textStatus: " + textStatus + ", request: " + request);
             var statusCode = parseInt(request.status);
 
