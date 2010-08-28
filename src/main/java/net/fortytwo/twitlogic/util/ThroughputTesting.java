@@ -66,9 +66,10 @@ public class ThroughputTesting {
         //testLoggingTransientMemoryPersister();
         //testNativeStorePersister();
         //t.testSocketBasedLoggingTransientMemoryPersister();
-        //t.testRdfTransactionPersister();
+        //t.testRdfTransactionPersister(1);
+        t.testRdfTransactionPersister(100);
         //t.testTrivialRdfTransactionPersister();
-        t.testAllegroGraphPersister();
+        //t.testAllegroGraphPersister();
         //t.testUdpTransactionPersister();
 
 /*
@@ -213,8 +214,10 @@ public class ThroughputTesting {
         }
     }
 
-    // Over the LAN: 60 t/s
-    private void testRdfTransactionPersister() throws Exception {
+    // Over the LAN:
+    //     1 trans/upload -- 60 t/s
+    //     100 trans/upload -- 160 t/s
+    private void testRdfTransactionPersister(final int commitsPerUpload) throws Exception {
         AGRepository repo = new NewAllegroSailFactory(TwitLogic.getConfiguration(), false).makeAGRepository();
         repo.initialize();
         try {
@@ -224,10 +227,11 @@ public class ThroughputTesting {
                 tSail.initialize();
 
                 try {
-                    Sail sail = new AGTransactionSail(tSail, rc);
+                    Sail sail = new AGTransactionSail(tSail, rc, commitsPerUpload);
                     try {
 
                         TweetStore store = new TweetStore(sail);
+                        store.doNotRefreshCoreMetadata();
                         store.initialize();
                         try {
                             final SailConnection tc = tSail.getConnection();
@@ -247,7 +251,7 @@ public class ThroughputTesting {
                                     }
                                 };
 
-                                stressTest(h, 10);
+                                stressTest(h, 100);
                             } finally {
                                 tc.close();
                             }
@@ -474,8 +478,9 @@ public class ThroughputTesting {
         private final AGRepositoryConnection connection;
 
         public AGTransactionSail(final Sail sail,
-                                 final AGRepositoryConnection connection) {
-            super(sail);
+                                 final AGRepositoryConnection connection,
+                                 final int commitsPerUpload) {
+            super(sail, commitsPerUpload);
             this.connection = connection;
         }
 
