@@ -62,9 +62,9 @@ public class FirehoseDemo {
     }
 
     private void run() throws Exception {
-        //String host = "localhost";
-        String host = "fluxdmz";
-        int port = 9999;
+        String host = "localhost";
+        //String host = "fluxdmz";
+        int port = 9990;
         
         InetAddress address = InetAddress.getByName(host);
 

@@ -21,22 +21,6 @@ import java.util.logging.Logger;
 public class Tweet implements Resource {
     private static final Logger LOGGER = TwitLogic.getLogger(Tweet.class);
 
-    public Entities getEntities() {
-        return entities;
-    }
-
-    public void setEntities(Entities entities) {
-        this.entities = entities;
-    }
-
-    public Place getPlace() {
-        return place;
-    }
-
-    public void setPlace(Place place) {
-        this.place = place;
-    }
-
     private User user;
 
     // private final List<User> contributors;
@@ -246,5 +230,20 @@ public class Tweet implements Resource {
         this.text = text;
     }
 
+    public Entities getEntities() {
+        return entities;
+    }
+
+    public void setEntities(Entities entities) {
+        this.entities = entities;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
 }
 
