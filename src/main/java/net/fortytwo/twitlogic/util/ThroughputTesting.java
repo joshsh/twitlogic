@@ -69,8 +69,8 @@ public class ThroughputTesting {
         //t.testRdfTransactionPersister(1);
         //t.testRdfTransactionPersister(100);
         //t.testTrivialRdfTransactionPersister();
-        //t.testAllegroGraphPersister();
-        t.testUdpTransactionPersister();
+        t.testAllegroGraphPersister();
+        //t.testUdpTransactionPersister();
 
 /*
         //System.out.println("" + Integer.MAX_VALUE);
