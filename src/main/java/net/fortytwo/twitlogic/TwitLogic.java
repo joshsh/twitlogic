@@ -63,6 +63,8 @@ public class TwitLogic {
             TWITTER_PASSWORD = "net.fortytwo.twitlogic.twitter.password",
             TWITTER_USERNAME = "net.fortytwo.twitlogic.twitter.username",
             TWITTER_WHITELISTED = "net.fortytwo.twitlogic.twitter.whitelisted",
+            UDP_REMOTEHOST = "net.fortytwo.twitlogic.persistence.udp.remoteHost",
+            UDP_REMOTEPORTS = "net.fortytwo.twitlogic.persistence.udp.remotePorts",
             XMPP_PORT = "net.fortytwo.twitlogic.xmpp.port",
             XMPP_REASONER_PASSWORD = "net.fortytwo.twitlogic.xmpp.reasonerPassword",
             XMPP_REASONER_USERNAME = "net.fortytwo.twitlogic.xmpp.reasonerUsername",

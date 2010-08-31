@@ -1,11 +1,11 @@
 package net.fortytwo.twitlogic.util;
 
-import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.TweetFilterCriterion;
+import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.flow.Filter;
+import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
 import net.fortytwo.twitlogic.logging.TweetReceivedLogger;
-import net.fortytwo.twitlogic.flow.Handler;
-import net.fortytwo.twitlogic.flow.Filter;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
@@ -18,6 +18,7 @@ import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
+import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -61,18 +62,32 @@ public class FirehoseDemo {
                 + "  <URL:http://wiki.github.com/joshsh/twitlogic/configuring-and-running-twitlogic>.");
     }
 
+    private int[] parsePorts(final String portsStr) {
+        String[] a = portsStr.split(",");
+        int[] ports = new int[a.length];
+        for (int i = 0; i < a.length; i++) {
+            ports[i] = Integer.valueOf(a[i].trim());
+        }
+        return ports;
+    }
+
     private void run() throws Exception {
-        String host = "localhost";
+        TypedProperties config = TwitLogic.getConfiguration();
+        String host = config.getString(TwitLogic.UDP_REMOTEHOST);
+        String portsStr = config.getString(TwitLogic.UDP_REMOTEPORTS);
+        int[] ports = parsePorts(portsStr);
+
+        //String host = "localhost";
         //String host = "fluxdmz";
-        int port = 9990;
-        
+        //int port = 9990;
+
         InetAddress address = InetAddress.getByName(host);
 
         Sail workingSail = new MemoryStore();
         workingSail.initialize();
 
         try {
-            Sail streamingSail = new UdpTransactionSail(workingSail, address, port);
+            Sail streamingSail = new UdpTransactionSail(workingSail, address, ports);
 
             try {
                 TweetStore store = new TweetStore(streamingSail);
