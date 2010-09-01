@@ -78,10 +78,6 @@ public class FirehoseDemo {
         String portsStr = config.getString(TwitLogic.UDP_REMOTEPORTS);
         int[] ports = parsePorts(portsStr);
 
-        //String host = "localhost";
-        //String host = "fluxdmz";
-        //int port = 9990;
-
         InetAddress address = InetAddress.getByName(host);
 
         Sail workingSail = new MemoryStore();
@@ -163,21 +159,4 @@ public class FirehoseDemo {
             workingSail.shutDown();
         }
     }
-
-    /*
-    private abstract class TweetHandler implements Handler<Tweet, TweetHandlerException> {
-        private final Handler<Tweet, TweetHandlerException> handler;
-
-        public TweetHandler(final Handler<Tweet, TweetHandlerException> handler) {
-            this.handler = handler;
-        }
-
-        public boolean handle(final Tweet tweet) throws TweetHandlerException {
-            return handler.handle(tweet);
-        }
-
-        public TweetHandler append(final Handler<Tweet, TweetHandlerException> other) {
-
-        }
-    }*/
 }

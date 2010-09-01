@@ -211,7 +211,11 @@ TwitLogic.SparqlWidget = function(settings) {
             url: settings.query.sparqlEndpoint,
             type: "GET",
             data: "query=" + encodeURIComponent(query),
-            dataType: "json",
+
+            // Temporary: allow for badly-escaped RDF-JSON
+            dataType: "text",
+            //        dataType: "json",
+
             cache: false,
             timeout: settings.query.connectionTimeout,
             beforeSend: function(request) {
@@ -221,6 +225,9 @@ TwitLogic.SparqlWidget = function(settings) {
                 //alert("issuing query: " + query);
             },
             success: function(data, textStatus, request) {
+                // Temporary: allow for badly-escaped RDF-JSON
+                data = JSON.parse(data);
+
                 var statusCode = parseInt(request.status);
 
                 if (0 == statusCode) {

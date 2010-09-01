@@ -176,7 +176,11 @@ function queryForTweets(sparqlEndpoint, query, connectionTimeout) {
         url: sparqlEndpoint,
         type: "GET",
         data: "query=" + encodeURIComponent(query),
+
+        // Temporary: allow for badly-escaped RDF-JSON
         dataType: "text",
+//        dataType: "json",
+
         cache: false,
         timeout: connectionTimeout,
         beforeSend: function(request) {
@@ -186,7 +190,9 @@ function queryForTweets(sparqlEndpoint, query, connectionTimeout) {
             //alert("issuing query: " + query);
         },
         success: function(data, textStatus, request) {
+            // Temporary: allow for badly-escaped RDF-JSON
             data = JSON.parse(data);
+
             //alert("data: " + data + ", textStatus: " + textStatus + ", request: " + request);
             var statusCode = parseInt(request.status);
 
