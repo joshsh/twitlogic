@@ -11,6 +11,9 @@
 
  */
 
+// Relax type-checking for not-entirely-compliant RDF-JSON engines.
+var strictAboutRDFJSONTypes = false;
+
 var TwitLogic = {};
 
 TwitLogic.SparqlWidget = function(settings) {
@@ -178,7 +181,9 @@ TwitLogic.SparqlWidget = function(settings) {
             return null;
         }
         if (t != type) {
-            error("wrong type '" + t + "' for value of property '" + property + "' (should be '" + type + "')");
+            if (strictAboutRDFJSONTypes) {
+                error("wrong type '" + t + "' for value of property '" + property + "' (should be '" + type + "')");
+            }
         }
 
         var v = json.value;
@@ -428,7 +433,7 @@ TwitLogic.SparqlWidget = function(settings) {
         aboutLink.setAttribute("target", "_blank");
         aboutLink.appendChild(document.createTextNode("TwitLogic"));
         aboutLink.style.backgroundColor = settings.appearance.shell.backgroundColor;
-        
+
         return widget;
     }
 
