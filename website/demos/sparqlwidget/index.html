@@ -26,30 +26,18 @@
     <script type="text/javascript">/* <![CDATA[ */
 
     $(document).ready(function() {
-        /*
-         var re = new RegExp("[a-z]+");
-         var m = re.exec("foo bar foo");
-         if (m == null) {
-         alert("No match");
-         } else {
-         var s = "Match at position " + m.index + ":\n";
-         for (var i = 0; i < m.length; i++) {
-         s = s + m[i] + "\n";
-         }
-         alert(s);
-         } */
-
         var w = new TwitLogic.SparqlWidget({
             title: "All tweets",
             comment: "Query for all recent tweets",
             query: {
                 sparqlEndpoint: "/catalogs/demos/repositories/places-demo",
                 //sparqlEndpoint: "../../sparql",
-//                sparqlEndpoint: "http://rambo:10042/catalogs/demos/repositories/places-demo",
+                //sparqlEndpoint: "http://rambo:10042/catalogs/demos/repositories/places-demo",
                 //sparqlQuery: document.getElementById("sparqlQuery").innerHTML.trim(),
                 sparqlQueryUrl: "examples/all-tweets.sparql",
                 connectionTimeout: 10000,  // Note: should be less than updateInterval
-                updateInterval: 15000
+                updateInterval: 15000,
+                queryWindow: 172800000  // 172800000ms = 2 days
             },
             appearance: {
                 maxVisibleTweets: 15,
@@ -72,6 +60,7 @@
         document.getElementById("widget-goes-here").appendChild(w.widget());
         w.start();
     });
+
     /* ]]> */</script>
     <link media="screen" type="text/css" href="v1/sparql-widget.css" rel="stylesheet"/>
 </head>

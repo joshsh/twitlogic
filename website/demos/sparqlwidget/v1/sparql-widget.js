@@ -34,6 +34,24 @@ TwitLogic.SparqlWidget = function(settings) {
         return this.replace(/^\s*/, "").replace(/\s*$/, "");
     };
 
+    function padNumber(n, digits) {
+        var s = "" + n;
+        for (var i = 0; i < digits - s.length; i++) {
+            s = "0" + s;
+        }
+        return s;
+    }
+
+    function dateToXsdDateTime(date) {
+        return padNumber(date.getUTCFullYear(), 4)
+                + "-" + padNumber(date.getUTCMonth() + 1, 2)
+                + "-" + padNumber(date.getUTCDate(), 2)
+                + "T" + padNumber(date.getUTCHours(), 2)
+                + ":" + padNumber(date.getUTCMinutes(), 2)
+                + ":" + padNumber(date.getUTCSeconds(), 2)
+                + ".000Z";
+    }
+
     // layout and content //////////////////////////////////////////////////////////
 
     function error(message) {
@@ -451,8 +469,15 @@ TwitLogic.SparqlWidget = function(settings) {
             return buildWidget();
         },
         start: function() {
-            latestTimestamp = "2000-01-01T00:00:00.000Z";
+            if (null == settings.query.queryWindow) {
+                latestTimestamp = "2000-01-01T00:00:00.000Z";
+            } else {
+                //var d= new Date();
+                var d = new Date(new Date().getTime() - settings.query.queryWindow);
+                latestTimestamp = dateToXsdDateTime(d);
+            }
             totalTweets = 0;
+            //alert("latestTimestamp: " + latestTimestamp);
 
             $.get(settings.query.sparqlQueryUrl, '', function(data) {
                 //alert(data);
