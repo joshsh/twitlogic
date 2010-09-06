@@ -38,6 +38,7 @@ public class TwitLogic {
             ALLOW_TWEETS_WITH_LINKS = "net.fortytwo.twitlogic.allowTweetsWithLinks",
             ALLOW_TWEETS_WITH_LOCATION = "net.fortytwo.twitlogic.allowTweetsWithLocation",
             ALLOW_TWEETS_WITH_PLACE = "net.fortytwo.twitlogic.allowTweetsWithPlace",
+            AVOID_REDUNDANT_TYPE_DESIGNATION = "net.fortytwo.twitlogic.persistence.avoidRedundantTypeDesignation",
             BITLY_APIKEY = "net.fortytwo.twitlogic.services.bitly.apiKey",
             BITLY_LOGIN = "net.fortytwo.twitlogic.services.bitly.login",
             COVERAGE_INTERVAL_END = "net.fortytwo.twitlogic.coverageIntervalEnd",

@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Place;
@@ -36,10 +37,14 @@ import java.util.Set;
  * Time: 10:31:14 PM
  */
 public class PersistenceContext {
-    private final ElmoManager manager;
 
-    public PersistenceContext(final ElmoManager manager) {
+    private final ElmoManager manager;
+    private final boolean avoidRedundantTypeDesignation;
+
+    public PersistenceContext(final ElmoManager manager) throws PropertyException {
         this.manager = manager;
+        avoidRedundantTypeDesignation = TwitLogic.getConfiguration().getBoolean(
+                TwitLogic.AVOID_REDUNDANT_TYPE_DESIGNATION, false);
     }
 
     public MicroblogPost persist(final Tweet tweet,
@@ -147,7 +152,7 @@ public class PersistenceContext {
             // rdf:type statement), as it might be the homepage of another
             // agent.  Therefore, "orphaned" Document resources are possible.
 
-            Document homepage = manager.designate(new QName(tweetUser.getUrl()), Document.class);
+            Document homepage = designate(tweetUser.getUrl(), Document.class);
             agent.setHomepage(homepage);
         }
 
@@ -157,7 +162,7 @@ public class PersistenceContext {
             // rdf:type statement), as it might be the image of another
             // agent.  Therefore, "orphaned" Image resources are possible.
 
-            Image depiction = manager.designate(new QName(tweetUser.getProfileImageUrl()), Image.class);
+            Image depiction = designate(tweetUser.getProfileImageUrl(), Image.class);
             agent.setDepiction(depiction);
         }
 
@@ -282,7 +287,17 @@ public class PersistenceContext {
 
     private <T> T designate(final String uri,
                             final Class<T> c) {
-        return manager.designate(new QName(uri), c);
+        // Avoid duplicate rdf:type statements (e.g. in AllegroGraph) by first
+        // removing matching rdf:type statements before adding a new one.
+        // Note: it is still possible for an entity to have multiple, distinct
+        // types (e.g. geo:Feature and geo:Point).
+        if (avoidRedundantTypeDesignation) {
+            T t = manager.designate(new QName(uri), c);
+            manager.removeDesignation(t, c);
+            return manager.designate(new QName(uri), c);
+        } else {
+            return manager.designate(new QName(uri), c);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
