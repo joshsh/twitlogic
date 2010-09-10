@@ -32,7 +32,12 @@ public class Place {
 
     // Note: this is a simplified data member; Twitter provides a *bounding polygon*
     private Point centroid;
-    
+
+    public Place(final String id) {
+        this.id = id;
+        json = null;
+    }
+
     public Place(final JSONObject json) throws TweetParseException {
         this.json = json;
 
@@ -78,7 +83,7 @@ public class Place {
                 throw new TweetParseException("wrong number of coordinate components for bounding box: " + box);
             }
 
-            Polygon p = null;
+            Polygon p;
             try {
                 p = new Polygon(coords.getJSONArray(0));
             } catch (JSONException e) {

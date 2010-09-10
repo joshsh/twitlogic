@@ -47,7 +47,6 @@ import java.util.Random;
  * Time: 3:10:06 PM
  */
 public class ThroughputTesting {
-    private final int udpOutputPorts[] = {9990, 9991, 9992, 9993, 9994, 9995};//, 9996, 9997};
 
     private static final Random RANDOM = new Random();
     private static final Date REFERENCE_DATE = new Date();
@@ -69,8 +68,8 @@ public class ThroughputTesting {
         //t.testRdfTransactionPersister(1);
         //t.testRdfTransactionPersister(100);
         //t.testTrivialRdfTransactionPersister();
-        t.testAllegroGraphPersister();
-        //t.testUdpTransactionPersister();
+        //t.testAllegroGraphPersister();
+        t.testUdpTransactionPersister();
 
 /*
         //System.out.println("" + Integer.MAX_VALUE);
@@ -417,7 +416,10 @@ public class ThroughputTesting {
 
     // Around 1000 t/s on (my MacBook Pro)-->(AG foray)
     private void testUdpTransactionPersister() throws Exception {
-        InetAddress address = InetAddress.getByName("fluxdmz");
+//        InetAddress address = InetAddress.getByName("fluxdmz");
+        InetAddress address = InetAddress.getByName("flux.franz.com");
+        int udpOutputPorts[] = {9992};//{9990, 9991, 9992, 9993, 9994, 9995};//, 9996, 9997};
+
 //            InetAddress address = InetAddress.getByName("foray");
         //int port = 9999;
 

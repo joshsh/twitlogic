@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
@@ -30,8 +31,12 @@ public class TweetDeleter implements Handler<Tweet, TweetHandlerException> {
     public TweetDeleter(final TweetStore store) throws TweetStoreException {
         this.storeConnection = store.createConnection();
         this.valueFactory = store.getSail().getValueFactory();
-        this.persistenceContext = new PersistenceContext(
-                storeConnection.getElmoManager());
+        try {
+            this.persistenceContext = new PersistenceContext(
+                    storeConnection.getElmoManager());
+        } catch (PropertyException e) {
+            throw new TweetStoreException(e);
+        }
     }
 
     public void close() throws TweetStoreException {

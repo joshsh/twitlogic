@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
@@ -44,16 +45,20 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
     private final PlacePersistenceHelper placeHelper;
 
     /**
-     * @param store the knowledge base
+     * @param store  the knowledge base
      * @param client an optional Twitter client for building the Places hierarchy
-     * @throws TweetStoreException
+     * @throws TweetStoreException if something goes awry
      */
     public TweetPersister(final TweetStore store,
                           final TwitterClient client) throws TweetStoreException {
         this.storeConnection = store.createConnection();
         this.valueFactory = store.getSail().getValueFactory();
-        this.persistenceContext = new PersistenceContext(
-                storeConnection.getElmoManager());
+        try {
+            this.persistenceContext = new PersistenceContext(
+                    storeConnection.getElmoManager());
+        } catch (PropertyException e) {
+            throw new TweetStoreException(e);
+        }
         this.placeHelper = null == client
                 ? null
                 : new PlacePersistenceHelper(persistenceContext, client);
@@ -99,7 +104,13 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         if (null != tweet.getPlace()) {
             Feature f = persistenceContext.persist(tweet.getPlace());
             if (null != placeHelper) {
-                placeHelper.submit(tweet.getPlace(), f);
+                try {
+                    placeHelper.submit(tweet.getPlace(), f);
+                } catch (TweetStoreException e) {
+                    throw new TweetHandlerException(e);
+                } catch (TwitterClientException e) {
+                    throw new TweetHandlerException(e);
+                }
             }
 
             Set<SpatialThing> s = currentMicroblogPost.getLocation();

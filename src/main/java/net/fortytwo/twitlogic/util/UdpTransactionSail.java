@@ -4,12 +4,15 @@ import net.fortytwo.sesametools.rdftransaction.RDFTransactionSail;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailException;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Note: typical size of a packet based on one of the test tweets is 6000 bytes.
@@ -32,8 +35,8 @@ public class UdpTransactionSail extends RDFTransactionSail {
 
     /**
      * @param baseSail base Sail
-     * @param address address of the remote host
-     * @param ports receiving ports of the remote host. This Sail will load-balance evenly across those ports.
+     * @param address  address of the remote host
+     * @param ports    receiving ports of the remote host. This Sail will load-balance evenly across those ports.
      */
     public UdpTransactionSail(final Sail baseSail,
                               final InetAddress address,
@@ -46,7 +49,13 @@ public class UdpTransactionSail extends RDFTransactionSail {
     }
 
     public void uploadTransactionEntity(byte[] bytes) throws SailException {
-        //System.out.println("message length: " + bytes.length);
+        /*
+        try {
+            System.out.println("message length: " + bytes.length + " (compressed: " + zipStringToBytes(bytes).length + ")");
+        } catch (IOException e) {
+            throw new SailException(e);
+        }
+        /*/
         //*
         try {
             socket.send(new DatagramPacket(bytes, bytes.length, address, ports[portIndex]));
@@ -54,5 +63,15 @@ public class UdpTransactionSail extends RDFTransactionSail {
         } catch (IOException e) {
             throw new SailException(e);
         }//*/
+    }
+
+    public static byte[] zipStringToBytes(byte[] input) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        BufferedOutputStream bufos = new BufferedOutputStream(new GZIPOutputStream(bos));
+        bufos.write(input);
+        bufos.close();
+        byte[] retval = bos.toByteArray();
+        bos.close();
+        return retval;
     }
 }
