@@ -32,7 +32,20 @@ import java.util.Properties;
  * Time: 12:21:28 PM
  */
 public class TweetMetrics {
+    /*
+    java -cp target/twitlogic-0.6-full.jar net.fortytwo.twitlogic.util.TweetMetrics config/metrics.properties > tweet_statistics.txt &
+1610 tweet_statistics.txt
 
+scp ubuntu@fortytwo.net:/home/ubuntu/projects/fortytwo/twitlogic/tweet_statistics.txt /tmp
+cat /tmp/tweet_statistics.txt | sed 's/^+//' > /tmp/stats.txt
+g <- read.table(file("/tmp/stats.txt", encoding="latin1"), comment.char = "")
+sum(g[,1])/length(g[,1])
+sum(g[,2])/length(g[,2])
+
+6502  -> 5212.153, 804.3202
+12131 -> 5213.096, 804.1835
+23653 -> 5206.831, 802.8875
+     */
     public static void main(final String[] args) {
         try {
             if (1 == args.length) {
