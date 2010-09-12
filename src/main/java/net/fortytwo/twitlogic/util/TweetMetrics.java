@@ -23,6 +23,7 @@ import org.openrdf.sail.memory.MemoryStore;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -149,7 +150,7 @@ sum(g[,2])/length(g[,2])
             int zipSize, gzipSize, lzmaSize, minilzoSize;
 
             System.out.println(new String(bytes));
-            /*
+
             try {
                 gzipSize = Compression.compress(bytes, Compression.Algorithm.GZIP).length;
                 lzmaSize = Compression.compress(bytes, Compression.Algorithm.LZMA).length;
@@ -159,8 +160,7 @@ sum(g[,2])/length(g[,2])
                 throw new SailException(e);
             }
 
-            System.out.println("+\t" + size + "\t" + gzipSize + "\t" + lzmaSize + "\t" + minilzoSize + "\t" + zipSize);
-            */
+            System.err.println("+\t" + size + "\t" + gzipSize + "\t" + lzmaSize + "\t" + minilzoSize + "\t" + zipSize);
         }
     }
 }
