@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -30,30 +31,34 @@ public class Compression {
 
     public static void main(final String[] args) {
         try {
+            //testCompression(Algorithm.GZIP);
             //testCompression(Algorithm.ZIP);
             //testCompression(Algorithm.LZMA);
             //testCompression(Algorithm.MINILZO);
-            //testDecompression(Algorithm.ZIP);
-            testDecompression(Algorithm.MINILZO);
+            testDecompression(Algorithm.ZIP);
+            //testDecompression(Algorithm.GZIP);
+            //testDecompression(Algorithm.MINILZO);
         } catch (Throwable t) {
             t.printStackTrace(System.err);
             System.exit(1);
         }
     }
 
+    // ZIP: > 4900 /s on my Macbook Pro
     // GZIP: > 5000 /s on my Macbook Pro
     // MINILZO: > 2500 /s on my Macbook Pro
     // LZMA: > 330 /s on my Macbook Pro
     private static void testCompression(final Algorithm algo) throws Exception {
         String s = readInputStreamAsString(Compression.class.getResourceAsStream("exampleTransaction.xml"));
         byte[] b = s.getBytes();
+        //System.out.println("b.length = " + b.length);
 
         int iterations = 10000;
         long before = System.currentTimeMillis();
         for (int i = 0; i < iterations; i++) {
             byte[] c = compress(b, algo);
-            //System.out.println(new String(c));
-            //System.out.println("" + b.length + "\t" + c.length);
+            System.out.println(new String(c));
+            System.out.println("" + b.length + "\t" + c.length);
         }
         long after = System.currentTimeMillis();
         long d = after - before;
@@ -62,6 +67,7 @@ public class Compression {
                 + (iterations * 1000 / (d * 1.0)) + "/s)");
     }
 
+    // ZIP: 196 /s on my Macbook Pro
     // GZIP: 187 /s on my Macbook Pro
     // MINILZO: 34800 /s on my Macbook Pro
     // LZMA: 195 /s on my Macbook Pro
@@ -74,6 +80,7 @@ public class Compression {
         long before = System.currentTimeMillis();
         for (int i = 0; i < iterations; i++) {
             byte[] d = decompress(c, algo);
+            //System.out.println("d.length = " + d.length);
             //System.out.println(new String(d));
         }
         long after = System.currentTimeMillis();
@@ -105,6 +112,7 @@ public class Compression {
                         break;
                     case ZIP:
                         os = new ZipOutputStream(bos);
+                        ((ZipOutputStream) os).putNextEntry(new ZipEntry(""));
                         break;
                     default:
                         throw new IllegalStateException("unfamiliar algorithm: " + algo);
@@ -140,6 +148,7 @@ public class Compression {
                         break;
                     case ZIP:
                         is = new ZipInputStream(bis);
+                        ((ZipInputStream) is).getNextEntry();
                         break;
                     default:
                         throw new IllegalStateException("unfamiliar algorithm: " + algo);
