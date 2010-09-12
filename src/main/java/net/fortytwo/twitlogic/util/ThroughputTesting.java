@@ -575,7 +575,7 @@ public class ThroughputTesting {
     }
 
     // Currently, each tweet contributes around 20 triples.
-    private static Tweet randomTweet() throws JSONException, TweetParseException {
+    public static Tweet randomTweet() throws JSONException, TweetParseException {
         String text = randomString(30, 140);
         String createdAt = randomDateString();
         String profileImageUrl = randomUrl();

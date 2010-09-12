@@ -150,7 +150,8 @@ sum(g[,2])/length(g[,2])
             int compressedSize;
 
             try {
-                compressedSize = UdpTransactionSail.zipStringToBytes(bytes).length;
+                //compressedSize = Compression.compress(bytes, Compression.Algorithm.ZIP).length;
+                compressedSize = Compression.compress(bytes, Compression.Algorithm.LZMA).length;
             } catch (IOException e) {
                 throw new SailException(e);
             }
