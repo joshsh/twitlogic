@@ -147,16 +147,17 @@ sum(g[,2])/length(g[,2])
 
         public void uploadTransactionEntity(byte[] bytes) throws SailException {
             int size = bytes.length;
-            int zipSize, lzmaSize;
+            int zipSize, lzmaSize, minilzoSize;
 
             try {
                 zipSize = Compression.compress(bytes, Compression.Algorithm.ZIP).length;
                 lzmaSize = Compression.compress(bytes, Compression.Algorithm.LZMA).length;
+                minilzoSize = Compression.compress(bytes, Compression.Algorithm.MINILZO).length;
             } catch (IOException e) {
                 throw new SailException(e);
             }
 
-            System.out.println("+\t" + size + "\t" + zipSize + "\t" + lzmaSize);
+            System.out.println("+\t" + size + "\t" + zipSize + "\t" + lzmaSize + "\t" + minilzoSize);
         }
     }
 }

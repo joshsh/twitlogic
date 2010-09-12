@@ -2,6 +2,8 @@ package net.fortytwo.twitlogic.util;
 
 import net.contrapunctus.lzma.LzmaInputStream;
 import net.contrapunctus.lzma.LzmaOutputStream;
+import org.jvcompress.lzo.MiniLZO;
+import org.jvcompress.util.MInt;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -10,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -20,14 +23,16 @@ import java.util.zip.GZIPOutputStream;
  */
 public class Compression {
     public enum Algorithm {
-        ZIP, LZMA
+        ZIP, LZMA, MINILZO
     }
 
     public static void main(final String[] args) {
         try {
             //testCompression(Algorithm.ZIP);
             //testCompression(Algorithm.LZMA);
-            testDecompression(Algorithm.ZIP);
+            //testCompression(Algorithm.MINILZO);
+            //testDecompression(Algorithm.ZIP);
+            testDecompression(Algorithm.MINILZO);
         } catch (Throwable t) {
             t.printStackTrace(System.err);
             System.exit(1);
@@ -35,6 +40,7 @@ public class Compression {
     }
 
     // ZIP: > 5000 /s on my Macbook Pro
+    // MINILZO: > 2500 /s on my Macbook Pro
     // LZMA: > 330 /s on my Macbook Pro
     private static void testCompression(final Algorithm algo) throws Exception {
         String s = readInputStreamAsString(Compression.class.getResourceAsStream("exampleTransaction.xml"));
@@ -44,6 +50,8 @@ public class Compression {
         long before = System.currentTimeMillis();
         for (int i = 0; i < iterations; i++) {
             byte[] c = compress(b, algo);
+            //System.out.println(new String(c));
+            //System.out.println("" + b.length + "\t" + c.length);
         }
         long after = System.currentTimeMillis();
         long d = after - before;
@@ -53,6 +61,7 @@ public class Compression {
     }
 
     // ZIP: 187 /s on my Macbook Pro
+    // MINILZO: 34800 /s on my Macbook Pro
     // LZMA: 195 /s on my Macbook Pro
     private static void testDecompression(final Algorithm algo) throws Exception {
         String s = readInputStreamAsString(Compression.class.getResourceAsStream("exampleTransaction.xml"));
@@ -74,52 +83,68 @@ public class Compression {
 
     public static byte[] compress(final byte[] input,
                                   final Algorithm algo) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            OutputStream os;
-            switch (algo) {
-                case LZMA:
-                    os = new LzmaOutputStream(bos);
-                    break;
-                case ZIP:
-                    os = new GZIPOutputStream(bos);
-                    break;
-                default:
-                    throw new IllegalStateException("unfamiliar algorithm: " + algo);
+        if (Algorithm.MINILZO == algo) {
+            MInt mint = new MInt();
+            byte[] out = new byte[input.length];
+            int[] dict = new int[128 * 1024];
+            Arrays.fill(dict, 0);
+            MiniLZO.lzo1x_1_compress(input, input.length, out, mint, dict);
+            return Arrays.copyOfRange(out, 0, mint.v);
+        } else {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try {
+                OutputStream os;
+                switch (algo) {
+                    case LZMA:
+                        os = new LzmaOutputStream(bos);
+                        break;
+                    case ZIP:
+                        os = new GZIPOutputStream(bos);
+                        break;
+                    default:
+                        throw new IllegalStateException("unfamiliar algorithm: " + algo);
+                }
+                BufferedOutputStream bufos = new BufferedOutputStream(os);
+                bufos.write(input);
+                bufos.close();
+                return bos.toByteArray();
+            } finally {
+                bos.close();
             }
-            BufferedOutputStream bufos = new BufferedOutputStream(os);
-            bufos.write(input);
-            bufos.close();
-            return bos.toByteArray();
-        } finally {
-            bos.close();
         }
     }
 
     public static byte[] decompress(final byte[] input,
                                     final Algorithm algo) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(input);
-            InputStream is;
-            switch (algo) {
-                case LZMA:
-                    is = new LzmaInputStream(bis);
-                    break;
-                case ZIP:
-                    is = new GZIPInputStream(bis);
-                    break;
-                default:
-                    throw new IllegalStateException("unfamiliar algorithm: " + algo);
+        if (Algorithm.MINILZO == algo) {
+            byte[] out = new byte[10*input.length];
+            MInt mint = new MInt();
+            MiniLZO.lzo1x_decompress(input, input.length, out, mint);
+            return Arrays.copyOfRange(out, 0, mint.v);
+        } else {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try {
+                ByteArrayInputStream bis = new ByteArrayInputStream(input);
+                InputStream is;
+                switch (algo) {
+                    case LZMA:
+                        is = new LzmaInputStream(bis);
+                        break;
+                    case ZIP:
+                        is = new GZIPInputStream(bis);
+                        break;
+                    default:
+                        throw new IllegalStateException("unfamiliar algorithm: " + algo);
+                }
+                int result = is.read();
+                while (result != -1) {
+                    bos.write(result);
+                    result = is.read();
+                }
+                return bos.toByteArray();
+            } finally {
+                bos.close();
             }
-            int result = is.read();
-            while (result != -1) {
-                bos.write(result);
-                result = is.read();
-            }
-            return bos.toByteArray();
-        } finally {
-            bos.close();
         }
     }
 
