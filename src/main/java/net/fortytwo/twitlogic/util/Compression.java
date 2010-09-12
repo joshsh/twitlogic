@@ -15,6 +15,8 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 /**
  * User: josh
@@ -23,7 +25,7 @@ import java.util.zip.GZIPOutputStream;
  */
 public class Compression {
     public enum Algorithm {
-        ZIP, LZMA, MINILZO
+        ZIP, GZIP, LZMA, MINILZO
     }
 
     public static void main(final String[] args) {
@@ -39,7 +41,7 @@ public class Compression {
         }
     }
 
-    // ZIP: > 5000 /s on my Macbook Pro
+    // GZIP: > 5000 /s on my Macbook Pro
     // MINILZO: > 2500 /s on my Macbook Pro
     // LZMA: > 330 /s on my Macbook Pro
     private static void testCompression(final Algorithm algo) throws Exception {
@@ -60,7 +62,7 @@ public class Compression {
                 + (iterations * 1000 / (d * 1.0)) + "/s)");
     }
 
-    // ZIP: 187 /s on my Macbook Pro
+    // GZIP: 187 /s on my Macbook Pro
     // MINILZO: 34800 /s on my Macbook Pro
     // LZMA: 195 /s on my Macbook Pro
     private static void testDecompression(final Algorithm algo) throws Exception {
@@ -98,8 +100,11 @@ public class Compression {
                     case LZMA:
                         os = new LzmaOutputStream(bos);
                         break;
-                    case ZIP:
+                    case GZIP:
                         os = new GZIPOutputStream(bos);
+                        break;
+                    case ZIP:
+                        os = new ZipOutputStream(bos);
                         break;
                     default:
                         throw new IllegalStateException("unfamiliar algorithm: " + algo);
@@ -130,8 +135,11 @@ public class Compression {
                     case LZMA:
                         is = new LzmaInputStream(bis);
                         break;
-                    case ZIP:
+                    case GZIP:
                         is = new GZIPInputStream(bis);
+                        break;
+                    case ZIP:
+                        is = new ZipInputStream(bis);
                         break;
                     default:
                         throw new IllegalStateException("unfamiliar algorithm: " + algo);
