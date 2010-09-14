@@ -7,10 +7,13 @@ import org.jvcompress.util.MInt;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
@@ -35,12 +38,107 @@ public class Compression {
             //testCompression(Algorithm.ZIP);
             //testCompression(Algorithm.LZMA);
             //testCompression(Algorithm.MINILZO);
-            testDecompression(Algorithm.ZIP);
+            //testDecompression(Algorithm.ZIP);
             //testDecompression(Algorithm.GZIP);
             //testDecompression(Algorithm.MINILZO);
+
+            //testCompressionOfVariableSizedFile();
+            testDecompressionOfVariableSizedFile();
         } catch (Throwable t) {
             t.printStackTrace(System.err);
             System.exit(1);
+        }
+    }
+
+    private static void testCompressionOfVariableSizedFile() throws Exception {
+        int iterations = 1000;
+
+        StringBuilder sb = new StringBuilder("lines");
+        sb.append("\tbytes");
+        for (Algorithm a : Algorithm.values()) {
+            sb.append("\t");
+            sb.append(a);
+        }
+        System.out.println(sb.toString());
+
+        for (int lines = 100; lines < 5000; lines += 100) {
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            InputStream is = new FileInputStream("/tmp/tweet_transactions.txt");
+            try {
+                BufferedReader b = new BufferedReader(new InputStreamReader(is));
+                for (int l = 0; l < lines; l++) {
+                    bos.write(b.readLine().getBytes());
+                }
+
+                byte[] bytes = bos.toByteArray();
+                sb = new StringBuilder();
+                sb.append(lines);
+                sb.append("\t");
+                sb.append(bytes.length);
+
+                for (Algorithm a : Algorithm.values()) {
+                    long before = System.currentTimeMillis();
+                    for (int k = 0; k < iterations; k++) {
+                        compress(bytes, a);
+                    }
+                    long after = System.currentTimeMillis();
+                    double ms = (after - before) / (iterations * 1.0);
+
+                    sb.append("\t");
+                    sb.append(ms);
+                }
+                System.out.println(sb.toString());
+            } finally {
+                is.close();
+            }
+        }
+    }
+
+    private static void testDecompressionOfVariableSizedFile() throws Exception {
+        int iterations = 1000;
+
+        StringBuilder sb = new StringBuilder("lines");
+        sb.append("\tbytes");
+        for (Algorithm a : Algorithm.values()) {
+            sb.append("\t");
+            sb.append(a);
+        }
+        System.out.println(sb.toString());
+
+        for (int lines = 100; lines < 5000; lines += 100) {
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            InputStream is = new FileInputStream("/tmp/tweet_transactions.txt");
+            try {
+                BufferedReader b = new BufferedReader(new InputStreamReader(is));
+                for (int l = 0; l < lines; l++) {
+                    bos.write(b.readLine().getBytes());
+                }
+
+                byte[] bytes = bos.toByteArray();
+                sb = new StringBuilder();
+                sb.append(lines);
+                sb.append("\t");
+                sb.append(bytes.length);
+
+                for (Algorithm a : Algorithm.values()) {
+                    byte[] c = compress(bytes, a);
+
+                    long before = System.currentTimeMillis();
+                    for (int k = 0; k < iterations; k++) {
+                        decompress(c, a);
+                    }
+                    long after = System.currentTimeMillis();
+                    double ms = (after - before) / (iterations * 1.0);
+
+                    sb.append("\t");
+                    sb.append(ms);
+                }
+                System.out.println(sb.toString());
+            } finally {
+                is.close();
+            }
         }
     }
 
@@ -130,7 +228,7 @@ public class Compression {
     public static byte[] decompress(final byte[] input,
                                     final Algorithm algo) throws IOException {
         if (Algorithm.MINILZO == algo) {
-            byte[] out = new byte[10*input.length];
+            byte[] out = new byte[10 * input.length];
             MInt mint = new MInt();
             MiniLZO.lzo1x_decompress(input, input.length, out, mint);
             return Arrays.copyOfRange(out, 0, mint.v);

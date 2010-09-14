@@ -137,6 +137,7 @@ public class TwitterAPI {
     public enum EntitiesField {
         URLS("urls"),
         HASHTAGS("hashtags"),
+        TEXT("text"),
         USER_MENTIONS("user_mentions");
 
         private static final Map<String, EntitiesField> fieldsByName;
