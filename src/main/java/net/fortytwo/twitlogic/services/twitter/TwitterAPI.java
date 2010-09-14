@@ -135,9 +135,11 @@ public class TwitterAPI {
     }
 
     public enum EntitiesField {
+        EXPANDED_URL("expanded_url"),
         URLS("urls"),
         HASHTAGS("hashtags"),
         TEXT("text"),
+        URL("url"),
         USER_MENTIONS("user_mentions");
 
         private static final Map<String, EntitiesField> fieldsByName;
@@ -292,7 +294,7 @@ public class TwitterAPI {
     }
 
     public static String getString(final JSONObject json,
-                                   final TwitterAPI.Field key) throws JSONException {
+                                   final Enum key) throws JSONException {
         String s = json.optString(key.toString());
         if (null != s && s.equals("null")) {
             s = null;

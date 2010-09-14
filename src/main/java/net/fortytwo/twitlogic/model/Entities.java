@@ -24,7 +24,10 @@ public class Entities {
         JSONArray urls = json.getJSONArray(TwitterAPI.EntitiesField.URLS.toString());
         for (int i = 0; i < urls.length(); i++) {
             JSONObject e = urls.getJSONObject(i);
-            String text = e.getString(TwitterAPI.EntitiesField.TEXT.toString());
+            String text = TwitterAPI.getString(e, TwitterAPI.EntitiesField.EXPANDED_URL);
+            if (null == text) {
+                text = TwitterAPI.getString(e, TwitterAPI.EntitiesField.URL);
+            }
             links.add(new URIReference(text));
         }
 
