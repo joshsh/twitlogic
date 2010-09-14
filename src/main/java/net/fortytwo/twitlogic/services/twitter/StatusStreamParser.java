@@ -87,6 +87,7 @@ public class StatusStreamParser {
                         } catch (TweetParseException e) {
                             if (recoverFromErrors) {
                                 LOGGER.severe("failed to parse status element: " + e);
+                                System.err.println("element json (followed by stack trace): " + json);
                                 e.printStackTrace(System.err);
                             } else {
                                 throw new TweetHandlerException(e);
