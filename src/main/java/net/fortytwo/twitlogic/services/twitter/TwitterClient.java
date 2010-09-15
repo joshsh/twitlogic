@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -113,6 +114,11 @@ public class TwitterClient extends RestfulJSONClient {
                     return client.execute(request);
                 } catch (HttpHostConnectException e) {
                     LOGGER.warning("failed to connect to host: " + e);
+                    throw new TwitterConnectionResetException(e);
+                } catch (SocketException e) {
+                    // Commonly: java.net.SocketException: Connection reset
+                    // It seems to happen (rarely) when Twitter experiences a service hiccup.
+                    LOGGER.warning("socket exception: " + e);
                     throw new TwitterConnectionResetException(e);
                 } catch (IOException e) {
                     throw new TwitterClientException(e);
