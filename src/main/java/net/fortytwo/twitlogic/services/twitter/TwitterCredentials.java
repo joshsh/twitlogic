@@ -10,14 +10,13 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
-import oauth.signpost.signature.SignatureMethod;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -62,10 +61,8 @@ public class TwitterCredentials {
             useOAuth = true;
             consumer = new CommonsHttpOAuthConsumer(
                     consumerKey,
-                    consumerSecret,
-                    SignatureMethod.HMAC_SHA1);
+                    consumerSecret);
             provider = new DefaultOAuthProvider(
-                    consumer,
                     TwitterAPI.OAUTH_REQUEST_TOKEN_URL,
                     TwitterAPI.OAUTH_ACCESS_TOKEN_URL,
                     TwitterAPI.OAUTH_AUTHORIZE_URL);
@@ -74,7 +71,7 @@ public class TwitterCredentials {
         }
     }
 
-    public void sign(final HttpUriRequest request) throws OAuthExpectationFailedException, OAuthMessageSignerException {
+    public void sign(final HttpUriRequest request) throws OAuthExpectationFailedException, OAuthMessageSignerException, OAuthCommunicationException {
         //request.getParams().s
         if (useOAuth) {
             consumer.sign(request);
@@ -98,11 +95,11 @@ public class TwitterCredentials {
      */
     public void deriveCredentials() throws OAuthCommunicationException, OAuthExpectationFailedException, OAuthNotAuthorizedException, OAuthMessageSignerException, IOException {
         // we do not support callbacks, thus pass OOB
-        String authURL = provider.retrieveRequestToken(OAuth.OUT_OF_BAND);
+        String authURL = provider.retrieveRequestToken(consumer, OAuth.OUT_OF_BAND);
         String pinCode = findPinCode(authURL);
 
         // user must have granted authorization at this point
-        provider.retrieveAccessToken(pinCode);
+        provider.retrieveAccessToken(consumer, pinCode);
 
         // store consumer.getToken() and consumer.getTokenSecret(),
         // for the current user, e.g. in a relational database

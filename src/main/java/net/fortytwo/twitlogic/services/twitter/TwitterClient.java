@@ -11,6 +11,7 @@ import net.fortytwo.twitlogic.services.twitter.errors.UnauthorizedException;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.exception.OAuthCommunicationException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -512,6 +513,8 @@ public class TwitterClient extends RestfulJSONClient {
         } catch (OAuthExpectationFailedException e) {
             throw new TwitterClientException(e);
         } catch (OAuthMessageSignerException e) {
+            throw new TwitterClientException(e);
+        } catch (OAuthCommunicationException e) {
             throw new TwitterClientException(e);
         }
     }

@@ -51,7 +51,7 @@
         <dependency>
             <groupId>oauth.signpost</groupId>
             <artifactId>signpost-commonshttp4</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2.1.1</version>
         </dependency>
         <dependency>
             <groupId>jivesoftware</groupId>
