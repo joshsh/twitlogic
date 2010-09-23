@@ -214,6 +214,7 @@ public class TwitterAPI {
         SOURCE("source"),
         STATUS("status"),
         STATUSES_COUNT("statuses_count"),
+        STATES("states"),
         TEXT("text"),
         TIME_ZONE("time_zone"),
         TRUNCATED("truncated"),

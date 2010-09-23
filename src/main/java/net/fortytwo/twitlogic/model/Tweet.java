@@ -36,6 +36,7 @@ public class Tweet implements Resource {
     // private boolean retweeted;
     private Tweet retweetOf;
     //private final String source;
+    //private Set<...> states;
     private String text;
     //private final Boolean truncated;
     private JSONArray twannotations;
