@@ -23,7 +23,11 @@ import org.openrdf.sail.memory.MemoryStore;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Properties;
 
 /**
@@ -141,8 +145,17 @@ sum(g[,2])/length(g[,2])
     }
 
     private class MockUdpTransactionSail extends RDFTransactionSail {
+        private final PrintStream ps;
+
         public MockUdpTransactionSail(final Sail baseSail) {
             super(baseSail);
+
+            try {
+                OutputStream os  = new FileOutputStream("/tmp/tweet_metrics.txt");
+                ps = new PrintStream(os);
+            } catch (FileNotFoundException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         public void uploadTransactionEntity(byte[] bytes) throws SailException {
@@ -161,7 +174,7 @@ sum(g[,2])/length(g[,2])
                 throw new SailException(e);
             }
 
-            System.err.println("+\t" + size + "\t" + gzipSize + "\t" + lzmaSize + "\t" + minilzoSize + "\t" + zipSize + "\t" + deflateSize);
+            ps.println("+\t" + size + "\t" + gzipSize + "\t" + lzmaSize + "\t" + minilzoSize + "\t" + zipSize + "\t" + deflateSize);
         }
     }
 }
