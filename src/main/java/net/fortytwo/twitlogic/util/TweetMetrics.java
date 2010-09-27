@@ -149,7 +149,7 @@ sum(g[,2])/length(g[,2])
             int size = bytes.length;
             int zipSize, gzipSize, lzmaSize, minilzoSize, deflateSize;
 
-            System.out.println(new String(bytes));
+            //System.out.println(new String(bytes));
 
             try {
                 gzipSize = Compression.compress(bytes, Compression.Algorithm.GZIP).length;
