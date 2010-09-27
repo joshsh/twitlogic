@@ -16,11 +16,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.zip.Deflater;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.Inflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import java.util.zip.DataFormatException;
 
 /**
  * User: josh
@@ -29,21 +32,25 @@ import java.util.zip.ZipOutputStream;
  */
 public class Compression {
     public enum Algorithm {
-        ZIP, GZIP, LZMA, MINILZO
+        ZIP, GZIP, LZMA, MINILZO, DEFLATE
     }
 
     public static void main(final String[] args) {
         try {
+            //testCompression(Algorithm.DEFLATE);
             //testCompression(Algorithm.GZIP);
-            //testCompression(Algorithm.ZIP);
             //testCompression(Algorithm.LZMA);
             //testCompression(Algorithm.MINILZO);
-            //testDecompression(Algorithm.ZIP);
-            //testDecompression(Algorithm.GZIP);
-            //testDecompression(Algorithm.MINILZO);
+            //testCompression(Algorithm.ZIP);
 
-            //testCompressionOfVariableSizedFile();
-            testDecompressionOfVariableSizedFile();
+            //testDecompression(Algorithm.DEFLATE);
+            //testDecompression(Algorithm.GZIP);
+            //testDecompression(Algorithm.LZMA);
+            //testDecompression(Algorithm.MINILZO);
+            //testDecompression(Algorithm.ZIP);
+
+            testCompressionOfVariableSizedFile();
+            //testDecompressionOfVariableSizedFile();
         } catch (Throwable t) {
             t.printStackTrace(System.err);
             System.exit(1);
@@ -142,10 +149,11 @@ public class Compression {
         }
     }
 
-    // ZIP: > 4900 /s on my Macbook Pro
-    // GZIP: > 5000 /s on my Macbook Pro
-    // MINILZO: > 2500 /s on my Macbook Pro
-    // LZMA: > 330 /s on my Macbook Pro
+    // DEFLATE: > 1589 /s on my Macbook Pro
+    // GZIP: > 3469 /s on my Macbook Pro
+    // LZMA: > 228 /s on my Macbook Pro
+    // MINILZO: > 1252 /s on my Macbook Pro
+    // ZIP: > 2469 /s on my Macbook Pro
     private static void testCompression(final Algorithm algo) throws Exception {
         String s = readInputStreamAsString(Compression.class.getResourceAsStream("exampleTransaction.xml"));
         byte[] b = s.getBytes();
@@ -155,20 +163,21 @@ public class Compression {
         long before = System.currentTimeMillis();
         for (int i = 0; i < iterations; i++) {
             byte[] c = compress(b, algo);
-            System.out.println(new String(c));
-            System.out.println("" + b.length + "\t" + c.length);
+            //System.out.println(new String(c));
+            //System.out.println("" + b.length + "\t" + c.length);
         }
         long after = System.currentTimeMillis();
         long d = after - before;
 
-        System.out.println("compressed " + iterations + " times in " + d + "ms ("
+        System.out.println(algo + ": compressed " + iterations + " times in " + d + "ms ("
                 + (iterations * 1000 / (d * 1.0)) + "/s)");
     }
 
-    // ZIP: 196 /s on my Macbook Pro
-    // GZIP: 187 /s on my Macbook Pro
-    // MINILZO: 34800 /s on my Macbook Pro
-    // LZMA: 195 /s on my Macbook Pro
+    // DEFLATE: 12987 /s on my Macbook Pro
+    // GZIP: 144 /s on my Macbook Pro
+    // LZMA: 389 /s on my Macbook Pro
+    // MINILZO: 14925 /s on my Macbook Pro
+    // ZIP: 134 /s on my Macbook Pro
     private static void testDecompression(final Algorithm algo) throws Exception {
         String s = readInputStreamAsString(Compression.class.getResourceAsStream("exampleTransaction.xml"));
         byte[] b = s.getBytes();
@@ -184,7 +193,7 @@ public class Compression {
         long after = System.currentTimeMillis();
         long d = after - before;
 
-        System.out.println("decompressed " + iterations + " times in " + d + "ms ("
+        System.out.println(algo + ": decompressed " + iterations + " times in " + d + "ms ("
                 + (iterations * 1000 / (d * 1.0)) + "/s)");
     }
 
@@ -197,6 +206,13 @@ public class Compression {
             Arrays.fill(dict, 0);
             MiniLZO.lzo1x_1_compress(input, input.length, out, mint, dict);
             return Arrays.copyOfRange(out, 0, mint.v);
+        } else if (Algorithm.DEFLATE == algo) {
+            byte[] output = new byte[input.length];
+            Deflater compresser = new Deflater();
+            compresser.setInput(input);
+            compresser.finish();
+            int compressedDataLength = compresser.deflate(output);
+            return Arrays.copyOfRange(output, 0, compressedDataLength);
         } else {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try {
@@ -232,6 +248,19 @@ public class Compression {
             MInt mint = new MInt();
             MiniLZO.lzo1x_decompress(input, input.length, out, mint);
             return Arrays.copyOfRange(out, 0, mint.v);
+        } else if (Algorithm.DEFLATE == algo) {
+            // Decompress the bytes
+            Inflater decompresser = new Inflater();
+            decompresser.setInput(input, 0, input.length);
+            byte[] result = new byte[10 * input.length];
+            int resultLength;
+            try {
+                resultLength = decompresser.inflate(result);
+            } catch (DataFormatException e) {
+                throw new IOException(e);
+            }
+            decompresser.end();
+            return Arrays.copyOfRange(result, 0, resultLength);
         } else {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try {
