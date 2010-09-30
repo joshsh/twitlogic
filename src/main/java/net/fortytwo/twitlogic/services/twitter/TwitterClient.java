@@ -116,7 +116,7 @@ public class TwitterClient extends RestfulJSONClient {
                 } catch (HttpHostConnectException e) {
                     LOGGER.warning("failed to connect to host: " + e);
                     throw new TwitterConnectionResetException(e);
-                } catch (SocketException e) {
+                } catch (SocketException e) {  // Note: double-check, but I don't think this code is ever used.  SocketExceptions are also caught in StatusStreamParser.
                     // Commonly: java.net.SocketException: Connection reset
                     // It seems to happen (rarely) when Twitter experiences a service hiccup.
                     LOGGER.warning("socket exception: " + e);
@@ -593,6 +593,10 @@ public class TwitterClient extends RestfulJSONClient {
                 case CONNECTION_REFUSED:
                     // If the connection is refused, try again, but patiently.
                     wait = CONNECTION_REFUSED_WAIT;
+                    break;
+                case CONNECTION_RESET:
+                    // If the connection is reset, try again, but patiently.
+                    wait = CONNECTION_RESET_WAIT;
                     break;
                 default:
                     throw new IllegalStateException("unexpected exit state: " + exit);

@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class StatusStreamParser {
     public enum ExitReason {
-        END_OF_INPUT, HANDLER_QUIT, EXCEPTION_THROWN, NULL_RESPONSE,
+        END_OF_INPUT, HANDLER_QUIT, EXCEPTION_THROWN, NULL_RESPONSE, CONNECTION_RESET,
         CONNECTION_REFUSED  // Note: this error actually occurs outside of the parser
     }
 
@@ -63,7 +64,15 @@ public class StatusStreamParser {
             LOGGER.info("begin reading from stream");
             // Break out when the end of input is reached, when the handler quits, or when an exception is thrown.
             while (true) {
-                String line = b.readLine();
+                String line;
+
+                try {
+                    line = b.readLine();
+                } catch (SocketException e) {
+                    exitReason = ExitReason.CONNECTION_RESET;
+                    break;
+                }
+
                 if (null == line) {
                     exitReason = ExitReason.END_OF_INPUT;
                     break;

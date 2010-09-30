@@ -43,7 +43,8 @@ public abstract class CommonHttpClient {
     protected static final long
             MIN_WAIT = 10000,
             MAX_WAIT = 320000,
-            CONNECTION_REFUSED_WAIT = 60000;
+            CONNECTION_REFUSED_WAIT = 60000,
+            CONNECTION_RESET_WAIT = 60000;
 
     private static final long
             PATIENCE_FACTOR = 3;
