@@ -46,7 +46,7 @@ public class UdpTransactionSail extends RDFTransactionSail {
     }
 
     public void uploadTransactionEntity(byte[] bytes) throws SailException {
-        System.out.println(new String(bytes));
+        //System.out.println(new String(bytes));
         /*
         try {
             System.out.println("message length: " + bytes.length + " (compressed: " + zipStringToBytes(bytes).length + ")");
