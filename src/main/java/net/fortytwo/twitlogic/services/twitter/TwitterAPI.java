@@ -193,6 +193,7 @@ public class TwitterAPI {
         LISTED_COUNT("listed_count"),
         LOCATION("location"),
         NAME("name"),
+        NEW_ID("new_id"),
         NOTIFICATIONS("notifications"),
         PLACE("place"),
         PROFILE_BACKGROUND_COLOR("profile_background_color"),

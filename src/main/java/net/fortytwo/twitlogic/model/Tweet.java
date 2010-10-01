@@ -31,6 +31,7 @@ public class Tweet implements Resource {
     private String id;
     //private User inReplyToUser;
     private Tweet inReplyToTweet;
+    //private String newId;
     private Place place;
     // private boolean retweetCount;
     // private boolean retweeted;
@@ -93,7 +94,11 @@ public class Tweet implements Resource {
                 place = new Place(placeObj);
             }
 
-            id = json.optString(TwitterAPI.Field.ID.toString());
+            // Use "new_id" if it is defined.
+            id = json.optString(TwitterAPI.Field.NEW_ID.toString());
+            if (null == id) {
+                id = json.optString(TwitterAPI.Field.ID.toString());
+            }
             // Note: this has happened at least twice before
             if (null == id) {
                 LOGGER.severe("received a tweet without an ID: " + json);
