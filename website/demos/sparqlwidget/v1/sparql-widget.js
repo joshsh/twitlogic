@@ -237,9 +237,15 @@ TwitLogic.SparqlWidget = function(settings) {
             cache: false,
             timeout: settings.query.connectionTimeout,
             beforeSend: function(request) {
-                request.setRequestHeader("Accept", "application/sparql-results+json");
-                loadingIndicator.style.visibility = "visible";
-                setStatus("Searching...");
+                try {
+                    //request.setRequestHeader('Accept', '');
+                    //request.setRequestHeader("Accept", null);
+                    request.setRequestHeader("Accept", "application/sparql-results+json;q=0.0");
+                    loadingIndicator.style.visibility = "visible";
+                    setStatus("Searching...");
+                } catch (e) {
+                    alert("error: " + e);
+                }
                 //alert("issuing query: " + query);
             },
             success: function(data, textStatus, request) {
@@ -456,7 +462,8 @@ TwitLogic.SparqlWidget = function(settings) {
         aboutLink.setAttribute("class", "tl-about-link");
         aboutLink.setAttribute("href", "http://twitlogic.fortytwo.net");
         aboutLink.setAttribute("target", "_blank");
-        aboutLink.appendChild(document.createTextNode("TwitLogic"));
+        aboutLink.appendChild(document.createTextNode("SPARQL powered"));
+//        aboutLink.appendChild(document.createTextNode("TwitLogic"));
         aboutLink.style.backgroundColor = settings.appearance.shell.backgroundColor;
 
         return widget;
