@@ -14,6 +14,9 @@ public class User implements Resource {
     //provate final Boolean contributorsEnabled;
     //private final Date createdAt;
     private final String description;
+    //private final boolean discoverableByEmail;
+    //private final boolean discoverableByMobilePhone;
+    //private final boolean emailDiscoverabilitySet;
     //private final Integer favoritesCount;
     //private final Integer followersCount;
     //private final Integer followRequestSent;
@@ -23,6 +26,7 @@ public class User implements Resource {
     //private final String language;
     //private final String listedCount;
     private final String location;
+    //private final boolean mobilePhoneDiscoverabilitySet;
     private final String name;
     //private final String notifications; // Appropriate data type unknown.
     private final String profileBackgroundColor;

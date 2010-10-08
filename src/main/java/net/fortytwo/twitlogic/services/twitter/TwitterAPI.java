@@ -174,6 +174,9 @@ public class TwitterAPI {
         CREATED_AT("created_at"), // Note: used in multiple contexts
         DESCRIPTION("description"),
         DELETE("delete"),
+        DISCOVERABLE_BY_EMAIL("discoverable_by_email"),
+        DISCOVERABLE_BY_MOBILE_PHONE("discoverable_by_mobile_phone"),
+        EMAIL_DISCOVERABILITY_SET("email_discoverability_set"),
         ENTITIES("entities"),
         FAVORITED("favorited"),
         FAVORITES_COUNT("favourites_count"),
@@ -192,6 +195,7 @@ public class TwitterAPI {
         LIMIT("limit"),
         LISTED_COUNT("listed_count"),
         LOCATION("location"),
+        MOBILE_PHONE_DISCOVERABILITY_SET("mobile_phone_discoverability_set"),
         NAME("name"),
         NEW_ID("new_id"),
         NOTIFICATIONS("notifications"),
