@@ -24,6 +24,7 @@ import org.openrdf.elmo.Entity;
 import javax.xml.namespace.QName;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Note: the (private) "persist" methods of the class use an "add only" approach:
@@ -37,6 +38,7 @@ import java.util.Set;
  * Time: 10:31:14 PM
  */
 public class PersistenceContext {
+    private static final Logger LOGGER = TwitLogic.getLogger(PersistenceContext.class);
 
     private final ElmoManager manager;
     private final boolean avoidRedundantTypeDesignation;
@@ -91,7 +93,12 @@ public class PersistenceContext {
         Set<Thing> links = new HashSet<Thing>();
         if (null != tweet.getEntities()) {
             for (URIReference t : tweet.getEntities().getLinks()) {
-                links.add(persist(t));
+                try {
+                    links.add(persist(t));
+                } catch (IllegalArgumentException e) {
+                    LOGGER.warning("invalid URI: " + t);
+                    // Just skip this link.
+                }
             }
         }
         post.setLinksTo(links);
