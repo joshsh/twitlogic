@@ -94,10 +94,16 @@ public class Tweet implements Resource {
                 place = new Place(placeObj);
             }
 
-            // Use "new_id" if it is defined.
-            id = json.optString(TwitterAPI.Field.NEW_ID.toString());
+            // Run through Twitter's gauntlet of tweet id schemes.
+            id = json.optString(TwitterAPI.Field.NEW_ID_STR.toString());
             if (null == id) {
-                id = json.optString(TwitterAPI.Field.ID.toString());
+                id = json.optString(TwitterAPI.Field.NEW_ID.toString());
+                if (null == id) {
+                    id = json.optString(TwitterAPI.Field.ID_STR.toString());
+                    if (null == id) {
+                        id = json.optString(TwitterAPI.Field.ID.toString());
+                    }
+                }
             }
             // Note: this has happened at least twice before
             if (null == id) {
@@ -105,9 +111,21 @@ public class Tweet implements Resource {
             }
 
             // Evidently, these three fields are a unit.
-            String inReplyToUserId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
-            String inReplyToScreenName = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
-            String inReplyToStatusId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
+            String inReplyToUserId;
+            String inReplyToScreenName;
+            String inReplyToStatusId = null;
+
+            inReplyToUserId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_USER_ID_STR.toString()));
+            if (null == inReplyToUserId) {
+                inReplyToUserId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_USER_ID.toString()));
+            }
+
+            inReplyToScreenName = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_SCREEN_NAME.toString()));
+
+            inReplyToStatusId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID_STR.toString()));
+            if (null == inReplyToStatusId) {
+                inReplyToStatusId = stringValue(json.optString(TwitterAPI.Field.IN_REPLY_TO_STATUS_ID.toString()));
+            }
 
             // Note: a value of "" for inReplyToUserId was observed for a tweet retrieved from a friends list
             if (null != inReplyToUserId && 0 < inReplyToUserId.length()

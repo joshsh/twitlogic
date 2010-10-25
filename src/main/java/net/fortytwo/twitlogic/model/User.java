@@ -105,7 +105,12 @@ public class User implements Resource {
         try {
             TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.USER);
 
-            id = json.getInt(TwitterAPI.Field.ID.toString());
+            Integer id0 = json.getInt(TwitterAPI.Field.ID.toString());
+            if (null == id0) {
+                id0 = Integer.valueOf(json.getString(TwitterAPI.Field.ID_STR.toString()));
+            }
+            id = id0;
+
             geoEnabled = json.getBoolean(TwitterAPI.Field.GEO_ENABLED.toString());
             location = TwitterAPI.getString(json, TwitterAPI.Field.LOCATION);
             description = TwitterAPI.getString(json, TwitterAPI.Field.DESCRIPTION);

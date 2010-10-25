@@ -187,10 +187,13 @@ public class TwitterAPI {
         GEO("geo"),
         GEO_ENABLED("geo_enabled"),
         ID("id"), // Note: used in multiple contexts
+        ID_STR("id_str"), // Note: used in multiple contexts
         IDS("ids"),
         IN_REPLY_TO_SCREEN_NAME("in_reply_to_screen_name"),
         IN_REPLY_TO_STATUS_ID("in_reply_to_status_id"),
+        IN_REPLY_TO_STATUS_ID_STR("in_reply_to_status_id_str"),
         IN_REPLY_TO_USER_ID("in_reply_to_user_id"),
+        IN_REPLY_TO_USER_ID_STR("in_reply_to_user_id_str"),
         LANG("lang"),
         LIMIT("limit"),
         LISTED_COUNT("listed_count"),
@@ -198,6 +201,7 @@ public class TwitterAPI {
         MOBILE_PHONE_DISCOVERABILITY_SET("mobile_phone_discoverability_set"),
         NAME("name"),
         NEW_ID("new_id"),
+        NEW_ID_STR("new_id_str"),
         NOTIFICATIONS("notifications"),
         PLACE("place"),
         PROFILE_BACKGROUND_COLOR("profile_background_color"),

@@ -1,7 +1,6 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Place;
@@ -17,6 +16,7 @@ import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManager;
 import org.openrdf.elmo.Entity;
@@ -252,6 +252,7 @@ public class PersistenceContext {
         Entity e = manager.find(new QName(uriOf(tweet)));
         return null == e
                 ? null
+
                 : e instanceof MicroblogPost
                 ? (MicroblogPost) e
                 : null;
