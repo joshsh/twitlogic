@@ -89,6 +89,7 @@ public class TwitLogic {
             DATASETS_BASEURI = BASE_URI + "dataset/",
             DUMPS_BASEURI = BASE_URI + "dump/",
             GRAPHS_BASEURI = BASE_URI + "graph/",
+            DOLLARTAGS_BASEURI = BASE_URI + "dollartag/",
             HASHTAGS_BASEURI = BASE_URI + "hashtag/",
             LOCATIONS_BASEURI = BASE_URI + "location/",
             MISCELLANEOUS_BASEURI = BASE_URI + "miscellaneous/",

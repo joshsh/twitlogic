@@ -7,7 +7,7 @@ package net.fortytwo.twitlogic.model;
  */
 public interface Resource {
     enum Type {
-        HASHTAG, USER, PERSON, PLAIN_LITERAL, TYPED_LITERAL, URI_REFERENCE, TWEET
+        DOLLARTAG, HASHTAG, USER, PERSON, PLAIN_LITERAL, TYPED_LITERAL, URI_REFERENCE, TWEET
     }
 
     Type getType();

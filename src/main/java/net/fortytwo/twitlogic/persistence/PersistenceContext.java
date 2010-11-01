@@ -1,9 +1,11 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.model.Dollartag;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.Place;
+import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.geo.Point;
@@ -84,8 +86,14 @@ public class PersistenceContext {
 
         Set<Thing> topics = new HashSet<Thing>();
         if (null != tweet.getEntities()) {
-            for (Hashtag t : tweet.getEntities().getTopics()) {
-                topics.add(persist(t));
+            for (Resource t : tweet.getEntities().getTopics()) {
+                if (t instanceof Hashtag) {
+                topics.add(persist((Hashtag) t));
+                } else if (t instanceof Dollartag) {
+                    topics.add(persist((Dollartag) t));
+                } else {
+                    throw new IllegalStateException("topic of unfamiliar type: " + t);
+                }
             }
         }
         post.setTopic(topics);
@@ -174,6 +182,10 @@ public class PersistenceContext {
         }
 
         return user;
+    }
+
+    public Thing persist(final Dollartag tag) {
+        return designate(uriOf(tag), Thing.class);
     }
 
     public Thing persist(final Hashtag hashtag) {
@@ -320,6 +332,11 @@ public class PersistenceContext {
 
     public static String uriOf(final Tweet tweet) {
         return TwitLogic.TWEETS_BASEURI + tweet.getId();
+    }
+
+    public static String uriOf(final Dollartag tag) {
+        // FIXME: assumes normalized dollar tags
+        return TwitLogic.HASHTAGS_BASEURI + tag.getName();
     }
 
     public static String uriOf(final Hashtag hashtag) {

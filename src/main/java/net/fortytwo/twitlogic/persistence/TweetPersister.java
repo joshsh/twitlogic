@@ -1,8 +1,8 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.model.Dollartag;
 import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Person;
 import net.fortytwo.twitlogic.model.PlainLiteral;
@@ -19,6 +19,7 @@ import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
@@ -198,6 +199,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
 
     private Value toRDF(final Resource resource) throws TwitterClientException {
         switch (resource.getType()) {
+            case DOLLARTAG:
+                return valueOf((Dollartag) resource);
             case HASHTAG:
                 return valueOf((Hashtag) resource);
             case PLAIN_LITERAL:
@@ -215,6 +218,10 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
             default:
                 throw new IllegalStateException("unhandled resource type: " + resource.getType());
         }
+    }
+
+    private URI valueOf(final Dollartag tag) {
+        return uriOf(persistenceContext.persist(tag));
     }
 
     private URI valueOf(final Hashtag hashtag) {

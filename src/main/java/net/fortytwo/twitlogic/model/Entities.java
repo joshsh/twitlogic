@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * Time: 1:42:33 PM
  */
 public class Entities {
-    private final Collection<Hashtag> topics = new LinkedList<Hashtag>();
+    private final Collection<Resource> topics = new LinkedList<Resource>();
     private final Collection<URIReference> links = new LinkedList<URIReference>();
 
     public Entities() {
@@ -41,7 +41,7 @@ public class Entities {
         // Note: USER_MENTIONS field is currently not used.
     }
 
-    public Collection<Hashtag> getTopics() {
+    public Collection<Resource> getTopics() {
         return topics;
     }
 
