@@ -336,7 +336,7 @@ public class PersistenceContext {
 
     public static String uriOf(final Dollartag tag) {
         // FIXME: assumes normalized dollar tags
-        return TwitLogic.HASHTAGS_BASEURI + tag.getName();
+        return TwitLogic.DOLLARTAGS_BASEURI + tag.getName();
     }
 
     public static String uriOf(final Hashtag hashtag) {
