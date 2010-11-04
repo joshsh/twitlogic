@@ -11,7 +11,7 @@ import java.util.HashSet;
  */
 public class TweetSyntax {
     public static final Pattern
-            DOLLARTAG_PATTERN = Pattern.compile("[$][A-Za-z0-9]([A-Za-z0-9-_]*[A-Za-z0-9])*"),
+            DOLLARTAG_PATTERN = Pattern.compile("[$][A-Za-z]+"),
             HASHTAG_PATTERN = Pattern.compile("#[A-Za-z0-9]([A-Za-z0-9-_]*[A-Za-z0-9])*"),
             USERNAME_PATTERN = Pattern.compile("@[A-Za-z0-9-_]+"),
             URL_PATTERN = Pattern.compile("http://[A-Za-z0-9-]+([.][A-Za-z0-9-]+)*(/([A-Za-z0-9-_#&+./=?~]*[A-Za-z0-9-/])?)?");
