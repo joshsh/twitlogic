@@ -233,9 +233,10 @@ public class TwitterClient extends RestfulJSONClient {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    
+
     // FIXME: the search API produces search result objects, not status elements
     // TODO: paging
+
     public void search(final String term,
                        final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
         HttpGet request = new HttpGet(TwitterAPI.SEARCH_URL + ".json"
@@ -298,6 +299,25 @@ public class TwitterClient extends RestfulJSONClient {
         } catch (TweetParseException e) {
             throw new TwitterClientException(e);
         }
+    }
+
+    public void addToList(final User user,
+                          final String listId,
+                          final String userId) throws TwitterClientException {
+        HttpPost request = new HttpPost(TwitterAPI.API_LISTS_URL + "/"
+                + user.getScreenName() + "/"
+                + listId + "/members.json");
+        sign(request);
+
+        List<NameValuePair> formParams = new ArrayList<NameValuePair>();
+        formParams.add(new BasicNameValuePair(
+                TwitterAPI.ID, userId));
+        setEntity(request, formParams);
+
+        JSONObject json = requestJSONObject(request);
+
+        System.out.println("response JSON: " + json);
+        // ...
     }
 
     public List<User> getListMembers(final User user,
