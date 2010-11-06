@@ -26,25 +26,59 @@ import java.util.Collection;
  */
 public class RelatedHashtagsResource extends QueryResource {
     private static final String
-            RESOURCE_PARAM = "resource";
+            RESOURCE_PARAM = "resource",
+            STEPS_PARAM = "steps",
+            LIMIT_PARAM = "limit";
+
+    private final int
+            DEFAULT_STEPS = 500,
+            MAX_STEPS = 5000,
+            DEFAULT_LIMIT = 10,
+            MAX_LIMIT = 100;
 
     private final Representation result;
 
     public RelatedHashtagsResource(final Context context,
-                                       final Request request,
-                                       final Response response) throws Throwable {
+                                   final Request request,
+                                   final Response response) throws Throwable {
         super(context, request, response);
 
         getVariants().add(new Variant(MediaType.APPLICATION_JSON));
 
         //try {
-        String resource = arguments.get(RESOURCE_PARAM);
 
+        String s;
+        s = arguments.get(LIMIT_PARAM);
+        int limit;
+        if (null == s) {
+            limit = DEFAULT_LIMIT;
+        } else {
+            limit = Integer.valueOf(s);
+            if (limit < 1) {
+                limit = 1;
+            } else if (limit > MAX_LIMIT) {
+                limit = MAX_LIMIT;
+            }
+        }
+        s = arguments.get(STEPS_PARAM);
+        int steps;
+        if (null == s) {
+            steps = DEFAULT_STEPS;
+        } else {
+            steps = Integer.valueOf(s);
+            if (steps < 1) {
+                steps = 1;
+            } else if (steps > MAX_STEPS) {
+                steps = MAX_STEPS;
+            }
+        }
+
+        String resource = arguments.get(RESOURCE_PARAM);
         if (null == resource) {
             throw new IllegalArgumentException("missing '" + RESOURCE_PARAM + "' parameter");
         }
 
-        JSONArray a = relatedTagsJSON(new URIImpl(resource));
+        JSONArray a = relatedTagsJSON(new URIImpl(resource), limit, steps);
         //System.out.println("query = " + query);
 
         //System.out.println("result: " + a);
@@ -57,7 +91,9 @@ public class RelatedHashtagsResource extends QueryResource {
         //}
     }
 
-    private JSONArray relatedTagsJSON(final Resource resource) throws SailException, PataException, JSONException {
+    private JSONArray relatedTagsJSON(final Resource resource,
+                                      final int limit,
+                                      final int steps) throws SailException, PataException, JSONException {
         Sail baseSail = sail instanceof RewriterSail
                 ? ((RewriterSail) sail).getBaseSail()
                 : sail;
@@ -68,10 +104,9 @@ public class RelatedHashtagsResource extends QueryResource {
         try {
             //System.out.println("resource (really): " + resource);
             RelatedHashtagsInferencer inf = new RelatedHashtagsInferencer(sc, resource);
-            int steps = 500;
             int used = inf.compute(steps);
 
-            results = inf.currentHashtagResults(10);
+            results = inf.currentHashtagResults(limit);
 
         } finally {
             sc.close();
