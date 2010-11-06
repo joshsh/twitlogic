@@ -261,6 +261,7 @@ public class TwitterAPI {
     // API parameter names
     public static final String
             ID = "id",
+            LIST_ID = "list_id",
             SCREEN_NAME = "screen_name",
             STATUS = "status",
             IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id",

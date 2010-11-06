@@ -312,6 +312,7 @@ public class TwitterClient extends RestfulJSONClient {
         List<NameValuePair> formParams = new ArrayList<NameValuePair>();
         formParams.add(new BasicNameValuePair(
                 TwitterAPI.ID, userId));
+        formParams.add(new BasicNameValuePair(TwitterAPI.LIST_ID, listId));
         setEntity(request, formParams);
 
         JSONObject json = requestJSONObject(request);
