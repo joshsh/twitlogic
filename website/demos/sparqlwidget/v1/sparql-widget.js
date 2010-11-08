@@ -255,7 +255,7 @@ TwitLogic.SparqlWidget = function(settings) {
                 //data = JSON.parse(data);
                 data = $.xml2json(data);
 
-                document.getElementById("widget-goes-here").appendChild(document.createTextNode("" + data));
+                document.getElementById("widget-goes-here").appendChild(document.createTextNode(JSON.stringify(data)));
 
                 var statusCode = parseInt(request.status);
 
