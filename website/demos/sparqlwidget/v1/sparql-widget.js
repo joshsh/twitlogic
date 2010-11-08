@@ -231,8 +231,9 @@ TwitLogic.SparqlWidget = function(settings) {
             data: "query=" + encodeURIComponent(query),
 
             // Temporary: allow for badly-escaped RDF-JSON
-            dataType: "text",
+            //dataType: "text",
             //        dataType: "json",
+                    dataType: "xml",
 
             cache: false,
             timeout: settings.query.connectionTimeout,
@@ -240,7 +241,8 @@ TwitLogic.SparqlWidget = function(settings) {
                 try {
                     //request.setRequestHeader('Accept', '');
                     //request.setRequestHeader("Accept", null);
-                    request.setRequestHeader("Accept", "application/sparql-results+json;q=0.0");
+//                    request.setRequestHeader("Accept", "application/sparql-results+json;q=0.0");
+                    request.setRequestHeader("Accept", "application/sparql-results+xml;q=0.0");
                     loadingIndicator.style.visibility = "visible";
                     setStatus("Searching...");
                 } catch (e) {
@@ -250,7 +252,8 @@ TwitLogic.SparqlWidget = function(settings) {
             },
             success: function(data, textStatus, request) {
                 // Temporary: allow for badly-escaped RDF-JSON
-                data = JSON.parse(data);
+                //data = JSON.parse(data);
+                data = $.xml2json(data);
 
                 var statusCode = parseInt(request.status);
 
