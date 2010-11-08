@@ -118,18 +118,18 @@
     </div>
 </ul>
 <div>
-    Below is an embeddable widget which, like Twitter's search widget, provides a live view of the Twitter stream.
-    However, this one allows you to create much &quot;smarter&quot; streams of social data, using SPARQL.
+    Below is an embeddable widget which, like Twitter's search widget, provides a live view of a stream of tweets.
+    However, this one allows you to create much &quot;smarter&quot; views by issuing <span style="font-style: italic;">SPARQL</span> queries over an <span style="font-style: italic;">RDF</span> data stream. 
     <a
         href="http://www.readwriteweb.com/archives/how_twitter_annotations_could_bring_the_real-time_semantic_web_together.php">Why
     is this cool?</a>
     Well, the more data that can be gotten out of a tweet, the more sophisticated real-time filters you can create.
-    Imagine a stream of tweets by people with low Erd&ouml;s numbers, or about upcoming albums by bands you like.
+    Imagine a stream of tweets by people with low Erd&ouml;s numbers, for example, or about upcoming albums by bands you like.
     Rather than developing an entirely new Twitter application, just write a new SPARQL query.
     The example below is connected to a SPARQL endpoint which contains the <a href="http://data.semanticweb.org/">Semantic
     Web Conference Corpus</a>, a <a href="http://dbpedia.org">DBpedia</a> dump, special-purpose data for <a
         href="http://iswc2010.semanticweb.org/">ISWC 2010</a>, and a real time stream of tweets about the conference.
-    Based on the authors and #hashtags of tweets, we can begin to construct some interesting filters.
+    Based on the authors and #hashtags of tweets, we can begin to construct some useful filters.
 </div>
 <ul>
 <span>
@@ -147,8 +147,7 @@
         <li>Watch the tweets appear. Any subsequent tweets will appear as soon as they arrive, through Twitter's Streaming API.</li>
         <li>You can easily customize this widget for your own application, changing the query, the SPARQL endpoint, the style of the widget, etc.  Have a look at the source code.</li>
     </ul>
-    To see the SPARQL query for each filter, click on the &quot;SPARQL powered&quot; link at the lower right corner of the
-    widget.
+    To see the SPARQL query for each filter, click on the &quot;SPARQL powered&quot; link in the lower right-hand corner.
 </div>
 
 <br/>
