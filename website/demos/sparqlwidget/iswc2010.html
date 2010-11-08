@@ -64,7 +64,7 @@
             sparqlQueryUrl: "examples/iswc2010-subevents-tweets.sparql"
         },
         {
-            title: "by paper authors (who have opted in!)",
+            title: "by ISWC paper authors (who have opted in!)",
             sparqlQueryUrl: "examples/paper-authors.sparql"
         }
     ];
@@ -105,32 +105,37 @@
     <link media="screen" type="text/css" href="v1/sparql-widget.css" rel="stylesheet"/>
 </head>
 <body>
+<ul>
+    <div style="font-size: 24px;">
+        SPARQL-based Twitter filters
+    </div>
+    <div>
+        For the International Semantic Web Conference 2010
+    </div>
+    <br/>
+    <div style="font-size: 18px">
+        A demo by <a href="http://fortytwo.net">Joshua Shinavier</a>
+    </div>
+</ul>
 <div>
-    SPARQL-based Twitter filters
-</div>
-<div>
-    For the International Semantic Web Conference 2010
-</div>
-<br/>
-<div>
-    Below is a widget which, like Twitter's search widget, provides a live view of the Twitter stream.
+    Below is an embeddable widget which, like Twitter's search widget, provides a live view of the Twitter stream.
     However, this one allows you to create much &quot;smarter&quot; streams of social data, using SPARQL.
-    So <a href="http://www.readwriteweb.com/archives/how_twitter_annotations_could_bring_the_real-time_semantic_web_together.php">why
-        is this cool?</a>
-    Well, the more data that can be gotten out of a tweet, and the more background knowledge you can combine it with,
-    the more sophisticated real-time filters you can create.
-    Imagine a stream of tweets by people with low Erdos numbers, or about new albums by bands you like.
+    <a
+        href="http://www.readwriteweb.com/archives/how_twitter_annotations_could_bring_the_real-time_semantic_web_together.php">Why
+    is this cool?</a>
+    Well, the more data that can be gotten out of a tweet, the more sophisticated real-time filters you can create.
+    Imagine a stream of tweets by people with low Erd&ouml;s numbers, or about upcoming albums by bands you like.
+    Rather than developing an entirely new Twitter application, just write a new SPARQL query.
     The example below is connected to a SPARQL endpoint which contains the <a href="http://data.semanticweb.org/">Semantic
-    Web Conference Corpus</a>, a <a href="http://dbpedia.org">DBpedia</a> dump, and special-purpose data for <a
-        href="http://iswc2010.semanticweb.org/">ISWC 2010</a>.
-    Combined with the hashtags found in tweets, we can begin to construct some interesting filters.
+    Web Conference Corpus</a>, a <a href="http://dbpedia.org">DBpedia</a> dump, special-purpose data for <a
+        href="http://iswc2010.semanticweb.org/">ISWC 2010</a>, and a real time stream of tweets about the conference.
+    Based on the authors and #hashtags of tweets, we can begin to construct some interesting filters.
 </div>
-<br/>
-<span style="horizontal-align: center;   margin-left: auto ;
-  margin-right: auto ;">
+<ul>
+<span>
     <div id="widget-goes-here"></div>
 </span>
-<br/>
+</ul>
 <div>
     To use this demo:
     <ul>
@@ -139,13 +144,19 @@
                 <select id="query-options" onclick="selectionChanged();"></select>
             </form>
         </li>
-        <li>Watch the tweets appear. Any new tweets will appear in near-real-time, as the come in.</li>
-        <li>You can easily customize this widget for your own application. Have a look at the source code.</li>
+        <li>Watch the tweets appear. Any subsequent tweets will appear as soon as they arrive, through Twitter's Streaming API.</li>
+        <li>You can easily customize this widget for your own application, changing the query, the SPARQL endpoint, the style of the widget, etc.  Have a look at the source code.</li>
     </ul>
-    To see the SPARQL query for each filter, click on the &quot;SPARQL powered&quot; at the lower right corner of the
+    To see the SPARQL query for each filter, click on the &quot;SPARQL powered&quot; link at the lower right corner of the
     widget.
 </div>
 
+<br/>
+
+<div>Disclaimer: this widget is very new, so there may be bugs.  I believe it works in Firefox, Chrome, Safari and Opera.
+    It does <span style="font-weight:bold">not</span> yet work in Internet Explorer.
+    If you encounter any other issues, please <a href="mailto:josh@fortytwo.net">let me know</a>.
+</div>
 
 </body>
 </html>
