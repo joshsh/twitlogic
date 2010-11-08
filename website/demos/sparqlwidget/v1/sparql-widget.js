@@ -193,6 +193,7 @@ TwitLogic.SparqlWidget = function(settings) {
         }
 
         // Type check
+        /*
         var t = json.type;
         if (null == t) {
             error("no type for value of property '" + property + "'");
@@ -202,9 +203,10 @@ TwitLogic.SparqlWidget = function(settings) {
             if (strictAboutRDFJSONTypes) {
                 error("wrong type '" + t + "' for value of property '" + property + "' (should be '" + type + "')");
             }
-        }
+        }*/
 
-        var v = json.value;
+        //var v = json.value;
+        var v = json[type];
         if (null == v) {
             error("null value for property '" + property + "'");
         }
@@ -221,7 +223,8 @@ TwitLogic.SparqlWidget = function(settings) {
     }
 
     function typedLiteralValue(resource, property, required) {
-        return valueOfType(resource, property, required, "typed-literal");
+        return valueOfType(resource, property, required, "literal");
+//        return valueOfType(resource, property, required, "typed-literal");
     }
 
     function queryForTweets(query) {
@@ -290,7 +293,12 @@ TwitLogic.SparqlWidget = function(settings) {
                 }
 
                 for (var i = bindings.length - 1; i >= 0; i--) {
-                    var tweet = bindings[i];
+                    var binding = bindings[i].binding;
+                    var tweet = {};
+                    for (var j = 0; j < binding.length; j++) {
+                        var o = binding[j];
+                        tweet[o.name] = o;
+                    }
                     pushTweet(tweet);
                 }
 
