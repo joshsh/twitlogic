@@ -208,6 +208,8 @@ public class TwitterClient extends RestfulJSONClient {
 
         List<NameValuePair> formParams = new ArrayList<NameValuePair>();
 
+        LOGGER.info("following " + users.size() + " users and tracking " + terms.size() + " terms");
+        
         if (0 < users.size()) {
             String followUsers = commaDelimit(userIds(users));
             LOGGER.fine("following users: " + followUsers);

@@ -1,0 +1,28 @@
+PREFIX dbprop: <http://dbpedia.org/property/>
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX sioc: <http://rdfs.org/sioc/ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT ?tweet ?createdAt ?text ?screenName ?profileImage ?place ?placeName WHERE {
+### begin application-specific constraints ###
+    ?tweet geo:location ?place .
+    ?place owl:sameAs ?dbplace .
+    ?dbplace skos:subject <http://dbpedia.org/resource/Category:University_towns_in_the_United_States> .
+    ?dbplace dbprop:populationTotal ?pop .
+    FILTER(?pop < 50000) .
+#### end application-specific constraints ####
+    ?tweet dc:created ?createdAt .
+    ?tweet sioc:content ?text .
+    ?tweet sioc:has_creator ?account .
+    ?account sioc:id ?screenName .
+    ?account sioc:account_of ?agent .
+    OPTIONAL { ?agent foaf:depiction ?profileImage . } .
+    OPTIONAL { ?tweet geo:location ?place .
+               ?place dc:title ?placeName . } .
+  # TIME FILTER #
+}
+ORDER BY DESC(?createdAt)
+# LIMIT #

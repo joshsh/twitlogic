@@ -30,7 +30,7 @@ public class RelatedHashtagsResource extends QueryResource {
             STEPS_PARAM = "steps",
             LIMIT_PARAM = "limit";
 
-    private final int
+    private static final int
             DEFAULT_STEPS = 500,
             MAX_STEPS = 5000,
             DEFAULT_LIMIT = 10,
