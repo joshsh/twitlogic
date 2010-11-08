@@ -255,7 +255,7 @@ TwitLogic.SparqlWidget = function(settings) {
                 //data = JSON.parse(data);
                 data = $.xml2json(data);
 
-                document.getElementById("widget-goes-here").appendChild(document.createTextNode(JSON.stringify(data)));
+                // document.getElementById("widget-goes-here").appendChild(document.createTextNode(JSON.stringify(data)));
 
                 var statusCode = parseInt(request.status);
 
@@ -276,21 +276,21 @@ TwitLogic.SparqlWidget = function(settings) {
                     setStatus("Invalid SPARQL JSON response (missing 'results' object).");
                     return;
                 }
-                /*
-                var bindings = results.bindings;
+
+                var bindings = results.result;
                 if (null == bindings) {
                     setStatus("Invalid SPARQL JSON response (missing 'bindings' object).");
                     return;
-                }*/
+                }
 
                 //alert("bindings.length = " + bindings.length);
 
-                if (0 < results.length) {
+                if (0 < bindings.length) {
                     setStatus("Loading...");
                 }
 
-                for (var i = results.length - 1; i >= 0; i--) {
-                    var tweet = results[i];
+                for (var i = bindings.length - 1; i >= 0; i--) {
+                    var tweet = bindings[i];
                     pushTweet(tweet);
                 }
 
