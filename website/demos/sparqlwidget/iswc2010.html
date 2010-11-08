@@ -26,37 +26,75 @@
     <script type="text/javascript" src="v1/sparql-widget.js"></script>
     <script type="text/javascript">/* <![CDATA[ */
 
-    $(document).ready(function() {
-        var w = new TwitLogic.SparqlWidget({
-            title: "tagged with #iswc2010",
-            comment: "Show me recent tweets...",
-            query: {
-                sparqlEndpoint: "http://flux.franz.com/catalogs/demos/repositories/iswc2010",
-                sparqlQueryUrl: "examples/iswc2010-tweets.sparql",
-                connectionTimeout: 10000,  // Note: should be less than updateInterval
-                updateInterval: 15000,
-                queryWindow: 17280000000  // 172800000ms = 2 days
+    var configuration = {
+        //title: "tagged with #iswc2010",
+        comment: "Show me recent tweets...",
+        query: {
+            sparqlEndpoint: "http://flux.franz.com/catalogs/demos/repositories/iswc2010",
+            //sparqlQueryUrl: "examples/iswc2010-tweets.sparql",
+            connectionTimeout: 10000,  // Note: should be less than updateInterval
+            updateInterval: 15000,
+            queryWindow: 17280000000  // 172800000ms = 2 days
+        },
+        appearance: {
+            maxVisibleTweets: 15,
+            scroll: true,
+            width: 400,
+            height: 300,
+            shell: {
+                textColor: "#FFFFFF",
+                backgroundColor: "#0031E2",
+                headerImage: "images/header-sparkle-blue.png",
+                footerImage: "images/footer-sparkle-blue.png"
             },
-            appearance: {
-                maxVisibleTweets: 15,
-                scroll: true,
-                width: 400,
-                height: 300,
-                shell: {
-                    textColor: "#FFFFFF",
-                    backgroundColor: "#0031E2",
-                    headerImage: "images/header-sparkle-blue.png",
-                    footerImage: "images/footer-sparkle-blue.png"
-                },
-                tweet: {
-                    backgroundColor1: "#FFFFF8",
-                    backgroundColor2: "#F0F0FF"
-                }
+            tweet: {
+                backgroundColor1: "#FFFFF8",
+                backgroundColor2: "#F0F0FF"
             }
-        });
+        }
+    };
 
-        document.getElementById("widget-goes-here").appendChild(w.widget());
+    var options = [
+        {
+            title: "tagged with #iswc2010",
+            sparqlQueryUrl: "examples/iswc2010-tweets.sparql"
+        },
+        {
+            title: "about sub-events of ISWC 2010",
+            sparqlQueryUrl: "examples/iswc2010-subevents-tweets.sparql"
+        }
+    ];
+
+    function selectionChanged() {
+        var select = document.getElementById("query-options");
+        //alert("selection changed: " + options[select.selectedIndex].title);
+        var option = options[select.selectedIndex];
+        configuration.title = option.title;
+        configuration.query.sparqlQueryUrl = option.sparqlQueryUrl;
+        reload();
+    }
+
+    function reload() {
+        var w = new TwitLogic.SparqlWidget(configuration);
+        var parent = document.getElementById("widget-goes-here");
+        var oldChild = parent.firstChild;
+        if (null != oldChild) {
+            parent.removeChild(oldChild);
+        }
+        parent.appendChild(w.widget());
         w.start();
+    }
+
+    $(document).ready(function() {
+        var select = document.getElementById("query-options");
+        for (var i = 0; i < options.length; i++) {
+            var o = options[i];
+            var option = document.createElement("option");
+            //option.setAttribute("value", o.sparqlQuery);
+            option.appendChild(document.createTextNode(o.title));
+            select.appendChild(option);
+        }
+        selectionChanged();
     });
 
     /* ]]> */</script>
@@ -64,5 +102,10 @@
 </head>
 <body>
 <div id="widget-goes-here"></div>
+
+<form action="">
+    <select id="query-options" onclick="selectionChanged();"></select>
+</form>
+
 </body>
 </html>

@@ -4,13 +4,15 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX sioc: <http://rdfs.org/sioc/ns#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 # Add more namespace definitions as needed
 PREFIX hashtag: <http://twitlogic.fortytwo.net/hashtag/>
 
 SELECT DISTINCT ?tweet ?createdAt ?text ?screenName ?profileImage ?place ?placeName WHERE {
 ### begin application-specific patterns ###
-    <http://data.semanticweb.org/conference/iswc/2010> skos:broader ?topic .
+    <http://data.semanticweb.org/conference/iswc/2010> swc:isSuperEventOf ?subevent .
+    ?subevent skos:broader ?topic .
     ?tweet sioc:topic ?topic .
 #### end application-specific patterns ####
     ?tweet dc:created ?createdAt .

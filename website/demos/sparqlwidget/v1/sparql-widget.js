@@ -194,16 +194,16 @@ TwitLogic.SparqlWidget = function(settings) {
 
         // Type check
         /*
-        var t = json.type;
-        if (null == t) {
-            error("no type for value of property '" + property + "'");
-            return null;
-        }
-        if (t != type) {
-            if (strictAboutRDFJSONTypes) {
-                error("wrong type '" + t + "' for value of property '" + property + "' (should be '" + type + "')");
-            }
-        }*/
+         var t = json.type;
+         if (null == t) {
+         error("no type for value of property '" + property + "'");
+         return null;
+         }
+         if (t != type) {
+         if (strictAboutRDFJSONTypes) {
+         error("wrong type '" + t + "' for value of property '" + property + "' (should be '" + type + "')");
+         }
+         }*/
 
         //var v = json.value;
         var v = json[type];
@@ -224,7 +224,7 @@ TwitLogic.SparqlWidget = function(settings) {
 
     function typedLiteralValue(resource, property, required) {
         return valueOfType(resource, property, required, "literal");
-//        return valueOfType(resource, property, required, "typed-literal");
+        //        return valueOfType(resource, property, required, "typed-literal");
     }
 
     function queryForTweets(query) {
@@ -236,7 +236,7 @@ TwitLogic.SparqlWidget = function(settings) {
             // Temporary: allow for badly-escaped RDF-JSON
             //dataType: "text",
             //        dataType: "json",
-                    dataType: "xml",
+            dataType: "xml",
 
             cache: false,
             timeout: settings.query.connectionTimeout,
@@ -244,7 +244,7 @@ TwitLogic.SparqlWidget = function(settings) {
                 try {
                     //request.setRequestHeader('Accept', '');
                     //request.setRequestHeader("Accept", null);
-//                    request.setRequestHeader("Accept", "application/sparql-results+json;q=0.0");
+                    //                    request.setRequestHeader("Accept", "application/sparql-results+json;q=0.0");
                     request.setRequestHeader("Accept", "application/sparql-results+xml;q=0.0");
                     loadingIndicator.style.visibility = "visible";
                     setStatus("Searching...");
@@ -281,25 +281,27 @@ TwitLogic.SparqlWidget = function(settings) {
                 }
 
                 var bindings = results.result;
-                if (null == bindings) {
-                    setStatus("Invalid SPARQL JSON response (missing 'bindings' object).");
-                    return;
-                }
+                /*
+                 if (null == bindings) {
+                 setStatus("Invalid SPARQL JSON response (missing 'bindings' object).");
+                 return;
+                 } */
+                if (null != bindings) {
+                    //alert("bindings.length = " + bindings.length);
 
-                //alert("bindings.length = " + bindings.length);
-
-                if (0 < bindings.length) {
-                    setStatus("Loading...");
-                }
-
-                for (var i = bindings.length - 1; i >= 0; i--) {
-                    var binding = bindings[i].binding;
-                    var tweet = {};
-                    for (var j = 0; j < binding.length; j++) {
-                        var o = binding[j];
-                        tweet[o.name] = o;
+                    if (0 < bindings.length) {
+                        setStatus("Loading...");
                     }
-                    pushTweet(tweet);
+
+                    for (var i = bindings.length - 1; i >= 0; i--) {
+                        var binding = bindings[i].binding;
+                        var tweet = {};
+                        for (var j = 0; j < binding.length; j++) {
+                            var o = binding[j];
+                            tweet[o.name] = o;
+                        }
+                        pushTweet(tweet);
+                    }
                 }
 
                 if (0 == totalTweets) {
@@ -474,10 +476,14 @@ TwitLogic.SparqlWidget = function(settings) {
         var aboutLink = document.createElement("a");
         about.appendChild(aboutLink);
         aboutLink.setAttribute("class", "tl-about-link");
-        aboutLink.setAttribute("href", "http://twitlogic.fortytwo.net");
+        var url = settings.query.sparqlQueryUrl;
+        if (null == url) {
+            url = "http://twitlogic.fortytwo.net";
+        }
+        aboutLink.setAttribute("href", url);
         aboutLink.setAttribute("target", "_blank");
         aboutLink.appendChild(document.createTextNode("SPARQL powered"));
-//        aboutLink.appendChild(document.createTextNode("TwitLogic"));
+        //        aboutLink.appendChild(document.createTextNode("TwitLogic"));
         aboutLink.style.backgroundColor = settings.appearance.shell.backgroundColor;
 
         return widget;
