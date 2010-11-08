@@ -274,20 +274,21 @@ TwitLogic.SparqlWidget = function(settings) {
                     setStatus("Invalid SPARQL JSON response (missing 'results' object).");
                     return;
                 }
+                /*
                 var bindings = results.bindings;
                 if (null == bindings) {
                     setStatus("Invalid SPARQL JSON response (missing 'bindings' object).");
                     return;
-                }
+                }*/
 
                 //alert("bindings.length = " + bindings.length);
 
-                if (0 < bindings.length) {
+                if (0 < results.length) {
                     setStatus("Loading...");
                 }
 
-                for (var i = bindings.length - 1; i >= 0; i--) {
-                    var tweet = bindings[i];
+                for (var i = results.length - 1; i >= 0; i--) {
+                    var tweet = results[i];
                     pushTweet(tweet);
                 }
 
