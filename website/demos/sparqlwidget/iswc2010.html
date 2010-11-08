@@ -32,7 +32,7 @@
         query: {
             sparqlEndpoint: "http://flux.franz.com/catalogs/demos/repositories/iswc2010",
             //sparqlQueryUrl: "examples/iswc2010-tweets.sparql",
-            connectionTimeout: 10000,  // Note: should be less than updateInterval
+            connectionTimeout: 20000,  // Note: should be less than updateInterval
             updateInterval: 15000,
             queryWindow: 17280000000  // 172800000ms = 2 days
         },
@@ -56,12 +56,16 @@
 
     var options = [
         {
-            title: "tagged with #iswc2010",
+            title: "about ISWC 2010",
             sparqlQueryUrl: "examples/iswc2010-tweets.sparql"
         },
         {
             title: "about sub-events of ISWC 2010",
             sparqlQueryUrl: "examples/iswc2010-subevents-tweets.sparql"
+        },
+        {
+            title: "by paper authors (who have opted in!)",
+            sparqlQueryUrl: "examples/paper-authors.sparql"
         }
     ];
 
@@ -101,11 +105,47 @@
     <link media="screen" type="text/css" href="v1/sparql-widget.css" rel="stylesheet"/>
 </head>
 <body>
-<div id="widget-goes-here"></div>
+<div>
+    SPARQL-based Twitter filters
+</div>
+<div>
+    For the International Semantic Web Conference 2010
+</div>
+<br/>
+<div>
+    Below is a widget which, like Twitter's search widget, provides a live view of the Twitter stream.
+    However, this one allows you to create much &quot;smarter&quot; streams of social data, using SPARQL.
+    So <a href="http://www.readwriteweb.com/archives/how_twitter_annotations_could_bring_the_real-time_semantic_web_together.php">why
+        is this cool?</a>
+    Well, the more data that can be gotten out of a tweet, and the more background knowledge you can combine it with,
+    the more sophisticated real-time filters you can create.
+    Imagine a stream of tweets by people with low Erdos numbers, or about new albums by bands you like.
+    The example below is connected to a SPARQL endpoint which contains the <a href="http://data.semanticweb.org/">Semantic
+    Web Conference Corpus</a>, a <a href="http://dbpedia.org">DBpedia</a> dump, and special-purpose data for <a
+        href="http://iswc2010.semanticweb.org/">ISWC 2010</a>.
+    Combined with the hashtags found in tweets, we can begin to construct some interesting filters.
+</div>
+<br/>
+<span style="horizontal-align: center;   margin-left: auto ;
+  margin-right: auto ;">
+    <div id="widget-goes-here"></div>
+</span>
+<br/>
+<div>
+    To use this demo:
+    <ul>
+        <li>Select a filter from this list:
+            <form action="">
+                <select id="query-options" onclick="selectionChanged();"></select>
+            </form>
+        </li>
+        <li>Watch the tweets appear. Any new tweets will appear in near-real-time, as the come in.</li>
+        <li>You can easily customize this widget for your own application. Have a look at the source code.</li>
+    </ul>
+    To see the SPARQL query for each filter, click on the &quot;SPARQL powered&quot; at the lower right corner of the
+    widget.
+</div>
 
-<form action="">
-    <select id="query-options" onclick="selectionChanged();"></select>
-</form>
 
 </body>
 </html>

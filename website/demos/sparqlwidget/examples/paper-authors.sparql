@@ -1,0 +1,37 @@
+# The widget will replace the LIMIT and the time filter with appropriate values.
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX sioc: <http://rdfs.org/sioc/ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX swc: <http://data.semanticweb.org/ns/swc/ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+# Add more namespace definitions as needed
+PREFIX hashtag: <http://twitlogic.fortytwo.net/hashtag/>
+
+SELECT DISTINCT ?tweet ?createdAt ?text ?screenName ?profileImage ?place ?placeName WHERE {
+### begin application-specific patterns ###
+    {
+        ?paper swc:isPartOf <http://data.semanticweb.org/conference/iswc/2010>
+    #} UNION {
+    #    ?paper swc:isPartOf ?event .
+    #    <http://data.semanticweb.org/conference/iswc/2010> swc:isSuperEventOf ?event .
+    } UNION {
+        ?paper swc:isPartOf ?event .
+        ?event swc:relatedToEvent <http://data.semanticweb.org/conference/iswc/2010> .
+    }
+    ?author foaf:made ?paper .
+    ?agent owl:sameAs ?author .
+#### end application-specific patterns ####
+    ?tweet dc:created ?createdAt .
+    ?tweet sioc:content ?text .
+    ?tweet sioc:has_creator ?account .
+    ?account sioc:id ?screenName .
+    ?account sioc:account_of ?agent .
+    OPTIONAL { ?agent foaf:depiction ?profileImage . } .
+    OPTIONAL { ?tweet geo:location ?place .
+               ?place dc:title ?placeName . } .
+    # TIME FILTER #
+} ORDER BY DESC(?createdAt)
+# LIMIT #
