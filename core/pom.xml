@@ -5,11 +5,17 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo</groupId>
-    <artifactId>twitlogic</artifactId>
-    <version>0.6.5</version>
+    <artifactId>twitlogic-core</artifactId>
+    <version>0.6.6</version>
     <packaging>jar</packaging>
-    <name>TwitLogic</name>
-    <description>real-time #SemanticWeb in &lt;= 140 chars</description>
+    <name>TwitLogic Core</name>
+    <description>Java components for real-time integration of Twitter data with the Semantic Web</description>
+
+    <parent>
+        <groupId>net.fortytwo.twitlogic</groupId>
+        <artifactId>twitlogic</artifactId>
+        <version>0.6.6</version>
+    </parent>
 
     <repositories>
         <repository>
