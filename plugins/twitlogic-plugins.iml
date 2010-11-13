@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="twitlogic-core" exported="" />
+    <orderEntry type="library" exported="" name="Maven: org.json:json:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.antlr:antlr-runtime:3.1.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.antlr:stringtemplate:3.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: antlr:antlr:2.7.7" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-httpclient:commons-httpclient:3.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-logging:commons-logging:1.0.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-codec:commons-codec:1.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: oauth.signpost:signpost-commonshttp4:1.2.1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: oauth.signpost:signpost-core:1.2.1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.httpcomponents:httpcore:4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.httpcomponents:httpclient:4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: jivesoftware:smack:3.1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: jivesoftware:smackx:3.1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-ntriples:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-model:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-collections:2.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-concurrent:2.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-api:1.5.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-iteration:2.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-i18n:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-api:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-lang:2.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-net:2.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-text:2.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-trig:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-turtle:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-io:2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-trix:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-xml:2.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-rdfxml:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-sail-memory:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-sail-api:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-query:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryalgebra-model:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-sail-inferencer:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryparser-api:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryparser-serql:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryalgebra-evaluation:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-sail-nativerdf:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-repository-sail:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-repository-api:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryresultio-sparqlxml:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryresultio-api:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryresultio-sparqljson:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.elmo:elmo-api:1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.elmo:elmo-sesame:1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.elmo:elmo-core:1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: jboss:javassist:3.7.ga" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.elmo:elmo-repository:1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-repository-event:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-repository-manager:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-repository-http:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-http-client:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-http-protocol:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.slf4j:jcl104-over-slf4j:1.5.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryparser-sparql:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-platform-info:2.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-repository-contextaware:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-runtime:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryresultio-binary:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryresultio-text:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-repository-dataset:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-n3:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-sail-rdbms:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-dbcp:commons-dbcp:1.2.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: commons-pool:commons-pool:1.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.elmo:elmo-owl:1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.elmo:elmo-rdfs:1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.slf4j:slf4j-log4j12:1.5.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: log4j:log4j:1.2.14" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.restlet:org.restlet:1.1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet:1.1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet.ext.simple:1.1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.simpleframework:org.simpleframework:3.1.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.noelios.restlet:com.noelios.restlet.ext.httpclient:1.1.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.franz.ag:agrepo:4.0.5" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.contrapunctus:lzma:4.63-jio-0.94" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.fortytwo.sesametools:reposail:1.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.fortytwo.sesametools:common:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.fortytwo:sparql-osc:0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: com.illposed.osc:javaosc:20060402" level="project" />
+    <orderEntry type="library" exported="" name="Maven: edu.rpi.tw:patadata:0.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.fortytwo:rdfflow:0.5.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.fortytwo:flow:0.5.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.neo4j:neo4j-rdf-sail:0.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.neo4j:neo4j-kernel:1.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.neo4j:neo4j-rdf:0.7-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.neo4j:neo4j-meta-model:0.9-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.neo4j:neo4j-utils:1.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.neo4j:neo4j-index:1.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.lucene:lucene-core:2.9.2" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.neo4j:neo4j-graph-matching:0.8-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.lucene:lucene-highlighter:2.9.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.apache.lucene:lucene-memory:2.9.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.fortytwo.sesametools:replay:1.1" level="project" />
+    <orderEntry type="library" exported="" name="Maven: net.fortytwo.sesametools:rdftransaction:1.3" level="project" />
+    <orderEntry type="library" exported="" name="Maven: eu.larkc:platform:2.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.5" level="project" />
+  </component>
+</module>
+
