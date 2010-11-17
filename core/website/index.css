@@ -24,7 +24,7 @@ body {
     margin: 0 auto;
     overflow: hidden;
     position: relative;
-    word-wrap: break-word;
+    /*word-wrap: break-word; */
     text-align: left;
     width: 700px;
 }
@@ -40,7 +40,7 @@ body {
     margin: 0 auto;
     overflow: hidden;
     position: relative;
-    word-wrap: break-word;
+   /* word-wrap: break-word; */
     text-align: left;
     width: 425px;
 }
