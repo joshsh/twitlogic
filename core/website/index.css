@@ -1,0 +1,46 @@
+#life {
+    margin: 0;
+    padding: 0;
+    color: green;
+    font-family: Courier;
+    font-weight: bold;
+    text-align: center;
+}
+
+#validators {
+    text-align: center;
+}
+
+div.img {
+    border: .2em dotted #009;
+    padding: 5px;
+}
+
+body {
+    text-align: center;
+}
+
+.content {
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    word-wrap: break-word;
+    text-align: left;
+    width: 700px;
+}
+
+.logo {
+/*    vertical-align: text-top;
+    text-align: left;    */
+    float: left;
+    margin: 5px;
+}
+
+.slideshow {
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    word-wrap: break-word;
+    text-align: left;
+    width: 425px;
+}

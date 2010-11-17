@@ -8,7 +8,7 @@
     <title>TwitLogic: real-time #SemanticWeb in &lt;= 140 chars</title>
     <!--<link rel="stylesheet" type="text/css" media="screen,print" href="Publications_files/Publications.css">-->
 
-    <!--<link rel="stylesheet" href="life.css" type="text/css" media="screen"/>-->
+    <link rel="stylesheet" href="index.css" type="text/css" media="screen"/>
     <link rel="icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 
@@ -30,104 +30,169 @@
 <body>
 
 
-<div style="margin: 0 auto; overflow: hidden; position: relative; word-wrap: break-word; text-align: left; width: 700px;">
-    <div style="margin-left: 0; position: relative; width: 700px;">
+<div class="content">
+    <!--<div style="margin-left: 0; position: relative; width: 700px;">-->
 
-        <br/>
-                   
-        <div style="text-align:center; font-size: 20px; font-family: courier,serif">
-            TwitLogic: real-time #SemanticWeb in &lt;= 140 chars
-        </div>
+    <br/>
 
-        <br/>
-
-        <div style="text-align:center">
-            <img src="divider.jpg" width="630" height="1" alt="divider"/>
-        </div>
-
-        <br/>
-
-        <div style="text-align:justify">
-            <img style="text-align: left;" src="images/TwitLogic_logo_small.png" width="101" height="132" alt="TwitLogic"/>
-            Instant publication, coupled with the rise of geosocial networking, presents new
-            opportunities for real-time and location-based services. Much as these services are changing the nature of
-            search on the World Wide Web, so the Semantic Web will be both challenged and enhanced by real-time
-            content. TwitLogic is a semantic data aggregator which brings together a collection of compact formats for
-            structured microblog content with Semantic Web vocabularies and best practices in order to augment the
-            Semantic Web with real-time, user-driven data.
-        </div>
-
-        <br/>
-        <br/>
-
-        <div style="text-align:left; font-size:16px">This Web interface is a work in progress. For now, you can <a
-                href="http://dataviewer.zitgist.com/?uri=http%3A//twitlogic.fortytwo.net/dataset/twitlogic-full">browse
-            the knowledge base</a> in Zitgist. Or if you're feeling adventurous, you can explore the knowledge base with
-            curl, like so:
-            <span style="font-size: 10px"><pre>curl -L -H "Accept: application/x-trig" http://twitlogic.fortytwo.net/hashtag/sdow2009</pre></span>
-            This gives you access to additional Named Graph information, allowing you to follow the
-            nanotation provenance trail.
-        </div>
-        <br/>
-
-        <div style="text-align:left">
-            <div style="font-size: 18px">See also:</div>
-            <ul>
-                <li>A <span style="font-size:20px"><a
-                        href="http://events.linkeddata.org/ldow2010/papers/ldow2010_paper16.pdf">paper</a></span> on
-                    TwitLogic
-                </li>
-                <li>Currently supported <span style="font-size:20px"><a
-                        href="http://wiki.github.com/joshsh/twitlogic/syntax-conventions">syntax
-                    conventions</a></span></li>
-                <li>The implementation <span style="font-size:20px"><a href="http://github.com/joshsh/twitlogic">source
-                    code</a></span></li>
-                <li><span style="font-size:20px"><a
-                        href="http://wiki.github.com/joshsh/twitlogic/configuring-and-running-twitlogic">Configuring and
-                    running</a></span> TwitLogic
-                </li>
-                <li>WWW2010 <span style="font-size:20px"><a href="demos/twctwit/">Conference Tweets</a></span> demo</li>
-                <li>Coming soon: <span style="font-size:20px"><a href="http://wiki.github.com/joshsh/twitlogic/semantic-twannotations">Semantic Twannotations</a></span></li>
-            </ul>
-        </div>
-
-        <br/>
-
-        <div style="text-align:left">
-            Also see also:
-            <ul>
-                <li>The <a href="http://twitterdata.org">Twitter Data</a> initiative</li>
-                <li>microblogging <a href="http://microformats.org/wiki/microblogging-nanoformats">nanoformats</a></li>
-                <li>Twitter's <a href="http://apiwiki.twitter.com/Streaming-API-Documentation">Streaming API</a></li>
-            </ul>
-        </div>
-
-        <br/>
-        <br/>
-
-        <!--
-        <div class="js-kit-comments"></div>
-        <script src="http://js-kit.com/for/twitlogic.fortytwo.net/comments.js" type="text/javascript"></script>
-
-        <br/>
-        <br/>
-        -->
-        
-        <div style="text-align:center" id="validators">
-            <a href="http://validator.w3.org/check/referer">
-                <img src="http://www.w3.org/Icons/valid-xhtml10" alt="Validate XHTML" height="31" width="88"/>
-            </a>
-            <a href="http://jigsaw.w3.org/css-validator/check/referer">
-                <img src="http://www.w3.org/Icons/valid-css.png" alt="Validate CSS"/>
-            </a>
-        </div>
-
-        <br/>
-
-        <div style="text-align:center">
-            <img src="josh_email.png" width="169" height="21" alt="josh at fortytwo dot net"/>
-        </div>
+    <div style="text-align:center; font-size: 20px; font-family: courier,serif">
+        TwitLogic: real-time #SemanticWeb in &lt;= 140 chars
     </div>
+
+    <br/>
+
+    <div style="text-align:center">
+        <img src="divider.jpg" width="630" height="1" alt="divider"/>
+    </div>
+
+    <br/>
+
+    <div >
+        <img class="logo" src="images/TwitLogic_logo_small.png" width="101" height="132"
+             alt="TwitLogic logo"/>
+        Instant publication, together with the rise of geosocial networking, presents new opportunities for real-time
+        and location-based services. Much as these services are changing the nature of search on the World Wide Web, so
+        the Semantic Web is both challenged and enhanced by real-time
+        content. TwitLogic is a tool for data integration which translates streaming social data using common, RDF-based
+        vocabularies and mashes it up
+        with Linked Data, enabling new kinds of real-time social applications which take advantage of the rich
+        background knowledge of the Semantic Web.
+    </div>
+
+    <br/>
+
+    <div class="content">
+        One upcoming source of rich structured social data for mashups are Twitter Annotations. Here is a
+        slide show which illustrates potential use cases of Annotations for &quot;smart&quot; real-time content
+        feeds:
+    </div>
+
+    <br/>
+    <br/>
+
+    <div class="slideshow" id="__ss_4606369">
+        <!--<strong style="display:block;margin:12px 0 4px">
+    <a href="http://www.slideshare.net/joshsh/realtime-semantic-web-with-twitter-annotations-4606369"
+       title="Real-time Semantic Web with Twitter Annotations">Real-time Semantic Web with Twitter
+        Annotations</a></strong>-->
+        <object id="__sse4606369" width="425" height="355">
+            <param name="movie"
+                   value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=twitlogicsemtech2010-100624132048-phpapp02&stripped_title=realtime-semantic-web-with-twitter-annotations-4606369&userName=joshsh"/>
+            <param name="allowFullScreen" value="true"/>
+            <param name="allowScriptAccess" value="always"/>
+            <embed name="__sse4606369"
+                   src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=twitlogicsemtech2010-100624132048-phpapp02&stripped_title=realtime-semantic-web-with-twitter-annotations-4606369&userName=joshsh"
+                   type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true"
+                   width="425" height="355"></embed>
+        </object>
+        <!--<div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a
+                href="http://www.slideshare.net/joshsh">Joshua Shinavier</a>.
+        </div>-->
+    </div>
+
+    <br/>
+    <br/>
+
+    <div style="text-align:left; font-size:16px">You can interact with TwitLogic through a
+        <a href="http://www.w3.org/TR/rdf-sparql-protocol/">SPARQL</a> endpoint (e.g. the one for <a
+                href="http://flux.franz.com/catalogs/demos/repositories/iswc2010">this triple store</a>)
+        or an <a href="http://arxiv.org/abs/1011.3595">RDF update stream</a>.
+
+        TwitLogic also publishes the social data it collects as Linked Data. For now, you can <a
+                href="http://dataviewer.zitgist.com/?uri=http%3A//twitlogic.fortytwo.net/dataset/twitlogic-full">browse
+            the knowledge base</a> in Zitgist. Or if you're feeling adventurous, you can explore the knowledge base
+        with
+        curl, like so:
+        <span style="font-size: 10px"><pre>curl -L -H "Accept: application/x-trig" http://twitlogic.fortytwo.net/hashtag/sdow2009</pre></span>
+        This gives you access to additional Named Graph information, allowing you to follow the
+        nanotation provenance trail.
+    </div>
+    <br/>
+
+    <div style="text-align:left">
+        <div style="font-size: 18px">New:</div>
+        <ul>
+            <li><span style="font-size:20px"><a
+                    href="http://flux.franz.com/static/twitlogic/website/demos/sparqlwidget/iswc2010.html">SPARQL-based
+                live search widget</a></span> for ISWC 2010 conference tweets
+            </li>
+        </ul>
+    </div>
+
+    <br/>
+
+    <div style="text-align:left">
+        <div style="font-size: 18px">See also:</div>
+        <ul>
+            <li>A <span style="font-size:20px"><a
+                    href="http://events.linkeddata.org/ldow2010/papers/ldow2010_paper16.pdf">paper</a></span> on
+                TwitLogic
+            </li>
+            <li>Currently supported <a
+                    href="http://wiki.github.com/joshsh/twitlogic/syntax-conventions">syntax
+                conventions</a></li>
+            <li>The implementation <a href="http://github.com/joshsh/twitlogic">source
+                code</a></li>
+            <li><a
+                    href="http://wiki.github.com/joshsh/twitlogic/configuring-and-running-twitlogic">Configuring and
+                running</a> TwitLogic
+            </li>
+            <li>Coming soon (?): <span style="font-size:20px"><a
+                    href="http://wiki.github.com/joshsh/twitlogic/semantic-twannotations">Semantic
+                Twannotations</a></span>
+            </li>
+            <li>TwitLogic in the news:
+                <ul>
+                    <li>
+                        <!--<img src="http://www.tieao.com/wp-content/plugins/wp-o-matic/cache/87e8d_rww_iphone_app_logo_150.jpg" alt="" width="20" height="20"/>-->
+                        <span style="font-size:20px">ReadWriteWeb</span> article: <a
+                            href="http://www.readwriteweb.com/archives/how_twitter_annotations_could_bring_the_real-time_semantic_web_together.php">How
+                        Twitter Annotations could bring the real-time and Semantic Web together</a></li>
+                    <li><span style="font-size:20px">New Scientist</span> article: <a
+                            href="http://www.newscientist.com/article/mg20727715.400-google-twitter-and-facebook-build-the-semantic-web.html">Google,
+                        Twitter and Facebook build the Semantic Web</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <br/>
+
+    <div style="text-align:left">
+        Also see also:
+        <ul>
+            <li>The <a href="http://twitterdata.org">Twitter Data</a> initiative</li>
+            <li>microblogging <a href="http://microformats.org/wiki/microblogging-nanoformats">nanoformats</a></li>
+            <li>Twitter's <a href="http://apiwiki.twitter.com/Streaming-API-Documentation">Streaming API</a></li>
+        </ul>
+    </div>
+
+    <br/>
+    <br/>
+
+    <!--
+    <div class="js-kit-comments"></div>
+    <script src="http://js-kit.com/for/twitlogic.fortytwo.net/comments.js" type="text/javascript"></script>
+
+    <br/>
+    <br/>
+    -->
+
+    <div style="text-align:center" id="validators">
+        <a href="http://validator.w3.org/check/referer">
+            <img src="http://www.w3.org/Icons/valid-xhtml10" alt="Validate XHTML" height="31" width="88"/>
+        </a>
+        <a href="http://jigsaw.w3.org/css-validator/check/referer">
+            <img src="http://www.w3.org/Icons/valid-css.png" alt="Validate CSS"/>
+        </a>
+    </div>
+
+    <br/>
+
+    <div style="text-align:center">
+        <img src="josh_email.png" width="169" height="21" alt="josh at fortytwo dot net"/>
+    </div>
+    <!--</div>-->
 </div>
 <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
