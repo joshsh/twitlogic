@@ -23,6 +23,7 @@ public class User implements Resource {
     //private final Integer friendsCount;
     private final boolean geoEnabled;
     private final Integer id;
+    //private final boolean isTranslator;  // TODO: what is the significance of this field?
     //private final String language;
     //private final String listedCount;
     private final String location;

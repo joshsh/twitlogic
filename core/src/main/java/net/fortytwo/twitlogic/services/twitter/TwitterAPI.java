@@ -194,6 +194,7 @@ public class TwitterAPI {
         IN_REPLY_TO_STATUS_ID_STR("in_reply_to_status_id_str"),
         IN_REPLY_TO_USER_ID("in_reply_to_user_id"),
         IN_REPLY_TO_USER_ID_STR("in_reply_to_user_id_str"),
+        IS_TRANSLATOR("is_translator"),
         LANG("lang"),
         LIMIT("limit"),
         LISTED_COUNT("listed_count"),
