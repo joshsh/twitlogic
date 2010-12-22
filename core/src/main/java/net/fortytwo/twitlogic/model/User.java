@@ -16,7 +16,9 @@ public class User implements Resource {
     private final String description;
     //private final boolean discoverableByEmail;
     //private final boolean discoverableByMobilePhone;
+    //private final String displayUrl;
     //private final boolean emailDiscoverabilitySet;
+    //private final String expandedUrl;
     //private final Integer favoritesCount;
     //private final Integer followersCount;
     //private final Integer followRequestSent;
