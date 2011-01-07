@@ -48,7 +48,7 @@ public class TwitterStream extends StreamingSetOfStatements {
     }
 
     public CloseableIterator<Statement> getStatements() {
-        StatementQueuingListener l;
+        final StatementQueuingListener l;
 
         try {
             l = new StatementQueuingListener(this.overflowPolicy);
@@ -63,12 +63,16 @@ public class TwitterStream extends StreamingSetOfStatements {
             }
         };
 
-        try {
-            start(l);
-        } catch (Exception e) {
-            LOGGER.severe(e.toString());
-            throw new IllegalStateException(e);
-        }
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    start(l);
+                } catch (Exception e) {
+                    LOGGER.severe(e.toString());
+                    throw new IllegalStateException(e);
+                }
+            }
+        }).start();
 
         return new StreamingQueueIterator<Statement>(l.getQueue(), onClose);
     }
