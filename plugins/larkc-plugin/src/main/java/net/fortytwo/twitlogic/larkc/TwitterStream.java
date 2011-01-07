@@ -25,6 +25,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.sail.NotifyingSail;
 import org.openrdf.sail.NotifyingSailConnection;
 import org.openrdf.sail.Sail;
+import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.NotifyingSailWrapper;
@@ -60,7 +61,7 @@ public class TwitterStream extends StreamingSetOfStatements {
             throw new IllegalStateException(e);
         }
 
-        final ArrayBlockingQueue queue = new ArrayBlockingQueue<Statement>(capacity);
+        final ArrayBlockingQueue<Statement> queue = new ArrayBlockingQueue<Statement>(capacity);
 
         final Factory<SailConnectionListener> factory = new Factory<SailConnectionListener>() {
             public SailConnectionListener create() {
@@ -99,12 +100,10 @@ public class TwitterStream extends StreamingSetOfStatements {
     }
 
     private void start(final Factory<SailConnectionListener> factory) throws Exception {
-        NotifyingSail baseSail = new MemoryStore();
-        baseSail.initialize();
+        NotifyingSail sail = new MemoryStore();
+        sail.initialize();
 
         try {
-            NotifyingSail sail = new NotifyingSailWrapper(baseSail);
-
             // Create a persistent store.
             TweetStore store = new TweetStore(sail);
             store.setSailConnectionListenerFactory(factory);
@@ -120,7 +119,7 @@ public class TwitterStream extends StreamingSetOfStatements {
                 final Handler<Tweet, TweetHandlerException> annotator
                         = createAnnotator(store, client);
 
-                final NotifyingSailConnection c = sail.getConnection();
+                final SailConnection c = sail.getConnection();
                 //c.addConnectionListener(listener);
 
                 try {
@@ -156,7 +155,7 @@ public class TwitterStream extends StreamingSetOfStatements {
                 store.shutDown();
             }
         } finally {
-            baseSail.shutDown();
+            sail.shutDown();
         }
     }
 
