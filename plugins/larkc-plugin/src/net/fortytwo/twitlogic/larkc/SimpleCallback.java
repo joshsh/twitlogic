@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.larkc;
 
 /**
- * User: josh
- * Date: 1/8/11
- * Time: 2:31 AM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public interface SimpleCallback {
     void execute();

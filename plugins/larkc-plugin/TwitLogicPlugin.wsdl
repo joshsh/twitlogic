@@ -1,11 +1,11 @@
 <wsdl:description>
-<wsdl:interface name="InformationSetTransformer"
-	sawsdl:modelReference="http://larkc.eu/plugin#InformationSetTransformer">
-</wsdl:interface>
-<wsdl:binding name="larkcbinding" type="http://larkc.eu/wsdl-binding" />
-<!-- SPECIFIC TO THIS PLUGIN_TYPE -->
-<wsdl:service name="urn:eu.larkc.plugin.transform.TwitLogiKC" interface="InformationSetTransformer"
-sawsdl:modelReference="http://larkc.eu/plugin#TwitlogicPlugin" >
-    <wsdl:endpoint location="java:net.fortytwo.twitlogic.larkc.TwitLogicPlugin" />
-</wsdl:service>
+    <wsdl:interface name="InformationSetTransformer"
+                    sawsdl:modelReference="http://larkc.eu/plugin#InformationSetTransformer">
+    </wsdl:interface>
+    <wsdl:binding name="larkcbinding" type="http://larkc.eu/wsdl-binding"/>
+    <!-- SPECIFIC TO THIS PLUGIN_TYPE -->
+    <wsdl:service name="urn:eu.larkc.plugin.transform.TwitLogiKC" interface="InformationSetTransformer"
+                  sawsdl:modelReference="http://larkc.eu/plugin#TwitlogicPlugin">
+        <wsdl:endpoint location="java:net.fortytwo.twitlogic.larkc.TwitLogicPlugin"/>
+    </wsdl:service>
 </wsdl:description>

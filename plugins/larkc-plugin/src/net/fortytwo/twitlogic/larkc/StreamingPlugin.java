@@ -4,9 +4,7 @@ import eu.larkc.plugin.Plugin;
 import org.openrdf.model.URI;
 
 /**
- * User: josh
- * Date: 1/8/11
- * Time: 12:24 AM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public abstract class StreamingPlugin extends Plugin {
     public enum OverflowPolicy { DROP_OLDEST, DROP_MOST_RECENT }

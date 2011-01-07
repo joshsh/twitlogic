@@ -9,7 +9,7 @@
     <version>0.1</version>
     <packaging>jar</packaging>
     <name>TwitLogic LarKC Plugin</name>
-    <description>...</description>
+    <description>LarKC plugin for the TwitLogic syndication tool</description>
 
     <repositories>
         <repository>

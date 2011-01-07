@@ -8,9 +8,7 @@ import java.util.Queue;
 /**
  * A CloseableIterator which iterates over the elements of a Queue which is expected to grow indefinitely.
  *
- * User: josh
- * Date: 1/8/11
- * Time: 12:52 AM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class StreamingQueueIterator<T> implements CloseableIterator<T> {
     private final Queue<T> queue;

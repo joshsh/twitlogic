@@ -10,9 +10,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: 1/8/11
- * Time: 12:22 AM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class StatementQueuingListener implements SailConnectionListener {
     public static final int DEFAULT_QUEUE_CAPACITY = 1000;

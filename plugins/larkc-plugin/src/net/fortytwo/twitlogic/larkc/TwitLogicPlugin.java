@@ -12,23 +12,29 @@ import eu.larkc.core.data.SetOfStatements;
 import org.openrdf.model.Value;
 
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
- * This is an identifier template, created by LarKC plug-in Wizard
+ * A streaming LarKC plugin which uses Twitter as a real-time data source for RDF statements.
  *
- * @author LarKC plug-in Wizard
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class TwitLogicPlugin extends StreamingPlugin {
 
+    // Configuration properties specific to the TwitLogic LarKC plugin
     public static final String
             OVERFLOW_POLICY = "net.fortytwo.twitlogic.larkc.overflowPolicy",
             QUEUE_CAPACITY = "net.fortytwo.twitlogic.larkc.queueCapacity";
 
-    //only first time when called, return results (anytime b.)
+    private static final Logger LOGGER = TwitLogic.getLogger(TwitLogicPlugin.class);
+
     private boolean once = false;
 
-    public TwitLogicPlugin(URI pluginName) {
+    private final URI pluginName;
+
+    public TwitLogicPlugin(final URI pluginName) {
         super(pluginName);
+        this.pluginName = pluginName;
     }
 
     @Override
@@ -38,8 +44,11 @@ public class TwitLogicPlugin extends StreamingPlugin {
 
     @Override
     protected void initialiseInternal(final SetOfStatements workflowDescription) {
+        Properties props = propertiesFromStatements(workflowDescription);
+        TwitLogic.setConfiguration(props);
     }
 
+    // Note: input is ignored.
     public SetOfStatements invokeInternal(final SetOfStatements input) {
         StreamingSetOfStatements s;
 
@@ -48,9 +57,13 @@ public class TwitLogicPlugin extends StreamingPlugin {
         }
         once = true;
 
-        Properties props = propertiesFromStatements(input);
-        TwitLogic.setConfiguration(props);
+        return new TwitterStream(findOverflowPolicy());
+    }
 
+    public void shutdown() {
+    }
+
+    private OverflowPolicy findOverflowPolicy() {
         String v = TwitLogic.getConfiguration().getProperty(OVERFLOW_POLICY, null);
         OverflowPolicy policy = null == v
                 ? null
@@ -59,26 +72,27 @@ public class TwitLogicPlugin extends StreamingPlugin {
             policy = OverflowPolicy.DROP_OLDEST;
         }
 
-        return new TwitterStream(policy);
+        LOGGER.info("using overflow policy " + policy);
+
+        return policy;
     }
 
-    public void shutdown() {
-    }
-
-    private static Properties propertiesFromStatements(final SetOfStatements statements) {
+    private Properties propertiesFromStatements(final SetOfStatements statements) {
         Properties props = new Properties();
         CloseableIterator<Statement> iter = statements.getStatements();
         try {
             while (iter.hasNext()) {
                 Statement st = iter.next();
-                String p = st.getPredicate().stringValue();
-                if (p.startsWith("urn:")) {
-                    Value v = st.getObject();
-                    if (v instanceof Literal) {
-                        String name = p.substring(4);
-                        String value = ((Literal) v).getLabel().trim();
+                if (st.getSubject().equals(pluginName)) {
+                    String p = st.getPredicate().stringValue();
+                    if (p.startsWith("urn:")) {
+                        Value v = st.getObject();
+                        if (v instanceof Literal) {
+                            String name = p.substring(4);
+                            String value = ((Literal) v).getLabel().trim();
 
-                        props.put(name, value);
+                            props.put(name, value);
+                        }
                     }
                 }
             }

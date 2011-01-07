@@ -35,9 +35,8 @@ import java.util.logging.Logger;
 /**
  * A streaming SetOfStatements implementation which draws statements from a stream of RDFized tweets.
  * <p/>
- * User: josh
- * Date: 1/7/11
- * Time: 11:05 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class TwitterStream extends StreamingSetOfStatements {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitterStream.class);
@@ -80,20 +79,17 @@ public class TwitterStream extends StreamingSetOfStatements {
     }
 
     private void start(final SailConnectionListener listener) throws Exception {
-        Sail baseSail = new MemoryStore();
+        NotifyingSail baseSail = new MemoryStore();
         baseSail.initialize();
 
         try {
-            NotifyingSail sail = new NotifyingSailWrapper();
+            NotifyingSail sail = new NotifyingSailWrapper(baseSail);
 
             // Create a persistent store.
-            TweetStore store = new TweetStore();
+            TweetStore store = new TweetStore(sail);
             store.initialize();
 
             try {
-                // Launch linked data server.
-                new TwitLogicServer(store);
-
                 // Create a client for communication with Twitter.
                 TwitterClient client = new TwitterClient();
 
