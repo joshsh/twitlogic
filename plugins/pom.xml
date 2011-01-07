@@ -4,83 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.fortytwo</groupId>
-    <artifactId>twitlogic-plugins</artifactId>
+    <groupId>net.fortytwo.twitlogic</groupId>
+    <artifactId>twitlogic-larkc-plugin</artifactId>
     <version>0.6.6</version>
-    <packaging>jar</packaging>
-    <name>TwitLogic Plugins</name>
-    <!--<description>Java components for real-time integration of Twitter data with the Semantic Web</description>-->
+    <packaging>pom</packaging>
+    <name>TwitLogic plugins</name>
+    <description>real-time #SemanticWeb in &lt;= 140 chars</description>
+    <url>http://twitlogic.fortytwo.net/</url>
 
-    <parent>
-        <groupId>net.fortytwo.twitlogic</groupId>
-        <artifactId>twitlogic</artifactId>
-        <version>0.6.6</version>
-    </parent>
-
-    <repositories>
-        <repository>
-            <id>fortytwo</id>
-            <name>fortytwo.net Maven repository</name>
-            <url>http://fortytwo.net/maven2</url>
-        </repository>
-        <repository>
-            <id>aduna-repo</id>
-            <name>Aduna repository</name>
-            <url>http://repo.aduna-software.org/maven2/releases</url>
-        </repository>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.org</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>net.fortytwo.twitlogic</groupId>
-            <artifactId>twitlogic-core</artifactId>
-            <version>0.6.6</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.larkc</groupId>
-            <artifactId>platform</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.5</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+	<module>larkc-plugin</module>
+    </modules>
 
     <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <directory>target</directory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
-        <finalName>${artifactId}-${version}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-        </plugins>
+        <directory>${basedir}/target</directory>
     </build>
 
 </project>

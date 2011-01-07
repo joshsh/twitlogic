@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.fortytwo.sesametools:common:1.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/fortytwo/sesametools/common/1.0/common-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/fortytwo/sesametools/common/1.0/common-1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/fortytwo/sesametools/common/1.0/common-1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
