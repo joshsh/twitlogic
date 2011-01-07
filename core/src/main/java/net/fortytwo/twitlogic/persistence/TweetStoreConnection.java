@@ -1,8 +1,11 @@
 package net.fortytwo.twitlogic.persistence;
 
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.util.Factory;
 import org.openrdf.elmo.ElmoManager;
+import org.openrdf.sail.NotifyingSailConnection;
 import org.openrdf.sail.SailConnection;
+import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 
 import java.util.logging.Logger;
@@ -21,11 +24,16 @@ public class TweetStoreConnection {
 
     private boolean closed;
 
-    public TweetStoreConnection(final TweetStore tweetStore) throws TweetStoreException {
+    public TweetStoreConnection(final TweetStore tweetStore,
+                                final Factory<SailConnectionListener> sailConnectionListenerFactory) throws TweetStoreException {
         this.tweetStore = tweetStore;
 
         try {
             this.sailConnection = tweetStore.getSail().getConnection();
+            if (null != sailConnectionListenerFactory && sailConnection instanceof NotifyingSailConnection) {
+                SailConnectionListener l = sailConnectionListenerFactory.create();
+                ((NotifyingSailConnection) sailConnection).addConnectionListener(l);
+            }
         } catch (SailException e) {
             throw new TweetStoreException(e);
         }

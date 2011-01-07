@@ -18,6 +18,7 @@ import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
+import net.fortytwo.twitlogic.util.Factory;
 import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
@@ -38,6 +39,7 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 import org.openrdf.sail.Sail;
+import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
@@ -72,6 +74,7 @@ public class TweetStore {
     private ElmoModule adminElmoModule;
     private SesameManagerFactory elmoManagerFactory;
     private boolean initialized = false;
+    private Factory<SailConnectionListener> sailConnectionListenerFactory;
     final Set<TweetStoreConnection> openConnections;
 
     /**
@@ -187,7 +190,7 @@ public class TweetStore {
     }
 
     public TweetStoreConnection createConnection() throws TweetStoreException {
-        return new TweetStoreConnection(this);
+        return new TweetStoreConnection(this, sailConnectionListenerFactory);
     }
 
     void notifyClosed(final TweetStoreConnection c) {
@@ -415,5 +418,9 @@ public class TweetStore {
 
     public void doNotRefreshCoreMetadata() {
         this.doNotRefreshCoreMetadata = true;
+    }
+
+    public void setSailConnectionListenerFactory(Factory<SailConnectionListener> sailConnectionListenerFactory) {
+        this.sailConnectionListenerFactory = sailConnectionListenerFactory;
     }
 }

@@ -19,6 +19,7 @@ import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
+import net.fortytwo.twitlogic.util.Factory;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.model.Statement;
 import org.openrdf.sail.NotifyingSail;
@@ -30,6 +31,7 @@ import org.openrdf.sail.helpers.NotifyingSailWrapper;
 import org.openrdf.sail.memory.MemoryStore;
 
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
 
 /**
@@ -50,12 +52,26 @@ public class TwitterStream extends StreamingSetOfStatements {
     public CloseableIterator<Statement> getStatements() {
         final StatementQueuingListener l;
 
+        int capacity;
         try {
-            l = new StatementQueuingListener(this.overflowPolicy);
+            capacity = TwitLogic.getConfiguration().getInt(TwitLogicPlugin.QUEUE_CAPACITY, TwitLogicPlugin.DEFAULT_QUEUE_CAPACITY);
         } catch (PropertyException e) {
             LOGGER.severe(e.toString());
             throw new IllegalStateException(e);
         }
+
+        final ArrayBlockingQueue queue = new ArrayBlockingQueue<Statement>(capacity);
+
+        final Factory<SailConnectionListener> factory = new Factory<SailConnectionListener>() {
+            public SailConnectionListener create() {
+                try {
+                    return new StatementQueuingListener(queue, overflowPolicy);
+                } catch (PropertyException e) {
+                    LOGGER.severe(e.toString());
+                    throw new IllegalStateException(e);
+                }
+            }
+        };
 
         SimpleCallback onClose = new SimpleCallback() {
             public void execute() {
@@ -66,7 +82,7 @@ public class TwitterStream extends StreamingSetOfStatements {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    start(l);
+                    start(factory);
                 } catch (Exception e) {
                     LOGGER.severe(e.toString());
                     throw new IllegalStateException(e);
@@ -74,7 +90,7 @@ public class TwitterStream extends StreamingSetOfStatements {
             }
         }).start();
 
-        return new StreamingQueueIterator<Statement>(l.getQueue(), onClose);
+        return new StreamingQueueIterator<Statement>(queue, onClose);
     }
 
     public SetOfStatements toRDF(final SetOfStatements setOfStatements) {
@@ -82,7 +98,7 @@ public class TwitterStream extends StreamingSetOfStatements {
         return this;
     }
 
-    private void start(final SailConnectionListener listener) throws Exception {
+    private void start(final Factory<SailConnectionListener> factory) throws Exception {
         NotifyingSail baseSail = new MemoryStore();
         baseSail.initialize();
 
@@ -91,6 +107,7 @@ public class TwitterStream extends StreamingSetOfStatements {
 
             // Create a persistent store.
             TweetStore store = new TweetStore(sail);
+            store.setSailConnectionListenerFactory(factory);
             store.initialize();
 
             try {
@@ -104,7 +121,7 @@ public class TwitterStream extends StreamingSetOfStatements {
                         = createAnnotator(store, client);
 
                 final NotifyingSailConnection c = sail.getConnection();
-                c.addConnectionListener(listener);
+                //c.addConnectionListener(listener);
 
                 try {
                     Handler<Tweet, TweetHandlerException> adder = new Handler<Tweet, TweetHandlerException>() {

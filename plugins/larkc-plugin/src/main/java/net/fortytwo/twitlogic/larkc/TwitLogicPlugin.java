@@ -26,6 +26,8 @@ public class TwitLogicPlugin extends StreamingPlugin {
             OVERFLOW_POLICY = "net.fortytwo.twitlogic.larkc.overflowPolicy",
             QUEUE_CAPACITY = "net.fortytwo.twitlogic.larkc.queueCapacity";
 
+    public static final int DEFAULT_QUEUE_CAPACITY = 1000;
+
     private static final Logger LOGGER = TwitLogic.getLogger(TwitLogicPlugin.class);
 
     private boolean once = false;

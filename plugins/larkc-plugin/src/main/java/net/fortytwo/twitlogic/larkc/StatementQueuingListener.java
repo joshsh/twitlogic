@@ -13,17 +13,16 @@ import java.util.logging.Logger;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class StatementQueuingListener implements SailConnectionListener {
-    public static final int DEFAULT_QUEUE_CAPACITY = 1000;
 
     private static final Logger LOGGER = TwitLogic.getLogger(StatementQueuingListener.class);
 
     private final ArrayBlockingQueue<Statement> queue;
     private final StreamingPlugin.OverflowPolicy policy;
 
-    public StatementQueuingListener(StreamingPlugin.OverflowPolicy policy) throws PropertyException {
+    public StatementQueuingListener(final ArrayBlockingQueue<Statement> queue,
+                                    final StreamingPlugin.OverflowPolicy policy) throws PropertyException {
+        this.queue = queue;
         this.policy = policy;
-        int capacity = TwitLogic.getConfiguration().getInt(TwitLogicPlugin.QUEUE_CAPACITY, DEFAULT_QUEUE_CAPACITY);
-        queue = new ArrayBlockingQueue<Statement>(capacity);
     }
 
     public void statementAdded(final Statement statement) {
