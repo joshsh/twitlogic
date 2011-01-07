@@ -5,11 +5,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.twitlogic</groupId>
-    <artifactId>twitlogic-larkc-plugin</artifactId>
+    <artifactId>twitlogic-plugins</artifactId>
     <version>0.6.6</version>
     <packaging>pom</packaging>
     <name>TwitLogic plugins</name>
-    <description>real-time #SemanticWeb in &lt;= 140 chars</description>
     <url>http://twitlogic.fortytwo.net/</url>
 
     <modules>
