@@ -47,7 +47,7 @@ public class StatementQueuingListener implements SailConnectionListener {
         // Do nothing.
     }
 
-    public Queue<Statement> getQueue() {
+    public ArrayBlockingQueue<Statement> getQueue() {
         return queue;
     }
 }

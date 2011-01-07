@@ -4,6 +4,7 @@ import eu.larkc.core.data.CloseableIterator;
 import org.openrdf.model.Statement;
 
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * A CloseableIterator which iterates over the elements of a Queue which is expected to grow indefinitely.
@@ -11,13 +12,13 @@ import java.util.Queue;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class StreamingQueueIterator<T> implements CloseableIterator<T> {
-    private final Queue<T> queue;
+    private final ArrayBlockingQueue<T> queue;
 
     private Statement n;
     private boolean closed = false;
     private final SimpleCallback onClose;
 
-    public StreamingQueueIterator(final Queue<T> queue,
+    public StreamingQueueIterator(final ArrayBlockingQueue<T> queue,
                                   final SimpleCallback onClose) {
         this.queue = queue;
         this.onClose = onClose;
@@ -29,7 +30,11 @@ public class StreamingQueueIterator<T> implements CloseableIterator<T> {
     }
 
     public T next() {
-        return queue.remove();
+        try {
+            return queue.take();
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public void remove() {
