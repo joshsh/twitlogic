@@ -96,11 +96,11 @@ public class Tweet implements Resource {
 
             // Run through Twitter's gauntlet of tweet id schemes.
             id = json.optString(TwitterAPI.Field.NEW_ID_STR.toString());
-            if (null == id) {
+            if (null == id || 0 == id.length()) {
                 id = json.optString(TwitterAPI.Field.NEW_ID.toString());
-                if (null == id) {
+                if (null == id || 0 == id.length()) {
                     id = json.optString(TwitterAPI.Field.ID_STR.toString());
-                    if (null == id) {
+                    if (null == id || 0 == id.length()) {
                         id = json.optString(TwitterAPI.Field.ID.toString());
                     }
                 }
