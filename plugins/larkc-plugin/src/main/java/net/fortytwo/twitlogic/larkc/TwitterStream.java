@@ -5,6 +5,7 @@ import eu.larkc.core.data.SetOfStatements;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.flow.NullHandler;
+import net.fortytwo.twitlogic.larkc.sail.QueueingSail;
 import net.fortytwo.twitlogic.logging.TweetReceivedLogger;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
@@ -100,8 +101,9 @@ public class TwitterStream extends StreamingSetOfStatements {
     }
 
     private void start(final Factory<SailConnectionListener> factory) throws Exception {
-        NotifyingSail sail = new MemoryStore();
-        sail.initialize();
+        NotifyingSail baseSail = new MemoryStore();
+        baseSail.initialize();
+        Sail sail = new QueueingSail(baseSail, factory.create());
 
         try {
             // Create a persistent store.

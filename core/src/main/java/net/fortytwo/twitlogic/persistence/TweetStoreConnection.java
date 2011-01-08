@@ -25,13 +25,13 @@ public class TweetStoreConnection {
     private boolean closed;
 
     public TweetStoreConnection(final TweetStore tweetStore,
-                                final Factory<SailConnectionListener> sailConnectionListenerFactory) throws TweetStoreException {
+                                final Factory<SailConnectionListener> listenerFactory) throws TweetStoreException {
         this.tweetStore = tweetStore;
 
         try {
             this.sailConnection = tweetStore.getSail().getConnection();
-            if (null != sailConnectionListenerFactory && sailConnection instanceof NotifyingSailConnection) {
-                SailConnectionListener l = sailConnectionListenerFactory.create();
+            if (null != listenerFactory && sailConnection instanceof NotifyingSailConnection) {
+                SailConnectionListener l = listenerFactory.create();
                 ((NotifyingSailConnection) sailConnection).addConnectionListener(l);
             }
         } catch (SailException e) {
