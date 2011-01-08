@@ -39,5 +39,7 @@ public class QueueingSailConnection extends SailConnectionWrapper {
             Statement st = valueFactory.createStatement(resource, uri, value, c);
             listener.statementAdded(st);
         }
+
+        this.getWrappedConnection().addStatement(resource, uri, value, resources);
     }
 }
