@@ -88,7 +88,7 @@ public class PersistenceContext {
         if (null != tweet.getEntities()) {
             for (Resource t : tweet.getEntities().getTopics()) {
                 if (t instanceof Hashtag) {
-                topics.add(persist((Hashtag) t));
+                    topics.add(persist((Hashtag) t));
                 } else if (t instanceof Dollartag) {
                     topics.add(persist((Dollartag) t));
                 } else {
@@ -295,7 +295,11 @@ public class PersistenceContext {
     }
 
     private MicroblogPost postForTweet(final Tweet tweet) {
-        return designate(uriOf(tweet), MicroblogPost.class);
+        try {
+            return designate(uriOf(tweet), MicroblogPost.class);
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("bad value: " + uriOf(tweet), e);
+        }
     }
 
     private Graph graphForTweet(final Tweet tweet) {

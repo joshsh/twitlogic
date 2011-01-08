@@ -109,6 +109,7 @@ public class TwitterStream extends StreamingSetOfStatements {
             // Create a persistent store.
             TweetStore store = new TweetStore(sail);
             store.setSailConnectionListenerFactory(factory);
+            store.doNotRefreshCoreMetadata();
             store.initialize();
 
             try {
