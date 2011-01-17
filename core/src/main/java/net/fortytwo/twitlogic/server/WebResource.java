@@ -68,7 +68,7 @@ public class WebResource extends Resource {
 
         selfURI = request.getResourceRef().toString();
 
-        /*
+        //*
         System.out.println("selfURI = " + selfURI);
         System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
         System.out.println("host domain = " + request.getResourceRef().getHostDomain());
@@ -154,6 +154,7 @@ public class WebResource extends Resource {
         // Only get statements in the default graph.
         org.openrdf.model.Resource [] contexts = new org.openrdf.model.Resource[]{null};
 
+        System.out.println("finding outbound statements");
         // Select outbound statements
         CloseableIteration<? extends Statement, SailException> stIter
                 = c.getStatements(vertex, null, null, false, contexts);
@@ -165,6 +166,7 @@ public class WebResource extends Resource {
             stIter.close();
         }
 
+        System.out.println("finding inbound statements");
         // Select inbound statements
         stIter = c.getStatements(null, null, vertex, false, contexts);
         try {
@@ -181,6 +183,7 @@ public class WebResource extends Resource {
                                            final Collection<Statement> statements,
                                            final SailConnection c,
                                            final ValueFactory vf) throws SailException {
+        System.out.println("finding seeAlso statements");
         Set<URI> describedResources = new HashSet<URI>();
         CloseableIteration<? extends Statement, SailException> iter
                 = c.getStatements(null, null, null, false, graph);
@@ -207,18 +210,9 @@ public class WebResource extends Resource {
         }
     }
 
-    private String resourceDescriptor() {
-        for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
-            if (baseRef.contains(t.getUriPath())) {
-                return t.getName();
-            }
-        }
-
-        return "resource";
-    }
-
     private void addDocumentMetadata(final Collection<Statement> statements,
                                      final ValueFactory vf) throws SailException {
+        System.out.println("adding document metadata");
         // Metadata about the document itself
         URI docURI = vf.createURI(selfURI);
         statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT)));
@@ -229,6 +223,16 @@ public class WebResource extends Resource {
         // it is properly rewritten, along with all other TwitLogic resource
         // URIs (which are rewritten through the Sail).
         statements.add(vf.createStatement(docURI, RDFS.SEEALSO, datasetURI));
+    }
+
+    private String resourceDescriptor() {
+        for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
+            if (baseRef.contains(t.getUriPath())) {
+                return t.getName();
+            }
+        }
+
+        return "resource";
     }
 
     private Representation getRDFRepresentation(final URI subject,
@@ -266,6 +270,7 @@ public class WebResource extends Resource {
                 }
                 */
 
+                System.out.println("adding namespaces");
                 // Select namespaces, for human-friendliness
                 CloseableIteration<? extends Namespace, SailException> nsIter
                         = c.getNamespaces();
@@ -279,6 +284,7 @@ public class WebResource extends Resource {
             } finally {
                 c.close();
             }
+            System.out.println("done");
             return new RDFRepresentation(statements, namespaces, format);
 
         } catch (Throwable t) {

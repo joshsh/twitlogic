@@ -47,4 +47,3 @@ public class RootApplication extends Application {
         return router;
     }
 }
-
