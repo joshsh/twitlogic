@@ -14,6 +14,7 @@ import java.io.File;
 
 public class RootApplication extends Application {
     private final File staticContentDir;
+
     public RootApplication() throws ServerException {
         super();
 
@@ -32,8 +33,11 @@ public class RootApplication extends Application {
         router.attach("/", new Directory(getContext(), "file://" + staticContentDir + "/"));
 
         for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
-            router.attach("/" + t.getUriPath() + "/", WebResource.class);
+            if (!t.getUriPath().equals("graph")) {
+                router.attach("/" + t.getUriPath() + "/", WebResource.class);
+            }
         }
+        router.attach("/graph/", GraphResource.class);
 
         router.attach("/sparql", SparqlResource.class);
         router.attach("/stream/relatedTweets", RelatedTweetsResource.class);

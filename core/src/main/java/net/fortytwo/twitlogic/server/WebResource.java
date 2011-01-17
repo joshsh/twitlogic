@@ -151,9 +151,12 @@ public class WebResource extends Resource {
     private void addIncidentStatements(final org.openrdf.model.Resource vertex,
                                        final Collection<Statement> statements,
                                        final SailConnection c) throws SailException {
+        // Only get statements in the default graph.
+        org.openrdf.model.Resource [] contexts = new org.openrdf.model.Resource[]{null};
+
         // Select outbound statements
         CloseableIteration<? extends Statement, SailException> stIter
-                = c.getStatements(vertex, null, null, false);
+                = c.getStatements(vertex, null, null, false, contexts);
         try {
             while (stIter.hasNext()) {
                 statements.add(stIter.next());
@@ -163,7 +166,7 @@ public class WebResource extends Resource {
         }
 
         // Select inbound statements
-        stIter = c.getStatements(null, null, vertex, false);
+        stIter = c.getStatements(null, null, vertex, false, contexts);
         try {
             while (stIter.hasNext()) {
                 statements.add(stIter.next());
@@ -200,7 +203,7 @@ public class WebResource extends Resource {
         }
 
         for (URI r : describedResources) {
-            statements.add(vf.createStatement(graph, RDFS.SEEALSO, r, TwitLogic.CORE_GRAPH));
+            statements.add(vf.createStatement(graph, RDFS.SEEALSO, r));
         }
     }
 
@@ -215,11 +218,10 @@ public class WebResource extends Resource {
     }
 
     private void addDocumentMetadata(final Collection<Statement> statements,
-                                     final SailConnection c,
                                      final ValueFactory vf) throws SailException {
         // Metadata about the document itself
         URI docURI = vf.createURI(selfURI);
-        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT), TwitLogic.CORE_GRAPH));
+        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT)));
         statements.add(vf.createStatement(docURI, RDFS.LABEL,
                 vf.createLiteral("" + format.getName() + " description of "
                         + resourceDescriptor() + " '" + typeSpecificId + "'")));
@@ -244,7 +246,7 @@ public class WebResource extends Resource {
                 addGraphSeeAlsoStatements(subject, statements, c, sail.getValueFactory());
 
                 // Add virtual statements about the document.
-                addDocumentMetadata(statements, c, sail.getValueFactory());
+                addDocumentMetadata(statements, sail.getValueFactory());
 
                 /*
                 // Due to the nature of the TwitLogic data set, we also need

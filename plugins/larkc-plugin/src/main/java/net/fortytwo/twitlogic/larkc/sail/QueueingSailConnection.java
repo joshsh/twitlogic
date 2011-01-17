@@ -40,6 +40,7 @@ public class QueueingSailConnection extends SailConnectionWrapper {
             listener.statementAdded(st);
         }
 
+        // Elmo needs to be able to retrieve previously added statements, even within a single transaction.
         this.getWrappedConnection().addStatement(resource, uri, value, resources);
     }
 }
