@@ -68,7 +68,7 @@ public class WebResource extends Resource {
 
         selfURI = request.getResourceRef().toString();
 
-        //*
+        /*
         System.out.println("selfURI = " + selfURI);
         System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
         System.out.println("host domain = " + request.getResourceRef().getHostDomain());
@@ -157,7 +157,7 @@ public class WebResource extends Resource {
         // Only get statements in the default graph.
         //org.openrdf.model.Resource [] contexts = new org.openrdf.model.Resource[]{null};
 
-        System.out.println("finding outbound statements");
+        //System.out.println("finding outbound statements");
         // Select outbound statements
         CloseableIteration<? extends Statement, SailException> stIter
                 = c.getStatements(vertex, null, null, false);
@@ -172,7 +172,7 @@ public class WebResource extends Resource {
             stIter.close();
         }
 
-        System.out.println("finding inbound statements");
+        //System.out.println("finding inbound statements");
         // Select inbound statements
         stIter = c.getStatements(null, null, vertex, false);
         try {
@@ -192,7 +192,7 @@ public class WebResource extends Resource {
                                       final Collection<Statement> statements,
                                       final SailConnection c,
                                       final ValueFactory vf) throws SailException {
-        System.out.println("finding seeAlso statements");
+        //System.out.println("finding seeAlso statements");
         Set<URI> contexts = new HashSet<URI>();
         CloseableIteration<? extends Statement, SailException> iter
                 = c.getStatements(subject, null, null, false);
@@ -234,7 +234,7 @@ public class WebResource extends Resource {
 
     private void addDocumentMetadata(final Collection<Statement> statements,
                                      final ValueFactory vf) throws SailException {
-        System.out.println("adding document metadata");
+        //System.out.println("adding document metadata");
         // Metadata about the document itself
         URI docURI = vf.createURI(selfURI);
         statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT)));
@@ -292,7 +292,7 @@ public class WebResource extends Resource {
                 }
                 */
 
-                System.out.println("adding namespaces");
+                //System.out.println("adding namespaces");
                 // Select namespaces, for human-friendliness
                 CloseableIteration<? extends Namespace, SailException> nsIter
                         = c.getNamespaces();
@@ -306,7 +306,7 @@ public class WebResource extends Resource {
             } finally {
                 c.close();
             }
-            System.out.println("done");
+            //System.out.println("done");
             return new RDFRepresentation(statements, namespaces, format);
 
         } catch (Throwable t) {

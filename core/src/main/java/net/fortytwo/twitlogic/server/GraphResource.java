@@ -2,14 +2,9 @@ package net.fortytwo.twitlogic.server;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.vocabs.FOAF;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -23,9 +18,7 @@ import org.restlet.resource.Resource;
 import org.restlet.resource.Variant;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,10 +39,7 @@ public class GraphResource extends Resource {
 
     protected final String selfURI;
 
-    private String baseRef;
-    private String typeSpecificId;
     protected Sail sail;
-    private URI datasetURI;
 
     public GraphResource(final Context context,
                          final Request request,
@@ -69,9 +59,6 @@ public class GraphResource extends Resource {
 
         getVariants().addAll(RDFStuff.getRDFVariants());
 
-        baseRef = request.getResourceRef().getBaseRef().toString();
-        typeSpecificId = selfURI.substring(baseRef.length());
-        datasetURI = TwitLogicServer.getServer(context).getDatasetURI();
         sail = TwitLogicServer.getServer(context).getSail(request);
     }
 
@@ -109,9 +96,9 @@ public class GraphResource extends Resource {
         }
     }
 
-    private void addStatementsIn(final org.openrdf.model.Resource graph,
-                                 final Collection<Statement> statements,
-                                 final SailConnection c) throws SailException {
+    private void addStatementsInGraph(final org.openrdf.model.Resource graph,
+                                      final Collection<Statement> statements,
+                                      final SailConnection c) throws SailException {
         CloseableIteration<? extends Statement, SailException> stIter
                 = c.getStatements(null, null, null, false, graph);
         try {
@@ -123,29 +110,6 @@ public class GraphResource extends Resource {
         }
     }
 
-    private String resourceDescriptor() {
-        for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
-            if (baseRef.contains(t.getUriPath())) {
-                return t.getName();
-            }
-        }
-
-        return "resource";
-    }
-
-    private void addDocumentMetadata(final Collection<Statement> statements,
-                                     final ValueFactory vf) throws SailException {
-        // Metadata about the document itself
-        URI docURI = vf.createURI(selfURI);
-        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT)));
-        statements.add(vf.createStatement(docURI, RDFS.LABEL, vf.createLiteral(""
-                + resourceDescriptor() + " '" + typeSpecificId + "'")));
-        // Note: we go to the trouble of special-casing the dataset URI, so that
-        // it is properly rewritten, along with all other TwitLogic resource
-        // URIs (which are rewritten through the Sail).
-        statements.add(vf.createStatement(docURI, RDFS.SEEALSO, datasetURI));
-    }
-
     private Representation getRDFRepresentation(final URI graph,
                                                 final RDFFormat format) {
         try {
@@ -154,11 +118,11 @@ public class GraphResource extends Resource {
 
             SailConnection c = sail.getConnection();
             try {
-                // Add virtual statements about the document.
-                addDocumentMetadata(statements, sail.getValueFactory());
+                // Note: do NOT add document metadata, as this document is to contain only those statements asserted
+                // in the graph in question.
 
                 // Add statements in this graph, preserving the graph component of the statements.
-                addStatementsIn(graph, statements, c);
+                addStatementsInGraph(graph, statements, c);
 
                 // Select namespaces, for human-friendliness
                 CloseableIteration<? extends Namespace, SailException> nsIter
