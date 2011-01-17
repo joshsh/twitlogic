@@ -151,16 +151,22 @@ public class WebResource extends Resource {
     private void addIncidentStatements(final org.openrdf.model.Resource vertex,
                                        final Collection<Statement> statements,
                                        final SailConnection c) throws SailException {
+        // Note: filtering on context (rather than using context in the getStatements queries) was found to be
+        // necessary for efficient operation when using NativeStore.
+
         // Only get statements in the default graph.
-        org.openrdf.model.Resource [] contexts = new org.openrdf.model.Resource[]{null};
+        //org.openrdf.model.Resource [] contexts = new org.openrdf.model.Resource[]{null};
 
         System.out.println("finding outbound statements");
         // Select outbound statements
         CloseableIteration<? extends Statement, SailException> stIter
-                = c.getStatements(vertex, null, null, false, contexts);
+                = c.getStatements(vertex, null, null, false);
         try {
             while (stIter.hasNext()) {
-                statements.add(stIter.next());
+                Statement s = stIter.next();
+                if (null == s.getContext()) {
+                    statements.add(s);
+                }
             }
         } finally {
             stIter.close();
@@ -168,10 +174,13 @@ public class WebResource extends Resource {
 
         System.out.println("finding inbound statements");
         // Select inbound statements
-        stIter = c.getStatements(null, null, vertex, false, contexts);
+        stIter = c.getStatements(null, null, vertex, false);
         try {
             while (stIter.hasNext()) {
-                statements.add(stIter.next());
+                Statement s = stIter.next();
+                if (null == s.getContext()) {
+                    statements.add(s);
+                }
             }
         } finally {
             stIter.close();
@@ -179,34 +188,47 @@ public class WebResource extends Resource {
     }
 
     // Note: a SPARQL query might be more efficient (in applications other than TwitLogic)
-    private void addGraphSeeAlsoStatements(final org.openrdf.model.Resource graph,
-                                           final Collection<Statement> statements,
-                                           final SailConnection c,
-                                           final ValueFactory vf) throws SailException {
+    private void addSeeAlsoStatements(final org.openrdf.model.Resource subject,
+                                      final Collection<Statement> statements,
+                                      final SailConnection c,
+                                      final ValueFactory vf) throws SailException {
         System.out.println("finding seeAlso statements");
-        Set<URI> describedResources = new HashSet<URI>();
+        Set<URI> contexts = new HashSet<URI>();
         CloseableIteration<? extends Statement, SailException> iter
-                = c.getStatements(null, null, null, false, graph);
+                = c.getStatements(subject, null, null, false);
         try {
             while (iter.hasNext()) {
                 Statement st = iter.next();
-                Value s = st.getSubject();
-                Value o = st.getObject();
+                org.openrdf.model.Resource context = st.getContext();
 
-                if (s instanceof URI && s.toString().startsWith(hostIdentifier)) {
-                    describedResources.add((URI) s);
-                }
-
-                if (o instanceof URI && o.toString().startsWith(hostIdentifier)) {
-                    describedResources.add((URI) o);
+                if (null != context) {
+                    if (context instanceof URI && context.toString().startsWith(hostIdentifier)) {
+                        contexts.add((URI) context);
+                    }
                 }
             }
         } finally {
             iter.close();
         }
 
-        for (URI r : describedResources) {
-            statements.add(vf.createStatement(graph, RDFS.SEEALSO, r));
+        iter = c.getStatements(null, null, subject, false);
+        try {
+            while (iter.hasNext()) {
+                Statement st = iter.next();
+                org.openrdf.model.Resource context = st.getContext();
+
+                if (null != context) {
+                    if (context instanceof URI && context.toString().startsWith(hostIdentifier)) {
+                        contexts.add((URI) context);
+                    }
+                }
+            }
+        } finally {
+            iter.close();
+        }
+
+        for (URI r : contexts) {
+            statements.add(vf.createStatement(subject, RDFS.SEEALSO, r));
         }
     }
 
@@ -247,7 +269,7 @@ public class WebResource extends Resource {
                 addIncidentStatements(subject, statements, c);
 
                 // Add virtual statements about named graphs.
-                addGraphSeeAlsoStatements(subject, statements, c, sail.getValueFactory());
+                addSeeAlsoStatements(subject, statements, c, sail.getValueFactory());
 
                 // Add virtual statements about the document.
                 addDocumentMetadata(statements, sail.getValueFactory());
