@@ -11,6 +11,13 @@
     <name>TwitLogic</name>
     <description>real-time #SemanticWeb in &lt;= 140 chars</description>
     <url>http://twitlogic.fortytwo.net/</url>
+    <developers>
+        <developer>
+            <name>Joshua Shinavier</name>
+            <email>josh@fortytwo.net</email>
+            <url>http://fortytwo.net</url>
+        </developer>
+    </developers>
 
     <modules>
         <module>core</module>

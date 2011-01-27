@@ -10,6 +10,13 @@
     <packaging>jar</packaging>
     <name>TwitLogic Core</name>
     <description>Java components for real-time integration of Twitter data with the Semantic Web</description>
+    <developers>
+        <developer>
+            <name>Joshua Shinavier</name>
+            <email>josh@fortytwo.net</email>
+            <url>http://fortytwo.net</url>
+        </developer>
+    </developers>
 
     <repositories>
         <repository>
@@ -188,7 +195,7 @@
         <dependency>
             <groupId>net.contrapunctus</groupId>
             <artifactId>lzma</artifactId>
-            <version>4.63-jio-0.94</version>   
+            <version>4.63-jio-0.94</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
@@ -208,8 +215,8 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>replay</artifactId>
-            <version>1.1</version> 
-        </dependency>                            
+            <version>1.1</version>
+        </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdftransaction</artifactId>

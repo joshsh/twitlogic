@@ -10,6 +10,13 @@
     <packaging>jar</packaging>
     <name>TwitLogic LarKC Plugin</name>
     <description>LarKC plugin for the TwitLogic syndication tool</description>
+    <developers>
+        <developer>
+            <name>Joshua Shinavier</name>
+            <email>josh@fortytwo.net</email>
+            <url>http://fortytwo.net</url>
+        </developer>
+    </developers>
 
     <repositories>
         <repository>
