@@ -1,6 +1,8 @@
 package net.fortytwo.twitlogic;
 
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
+import net.fortytwo.twitlogic.logging.TweetReceivedLogger;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
@@ -90,8 +92,9 @@ public class TwitLogicDemo {
             GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
             //gatherHistoricalTweets(store, client, users, cal.getTime());
 
+            TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), annotator);
             TweetDeleter d = new TweetDeleter(store);
-            client.processFilterStream(users, terms, annotator, d, 0);
+            client.processFilterStream(users, terms, rLogger, d, 0);
         } finally {
             store.shutDown();
         }
@@ -126,9 +129,10 @@ public class TwitLogicDemo {
                                                                          final TwitterClient client) throws TweetStoreException {
         // Create the tweet persister.
         TweetPersister persister = new TweetPersister(store, client);
+        TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
 
         // Add a "topic sniffer".
-        TopicSniffer topicSniffer = new TopicSniffer(persister);
+        TopicSniffer topicSniffer = new TopicSniffer(pLogger);
 
         // Add a tweet annotator.
         Matcher matcher = new MultiMatcher(
