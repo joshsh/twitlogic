@@ -45,7 +45,6 @@ public class TwitLogic {
             COVERAGE_INTERVAL_START = "net.fortytwo.twitlogic.coverageIntervalStart",
             DUMP_FILE = "net.fortytwo.twitlogic.persistence.dump.file",
             DUMP_INTERVAL = "net.fortytwo.twitlogic.persistence.dump.interval",
-            FILTER_ = "net.fortytwo.twitlogic.allowTweetsWithPlace",
             FOLLOWFOLLOWED = "net.fortytwo.twitlogic.followFollowed",
             FOLLOWLIST = "net.fortytwo.twitlogic.followList",
             FOLLOWUSER = "net.fortytwo.twitlogic.followUser",
