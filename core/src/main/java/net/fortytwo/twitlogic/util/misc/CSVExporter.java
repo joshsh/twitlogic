@@ -105,7 +105,9 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
                 ////////////////////////////////////////////////////////////////
 
                 query = "PREFIX sioc: <http://rdfs.org/sioc/ns#>\n" +
+                        "PREFIX sioct: <http://rdfs.org/sioc/types#>\n" +
                         "SELECT DISTINCT ?tweet ?topic WHERE {\n" +
+                        "    ?tweet a sioct:MicroblogPost .\n" +
                         "    ?tweet sioc:topic ?topic .\n" +
                         "}";
 
@@ -126,7 +128,9 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
                 ////////////////////////////////////////////////////////////////
 
                 query = "PREFIX sioc: <http://rdfs.org/sioc/ns#>\n" +
+                        "PREFIX sioct: <http://rdfs.org/sioc/types#>\n" +
                         "SELECT DISTINCT ?tweet ?url WHERE {\n" +
+                        "    ?tweet a sioct:MicroblogPost .\n" +
                         "    ?tweet sioc:links_to ?url .\n" +
                         "}";
 
@@ -185,6 +189,7 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
 
     private String escape(final String s) {
         return s.replaceAll("\\\\", "\\\\")
+                .replaceAll("\\n", " ")
                 .replaceAll("\"", "\\\"");
     }
 
