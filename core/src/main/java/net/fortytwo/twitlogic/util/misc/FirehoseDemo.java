@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic.util;
+package net.fortytwo.twitlogic.util.misc;
 
 import net.fortytwo.twitlogic.TweetFilterCriterion;
 import net.fortytwo.twitlogic.TwitLogic;
@@ -19,6 +19,7 @@ import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
+import net.fortytwo.twitlogic.util.UdpTransactionSail;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;

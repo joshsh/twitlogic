@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic.util;
+package net.fortytwo.twitlogic.util.misc;
 
 import net.fortytwo.twitlogic.TweetFilterCriterion;
 import net.fortytwo.twitlogic.TwitLogic;

@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic.util;
+package net.fortytwo.twitlogic.util.misc;
 
 import com.franz.agraph.repository.AGRepository;
 import com.franz.agraph.repository.AGRepositoryConnection;
@@ -15,6 +15,7 @@ import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
+import net.fortytwo.twitlogic.util.UdpTransactionSail;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.json.JSONException;

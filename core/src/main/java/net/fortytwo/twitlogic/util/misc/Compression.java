@@ -1,4 +1,4 @@
-package net.fortytwo.twitlogic.util;
+package net.fortytwo.twitlogic.util.misc;
 
 import net.contrapunctus.lzma.LzmaInputStream;
 import net.contrapunctus.lzma.LzmaOutputStream;

@@ -16,6 +16,7 @@ import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
+import net.fortytwo.twitlogic.util.misc.Compression;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;

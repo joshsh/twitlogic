@@ -16,7 +16,7 @@ if [ "$JAVA_OPTIONS" = "" ] ; then
 fi
 
 # Launch the application
-$JAVA $JAVA_OPTIONS -cp $JAR net.fortytwo.twitlogic.util.ThroughputTesting $*
+$JAVA $JAVA_OPTIONS -cp $JAR net.fortytwo.twitlogic.util.misc.ThroughputTesting $*
 
 # Return the program's exit code
 exit $?
