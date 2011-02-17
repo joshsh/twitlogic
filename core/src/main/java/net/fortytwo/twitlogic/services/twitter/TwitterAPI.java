@@ -22,6 +22,7 @@ public class TwitterAPI {
 
     public static final String
             API_FRIENDS_URL = "http://api.twitter.com/1/friends/ids",
+            API_FOLLOWERS_URL = "http://api.twitter.com/1/followers/ids",
             API_LISTS_URL = "http://api.twitter.com/1",
             API_PLACES_URL = "http://api.twitter.com/1/geo/id/",
             OAUTH_REQUEST_TOKEN_URL = "http://twitter.com/oauth/request_token",

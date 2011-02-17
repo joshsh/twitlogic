@@ -209,7 +209,7 @@ public class TwitterClient extends RestfulJSONClient {
         List<NameValuePair> formParams = new ArrayList<NameValuePair>();
 
         LOGGER.info("following " + users.size() + " users and tracking " + terms.size() + " terms");
-        
+
         if (0 < users.size()) {
             String followUsers = commaDelimit(userIds(users));
             LOGGER.fine("following users: " + followUsers);
@@ -346,6 +346,35 @@ public class TwitterClient extends RestfulJSONClient {
             }
 
             users.addAll(constructUserList(array));
+
+            cursor = json.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
+        }
+
+        return users;
+    }
+
+    public List<User> getFollowers(final User user) throws TwitterClientException {
+        List<User> users = new LinkedList<User>();
+
+        String cursor = "-1";
+
+        // Note: a null cursor doesn't appear to occur, but just to be safe...
+        while (null != cursor && !cursor.equals("0")) {
+            HttpGet request = new HttpGet(TwitterAPI.API_FOLLOWERS_URL
+                    + "/" + user.getScreenName() + ".json"
+                    + "?cursor=" + cursor);
+            sign(request);
+
+            JSONObject json = requestJSONObject(request);
+            System.out.println(json);
+
+            JSONArray array;
+            try {
+                array = json.getJSONArray(TwitterAPI.Field.IDS.toString());
+            } catch (JSONException e) {
+                throw new TwitterClientException(e);
+            }
+            users.addAll(constructUserListFromIDs(array));
 
             cursor = json.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
         }

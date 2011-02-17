@@ -4,6 +4,8 @@ import net.fortytwo.twitlogic.vocabs.FOAF;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.annotations.rdf;
 
+import java.util.Set;
+
 /**
  * User: josh
  * Date: Nov 20, 2009
@@ -30,4 +32,8 @@ public interface Agent extends Thing {
     @rdf(FOAF.BASEDNEAR)
     SpatialThing getBasedNear();
     void setBasedNear(SpatialThing basedNear);
+
+    @rdf(FOAF.KNOWS)
+    Set<Agent> getKnows();
+    void setKnows(Set<Agent> knows);
 }
