@@ -3,6 +3,7 @@ package net.fortytwo.twitlogic.util.misc;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.errors.NotFoundException;
 import net.fortytwo.twitlogic.services.twitter.errors.UnauthorizedException;
 
 import java.io.BufferedReader;
@@ -47,11 +48,13 @@ public class FriendFetcher {
                 String id = l.trim();
                 User user = new User(id);
                 try {
-                for (User followed : client.getFollowedUsers(user)) {
-                    ps.println(id + "\t" + followed.getId());
-                }
+                    for (User followed : client.getFollowedUsers(user)) {
+                        ps.println(id + "\t" + followed.getId());
+                    }
                 } catch (UnauthorizedException e) {
                     System.err.println("warning: not authorized to fetch followers of user '" + id + "'");
+                } catch (NotFoundException e) {
+                    System.err.println("user '" + id + "' not found");
                 }
             }
             in.close();
