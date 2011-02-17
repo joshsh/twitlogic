@@ -39,9 +39,8 @@ public class RestfulJSONClient extends CommonHttpClient {
                     response = client.execute(request);
                 } catch (SocketException e) {
                     throw new TwitterConnectionResetException(e);
-                } catch (HttpResponseException e) {
-                    e.getMessage();
-                    throw new TwitterClientException(e);
+                //} catch (HttpResponseException e) {
+                //    throw new TwitterClientException(e);
                 } catch (IOException e) {
                     throw new TwitterClientException(e);
                 }

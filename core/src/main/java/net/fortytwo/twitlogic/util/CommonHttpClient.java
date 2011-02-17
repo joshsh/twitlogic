@@ -190,6 +190,16 @@ public abstract class CommonHttpClient {
                 return response;
             } else {
                 LOGGER.warning("unsuccessful request (response code " + code + ")");
+
+                // Attempt to consume the response body, so as to avoid "connection still allocated" errors on
+                // subsequent requests.
+                try {
+                    response.getEntity().consumeContent();
+                } catch (IOException e) {
+                    throw new TwitterClientException("failed to consume (error) response body", e);
+                }
+
+                // All of the below involve throwing an exception.
                 switch (code) {
                     case 304:
                         throw new NotModifiedException();
