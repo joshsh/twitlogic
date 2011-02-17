@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.services.twitter;
 
 import net.fortytwo.twitlogic.util.CommonHttpClient;
 import net.fortytwo.twitlogic.services.twitter.errors.UnauthorizedException;
+import org.apache.http.client.HttpResponseException;
 import org.json.JSONObject;
 import org.json.JSONException;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -38,6 +39,9 @@ public class RestfulJSONClient extends CommonHttpClient {
                     response = client.execute(request);
                 } catch (SocketException e) {
                     throw new TwitterConnectionResetException(e);
+                } catch (HttpResponseException e) {
+                    e.getMessage();
+                    throw new TwitterClientException(e);
                 } catch (IOException e) {
                     throw new TwitterClientException(e);
                 }
