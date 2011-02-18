@@ -3,6 +3,7 @@ package net.fortytwo.twitlogic.util.misc;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.services.twitter.errors.NotFoundException;
 import net.fortytwo.twitlogic.services.twitter.errors.UnauthorizedException;
 
@@ -36,7 +37,7 @@ public class FriendFetcher {
         TwitLogic.setConfiguration(props);
         TwitterClient client = new TwitterClient();
 
-        OutputStream os = new FileOutputStream("/tmp/following");
+        OutputStream os = new FileOutputStream("/tmp/following.csv");
         try {
             PrintStream ps = new PrintStream(os);
 
@@ -55,6 +56,8 @@ public class FriendFetcher {
                     System.err.println("warning: not authorized to fetch followers of user '" + id + "'");
                 } catch (NotFoundException e) {
                     System.err.println("user '" + id + "' not found");
+                } catch (TwitterClientException e) {
+                    System.err.println("twitter client exception: " + e.getMessage());
                 }
             }
             in.close();
