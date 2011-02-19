@@ -69,11 +69,11 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
 
                 query = "PREFIX dc: <http://purl.org/dc/terms/>\n" +
                         "PREFIX sioc: <http://rdfs.org/sioc/ns#>\n" +
-                        "SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {\n" +
+                        "SELECT DISTINCT ?tweet ?account ?replyTo ?createdAt ?text WHERE {\n" +
                         "    ?tweet dc:created ?createdAt .\n" +
                         "    ?tweet sioc:content ?text .\n" +
                         "    ?tweet sioc:has_creator ?account .\n" +
-                        "    ?account sioc:id ?screenName .\n" +
+                       // "    ?account sioc:id ?screenName .\n" +
                         "    OPTIONAL { ?tweet sioc:reply_of ?replyTo . } .\n" +
                         "}";
 
@@ -84,7 +84,8 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
                                            final StringBuilder sb) {
                             sb.append(esc(((URI) b.getValue("tweet")).getLocalName()));
                             sb.append(", ");
-                            sb.append(esc(((Literal) b.getValue("screenName")).getLabel()));
+                            sb.append(esc(((URI) b.getValue("account")).getLocalName()));
+                          //  sb.append(esc(((Literal) b.getValue("screenName")).getLabel()));
                             sb.append(", ");
                             Value v = b.getValue("replyTo");
                             if (null == v) {
