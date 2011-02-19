@@ -395,7 +395,7 @@ public class TwitterClient extends RestfulJSONClient {
             sign(request);
 
             JSONObject json = requestJSONObject(request);
-            System.out.println(json);
+            //System.out.println(json);
 
             JSONArray array;
             try {
