@@ -1,5 +1,7 @@
 package net.fortytwo.twitlogic.persistence;
 
+import edu.rpi.tw.twctwit.query.RelatedHashtagsResource;
+import edu.rpi.tw.twctwit.query.RelatedTweetsResource;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.beans.AdministrativeDivision;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
@@ -18,8 +20,11 @@ import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
+import net.fortytwo.twitlogic.server.GraphResource;
 import net.fortytwo.twitlogic.server.LinkedDataServer;
 import net.fortytwo.twitlogic.server.ServerException;
+import net.fortytwo.twitlogic.server.WebResource;
+import net.fortytwo.twitlogic.server.query.SparqlResource;
 import net.fortytwo.twitlogic.util.Factory;
 import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
@@ -45,6 +50,8 @@ import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
+import org.restlet.Directory;
+import org.restlet.Router;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -428,18 +435,36 @@ public class TweetStore {
         this.sailConnectionListenerFactory = sailConnectionListenerFactory;
     }
 
-    public LinkedDataServer startServer() throws ServerException {
+    public void startServer() throws ServerException {
         try {
             String internalBaseURI = TwitLogic.getConfiguration().getURI(TwitLogic.SERVER_BASEURI).toString();
             String externalBaseURI = TwitLogic.BASE_URI;
             final String datasetURI = TwitLogic.TWITLOGIC_DATASET;
             int port = TwitLogic.getConfiguration().getInt(TwitLogic.SERVER_PORT, DEFAULT_PORT);
+            File staticContentDir = TwitLogic.getConfiguration().getFile(TwitLogic.SERVER_STATICCONTENTDIRECTORY);
 
-            return new LinkedDataServer(this.getSail(),
+            LinkedDataServer server = new LinkedDataServer(this.getSail(),
                     internalBaseURI,
                     externalBaseURI,
                     port,
                     datasetURI);
+
+            Router router = server.getRouter();
+
+            router.attach("/", new Directory(server.getRouter().getContext(), "file://" + staticContentDir + "/"));
+
+            for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
+                if (!t.getUriPath().equals("graph")) {
+                    router.attach("/" + t.getUriPath() + "/", WebResource.class);
+                }
+            }
+            router.attach("/graph/", GraphResource.class);
+
+            router.attach("/sparql", SparqlResource.class);
+            router.attach("/stream/relatedTweets", RelatedTweetsResource.class);
+            router.attach("/stream/relatedTags", RelatedHashtagsResource.class);
+
+            server.start();
         } catch (PropertyException e) {
             throw new ServerException(e);
         }

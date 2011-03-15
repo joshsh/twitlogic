@@ -6,8 +6,11 @@ import net.fortytwo.sesametools.mappingsail.RewriteRule;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
+import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Context;
+import org.restlet.Restlet;
+import org.restlet.Router;
 import org.restlet.data.Protocol;
 
 /**
@@ -21,7 +24,9 @@ public class LinkedDataServer {
     public static final String SERVER_ATTR = "linked-data-server";
 
     private final Sail sail;
-    private URI datasetURI;
+    private final Component component;
+    private final Router router;
+    private final URI datasetURI;
 
     /**
      * @param baseSail        the data store published by this server
@@ -50,7 +55,7 @@ public class LinkedDataServer {
                             final String internalBaseURI,
                             final String externalBaseURI,
                             final int serverPort,
-                            final String dataset) throws ServerException {
+                            final String dataset) {
         final ValueFactory vf = baseSail.getValueFactory();
 
         if (!internalBaseURI.equals(externalBaseURI)) {
@@ -92,15 +97,30 @@ public class LinkedDataServer {
         }
 
         // Create a new Restlet component and add a HTTP server connector to it
-        Component component = new Component();
+        component = new Component();
         component.getServers().add(Protocol.HTTP, serverPort);
         //component.getServers().add(Protocol.FILE);
         component.getClients().add(Protocol.FILE);
 
-        component.getDefaultHost().getContext().getAttributes().put(SERVER_ATTR, this);
-        component.getDefaultHost().attach(new RootApplication());
+        component.getContext().getAttributes().put(SERVER_ATTR, this);
 
+        router = new Router(component.getContext());
+    }
+
+    public Router getRouter() {
+        return router;
+    }
+
+    public void start() throws ServerException {
         try {
+            component.getDefaultHost().attach(
+                    new Application() {
+                        @Override
+                        public Restlet createRoot() {
+                            return router;
+                        }
+                    });
+
             component.start();
         } catch (Exception e) {
             throw new ServerException(e);
@@ -125,7 +145,7 @@ public class LinkedDataServer {
      * @param context the current Restlet context
      * @return the Linked Data server contained in the given context
      */
-    public static LinkedDataServer getServer(Context context) {
+    public static LinkedDataServer getServer(final Context context) {
         Object o = context.getAttributes().get(SERVER_ATTR);
         if (o instanceof LinkedDataServer) {
             return (LinkedDataServer) o;
