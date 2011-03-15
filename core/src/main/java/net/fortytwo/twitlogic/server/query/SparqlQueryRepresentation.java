@@ -1,4 +1,4 @@
-package edu.rpi.tw.twctwit.query;
+package net.fortytwo.twitlogic.server.query;
 
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;

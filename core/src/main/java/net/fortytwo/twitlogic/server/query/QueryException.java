@@ -1,4 +1,4 @@
-package edu.rpi.tw.twctwit.query;
+package net.fortytwo.twitlogic.server.query;
 
 /**
  * User: josh

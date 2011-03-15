@@ -58,7 +58,7 @@ public class PlacesDemo {
 
         //store.dumpToFile(new File("/tmp/places-demo-dump.nt"), RDFFormat.NTRIPLES);
 
-        new LinkedDataServer(store.getSail());
+        store.startServer();
 
         try {
             TwitterClient client = new TwitterClient();

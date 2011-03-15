@@ -68,7 +68,7 @@ public class TwitLogicDemo {
 
         try {
             // Launch linked data server.
-            new LinkedDataServer(store.getSail());
+            store.startServer();
 
             // Create a client for communication with Twitter.
             TwitterClient client = new TwitterClient();

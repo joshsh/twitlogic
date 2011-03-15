@@ -233,17 +233,19 @@ public class WebResource extends Resource {
 
     private void addDocumentMetadata(final Collection<Statement> statements,
                                      final ValueFactory vf) throws SailException {
-        //System.out.println("adding document metadata");
         // Metadata about the document itself
         URI docURI = vf.createURI(selfURI);
         statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI(FOAF.DOCUMENT)));
         statements.add(vf.createStatement(docURI, RDFS.LABEL,
                 vf.createLiteral("" + format.getName() + " description of "
                         + resourceDescriptor() + " '" + typeSpecificId + "'")));
+
         // Note: we go to the trouble of special-casing the dataset URI, so that
         // it is properly rewritten, along with all other TwitLogic resource
         // URIs (which are rewritten through the Sail).
-        statements.add(vf.createStatement(docURI, RDFS.SEEALSO, datasetURI));
+        if (null != datasetURI) {
+            statements.add(vf.createStatement(docURI, RDFS.SEEALSO, datasetURI));
+        }
     }
 
     private String resourceDescriptor() {

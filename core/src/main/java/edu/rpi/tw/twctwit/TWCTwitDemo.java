@@ -50,7 +50,7 @@ public class TWCTwitDemo {
             //store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 
             // Launch linked data server.
-            new LinkedDataServer(store.getSail());
+            store.startServer();
 
             Object mutex = "";
             synchronized (mutex) {

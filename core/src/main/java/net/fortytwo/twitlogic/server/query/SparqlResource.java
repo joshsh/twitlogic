@@ -1,6 +1,5 @@
-package edu.rpi.tw.twctwit.query;
+package net.fortytwo.twitlogic.server.query;
 
-import net.fortytwo.twitlogic.TwitLogic;
 import org.openrdf.sail.SailException;
 import org.restlet.Context;
 import org.restlet.data.Request;
@@ -9,8 +8,6 @@ import org.restlet.data.Status;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-
-import java.util.logging.Logger;
 
 /*
 wget "http://localhost:8182/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20%20WHERE%20%7B%3Fs%20%3Fp%20%3Fo%7D%20limit%2010"
@@ -25,25 +22,10 @@ wget "http://localhost:8182/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20%20WHERE%
  */
 
 /**
- * Information and non-information resources are distinguished by the suffix of the resource's URI:
- * 1) information resource URIs end in .rdf or .trig
- * 2) non-information resources have no such suffix (and TwitLogic will not make statements about such URIs)
- * <p/>
- * A request for an information resource is fulfilled with the resource itself.  No content negotiation occurs.
- * <p/>
- * A request for a non-information resource is fulfilled with a 303-redirect to an information resource of the appropriate media type.
- * <p/>
- * User: josh
- * Date: Oct 3, 2009
- * Time: 2:55:27 PM
+ *
  */
 public class SparqlResource extends QueryResource {
-
-    private static final Logger LOGGER
-            = TwitLogic.getLogger(SparqlResource.class);
-
     private final String query;
-    private Representation representation;
 
     public SparqlResource(final Context context,
                           final Request request,

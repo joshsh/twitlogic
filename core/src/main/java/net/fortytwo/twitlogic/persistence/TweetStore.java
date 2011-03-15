@@ -18,6 +18,8 @@ import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
+import net.fortytwo.twitlogic.server.LinkedDataServer;
+import net.fortytwo.twitlogic.server.ServerException;
 import net.fortytwo.twitlogic.util.Factory;
 import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
@@ -65,6 +67,8 @@ import java.util.zip.GZIPOutputStream;
  */
 public class TweetStore {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetStore.class);
+
+    private static final int DEFAULT_PORT = 8182;
 
     private final Sail sail;
     private final TypedProperties configuration;
@@ -422,5 +426,22 @@ public class TweetStore {
 
     public void setSailConnectionListenerFactory(Factory<SailConnectionListener> sailConnectionListenerFactory) {
         this.sailConnectionListenerFactory = sailConnectionListenerFactory;
+    }
+
+    public LinkedDataServer startServer() throws ServerException {
+        try {
+            String internalBaseURI = TwitLogic.getConfiguration().getURI(TwitLogic.SERVER_BASEURI).toString();
+            String externalBaseURI = TwitLogic.BASE_URI;
+            final String datasetURI = TwitLogic.TWITLOGIC_DATASET;
+            int port = TwitLogic.getConfiguration().getInt(TwitLogic.SERVER_PORT, DEFAULT_PORT);
+
+            return new LinkedDataServer(this.getSail(),
+                    internalBaseURI,
+                    externalBaseURI,
+                    port,
+                    datasetURI);
+        } catch (PropertyException e) {
+            throw new ServerException(e);
+        }
     }
 }

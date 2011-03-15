@@ -93,7 +93,7 @@ public class FirehoseDemo {
                 store.initialize();
 
                 // Note: this is only for serving local files.
-                new LinkedDataServer(store.getSail());
+                store.startServer();
 
                 try {
                     // A connection with which to repeatedly clear the working store

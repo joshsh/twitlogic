@@ -1,4 +1,4 @@
-package edu.rpi.tw.twctwit.query;
+package net.fortytwo.twitlogic.server.query;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.server.LinkedDataServer;
@@ -15,17 +15,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * Information and non-information resources are distinguished by the suffix of the resource's URI:
- * 1) information resource URIs end in .rdf or .trig
- * 2) non-information resources have no such suffix (and TwitLogic will not make statements about such URIs)
- * <p/>
- * A request for an information resource is fulfilled with the resource itself.  No content negotiation occurs.
- * <p/>
- * A request for a non-information resource is fulfilled with a 303-redirect to an information resource of the appropriate media type.
- * <p/>
- * User: josh
- * Date: Oct 3, 2009
- * Time: 2:55:27 PM
+ *
  */
 public abstract class QueryResource extends Resource {
     private static final String UTF_8 = "UTF-8";

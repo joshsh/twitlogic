@@ -2,6 +2,10 @@ package edu.rpi.tw.twctwit.query;
 
 import edu.rpi.tw.patadata.PataException;
 import net.fortytwo.sesametools.mappingsail.MappingSail;
+import net.fortytwo.twitlogic.server.query.QueryException;
+import net.fortytwo.twitlogic.server.query.QueryResource;
+import net.fortytwo.twitlogic.server.query.SparqlQueryRepresentation;
+import net.fortytwo.twitlogic.server.query.SparqlTools;
 import net.fortytwo.twitlogic.vocabs.DCTerms;
 import net.fortytwo.twitlogic.vocabs.FOAF;
 import net.fortytwo.twitlogic.vocabs.RDF;

@@ -2,11 +2,10 @@ package net.fortytwo.twitlogic.server;
 
 import edu.rpi.tw.twctwit.query.RelatedHashtagsResource;
 import edu.rpi.tw.twctwit.query.RelatedTweetsResource;
-import edu.rpi.tw.twctwit.query.SparqlResource;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.server.query.SparqlResource;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.restlet.Application;
-import org.restlet.Context;
 import org.restlet.Directory;
 import org.restlet.Restlet;
 import org.restlet.Router;
