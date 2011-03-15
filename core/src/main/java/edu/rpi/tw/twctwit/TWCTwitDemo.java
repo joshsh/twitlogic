@@ -2,7 +2,6 @@ package edu.rpi.tw.twctwit;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.server.LinkedDataServer;
 
 import java.io.FileInputStream;
 import java.io.File;

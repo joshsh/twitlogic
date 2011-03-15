@@ -10,7 +10,6 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.server.LinkedDataServer;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 

@@ -1,6 +1,6 @@
 package net.fortytwo.twitlogic;
 
-import net.fortytwo.twitlogic.server.query.SparqlTools;
+import net.fortytwo.sesametools.ldserver.query.SparqlTools;
 import junit.framework.TestCase;
 
 /**

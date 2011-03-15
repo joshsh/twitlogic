@@ -2,7 +2,7 @@ package edu.rpi.tw.twctwit.query;
 
 import edu.rpi.tw.patadata.PataException;
 import net.fortytwo.sesametools.mappingsail.MappingSail;
-import net.fortytwo.twitlogic.server.query.QueryResource;
+import net.fortytwo.sesametools.ldserver.query.QueryResource;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.openrdf.model.Resource;

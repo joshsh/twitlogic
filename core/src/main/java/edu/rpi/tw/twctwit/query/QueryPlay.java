@@ -3,13 +3,13 @@ package edu.rpi.tw.twctwit.query;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
-import net.fortytwo.twitlogic.server.query.SparqlTools;
 import net.fortytwo.twitlogic.vocabs.DCTerms;
 import net.fortytwo.twitlogic.vocabs.FOAF;
 import net.fortytwo.twitlogic.vocabs.RDF;
 import net.fortytwo.twitlogic.vocabs.SIOC;
 import net.fortytwo.twitlogic.vocabs.SIOCT;
 import org.openrdf.sail.SailConnection;
+import net.fortytwo.sesametools.ldserver.query.SparqlTools;
 
 import java.io.FileInputStream;
 import java.util.Properties;

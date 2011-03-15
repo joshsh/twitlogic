@@ -2,7 +2,6 @@ package net.fortytwo.twitlogic.util.misc;
 
 import net.fortytwo.twitlogic.TweetFilterCriterion;
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.server.LinkedDataServer;
 import net.fortytwo.twitlogic.flow.Filter;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
