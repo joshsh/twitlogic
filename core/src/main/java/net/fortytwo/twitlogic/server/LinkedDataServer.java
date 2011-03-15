@@ -1,10 +1,9 @@
 package net.fortytwo.twitlogic.server;
 
-import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.sesametools.mappingsail.MappingSail;
 import net.fortytwo.sesametools.mappingsail.MappingSchema;
-import net.fortytwo.sesametools.mappingsail.URIRewriter;
+import net.fortytwo.sesametools.mappingsail.RewriteRule;
+import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -12,40 +11,40 @@ import org.openrdf.sail.Sail;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.data.Protocol;
-import org.restlet.data.Request;
 
 /**
  * User: josh
  * Date: Oct 3, 2009
  * Time: 2:39:31 PM
  */
-public class TwitLogicServer {
+public class LinkedDataServer {
     public static final String SERVER_ATTR = "server";
 
     private static final int DEFAULT_PORT = 8182;
 
-    // FIXME: temporary
-    private static TwitLogicServer singleton;
-
-    private final SailSelector sailSelector;
+    private final Sail sail;
     private final URI datasetURI;
 
-    public static TwitLogicServer getServer(final Context context) {
-        return singleton;
-    }
-
-    public Sail getSail(final Request request) throws Exception {
-        return sailSelector.selectSail(request);
+    public Sail getSail() throws Exception {
+        return sail;
     }
 
     public URI getDatasetURI() {
         return datasetURI;
     }
 
-    public TwitLogicServer(final TweetStore store) throws ServerException {
-        singleton = this;
-        Sail sail = store.getSail();
-        final ValueFactory valueFactory = sail.getValueFactory();
+    public static LinkedDataServer getServer(Context context) {
+        Object o = context.getAttributes().get(SERVER_ATTR);
+        if (o instanceof LinkedDataServer) {
+            return (LinkedDataServer) o;
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    public LinkedDataServer(final Sail baseSail) throws ServerException {
+
+        final ValueFactory valueFactory = baseSail.getValueFactory();
 
         final String serverBaseURI;
         final int serverPort;
@@ -57,7 +56,7 @@ public class TwitLogicServer {
         }
 
         if (!serverBaseURI.equals(TwitLogic.BASE_URI)) {
-            URIRewriter fromStoreRewriter = new URIRewriter() {
+            RewriteRule outboundRewriter = new RewriteRule() {
                 public URI rewrite(final URI original) {
                     if (null == original) {
                         return null;
@@ -70,7 +69,7 @@ public class TwitLogicServer {
                 }
             };
 
-            URIRewriter toStoreRewriter = new URIRewriter() {
+            RewriteRule inboundRewriter = new RewriteRule() {
                 public URI rewrite(final URI original) {
                     if (null == original) {
                         return null;
@@ -84,55 +83,25 @@ public class TwitLogicServer {
             };
 
             MappingSchema schema = new MappingSchema();
-            schema.setRewriter(MappingSchema.PartOfSpeech.SUBJECT,
-                    MappingSchema.Action.TO_STORE,
-                    toStoreRewriter);
-            schema.setRewriter(MappingSchema.PartOfSpeech.PREDICATE,
-                    MappingSchema.Action.TO_STORE,
-                    toStoreRewriter);
-            schema.setRewriter(MappingSchema.PartOfSpeech.OBJECT,
-                    MappingSchema.Action.TO_STORE,
-                    toStoreRewriter);
-            schema.setRewriter(MappingSchema.PartOfSpeech.GRAPH,
-                    MappingSchema.Action.TO_STORE,
-                    toStoreRewriter);
-            schema.setRewriter(MappingSchema.PartOfSpeech.SUBJECT,
-                    MappingSchema.Action.FROM_STORE,
-                    fromStoreRewriter);
-            schema.setRewriter(MappingSchema.PartOfSpeech.PREDICATE,
-                    MappingSchema.Action.FROM_STORE,
-                    fromStoreRewriter);
-            schema.setRewriter(MappingSchema.PartOfSpeech.OBJECT,
-                    MappingSchema.Action.FROM_STORE,
-                    fromStoreRewriter);
-            schema.setRewriter(MappingSchema.PartOfSpeech.GRAPH,
-                    MappingSchema.Action.FROM_STORE,
-                    fromStoreRewriter);
+            schema.setRewriter(MappingSchema.Direction.INBOUND, inboundRewriter);
+            schema.setRewriter(MappingSchema.Direction.OUTBOUND, outboundRewriter);
+            this.sail = new MappingSail(baseSail, schema);
 
-            sail = new MappingSail(sail, schema);
-
-            datasetURI = fromStoreRewriter.rewrite(sail.getValueFactory().createURI(TwitLogic.TWITLOGIC_DATASET));
+            datasetURI = outboundRewriter.rewrite(this.sail.getValueFactory().createURI(TwitLogic.TWITLOGIC_DATASET));
         } else {
-            datasetURI = sail.getValueFactory().createURI(TwitLogic.TWITLOGIC_DATASET);
+            this.sail = baseSail;
+            datasetURI = this.sail.getValueFactory().createURI(TwitLogic.TWITLOGIC_DATASET);
         }
-
-
-        final Sail selectedSail = sail;
-
-        sailSelector = new SailSelector() {
-            public Sail selectSail(final Request request) throws Exception {
-                return selectedSail;
-            }
-        };
 
         // Create a new Restlet component and add a HTTP server connector to it
         Component component = new Component();
         component.getServers().add(Protocol.HTTP, serverPort);
         //component.getServers().add(Protocol.FILE);
-        component.getClients().add(Protocol.FILE); 
+        component.getClients().add(Protocol.FILE);
 
         component.getDefaultHost().getContext().getAttributes().put(SERVER_ATTR, this);
         component.getDefaultHost().attach(new RootApplication());
+
         try {
             component.start();
         } catch (Exception e) {

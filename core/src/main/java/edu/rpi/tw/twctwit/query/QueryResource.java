@@ -1,7 +1,7 @@
 package edu.rpi.tw.twctwit.query;
 
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.server.TwitLogicServer;
+import net.fortytwo.twitlogic.server.LinkedDataServer;
 import org.openrdf.sail.Sail;
 import org.restlet.Context;
 import org.restlet.data.Request;
@@ -61,7 +61,7 @@ public abstract class QueryResource extends Resource {
         System.out.println("host ref = " + request.getHostRef().toString());
         //*/
 
-        sail = TwitLogicServer.getServer(context).getSail(request);
+        sail = LinkedDataServer.getServer(context).getSail();
 
         //getVariants().add(new Variant(MediaType.APPLICATION_JSON));
 

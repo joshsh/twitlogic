@@ -6,7 +6,6 @@ import net.fortytwo.twitlogic.vocabs.FOAF;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
@@ -80,22 +79,22 @@ public class WebResource extends Resource {
         int i = selfURI.lastIndexOf(".");
         if (i > 0) {
             String suffix = selfURI.substring(i + 1);
-            format = RDFStuff.findFormat(suffix);
+            format = RDFMediaTypes.findFormat(suffix);
         }
 
         if (null == format) {
             webResourceCategory = WebResourceCategory.NonInformationResource;
-            getVariants().addAll(RDFStuff.getRDFVariants());
+            getVariants().addAll(RDFMediaTypes.getRDFVariants());
         } else {
             webResourceCategory = WebResourceCategory.InformationResource;
-            getVariants().add(RDFStuff.findVariant(format));
+            getVariants().add(RDFMediaTypes.findVariant(format));
 
             hostIdentifier = request.getResourceRef().getHostIdentifier();
             baseRef = request.getResourceRef().getBaseRef().toString();
             subjectResourceURI = selfURI.substring(0, i);
             typeSpecificId = subjectResourceURI.substring(baseRef.length());
-            datasetURI = TwitLogicServer.getServer(context).getDatasetURI();
-            sail = TwitLogicServer.getServer(context).getSail(request);
+            datasetURI = LinkedDataServer.getServer(context).getDatasetURI();
+            sail = LinkedDataServer.getServer(context).getSail();
         }
     }
 
@@ -139,8 +138,8 @@ public class WebResource extends Resource {
 
     private Representation representNonInformationResource(final Variant variant) {
         MediaType type = variant.getMediaType();
-        RDFFormat format = RDFStuff.findRdfFormat(type);
-        String suffix = RDFStuff.findSuffix(format);
+        RDFFormat format = RDFMediaTypes.findRdfFormat(type);
+        String suffix = RDFMediaTypes.findSuffix(format);
 
         getResponse().redirectSeeOther(selfURI + "." + suffix);
 

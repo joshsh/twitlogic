@@ -29,7 +29,7 @@ public class RDFRepresentation extends OutputRepresentation {
     public RDFRepresentation(final Collection<Statement> statements,
                              final Collection<Namespace> namespaces,
                              final RDFFormat format) {
-        super(RDFStuff.findMediaType(format));
+        super(RDFMediaTypes.findMediaType(format));
 
         this.statements = statements;
         this.namespaces = namespaces;

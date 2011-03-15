@@ -6,6 +6,7 @@ import edu.rpi.tw.twctwit.query.SparqlResource;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.restlet.Application;
+import org.restlet.Context;
 import org.restlet.Directory;
 import org.restlet.Restlet;
 import org.restlet.Router;
@@ -27,7 +28,6 @@ public class RootApplication extends Application {
 
     @Override
     public Restlet createRoot() {
-        // Create a root router
         Router router = new Router(getContext());
 
         router.attach("/", new Directory(getContext(), "file://" + staticContentDir + "/"));

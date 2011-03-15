@@ -10,7 +10,7 @@ import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
-import net.fortytwo.twitlogic.server.TwitLogicServer;
+import net.fortytwo.twitlogic.server.LinkedDataServer;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
@@ -68,7 +68,7 @@ public class TwitLogicDemo {
 
         try {
             // Launch linked data server.
-            new TwitLogicServer(store);
+            new LinkedDataServer(store.getSail());
 
             // Create a client for communication with Twitter.
             TwitterClient client = new TwitterClient();

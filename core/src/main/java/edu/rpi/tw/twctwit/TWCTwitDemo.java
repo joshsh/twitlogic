@@ -2,7 +2,7 @@ package edu.rpi.tw.twctwit;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.server.TwitLogicServer;
+import net.fortytwo.twitlogic.server.LinkedDataServer;
 
 import java.io.FileInputStream;
 import java.io.File;
@@ -50,7 +50,7 @@ public class TWCTwitDemo {
             //store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 
             // Launch linked data server.
-            new TwitLogicServer(store);
+            new LinkedDataServer(store.getSail());
 
             Object mutex = "";
             synchronized (mutex) {

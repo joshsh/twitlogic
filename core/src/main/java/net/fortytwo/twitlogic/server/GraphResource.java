@@ -57,9 +57,9 @@ public class GraphResource extends Resource {
         System.out.println("host ref = " + request.getHostRef().toString());
         //*/
 
-        getVariants().addAll(RDFStuff.getRDFVariants());
+        getVariants().addAll(RDFMediaTypes.getRDFVariants());
 
-        sail = TwitLogicServer.getServer(context).getSail(request);
+        sail = LinkedDataServer.getServer(context).getSail();
     }
 
     public boolean allowDelete() {
@@ -85,7 +85,7 @@ public class GraphResource extends Resource {
 
     private Representation representInformationResource(final Variant variant) {
         MediaType type = variant.getMediaType();
-        RDFFormat format = RDFStuff.findRdfFormat(type);
+        RDFFormat format = RDFMediaTypes.findRdfFormat(type);
 
         try {
             URI subject = sail.getValueFactory().createURI(selfURI);
@@ -118,21 +118,21 @@ public class GraphResource extends Resource {
 
             SailConnection c = sail.getConnection();
             try {
-                // Note: do NOT add document metadata, as this document is to contain only those statements asserted
-                // in the graph in question.
+                // Note: do NOT add graph or document metadata, as this document is to contain only those statements
+                // asserted in the graph in question.
 
                 // Add statements in this graph, preserving the graph component of the statements.
                 addStatementsInGraph(graph, statements, c);
 
                 // Select namespaces, for human-friendliness
-                CloseableIteration<? extends Namespace, SailException> nsIter
+                CloseableIteration<? extends Namespace, SailException> ns
                         = c.getNamespaces();
                 try {
-                    while (nsIter.hasNext()) {
-                        namespaces.add(nsIter.next());
+                    while (ns.hasNext()) {
+                        namespaces.add(ns.next());
                     }
                 } finally {
-                    nsIter.close();
+                    ns.close();
                 }
             } finally {
                 c.close();

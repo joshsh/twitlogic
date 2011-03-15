@@ -15,7 +15,7 @@ import java.util.Map;
  * Date: Oct 3, 2009
  * Time: 2:57:31 PM
  */
-public class RDFStuff {
+public class RDFMediaTypes {
     private static final Map<RDFFormat, MediaType> rdfFormatToMediaTypeMap;
     private static final Map<MediaType, RDFFormat> mediaTypeToRdfFormatMap;
     private static final List<Variant> rdfVariants;

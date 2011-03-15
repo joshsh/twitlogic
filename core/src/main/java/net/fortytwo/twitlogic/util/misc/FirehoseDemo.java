@@ -2,7 +2,7 @@ package net.fortytwo.twitlogic.util.misc;
 
 import net.fortytwo.twitlogic.TweetFilterCriterion;
 import net.fortytwo.twitlogic.TwitLogic;
-import net.fortytwo.twitlogic.server.TwitLogicServer;
+import net.fortytwo.twitlogic.server.LinkedDataServer;
 import net.fortytwo.twitlogic.flow.Filter;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.logging.TweetPersistedLogger;
@@ -93,7 +93,7 @@ public class FirehoseDemo {
                 store.initialize();
 
                 // Note: this is only for serving local files.
-                new TwitLogicServer(store);
+                new LinkedDataServer(store.getSail());
 
                 try {
                     // A connection with which to repeatedly clear the working store

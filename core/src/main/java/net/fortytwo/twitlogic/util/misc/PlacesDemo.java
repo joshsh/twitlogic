@@ -10,7 +10,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.server.TwitLogicServer;
+import net.fortytwo.twitlogic.server.LinkedDataServer;
 import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 
@@ -58,7 +58,7 @@ public class PlacesDemo {
 
         //store.dumpToFile(new File("/tmp/places-demo-dump.nt"), RDFFormat.NTRIPLES);
 
-        new TwitLogicServer(store);
+        new LinkedDataServer(store.getSail());
 
         try {
             TwitterClient client = new TwitterClient();
