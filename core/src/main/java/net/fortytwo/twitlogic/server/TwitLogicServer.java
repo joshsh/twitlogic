@@ -2,9 +2,9 @@ package net.fortytwo.twitlogic.server;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.server.rewriter.RewriterSail;
-import net.fortytwo.twitlogic.server.rewriter.RewritingSchema;
-import net.fortytwo.twitlogic.server.rewriter.URIRewriter;
+import net.fortytwo.sesametools.mappingsail.MappingSail;
+import net.fortytwo.sesametools.mappingsail.MappingSchema;
+import net.fortytwo.sesametools.mappingsail.URIRewriter;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -83,33 +83,33 @@ public class TwitLogicServer {
                 }
             };
 
-            RewritingSchema schema = new RewritingSchema();
-            schema.setRewriter(RewritingSchema.PartOfSpeech.SUBJECT,
-                    RewritingSchema.Action.TO_STORE,
+            MappingSchema schema = new MappingSchema();
+            schema.setRewriter(MappingSchema.PartOfSpeech.SUBJECT,
+                    MappingSchema.Action.TO_STORE,
                     toStoreRewriter);
-            schema.setRewriter(RewritingSchema.PartOfSpeech.PREDICATE,
-                    RewritingSchema.Action.TO_STORE,
+            schema.setRewriter(MappingSchema.PartOfSpeech.PREDICATE,
+                    MappingSchema.Action.TO_STORE,
                     toStoreRewriter);
-            schema.setRewriter(RewritingSchema.PartOfSpeech.OBJECT,
-                    RewritingSchema.Action.TO_STORE,
+            schema.setRewriter(MappingSchema.PartOfSpeech.OBJECT,
+                    MappingSchema.Action.TO_STORE,
                     toStoreRewriter);
-            schema.setRewriter(RewritingSchema.PartOfSpeech.GRAPH,
-                    RewritingSchema.Action.TO_STORE,
+            schema.setRewriter(MappingSchema.PartOfSpeech.GRAPH,
+                    MappingSchema.Action.TO_STORE,
                     toStoreRewriter);
-            schema.setRewriter(RewritingSchema.PartOfSpeech.SUBJECT,
-                    RewritingSchema.Action.FROM_STORE,
+            schema.setRewriter(MappingSchema.PartOfSpeech.SUBJECT,
+                    MappingSchema.Action.FROM_STORE,
                     fromStoreRewriter);
-            schema.setRewriter(RewritingSchema.PartOfSpeech.PREDICATE,
-                    RewritingSchema.Action.FROM_STORE,
+            schema.setRewriter(MappingSchema.PartOfSpeech.PREDICATE,
+                    MappingSchema.Action.FROM_STORE,
                     fromStoreRewriter);
-            schema.setRewriter(RewritingSchema.PartOfSpeech.OBJECT,
-                    RewritingSchema.Action.FROM_STORE,
+            schema.setRewriter(MappingSchema.PartOfSpeech.OBJECT,
+                    MappingSchema.Action.FROM_STORE,
                     fromStoreRewriter);
-            schema.setRewriter(RewritingSchema.PartOfSpeech.GRAPH,
-                    RewritingSchema.Action.FROM_STORE,
+            schema.setRewriter(MappingSchema.PartOfSpeech.GRAPH,
+                    MappingSchema.Action.FROM_STORE,
                     fromStoreRewriter);
 
-            sail = new RewriterSail(sail, schema);
+            sail = new MappingSail(sail, schema);
 
             datasetURI = fromStoreRewriter.rewrite(sail.getValueFactory().createURI(TwitLogic.TWITLOGIC_DATASET));
         } else {

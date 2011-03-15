@@ -1,7 +1,7 @@
 package edu.rpi.tw.twctwit.query;
 
 import edu.rpi.tw.patadata.PataException;
-import net.fortytwo.twitlogic.server.rewriter.RewriterSail;
+import net.fortytwo.sesametools.mappingsail.MappingSail;
 import net.fortytwo.twitlogic.vocabs.DCTerms;
 import net.fortytwo.twitlogic.vocabs.FOAF;
 import net.fortytwo.twitlogic.vocabs.RDF;
@@ -118,8 +118,8 @@ public class RelatedTweetsResource extends QueryResource {
 
     private String alternativesQuery(final Resource resource,
                                      final String after) throws SailException, PataException {
-        Sail baseSail = sail instanceof RewriterSail
-                ? ((RewriterSail) sail).getBaseSail()
+        Sail baseSail = sail instanceof MappingSail
+                ? ((MappingSail) sail).getBaseSail()
                 : sail;
 
         //SailConnection sc = sail.getConnection();

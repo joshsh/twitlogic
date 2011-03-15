@@ -1,7 +1,7 @@
 package edu.rpi.tw.twctwit.query;
 
 import edu.rpi.tw.patadata.PataException;
-import net.fortytwo.twitlogic.server.rewriter.RewriterSail;
+import net.fortytwo.sesametools.mappingsail.MappingSail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.openrdf.model.Resource;
@@ -94,8 +94,8 @@ public class RelatedHashtagsResource extends QueryResource {
     private JSONArray relatedTagsJSON(final Resource resource,
                                       final int limit,
                                       final int steps) throws SailException, PataException, JSONException {
-        Sail baseSail = sail instanceof RewriterSail
-                ? ((RewriterSail) sail).getBaseSail()
+        Sail baseSail = sail instanceof MappingSail
+                ? ((MappingSail) sail).getBaseSail()
                 : sail;
 
         Collection<Resource> results;
