@@ -69,11 +69,43 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
 
                 query = "PREFIX dc: <http://purl.org/dc/terms/>\n" +
                         "PREFIX sioc: <http://rdfs.org/sioc/ns#>\n" +
+                        "SELECT DISTINCT ?tweet1 ?tweet2 ?time1 ?time2 WHERE {\n" +
+                        "    ?tweet1 dc:created ?time1 .\n" +
+                        "    ?tweet2 dc:created ?time2 .\n" +
+                        "    ?tweet2 sioc:reply_of ?tweet1 .\n" +
+                        "}";
+
+                os = new FileOutputStream("/tmp/replies.csv");
+                try {
+                    doQuery(query, rc, new PrintStream(os), new CSVOutputter() {
+                        public void output(final BindingSet b,
+                                           final StringBuilder sb) {
+                            sb.append(esc(((URI) b.getValue("tweet1")).getLocalName()));
+                            sb.append(", ");
+                            long l1 = ((Literal) b.getValue("time1")).calendarValue().toGregorianCalendar().getTime().getTime();
+                            sb.append(esc("" + l1));
+
+                            sb.append(", ");
+
+                            sb.append(esc(((URI) b.getValue("tweet2")).getLocalName()));
+                            sb.append(", ");
+                            long l2 = ((Literal) b.getValue("time2")).calendarValue().toGregorianCalendar().getTime().getTime();
+                            sb.append(esc("" + l2));
+                        }
+                    });
+                } finally {
+                    os.close();
+                }
+
+                ////////////////////////////////////////////////////////////////
+
+                query = "PREFIX dc: <http://purl.org/dc/terms/>\n" +
+                        "PREFIX sioc: <http://rdfs.org/sioc/ns#>\n" +
                         "SELECT DISTINCT ?tweet ?account ?replyTo ?createdAt ?text WHERE {\n" +
                         "    ?tweet dc:created ?createdAt .\n" +
                         "    ?tweet sioc:content ?text .\n" +
                         "    ?tweet sioc:has_creator ?account .\n" +
-                       // "    ?account sioc:id ?screenName .\n" +
+                        // "    ?account sioc:id ?screenName .\n" +
                         "    OPTIONAL { ?tweet sioc:reply_of ?replyTo . } .\n" +
                         "}";
 
@@ -85,7 +117,7 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
                             sb.append(esc(((URI) b.getValue("tweet")).getLocalName()));
                             sb.append(", ");
                             sb.append(esc(((URI) b.getValue("account")).getLocalName()));
-                          //  sb.append(esc(((Literal) b.getValue("screenName")).getLabel()));
+                            //  sb.append(esc(((Literal) b.getValue("screenName")).getLabel()));
                             sb.append(", ");
                             Value v = b.getValue("replyTo");
                             if (null == v) {
