@@ -173,6 +173,8 @@ public class TwitterAPI {
         CONTRIBUTORS_ENABLED("contributors_enabled"),
         COORDINATES("coordinates"),
         CREATED_AT("created_at"), // Note: used in multiple contexts
+        DEFAULT_PROFILE("default_profile"),
+        DEFAULT_PROFILE_IMAGE("default_profile_image"),
         DESCRIPTION("description"),
         DELETE("delete"),
         DISCOVERABLE_BY_EMAIL("discoverable_by_email"),

@@ -13,6 +13,8 @@ import org.json.JSONObject;
 public class User implements Resource {
     //provate final Boolean contributorsEnabled;
     //private final Date createdAt;
+    //private final boolean defaultProfile;
+    //private final boolean defaultProfileImage;
     private final String description;
     //private final boolean discoverableByEmail;
     //private final boolean discoverableByMobilePhone;
