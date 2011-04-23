@@ -176,8 +176,7 @@ public abstract class CommonHttpClient {
         //    System.out.println("Authorization header: " + h.getName() + ", " + h.getValue());
         //}
 
-        HttpResponse response;
-        response = client.execute(request);
+        HttpResponse response = client.execute(request);
 
         if (null == response) {
             LOGGER.severe("null response");

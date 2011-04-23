@@ -24,14 +24,18 @@ import java.util.Properties;
 public class FriendFetcher {
     public static void main(final String[] args) {
         try {
-            new FriendFetcher().doit();
+            boolean reverse = false;
+            if (args.length > 0 && args[0].toLowerCase().equals("followers")) {
+                reverse = true;
+            }
+            new FriendFetcher().doit(reverse);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    private void doit() throws Exception {
+    private void doit(final boolean reverse) throws Exception {
         Properties props = new Properties();
         props.load(new FileInputStream("/tmp/friendfetcher.properties"));
         TwitLogic.setConfiguration(props);
@@ -49,8 +53,14 @@ public class FriendFetcher {
                 String id = l.trim();
                 User user = new User(id);
                 try {
-                    for (User followed : client.getFollowedUsers(user)) {
-                        ps.println(id + "\t" + followed.getId());
+                    if (reverse) {
+                        for (User follower : client.getFollowers(user)) {
+                            ps.println(follower.getId() + "\t" + id);
+                        }
+                    } else {
+                        for (User followed : client.getFollowedUsers(user)) {
+                            ps.println(id + "\t" + followed.getId());
+                        }
                     }
                 } catch (UnauthorizedException e) {
                     System.err.println("warning: not authorized to fetch followers of user '" + id + "'");
