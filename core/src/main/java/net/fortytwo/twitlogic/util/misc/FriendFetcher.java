@@ -36,6 +36,12 @@ public class FriendFetcher {
     }
 
     private void doit(final boolean reverse) throws Exception {
+        if (reverse) {
+            System.out.println("finding followers of the given users");
+        } else {
+            System.out.println("finding users the given user follows");
+        }
+
         Properties props = new Properties();
         props.load(new FileInputStream("/tmp/friendfetcher.properties"));
         TwitLogic.setConfiguration(props);
