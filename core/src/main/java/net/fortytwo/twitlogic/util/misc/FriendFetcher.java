@@ -47,11 +47,13 @@ public class FriendFetcher {
         TwitLogic.setConfiguration(props);
         TwitterClient client = new TwitterClient();
 
-        OutputStream os = new FileOutputStream("/tmp/following.csv");
+        String name = reverse ? "followers.txt" : "following.txt";
+
+        OutputStream os = new FileOutputStream("/tmp/" + name);
         try {
             PrintStream ps = new PrintStream(os);
 
-            FileInputStream fstream = new FileInputStream("/tmp/users");
+            FileInputStream fstream = new FileInputStream("/tmp/users.txt");
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String l;
