@@ -3,7 +3,7 @@ package net.fortytwo.twitlogic.persistence;
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 
@@ -50,10 +50,10 @@ public class UserRegistry {
         return user.getId();
     }
 
-    public Handler<Tweet, TweetHandlerException> createUserRegistryFilter(
-            final Handler<Tweet, TweetHandlerException> baseHandler) {
-        return new Handler<Tweet, TweetHandlerException>() {
-            public boolean handle(final Tweet tweet) throws TweetHandlerException {
+    public Handler<Tweet> createUserRegistryFilter(
+            final Handler<Tweet> baseHandler) {
+        return new Handler<Tweet>() {
+            public boolean handle(final Tweet tweet) throws HandlerException {
                 add(tweet.getUser());
                 return baseHandler.handle(tweet);
             }

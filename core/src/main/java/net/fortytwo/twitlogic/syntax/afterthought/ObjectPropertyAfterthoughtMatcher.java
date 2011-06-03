@@ -4,6 +4,7 @@ import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
 
@@ -33,7 +34,11 @@ public abstract class ObjectPropertyAfterthoughtMatcher extends AfterthoughtMatc
         // Note: anything after the object is ignored
 
         if (predicateMatches(predicate)) {
-            context.handleCompletedTriple(new URIReference(getPropertyURI()), object);
+            try {
+                context.handleCompletedTriple(new URIReference(getPropertyURI()), object);
+            } catch (HandlerException e) {
+                throw new MatcherException(e);
+            }
         }
     }
 

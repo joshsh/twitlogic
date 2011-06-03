@@ -47,7 +47,7 @@ public abstract class AfterthoughtMatcher implements Matcher {
     }
 
     public void match(final String expression,
-                      final Handler<Triple, MatcherException> handler,
+                      final Handler<Triple> handler,
                       final TweetContext tweetContext) throws MatcherException {
         AfterthoughtParserHelper helper = new AfterthoughtParserHelper() {
             public void handleAfterthoughtCandidate(final Resource subject,

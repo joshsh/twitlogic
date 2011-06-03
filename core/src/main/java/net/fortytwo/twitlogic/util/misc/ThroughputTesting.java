@@ -13,7 +13,7 @@ import net.fortytwo.twitlogic.persistence.SailFactory;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import net.fortytwo.twitlogic.util.UdpTransactionSail;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
@@ -111,7 +111,7 @@ public class ThroughputTesting {
     // Around 14,000 t/s on the reference machine.
 
     private void testNullHandler() throws Exception {
-        Handler<Tweet, TweetHandlerException> h = new NullHandler<Tweet, TweetHandlerException>();
+        Handler<Tweet> h = new NullHandler<Tweet>();
         stressTest(h, 10000);
     }
 
@@ -148,13 +148,13 @@ public class ThroughputTesting {
                 try {
                     final TweetPersister p = new TweetPersister(store, null);
 
-                    Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
-                        public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                    Handler<Tweet> h = new Handler<Tweet>() {
+                        public boolean handle(final Tweet tweet) throws HandlerException {
                             try {
                                 sc.clear();
                                 sc.commit();
                             } catch (SailException e) {
-                                throw new TweetHandlerException(e);
+                                throw new HandlerException(e);
                             }
                             return p.handle(tweet);
                         }
@@ -190,13 +190,13 @@ public class ThroughputTesting {
                 try {
                     final TweetPersister p = new TweetPersister(store, null);
 
-                    Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
-                        public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                    Handler<Tweet> h = new Handler<Tweet>() {
+                        public boolean handle(final Tweet tweet) throws HandlerException {
                             try {
                                 sc.clear();
                                 sc.commit();
                             } catch (SailException e) {
-                                throw new TweetHandlerException(e);
+                                throw new HandlerException(e);
                             }
                             return p.handle(tweet);
                         }
@@ -238,13 +238,13 @@ public class ThroughputTesting {
                             try {
                                 final TweetPersister p = new TweetPersister(store, null);
 
-                                Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
-                                    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                                Handler<Tweet> h = new Handler<Tweet>() {
+                                    public boolean handle(final Tweet tweet) throws HandlerException {
                                         try {
                                             tc.clear();
                                             tc.commit();
                                         } catch (SailException e) {
-                                            throw new TweetHandlerException(e);
+                                            throw new HandlerException(e);
                                         }
 
                                         return p.handle(tweet);
@@ -291,13 +291,13 @@ public class ThroughputTesting {
                     try {
                         final TweetPersister p = new TweetPersister(store, null);
 
-                        Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
-                            public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                        Handler<Tweet> h = new Handler<Tweet>() {
+                            public boolean handle(final Tweet tweet) throws HandlerException {
                                 try {
                                     tc.clear();
                                     tc.commit();
                                 } catch (SailException e) {
-                                    throw new TweetHandlerException(e);
+                                    throw new HandlerException(e);
                                 }
                                 return p.handle(tweet);
                             }
@@ -444,13 +444,13 @@ public class ThroughputTesting {
                         final TweetPersister p = new TweetPersister(store, null);
 
                         try {
-                            Handler<Tweet, TweetHandlerException> h = new Handler<Tweet, TweetHandlerException>() {
-                                public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                            Handler<Tweet> h = new Handler<Tweet>() {
+                                public boolean handle(final Tweet tweet) throws HandlerException {
                                     try {
                                         c.clear();
                                         c.commit();
                                     } catch (SailException e) {
-                                        throw new TweetHandlerException(e);
+                                        throw new HandlerException(e);
                                     }
 
                                     return p.handle(tweet);
@@ -638,8 +638,8 @@ public class ThroughputTesting {
         return new Tweet(new JSONObject(sb.toString()));
     }
 
-    private static void stressTest(final Handler<Tweet, TweetHandlerException> handler,
-                                   final long chunkSize) throws JSONException, TweetParseException, TweetHandlerException {
+    private static void stressTest(final Handler<Tweet> handler,
+                                   final long chunkSize) throws JSONException, TweetParseException, HandlerException {
         while (true) {
             long before = new Date().getTime();
             for (long i = 0; i < chunkSize; i++) {

@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.xmpp;
 
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import org.jivesoftware.smackx.PEPManager;
 import org.jivesoftware.smackx.packet.PEPItem;
 import org.jivesoftware.smackx.packet.RDFDocumentPEPItem;
@@ -13,8 +14,8 @@ import org.openrdf.rio.RDFFormat;
  * Time: 6:56:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RDFPubSubSender implements Handler<RDFDocument, Exception> {
-    private final Handler<RDFDocument, Exception> handler;
+public class RDFPubSubSender implements Handler<RDFDocument> {
+    private final Handler<RDFDocument> handler;
     private final PEPManager manager;
     private final RDFFormat format;
 
@@ -23,8 +24,8 @@ public class RDFPubSubSender implements Handler<RDFDocument, Exception> {
         this.manager = manager;
         this.format = format;
 
-        handler = new Handler<RDFDocument, Exception>() {
-            public boolean handle(final RDFDocument document) throws Exception {
+        handler = new Handler<RDFDocument>() {
+            public boolean handle(final RDFDocument document) throws HandlerException {
                 return publish(document);
             }
         };
@@ -37,7 +38,7 @@ public class RDFPubSubSender implements Handler<RDFDocument, Exception> {
         return true;
     }
 
-    public boolean handle(final RDFDocument document) throws Exception {
+    public boolean handle(final RDFDocument document) throws HandlerException {
         return handler.handle(document);
     }
 }

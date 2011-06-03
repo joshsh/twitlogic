@@ -17,7 +17,7 @@ public class MultiMatcher implements Matcher {
     }
 
     public void match(final String expression,
-                      final Handler<Triple, MatcherException> handler,
+                      final Handler<Triple> handler,
                       final TweetContext context) throws MatcherException {
         for (Matcher m : componentMatchers) {
             m.match(expression, handler, context);

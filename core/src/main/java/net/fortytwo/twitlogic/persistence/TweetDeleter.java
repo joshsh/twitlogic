@@ -6,7 +6,7 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import org.openrdf.elmo.Entity;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * Date: Jul 23, 2010
  * Time: 2:44:18 PM
  */
-public class TweetDeleter implements Handler<Tweet, TweetHandlerException> {
+public class TweetDeleter implements Handler<Tweet> {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetDeleter.class);
 
     private final TweetStoreConnection storeConnection;
@@ -43,7 +43,7 @@ public class TweetDeleter implements Handler<Tweet, TweetHandlerException> {
         storeConnection.close();
     }
 
-    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+    public boolean handle(final Tweet tweet) throws HandlerException {
         MicroblogPost p = persistenceContext.find(tweet);
 
         if (null != p) {
@@ -60,7 +60,7 @@ public class TweetDeleter implements Handler<Tweet, TweetHandlerException> {
                 }
                 c.commit();
             } catch (SailException e) {
-                throw new TweetHandlerException(e);
+                throw new HandlerException(e);
             }
         }
 

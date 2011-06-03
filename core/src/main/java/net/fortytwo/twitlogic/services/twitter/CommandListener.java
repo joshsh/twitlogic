@@ -15,15 +15,15 @@ import java.util.logging.Logger;
  * Date: Oct 4, 2009
  * Time: 8:21:54 PM
  */
-public class CommandListener implements Handler<Tweet, TweetHandlerException> {
+public class CommandListener implements Handler<Tweet> {
     private static final Logger LOGGER = TwitLogic.getLogger(CommandListener.class);
     //private final String userName;
     private final TwitLogicAgent agent;
-    private final Handler<Tweet, TweetHandlerException> baseHandler;
+    private final Handler<Tweet> baseHandler;
     private final Set<String> selfScreenNames;
 
     public CommandListener(final TwitLogicAgent agent,
-                           final Handler<Tweet, TweetHandlerException> baseHandler) throws PropertyException {
+                           final Handler<Tweet> baseHandler) throws PropertyException {
         this.agent = agent;
         this.baseHandler = baseHandler;
 
@@ -32,13 +32,13 @@ public class CommandListener implements Handler<Tweet, TweetHandlerException> {
         selfScreenNames.add(TwitLogicAgent.ASPIRATIONAL_SCREENNAME);
     }
 
-    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+    public boolean handle(final Tweet tweet) throws HandlerException {
         if (null != getReplyTo(tweet)) {
             LOGGER.info("received a command from " + tweet.getUser() + ": " + tweet.getText());
             try {
                 agent.interpretCommand(tweet);
             } catch (TwitterClientException e) {
-                throw new TweetHandlerException(e);
+                throw new HandlerException(e);
             }
             System.out.println("woo");
         }

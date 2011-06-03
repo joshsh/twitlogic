@@ -1,5 +1,7 @@
 package net.fortytwo.twitlogic.flow;
 
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
+
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -11,21 +13,21 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Date: Jul 1, 2010
  * Time: 7:52:21 PM
  */
-public class ConcurrentBuffer<T, E extends Exception> implements Handler<T, E> {
+public class ConcurrentBuffer<T> implements Handler<T> {
     private final Queue<T> outQueue;
-    private final Handler<T, E> handler;
+    private final Handler<T> handler;
 
-    public ConcurrentBuffer(final Handler<T, E> handler) {
+    public ConcurrentBuffer(final Handler<T> handler) {
         this.handler = handler;
         outQueue = new ConcurrentLinkedQueue<T>();
     }
 
-    public boolean handle(final T t) throws E {
+    public boolean handle(final T t) throws HandlerException {
         outQueue.add(t);
         return true;
     }
 
-    public boolean flush() throws E {
+    public boolean flush() throws HandlerException {
         int size = outQueue.size();
 
         for (int i = 0; i < size; i++) {

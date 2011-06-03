@@ -10,7 +10,6 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 
 import java.io.File;
@@ -67,7 +66,7 @@ public class PlacesDemo {
 
             TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
             TweetFilterCriterion crit = new TweetFilterCriterion(TwitLogic.getConfiguration());
-            Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, pLogger);
+            Filter<Tweet> f = new Filter<Tweet>(crit, pLogger);
             TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), f);
 
             Set<User> users = TwitLogic.findFollowList(client);

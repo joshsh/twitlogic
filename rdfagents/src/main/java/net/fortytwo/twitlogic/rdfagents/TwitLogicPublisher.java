@@ -19,7 +19,7 @@ import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.syntax.Matcher;
@@ -61,13 +61,13 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
 
         TwitLogic.setConfiguration(config);
 
-        final Handler<Dataset, TweetHandlerException> handler = new Handler<Dataset, TweetHandlerException>() {
+        final Handler<Dataset> handler = new Handler<Dataset>() {
             @Override
-            public boolean handle(Dataset dataset) throws TweetHandlerException {
+            public boolean handle(Dataset dataset) throws HandlerException {
                 try {
                     handleDataset(dataset);
                 } catch (LocalFailure e) {
-                    throw new TweetHandlerException(e);
+                    throw new HandlerException(e);
                 }
 
                 return true;
@@ -104,7 +104,7 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
         private final Collection<Statement> buffer = new LinkedList<Statement>();
         private final TweetStore store;
 
-        public TweetGenerator(final Handler<Dataset, TweetHandlerException> datasetHandler) throws SailException, TweetStoreException, TwitterClientException, PropertyException {
+        public TweetGenerator(final Handler<Dataset> datasetHandler) throws SailException, TweetStoreException, TwitterClientException, PropertyException {
 
             SailConnectionListener listener = new SailConnectionListener() {
                 @Override
@@ -133,9 +133,9 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
             try {
                 final TweetPersister persister = new TweetPersister(store, null);
                 try {
-                    Handler<Tweet, TweetHandlerException> handler = new Handler<Tweet, TweetHandlerException>() {
+                    Handler<Tweet> handler = new Handler<Tweet>() {
                         @Override
-                        public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                        public boolean handle(final Tweet tweet) throws HandlerException {
                             buffer.clear();
                             boolean b = persister.handle(tweet);
 
@@ -155,7 +155,7 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
 
                     TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
                     TweetFilterCriterion crit = new TweetFilterCriterion(TwitLogic.getConfiguration());
-                    Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, pLogger);
+                    Filter<Tweet> f = new Filter<Tweet>(crit, pLogger);
 
                     // Add a "topic sniffer".
                     TopicSniffer topicSniffer = new TopicSniffer(f);
@@ -164,10 +164,10 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
                     Matcher matcher = new MultiMatcher(
                             new DemoAfterthoughtMatcher());
 
-                    final Handler<Tweet, TweetHandlerException> annotator
+                    final Handler<Tweet> annotator
                             = new TweetAnnotator(matcher, topicSniffer);
 
-                    Handler<Tweet, TweetHandlerException> deleter = new TweetDeleter(store);
+                    Handler<Tweet> deleter = new TweetDeleter(store);
 
                     TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), annotator);
 

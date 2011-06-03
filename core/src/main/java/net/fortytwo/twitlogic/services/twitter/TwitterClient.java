@@ -151,7 +151,7 @@ public class TwitterClient extends RestfulJSONClient {
     }
 
     public void requestUserTimeline(final User user,
-                                    final Handler<Tweet, Exception> handler) throws TwitterClientException {
+                                    final Handler<Tweet> handler) throws TwitterClientException {
         StringBuilder sb = new StringBuilder(TwitterAPI.STATUSES_USER_TIMELINE_URL)
                 .append(".json").append("?");
 
@@ -166,8 +166,8 @@ public class TwitterClient extends RestfulJSONClient {
         requestStatusArray(request, handler);
     }
 
-    public void processSampleStream(final Handler<Tweet, TweetHandlerException> addHandler,
-                                    final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
+    public void processSampleStream(final Handler<Tweet> addHandler,
+                                    final Handler<Tweet> deleteHandler) throws TwitterClientException {
         HttpGet request = new HttpGet(TwitterAPI.STREAM_STATUSES_SAMPLE_URL);
 
         continuousStream(request, addHandler, deleteHandler);
@@ -185,8 +185,8 @@ public class TwitterClient extends RestfulJSONClient {
 
     public void processFilterStream(final Collection<User> users,
                                     final Collection<String> terms,
-                                    final Handler<Tweet, TweetHandlerException> addHandler,
-                                    final Handler<Tweet, TweetHandlerException> deleteHandler,
+                                    final Handler<Tweet> addHandler,
+                                    final Handler<Tweet> deleteHandler,
                                     final int previousStatusCount) throws TwitterClientException {
         if (0 == users.size() && 0 == terms.size()) {
             throw new TwitterClientException("no users to follow and no keywords to track!  Set " + TwitLogic.FOLLOWLIST + " and related properties in your configuration");
@@ -240,7 +240,7 @@ public class TwitterClient extends RestfulJSONClient {
     // TODO: paging
 
     public void search(final String term,
-                       final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException {
+                       final Handler<Tweet> handler) throws TwitterClientException {
         HttpGet request = new HttpGet(TwitterAPI.SEARCH_URL + ".json"
                 + "?q=" + term);
 
@@ -260,7 +260,7 @@ public class TwitterClient extends RestfulJSONClient {
                     if (!handler.handle(t)) {
                         return;
                     }
-                } catch (TweetHandlerException e) {
+                } catch (HandlerException e) {
                     throw new TwitterClientException(e);
                 }
             }
@@ -413,7 +413,7 @@ public class TwitterClient extends RestfulJSONClient {
 
     public boolean handlePublicTimelinePage(final User user,
                                             final int page,
-                                            final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+                                            final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
         if (page < 1) {
             throw new IllegalArgumentException("bad page number");
         }
@@ -446,11 +446,11 @@ public class TwitterClient extends RestfulJSONClient {
     public void handleTimelineFrom(final User user,
                                    final Date minTimestamp,
                                    final Date maxTimestamp,
-                                   final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
-        Handler<Tweet, TweetHandlerException> dateFilter = new Handler<Tweet, TweetHandlerException>() {
+                                   final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
+        Handler<Tweet> dateFilter = new Handler<Tweet>() {
             private int statuses = 0;
 
-            public boolean handle(final Tweet tweet) throws TweetHandlerException {
+            public boolean handle(final Tweet tweet) throws HandlerException {
                 if (++statuses >= limits.getStatusesLimit()) {
                     LOGGER.warning("maximum number (" + limits.getStatusesLimit()
                             + ") of statuses retrieved for user " + user.getScreenName());
@@ -473,7 +473,7 @@ public class TwitterClient extends RestfulJSONClient {
     public void processTimelineFrom(final Set<User> users,
                                     final Date minTimestamp,
                                     final Date maxTimestamp,
-                                    final Handler<Tweet, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+                                    final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
         for (User u : users) {
             try {
                 handleTimelineFrom(u, minTimestamp, maxTimestamp, handler);
@@ -484,7 +484,7 @@ public class TwitterClient extends RestfulJSONClient {
     }
 
     public void processFollowers(final User user,
-                                 final Handler<User, TweetHandlerException> handler) throws TwitterClientException, TweetHandlerException {
+                                 final Handler<User> handler) throws TwitterClientException, HandlerException {
         String cursor = "-1";
 
         // Note: a null cursor doesn't appear to occur, but just to be safe...
@@ -603,7 +603,7 @@ public class TwitterClient extends RestfulJSONClient {
     }
 
     private void requestStatusArray(final HttpUriRequest request,
-                                    final Handler<Tweet, Exception> handler) throws TwitterClientException {
+                                    final Handler<Tweet> handler) throws TwitterClientException {
         JSONArray array = requestJSONArray(request);
         if (null != array) {
             int length = array.length();
@@ -621,8 +621,8 @@ public class TwitterClient extends RestfulJSONClient {
     }
 
     private StatusStreamParser.ExitReason continuousStream(final HttpUriRequest request,
-                                                           final Handler<Tweet, TweetHandlerException> addHandler,
-                                                           final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
+                                                           final Handler<Tweet> addHandler,
+                                                           final Handler<Tweet> deleteHandler) throws TwitterClientException {
         long lastWait = 0;
         while (true) {
             long timeOfLastRequest = System.currentTimeMillis();
@@ -664,8 +664,8 @@ public class TwitterClient extends RestfulJSONClient {
     }
 
     private StatusStreamParser.ExitReason singleStreamRequest(final HttpUriRequest request,
-                                                              final Handler<Tweet, TweetHandlerException> addHandler,
-                                                              final Handler<Tweet, TweetHandlerException> deleteHandler) throws TwitterClientException {
+                                                              final Handler<Tweet> addHandler,
+                                                              final Handler<Tweet> deleteHandler) throws TwitterClientException {
         sign(request);
         HttpResponse response;
 
@@ -682,7 +682,7 @@ public class TwitterClient extends RestfulJSONClient {
                 return new StatusStreamParser(addHandler, deleteHandler, recoverFromErrors).parse(responseEntity.getContent());
             } catch (IOException e) {
                 throw new TwitterClientException(e);
-            } catch (TweetHandlerException e) {
+            } catch (HandlerException e) {
                 throw new TwitterClientException(e);
             }
         } else {

@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.syntax.afterthought;
 
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Triple;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 
 import java.util.Collection;
@@ -27,8 +28,8 @@ public class CompoundAfterthoughtMatcher extends AfterthoughtMatcher {
         final BooleanWrapper matched = new BooleanWrapper();
         matched.value = false;
 
-        Handler<Triple, MatcherException> singleMatchHandler = new Handler<Triple, MatcherException>() {
-            public boolean handle(final Triple triple) throws MatcherException {
+        Handler<Triple> singleMatchHandler = new Handler<Triple>() {
+            public boolean handle(final Triple triple) throws HandlerException {
                 context.handle(triple);
                 matched.value = true;
                 return true;

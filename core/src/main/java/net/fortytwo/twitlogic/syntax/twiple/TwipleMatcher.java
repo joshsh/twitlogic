@@ -10,6 +10,7 @@ import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.model.TypedLiteral;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import org.antlr.runtime.ANTLRStringStream;
@@ -205,7 +206,7 @@ public class TwipleMatcher implements Matcher {
     } */
 
     private void matchTriples(final List<Resource> sequence,
-                              final Handler<Triple, MatcherException> resultHandler) throws MatcherException {
+                              final Handler<Triple> resultHandler) throws MatcherException {
         for (int i = 0; i < sequence.size() - 2; i++) {
             Resource subject = sequence.get(i);
             Resource predicate = sequence.get(i + 1);
@@ -233,8 +234,12 @@ public class TwipleMatcher implements Matcher {
                 weight *= weightResource(object, PartOfSpeech.OBJECT);
 
                 Triple st = new Triple(subject, predicate, object, weight);
-                if (!resultHandler.handle(st)) {
-                    break;
+                try {
+                    if (!resultHandler.handle(st)) {
+                        break;
+                    }
+                } catch (HandlerException e) {
+                    throw new MatcherException(e);
                 }
             }
         }
@@ -242,7 +247,7 @@ public class TwipleMatcher implements Matcher {
 
 
     public void match(final String expression,
-                      final Handler<Triple, MatcherException> handler,
+                      final Handler<Triple> handler,
                       final TweetContext context) throws MatcherException {
         // TODO: is it very inefficient to create a new lexer and parser for each input string?
         CharStream s = new ANTLRStringStream(expression);

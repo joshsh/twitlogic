@@ -10,7 +10,7 @@ import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.syntax.Matcher;
@@ -72,7 +72,7 @@ public class TwitLogicDemo {
             // Create a client for communication with Twitter.
             TwitterClient client = new TwitterClient();
 
-            Handler<Tweet, TweetHandlerException> annotator
+            Handler<Tweet> annotator
                     = createAnnotator(store, client);
 
             // Create an agent to listen for commands.
@@ -102,7 +102,7 @@ public class TwitLogicDemo {
     private static void gatherHistoricalTweets(final TweetStore store,
                                                final TwitterClient client,
                                                final Set<User> users,
-                                               final Date startTime) throws TweetStoreException, TwitterClientException, TweetHandlerException {
+                                               final Date startTime) throws TweetStoreException, TwitterClientException, HandlerException {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
@@ -124,7 +124,7 @@ public class TwitLogicDemo {
         t.start();
     }
 
-    private static Handler<Tweet, TweetHandlerException> createAnnotator(final TweetStore store,
+    private static Handler<Tweet> createAnnotator(final TweetStore store,
                                                                          final TwitterClient client) throws TweetStoreException {
         // Create the tweet persister.
         TweetPersister persister = new TweetPersister(store, client);

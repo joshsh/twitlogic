@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.proof;
 
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.vocabs.PMLJustification;
 import net.fortytwo.twitlogic.vocabs.PMLProvenance;
 import org.openrdf.model.Resource;
@@ -27,7 +28,7 @@ public class Query extends PMLConstruct {
         this.answers = answers;
     }
 
-    protected void handleStatements(final Handler<Statement, RDFizerException> handler) throws RDFizerException {
+    protected void handleStatements(final Handler<Statement> handler) throws HandlerException {
         Resource g = context.getNamedGraph();
         ValueFactory vf = context.getValueFactory();
 

@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.proof;
 
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.ValueFactory;
@@ -18,7 +19,7 @@ public abstract class PMLConstruct {
     protected final Resource self;
     protected final RDFizerContext context;
 
-    protected abstract void handleStatements(Handler<Statement, RDFizerException> handler) throws RDFizerException;
+    protected abstract void handleStatements(Handler<Statement> handler) throws HandlerException;
 
     protected PMLConstruct(final RDFizerContext context) {
         this.context = context;

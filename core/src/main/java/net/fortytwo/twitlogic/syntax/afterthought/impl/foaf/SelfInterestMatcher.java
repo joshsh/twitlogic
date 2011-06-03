@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.syntax.afterthought.impl.foaf;
 
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtContext;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtMatcher;
 import net.fortytwo.twitlogic.syntax.MatcherException;
@@ -24,7 +25,11 @@ public class SelfInterestMatcher extends AfterthoughtMatcher {
                     new URIReference(FOAF.INTEREST),
                     context.getSubject());
 
-            context.handle(t);
+            try {
+                context.handle(t);
+            } catch (HandlerException e) {
+                throw new MatcherException(e);
+            }
         }
     }
 }

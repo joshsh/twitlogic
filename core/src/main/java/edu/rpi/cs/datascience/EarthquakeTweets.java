@@ -13,7 +13,6 @@ import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
 import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.services.twitter.CommandListener;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import org.openrdf.model.Literal;
 import org.openrdf.query.BindingSet;
@@ -94,7 +93,7 @@ public class EarthquakeTweets {
                 // Create an agent to listen for commands.
                 // Also take the opportunity to memoize users we're following.
                 TwitLogicAgent agent = new TwitLogicAgent(client);
-                Handler<Tweet, TweetHandlerException> statusHandler
+                Handler<Tweet> statusHandler
                         = userRegistry.createUserRegistryFilter(
                         new CommandListener(agent, baseStatusHandler));
 

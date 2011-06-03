@@ -18,9 +18,9 @@ import org.xmlpull.v1.XmlPullParser;
  * To change this template use File | Settings | File Templates.
  */
 public class RDFPubSubReceiver {
-    private final Handler<RDFDocument, Exception> handler;
+    private final Handler<RDFDocument> handler;
 
-    public RDFPubSubReceiver(final Handler<RDFDocument, Exception> handler) {
+    public RDFPubSubReceiver(final Handler<RDFDocument> handler) {
         this.handler = handler;
     }
 

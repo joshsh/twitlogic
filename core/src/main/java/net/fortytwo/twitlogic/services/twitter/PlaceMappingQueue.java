@@ -29,7 +29,7 @@ public class PlaceMappingQueue<E extends Exception> {
     private boolean closed = false;
 
     public PlaceMappingQueue(final TwitterClient client,
-                             final Handler<Place, E> resultHandler) {
+                             final Handler<Place> resultHandler) {
         capacity = client.getLimits().getRestApiRequestsPerHourLimit() / 2;
         this.inQueue = new LinkedBlockingQueue<String>(capacity);
         this.placeIdsSet = Collections.synchronizedSet(new HashSet<String>());

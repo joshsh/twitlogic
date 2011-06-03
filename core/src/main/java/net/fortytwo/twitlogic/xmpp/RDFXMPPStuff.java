@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic.xmpp;
 
 import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
@@ -162,8 +163,8 @@ public class RDFXMPPStuff {
 
         PEPManager receiverManager = new PEPManager(receiverConn);
 
-        Handler<RDFDocument, Exception> handler = new Handler<RDFDocument, Exception>() {
-            public boolean handle(final RDFDocument doc) throws Exception {
+        Handler<RDFDocument> handler = new Handler<RDFDocument>() {
+            public boolean handle(final RDFDocument doc) throws HandlerException {
                 System.out.println("got a document: " + doc);
                 return true;
             }

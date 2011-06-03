@@ -6,6 +6,7 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.PlaceType;
 import net.fortytwo.twitlogic.persistence.beans.Feature;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.PlaceMappingQueue;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
@@ -22,9 +23,9 @@ import java.util.logging.Logger;
 public class PlacePersistenceHelper {
     private static final Logger LOGGER = TwitLogic.getLogger(PlacePersistenceHelper.class);
 
-    private final Handler<Place, TweetStoreException> placeMappingHandler;
+    private final Handler<Place> placeMappingHandler;
     private final PlaceMappingQueue<TweetStoreException> placeMappingQueue;
-    private final ConcurrentBuffer<Place, TweetStoreException> buffer;
+    private final ConcurrentBuffer<Place> buffer;
     private final TwitterClient client;
     private final boolean asynchronous;
 
@@ -39,8 +40,8 @@ public class PlacePersistenceHelper {
         this.client = client;
         this.asynchronous = asynchronous;
 
-        placeMappingHandler = new Handler<Place, TweetStoreException>() {
-            public boolean handle(final Place p) throws TweetStoreException {
+        placeMappingHandler = new Handler<Place>() {
+            public boolean handle(final Place p) throws HandlerException {
                 //System.out.println("received this place: " + p.getJson());
                 client.getStatistics().placeDereferenced(p);
 
@@ -57,7 +58,7 @@ public class PlacePersistenceHelper {
                         try {
                             submit(par, parf);
                         } catch (TwitterClientException e) {
-                            throw new TweetStoreException(e);
+                            throw new HandlerException(e);
                         }
                     }
 
@@ -68,14 +69,14 @@ public class PlacePersistenceHelper {
             }
         };
 
-        buffer = new ConcurrentBuffer<Place, TweetStoreException>(placeMappingHandler);
+        buffer = new ConcurrentBuffer<Place>(placeMappingHandler);
         placeMappingQueue = asynchronous
                 ? new PlaceMappingQueue<TweetStoreException>(client, buffer)
                 : null;
     }
 
     public boolean submit(final Place p,
-                          final Feature f) throws TweetStoreException, TwitterClientException {
+                          final Feature f) throws TwitterClientException, HandlerException {
         // Note: for now, links in the hierarchy are established once, and never updated.
         if (0 == f.getParentFeature().size() && PlaceType.COUNTRY != p.getPlaceType()) {
             //if (0 == f.getOwlSameAs().size()
@@ -95,7 +96,7 @@ public class PlacePersistenceHelper {
         }
     }
 
-    public boolean flush() throws TweetStoreException {
+    public boolean flush() throws HandlerException {
         return buffer.flush();
     }
 }

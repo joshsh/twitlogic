@@ -1,7 +1,7 @@
 package net.fortytwo.twitlogic.logging;
 
 import net.fortytwo.twitlogic.model.Tweet;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.flow.Handler;
 
 /**
@@ -9,17 +9,17 @@ import net.fortytwo.twitlogic.flow.Handler;
 * Date: Jul 19, 2010
 * Time: 3:55:52 PM
 */
-public class TweetReceivedLogger implements Handler<Tweet, TweetHandlerException> {
+public class TweetReceivedLogger implements Handler<Tweet> {
     private final TweetStatistics statistics;
-    private final Handler<Tweet, TweetHandlerException> baseHandler;
+    private final Handler<Tweet> baseHandler;
 
     public TweetReceivedLogger(final TweetStatistics statistics,
-                               final Handler<Tweet, TweetHandlerException> baseHandler) {
+                               final Handler<Tweet> baseHandler) {
         this.statistics = statistics;
         this.baseHandler = baseHandler;
     }
 
-    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+    public boolean handle(final Tweet tweet) throws HandlerException {
         boolean b = baseHandler.handle(tweet);
         statistics.tweetReceived(tweet);
         return b;

@@ -20,7 +20,7 @@ public class HashtagLexer {
     }
 
     public void tokenize(final String hashtag,
-                         final Handler<List<String>, Exception> resultHandler) throws Exception {
+                         final Handler<List<String>> resultHandler) throws Exception {
         String s = hashtag.trim().toLowerCase();
         if (0 < s.length()) {
             tokenize(s, 0, resultHandler, new LinkedList<String>());
@@ -29,7 +29,7 @@ public class HashtagLexer {
 
     private boolean tokenize(final String hashtag,
                              final int startIndex,
-                             final Handler<List<String>, Exception> resultHandler,
+                             final Handler<List<String>> resultHandler,
                              final List<String> completed) throws Exception {
         if (hashtag.length() == startIndex) {
             return resultHandler.handle(completed);

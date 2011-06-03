@@ -16,7 +16,7 @@ import net.fortytwo.twitlogic.persistence.beans.Feature;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  * Date: Nov 30, 2009
  * Time: 5:39:48 PM
  */
-public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
+public class TweetPersister implements Handler<Tweet> {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetPersister.class);
 
     private final TweetStoreConnection storeConnection;
@@ -69,7 +69,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         storeConnection.close();
     }
 
-    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+    public boolean handle(final Tweet tweet) throws HandlerException {
         //LOGGER.fine(tweet.describe());
 
         //System.out.println("beginning transaction...");
@@ -81,11 +81,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
             // Since Elmo is not thread-safe, Elmo operations to be carried out by
             // placeHelper are queued until they can be executed here, in the main
             // transaction.
-            try {
-                placeHelper.flush();
-            } catch (TweetStoreException e) {
-                throw new TweetHandlerException(e);
-            }
+            placeHelper.flush();
         }
 
         boolean hasAnnotations = 0 < tweet.getAnnotations().size();
@@ -107,10 +103,8 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
             if (null != placeHelper) {
                 try {
                     placeHelper.submit(tweet.getPlace(), f);
-                } catch (TweetStoreException e) {
-                    throw new TweetHandlerException(e);
                 } catch (TwitterClientException e) {
-                    throw new TweetHandlerException(e);
+                    throw new HandlerException(e);
                 }
             }
 
@@ -124,7 +118,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
         try {
             storeConnection.commit();
         } catch (TweetStoreException e) {
-            throw new TweetHandlerException(e);
+            throw new HandlerException(e);
         }
 
         // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
@@ -150,7 +144,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                 try {
                     st = toRDF(triple, uriOf(currentMicroblogPost.getEmbedsKnowledge()));
                 } catch (TwitterClientException e) {
-                    throw new TweetHandlerException(e);
+                    throw new HandlerException(e);
                 }
 
                 if (null != st) {
@@ -163,7 +157,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
                         storeConnection.getSailConnection()
                                 .addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
                     } catch (SailException e) {
-                        throw new TweetHandlerException(e);
+                        throw new HandlerException(e);
                     }
                 }
             }
@@ -171,7 +165,7 @@ public class TweetPersister implements Handler<Tweet, TweetHandlerException> {
             try {
                 storeConnection.getSailConnection().commit();
             } catch (SailException e) {
-                throw new TweetHandlerException(e);
+                throw new HandlerException(e);
             }
         }
 

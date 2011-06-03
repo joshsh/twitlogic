@@ -9,6 +9,7 @@ import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -60,8 +61,8 @@ public abstract class MatcherTestBase extends TestCase {
 
     protected final Set<Triple> results = new HashSet<Triple>();
 
-    protected final Handler<Triple, MatcherException> handler = new Handler<Triple, MatcherException>() {
-        public boolean handle(final Triple triple) throws MatcherException {
+    protected final Handler<Triple> handler = new Handler<Triple>() {
+        public boolean handle(final Triple triple) throws HandlerException {
             results.add(triple);
             return true;
         }

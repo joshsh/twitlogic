@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.proof;
 
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.vocabs.PMLJustification;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -24,7 +25,7 @@ public class InferenceStep extends PMLConstruct {
         this.antecedentList = antecedentList;
     }
 
-    protected void handleStatements(final Handler<Statement, RDFizerException> handler) throws RDFizerException {
+    protected void handleStatements(final Handler<Statement> handler) throws HandlerException {
         Resource g = context.getNamedGraph();
         ValueFactory vf = context.getValueFactory();
 

@@ -11,7 +11,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
@@ -107,7 +107,7 @@ public class FirehoseDemo {
 
                             TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
                             TweetFilterCriterion crit = new TweetFilterCriterion(TwitLogic.getConfiguration());
-                            Filter<Tweet, TweetHandlerException> f = new Filter<Tweet, TweetHandlerException>(crit, pLogger);
+                            Filter<Tweet> f = new Filter<Tweet>(crit, pLogger);
 
                             // Add a "topic sniffer".
                             TopicSniffer topicSniffer = new TopicSniffer(f);
@@ -116,22 +116,22 @@ public class FirehoseDemo {
                             Matcher matcher = new MultiMatcher(
                                     new DemoAfterthoughtMatcher());
 
-                            final Handler<Tweet, TweetHandlerException> annotator
+                            final Handler<Tweet> annotator
                                     = new TweetAnnotator(matcher, topicSniffer);
 
-                            Handler<Tweet, TweetHandlerException> adder = new Handler<Tweet, TweetHandlerException>() {
-                                public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                            Handler<Tweet> adder = new Handler<Tweet>() {
+                                public boolean handle(final Tweet tweet) throws HandlerException {
                                     try {
                                         c.clear();
                                         c.commit();
                                     } catch (SailException e) {
-                                        throw new TweetHandlerException(e);
+                                        throw new HandlerException(e);
                                     }
 
                                     return annotator.handle(tweet);
                                 }
                             };
-                            Handler<Tweet, TweetHandlerException> deleter = new TweetDeleter(store);
+                            Handler<Tweet> deleter = new TweetDeleter(store);
 
                             TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), adder);
 

@@ -1,13 +1,13 @@
 package net.fortytwo.twitlogic.syntax;
 
 import junit.framework.TestCase;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
-import java.util.Arrays;
-
 import net.fortytwo.twitlogic.flow.Handler;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,8 +47,8 @@ public class HashtagLexerTest extends TestCase {
     private void assertTokenizesTo(final String hashtag, final String... expectedResults) throws Exception {
         final Set<String> actualResults = new HashSet<String>();
 
-        Handler<List<String>, Exception> resultHandler = new Handler<List<String>, Exception>() {
-            public boolean handle(List<String> result) throws Exception {
+        Handler<List<String>> resultHandler = new Handler<List<String>>() {
+            public boolean handle(List<String> result) throws HandlerException {
                 actualResults.add(commaDelimit(result));
                 return true;
             }

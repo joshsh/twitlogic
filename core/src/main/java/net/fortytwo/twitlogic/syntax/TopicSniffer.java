@@ -6,7 +6,7 @@ import net.fortytwo.twitlogic.model.Hashtag;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 
 import java.util.Collection;
 
@@ -15,14 +15,14 @@ import java.util.Collection;
  * Date: Apr 5, 2010
  * Time: 6:08:07 PM
  */
-public class TopicSniffer implements Handler<Tweet, TweetHandlerException> {
-    private final Handler<Tweet, TweetHandlerException> baseHandler;
+public class TopicSniffer implements Handler<Tweet> {
+    private final Handler<Tweet> baseHandler;
 
-    public TopicSniffer(final Handler<Tweet, TweetHandlerException> baseHandler) {
+    public TopicSniffer(final Handler<Tweet> baseHandler) {
         this.baseHandler = baseHandler;
     }
 
-    public boolean handle(final Tweet tweet) throws TweetHandlerException {
+    public boolean handle(final Tweet tweet) throws HandlerException {
         if (null == tweet.getEntities() && null != tweet.getText()) {
             Entities entities = new Entities();
 

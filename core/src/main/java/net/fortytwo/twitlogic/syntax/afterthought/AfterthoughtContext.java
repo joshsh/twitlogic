@@ -7,7 +7,7 @@ import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.syntax.MatcherException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 
 /**
  * User: josh
@@ -16,11 +16,11 @@ import net.fortytwo.twitlogic.syntax.MatcherException;
  */
 public class AfterthoughtContext implements TweetContext {
     private final TweetContext baseContext;
-    private final Handler<Triple, MatcherException> handler;
+    private final Handler<Triple> handler;
     private final Resource subject;
 
     public AfterthoughtContext(final Resource subject,
-                               final Handler<Triple, MatcherException> handler,
+                               final Handler<Triple> handler,
                                final TweetContext baseContext) {
         this.subject = subject;
         this.handler = handler;
@@ -31,12 +31,12 @@ public class AfterthoughtContext implements TweetContext {
         return subject;
     }
 
-    public void handle(final Triple t) throws MatcherException {
+    public void handle(final Triple t) throws HandlerException {
         handler.handle(t);
     }
 
     public void handleCompletedTriple(final Resource predicate,
-                                      final Resource object) throws MatcherException {
+                                      final Resource object) throws HandlerException {
         Triple t = new Triple(subject, predicate, object);
         handler.handle(t);
     }

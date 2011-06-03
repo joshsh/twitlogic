@@ -4,6 +4,7 @@ import net.fortytwo.twitlogic.model.PlainLiteral;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.syntax.MatcherException;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtContext;
 import net.fortytwo.twitlogic.syntax.afterthought.AfterthoughtMatcher;
@@ -50,12 +51,16 @@ public class ReviewMatcher extends AfterthoughtMatcher {
                     && rating >= 0
                     && rating <= maxRating) {
                 Resource review = context.anonymousNode();
-                context.handle(new Triple(context.getSubject(), HASREVIEW, review));
-                context.handle(new Triple(review, TYPE, REVIEW));
-                context.handle(new Triple(review, RATING, new PlainLiteral("" + rating)));
-                context.handle(new Triple(review, MAXRATING, new PlainLiteral("" + maxRating)));
-                context.handle(new Triple(review, MINRATING, new PlainLiteral("" + minRating)));
-                context.handle(new Triple(review, TEXT, new PlainLiteral(context.thisTweet().getText())));
+                try {
+                    context.handle(new Triple(context.getSubject(), HASREVIEW, review));
+                    context.handle(new Triple(review, TYPE, REVIEW));
+                    context.handle(new Triple(review, RATING, new PlainLiteral("" + rating)));
+                    context.handle(new Triple(review, MAXRATING, new PlainLiteral("" + maxRating)));
+                    context.handle(new Triple(review, MINRATING, new PlainLiteral("" + minRating)));
+                    context.handle(new Triple(review, TEXT, new PlainLiteral(context.thisTweet().getText())));
+                } catch (HandlerException e) {
+                    throw new MatcherException(e);
+                }
 
                 // FIXME: restore this.  Currently, it causes a transaction to hang.
                 //context.handle(new Triple(review, REVIEWER, context.thisPerson()));
