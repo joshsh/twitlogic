@@ -95,13 +95,8 @@ public class TweetStore {
      */
     public TweetStore() throws TweetStoreException {
         configuration = TwitLogic.getConfiguration();
-        String sailType;
-        try {
-            sailType = configuration.getString(TwitLogic.SAIL_CLASS);
-        } catch (PropertyException e) {
-            throw new TweetStoreException(e);
-        }
-        sail = createSail(sailType, configuration);
+
+        sail = createSail(configuration);
 
         openConnections = Collections.synchronizedSet(new HashSet<TweetStoreConnection>());
     }
@@ -370,10 +365,15 @@ public class TweetStore {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private Sail createSail(final String sailType,
-                            final TypedProperties props) throws TweetStoreException {
+    public static Sail createSail(final TypedProperties props) throws TweetStoreException {
+        String sailType;
+        try {
+            sailType = props.getString(TwitLogic.SAIL_CLASS);
+        } catch (PropertyException e) {
+            throw new TweetStoreException(e);
+        }
+
         System.out.println("creating Sail of type: " + sailType);
-        Sail sail;
         SailFactory factory;
 
         if (sailType.equals(MemoryStore.class.getName())) {

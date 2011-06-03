@@ -2,6 +2,7 @@ package net.fortytwo.twitlogic;
 
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
@@ -221,7 +222,7 @@ public class TwitLogic {
     }
 
     // Note: for now, lists are not persisted in any way
-    public static Set<User> findFollowList(final TwitterClient client) throws Exception {
+    public static Set<User> findFollowList(final TwitterClient client) throws TwitterClientException, PropertyException {
         TypedProperties props = TwitLogic.getConfiguration();
 
         // Note: this doesn't really need to be an order-preserving collection,
