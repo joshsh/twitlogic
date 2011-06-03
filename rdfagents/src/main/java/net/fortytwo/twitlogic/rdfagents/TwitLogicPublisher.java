@@ -127,6 +127,7 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
                 ((NotifyingSailWrapper) b).setBaseSail(baseSail);
             }
             sail = new WrapperNotifyingSail(b, listener);
+            sail.initialize();
 
             store = new TweetStore(sail);
             store.initialize();
@@ -136,6 +137,8 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
                     Handler<Tweet> handler = new Handler<Tweet>() {
                         @Override
                         public boolean handle(final Tweet tweet) throws HandlerException {
+                            System.out.println("got this tweet: " + tweet);
+
                             buffer.clear();
                             boolean b = persister.handle(tweet);
 
@@ -153,7 +156,7 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
 
                     TwitterClient client = new TwitterClient();
 
-                    TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
+                    TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), handler);
                     TweetFilterCriterion crit = new TweetFilterCriterion(TwitLogic.getConfiguration());
                     Filter<Tweet> f = new Filter<Tweet>(crit, pLogger);
 
