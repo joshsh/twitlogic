@@ -73,16 +73,6 @@
             <artifactId>signpost-commonshttp4</artifactId>
             <version>1.2.1.1</version>
         </dependency>
-        <dependency>
-            <groupId>jivesoftware</groupId>
-            <artifactId>smack</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>jivesoftware</groupId>
-            <artifactId>smackx</artifactId>
-            <version>3.1.0</version>
-        </dependency>
         <!--<dependency>
             <groupId>net.fortytwo.rdfagents</groupId>
             <artifactId>rdfagents-jade</artifactId>

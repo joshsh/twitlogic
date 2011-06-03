@@ -8,7 +8,7 @@
     <artifactId>twitlogic-rdfagents</artifactId>
     <version>0.9-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>RDFAgents Demos</name>
+    <name>TwitLogic RDFAgents</name>
 
     <repositories>
         <repository>
