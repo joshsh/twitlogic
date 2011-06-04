@@ -382,7 +382,7 @@ public class TweetStore {
             factory = new NativeStoreFactory(props);
         } else if (sailType.equals("com.knowledgereefsystems.agsail.AllegroSail")) {
             //factory = new AllegroSailFactory(props);
-            factory = new NewAllegroSailFactory(props, true);
+            factory = new NewAllegroSailFactory(props, false);
         } else {
             throw new TweetStoreException("unhandled Sail type: " + sailType);
         }
