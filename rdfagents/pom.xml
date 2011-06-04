@@ -22,7 +22,7 @@
         <dependency>
             <groupId>net.fortytwo.rdfagents</groupId>
             <artifactId>rdfagents-jade</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.twitlogic</groupId>
