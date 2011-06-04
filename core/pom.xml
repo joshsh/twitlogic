@@ -137,6 +137,12 @@
             <groupId>org.openrdf.elmo</groupId>
             <artifactId>elmo-sesame</artifactId>
             <version>1.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl104-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.openrdf.elmo</groupId>
@@ -150,8 +156,8 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>jcl104-over-slf4j</artifactId>
-            <version>1.5.0</version>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
