@@ -104,13 +104,9 @@ public class AgentDemo {
             }
         };
 
-        /*
-        Object mutex = "";
-        synchronized(mutex) {
-            mutex.wait(10000);
-        }*/
+        //client.submit(new URIImpl("http://rdfs.org/sioc/types#MicroblogPost"), twitlogic.getIdentity(), callback);
 
-        client.submit(new URIImpl("http://rdfs.org/sioc/types#MicroblogPost"), twitlogic.getIdentity(), callback);
         subscriber.submit(new URIImpl("http://rdfs.org/sioc/types#MicroblogPost"), twitlogic.getIdentity(), callback);
+        //subscriber.submit(new URIImpl("http://twitlogic.fortytwo.net/post/twitter/76748841705144320"), twitlogic.getIdentity(), callback);
     }
 }
