@@ -19,10 +19,11 @@
         </developer>
     </developers>
 
+
     <modules>
         <module>core</module>
         <module>plugins</module>
-	<module>rdfagents</module>
+        <module>rdfagents</module>
     </modules>
 
     <build>

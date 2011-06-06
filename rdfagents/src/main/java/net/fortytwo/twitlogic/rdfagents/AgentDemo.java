@@ -2,14 +2,15 @@ package net.fortytwo.twitlogic.rdfagents;
 
 import net.fortytwo.rdfagents.RDFAgents;
 import net.fortytwo.rdfagents.data.DatasetFactory;
-import net.fortytwo.rdfagents.jade.QueryClientImpl;
+import net.fortytwo.rdfagents.jade.PubsubConsumerImpl;
+import net.fortytwo.rdfagents.jade.QueryConsumerImpl;
 import net.fortytwo.rdfagents.jade.RDFAgentImpl;
 import net.fortytwo.rdfagents.jade.RDFAgentsPlatformImpl;
-import net.fortytwo.rdfagents.jade.SubscriberImpl;
+import net.fortytwo.rdfagents.messaging.ConsumerCallback;
 import net.fortytwo.rdfagents.messaging.LocalFailure;
-import net.fortytwo.rdfagents.messaging.QueryCallback;
-import net.fortytwo.rdfagents.messaging.query.QueryClient;
-import net.fortytwo.rdfagents.messaging.subscribe.Subscriber;
+import net.fortytwo.rdfagents.messaging.query.QueryConsumer;
+import net.fortytwo.rdfagents.messaging.subscribe.PubsubConsumer;
+import net.fortytwo.rdfagents.model.AgentId;
 import net.fortytwo.rdfagents.model.Dataset;
 import net.fortytwo.rdfagents.model.ErrorExplanation;
 import net.fortytwo.rdfagents.model.RDFAgent;
@@ -68,16 +69,18 @@ public class AgentDemo {
             datasetFactory.addLanguage(l);
         }
 
-        RDFAgentsPlatform p = new RDFAgentsPlatformImpl("twitlogic.fortytwo.net", datasetFactory, 8888, config);
+        RDFAgentsPlatform p = new RDFAgentsPlatformImpl("twitlogic.fortytwo.net", 8889, config);
 
 
-        RDFAgent twitlogic = new TwitLogicAgent(config, RDFAgents.NAME_PREFIX + "twitlogic", p, "xmpp:patabot.1@fortytwo.net");
-        RDFAgent consumer = new RDFAgentImpl(RDFAgents.NAME_PREFIX + "agent1", p, "xmpp:patabot.1@fortytwo.net");
+        RDFAgent twitlogic = new TwitLogicAgent(config, p,
+                new AgentId("urn:x-agent:twitlogic@twitlogic.fortytwo.net", "xmpp://patabot.2@jabber.org"));
+        RDFAgent consumer = new RDFAgentImpl(p,
+                new AgentId("urn:x-agent:agent1@twitlogic.fortytwo.net", "xmpp://patabot.2@jabber.org"));
 
-        QueryClient<Value, Dataset> client = new QueryClientImpl(consumer);
-        Subscriber<Value, Dataset> subscriber = new SubscriberImpl(consumer);
+        QueryConsumer<Value, Dataset> client = new QueryConsumerImpl(consumer);
+        PubsubConsumer<Value, Dataset> subscriber = new PubsubConsumerImpl(consumer);
 
-        QueryCallback<Dataset> callback = new QueryCallback<Dataset>() {
+        ConsumerCallback<Dataset> callback = new ConsumerCallback<Dataset>() {
             public void success(final Dataset answer) {
                 System.out.println("received a query result or subscription update.  Answer follows:");
                 try {

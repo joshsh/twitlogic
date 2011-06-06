@@ -3,8 +3,8 @@ package net.fortytwo.twitlogic.rdfagents;
 import net.fortytwo.rdfagents.RDFAgents;
 import net.fortytwo.rdfagents.messaging.Commitment;
 import net.fortytwo.rdfagents.messaging.LocalFailure;
-import net.fortytwo.rdfagents.messaging.subscribe.Publisher;
-import net.fortytwo.rdfagents.model.AgentReference;
+import net.fortytwo.rdfagents.messaging.subscribe.PubsubProvider;
+import net.fortytwo.rdfagents.model.AgentId;
 import net.fortytwo.rdfagents.model.Dataset;
 import net.fortytwo.rdfagents.model.RDFAgent;
 import net.fortytwo.twitlogic.TweetFilterCriterion;
@@ -40,6 +40,7 @@ import org.openrdf.sail.helpers.NotifyingSailBase;
 import org.openrdf.sail.helpers.NotifyingSailWrapper;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Set;
@@ -50,13 +51,15 @@ import java.util.logging.Logger;
  * Date: 6/1/11
  * Time: 4:41 PM
  */
-public class TwitLogicPublisher extends Publisher<Value, Dataset> {
-    private static final Logger LOGGER = TwitLogic.getLogger(TwitLogicPublisher.class);
+public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
+    private static final Logger LOGGER = TwitLogic.getLogger(TwitLogicPubsubProvider.class);
 
     private boolean active = false;
+    private long minimumUpdateInterval = 0;
+    private long lastUpdate = 0;
 
-    public TwitLogicPublisher(final RDFAgent agent,
-                              final Properties config) {
+    public TwitLogicPubsubProvider(final RDFAgent agent,
+                                   final Properties config) {
         super(agent);
 
         TwitLogic.setConfiguration(config);
@@ -88,14 +91,18 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
         }).start();
     }
 
+    public void setMinimumUpdateInterval(final long minimumUpdateInterval) {
+        this.minimumUpdateInterval = minimumUpdateInterval;
+    }
+
     public boolean isActive() {
         return active;
     }
 
     @Override
     protected Commitment considerSubscriptionRequestInternal(final Value topic,
-                                                             final AgentReference initiator) {
-        return new Commitment(Commitment.Decision.AGREE_WITH_CONFIRMATION, null);
+                                                             final AgentId initiator) {
+        return new Commitment(Commitment.Decision.AGREE_AND_NOTIFY, null);
     }
 
     public class TweetGenerator {
@@ -226,11 +233,17 @@ public class TwitLogicPublisher extends Publisher<Value, Dataset> {
     protected void handleDataset(final Dataset d) throws LocalFailure {
         Set<Value> t = getTopics();
 
-        for (Statement s : d.getStatements()) {
-            if (t.contains(s.getSubject())) {
-                produceUpdate(s.getSubject(), d);
-            } else if (t.contains(s.getObject())) {
-                produceUpdate(s.getObject(), d);
+        long now = new Date().getTime();
+
+        if (now - lastUpdate >= minimumUpdateInterval) {
+            lastUpdate = now;
+
+            for (Statement s : d.getStatements()) {
+                if (t.contains(s.getSubject())) {
+                    produceUpdate(s.getSubject(), d);
+                } else if (t.contains(s.getObject())) {
+                    produceUpdate(s.getObject(), d);
+                }
             }
         }
     }
