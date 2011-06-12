@@ -58,8 +58,10 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
     private long minimumUpdateInterval = 0;
     private long lastUpdate = 0;
 
+    private Sail sail;
+
     public TwitLogicPubsubProvider(final RDFAgent agent,
-                                   final Properties config) {
+                                   final Properties config) throws Exception {
         super(agent);
 
         TwitLogic.setConfiguration(config);
@@ -77,12 +79,15 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
             }
         };
 
+        // Do this here so that the Sail is initialized before the runner thread starts.
+        final TweetGenerator g = new TweetGenerator();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     // TODO: shut down the generator
-                    new TweetGenerator(handler);
+                    g.run(handler);
                 } catch (Throwable e) {
                     active = false;
                     LOGGER.severe("TwitLogic thread failed (stack trace follows)\n" + RDFAgents.stackTraceToString(e));
@@ -99,6 +104,11 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
         return active;
     }
 
+
+    public Sail getSail() {
+        return sail;
+    }
+
     @Override
     protected Commitment considerSubscriptionRequestInternal(final Value topic,
                                                              final AgentId initiator) {
@@ -107,11 +117,10 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
 
     public class TweetGenerator {
 
-        private final NotifyingSail sail;
         private final Collection<Statement> buffer = new LinkedList<Statement>();
         private final TweetStore store;
 
-        public TweetGenerator(final Handler<Dataset> datasetHandler) throws SailException, TweetStoreException, TwitterClientException, PropertyException {
+        public TweetGenerator() throws TweetStoreException, SailException {
 
             SailConnectionListener listener = new SailConnectionListener() {
                 @Override
@@ -137,6 +146,9 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
             sail.initialize();
 
             store = new TweetStore(sail);
+        }
+
+        public void run(final Handler<Dataset> datasetHandler) throws TweetStoreException, TwitterClientException, PropertyException {
             store.initialize();
             try {
                 final TweetPersister persister = new TweetPersister(store, null);

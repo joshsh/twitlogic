@@ -1,11 +1,9 @@
 package net.fortytwo.twitlogic.rdfagents;
 
 import net.fortytwo.rdfagents.jade.RDFAgentImpl;
-import net.fortytwo.rdfagents.messaging.query.QueryProvider;
+import net.fortytwo.rdfagents.jade.SailBasedQueryProvider;
 import net.fortytwo.rdfagents.model.AgentId;
-import net.fortytwo.rdfagents.model.Dataset;
 import net.fortytwo.rdfagents.model.RDFAgentsPlatform;
-import org.openrdf.model.Value;
 
 import java.util.Properties;
 
@@ -22,13 +20,15 @@ public class TwitLogicAgent extends RDFAgentImpl {
                           final RDFAgentsPlatform platform,
                           final AgentId id) throws RDFAgentException {
         super(platform, id);
-        pub = new TwitLogicPubsubProvider(this, config);
-        setPubsubProvider(pub);
-    }
 
-    @Override
-    public void setQueryProvider(QueryProvider<Value, Dataset> queryServer) {
-        throw new UnsupportedOperationException("queries (as opposed to subscriptions) are not yet supported");
+        try {
+            pub = new TwitLogicPubsubProvider(this, config);
+        } catch (Exception e) {
+            throw new RDFAgentException(e);
+        }
+        setPubsubProvider(pub);
+
+        setQueryProvider(new SailBasedQueryProvider(this, pub.getSail()));
     }
 
     public void setRateLimit(final long minimumInterval) {

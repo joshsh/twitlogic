@@ -16,6 +16,11 @@
             <name>fortytwo.net Maven repository</name>
             <url>http://fortytwo.net/maven2</url>
         </repository>
+        <repository>
+            <id>aduna-repo</id>
+            <name>Aduna repository</name>
+            <url>http://repo.aduna-software.org/maven2/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -62,7 +67,7 @@
                     <descriptors>
                         <descriptor>src/assembly/standalone.xml</descriptor>
                     </descriptors>
-                    <finalName>rdfagents-${project.version}</finalName>
+                    <finalName>twitlogic-rdfagents-${project.version}</finalName>
                     <outputDirectory>target</outputDirectory>
                     <workDirectory>target/assembly/work</workDirectory>
                     <tarLongFileMode>warn</tarLongFileMode>
