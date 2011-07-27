@@ -1,11 +1,11 @@
 package edu.rpi.tw.twctwit.query;
 
-import edu.rpi.tw.patadata.PataException;
-import net.fortytwo.sesametools.mappingsail.MappingSail;
+import net.fortytwo.flow.rdf.ranking.HandlerException;
 import net.fortytwo.sesametools.ldserver.query.QueryException;
 import net.fortytwo.sesametools.ldserver.query.QueryResource;
 import net.fortytwo.sesametools.ldserver.query.SparqlQueryRepresentation;
 import net.fortytwo.sesametools.ldserver.query.SparqlTools;
+import net.fortytwo.sesametools.mappingsail.MappingSail;
 import net.fortytwo.twitlogic.vocabs.DCTerms;
 import net.fortytwo.twitlogic.vocabs.FOAF;
 import net.fortytwo.twitlogic.vocabs.RDF;
@@ -121,7 +121,7 @@ public class RelatedTweetsResource extends QueryResource {
     }
 
     private String alternativesQuery(final Resource resource,
-                                     final String after) throws SailException, PataException {
+                                     final String after) throws SailException, HandlerException {
         Sail baseSail = sail instanceof MappingSail
                 ? ((MappingSail) sail).getBaseSail()
                 : sail;

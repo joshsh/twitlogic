@@ -1,10 +1,10 @@
 package edu.rpi.tw.twctwit.query;
 
-import edu.rpi.tw.patadata.Handler;
-import edu.rpi.tw.patadata.KeepResourcesFilter;
-import edu.rpi.tw.patadata.PataException;
-import edu.rpi.tw.patadata.TraverserTools;
-import edu.rpi.tw.patadata.ranking.Approximation;
+import net.fortytwo.flow.rdf.ranking.Handler;
+import net.fortytwo.flow.rdf.ranking.KeepResourcesFilter;
+import net.fortytwo.flow.rdf.ranking.HandlerException;
+import net.fortytwo.flow.rdf.ranking.Ranking;
+import net.fortytwo.flow.rdf.ranking.Approximation;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.sail.SailConnection;
@@ -20,7 +20,7 @@ import java.util.Set;
  * Date: Apr 19, 2010
  * Time: 3:01:08 PM
  */
-public class SimpleInferencer implements Approximation<Set<Resource>, PataException> {
+public class SimpleInferencer implements Approximation<Set<Resource>, HandlerException> {
 
     private Queue<Resource> curGen;
     private Queue<Resource> nextGen;
@@ -49,7 +49,7 @@ public class SimpleInferencer implements Approximation<Set<Resource>, PataExcept
         return results;
     }
 
-    public int compute(int cycles) throws PataException {
+    public int compute(int cycles) throws HandlerException {
         //System.out.println("simple inferencer: " + cycles + " cycles over " + seeds.length + " seeds: " + seeds[0] + "...");
         for (int i = 0; i < cycles; i++) {
             if (0 == curGen.size()) {
@@ -81,23 +81,23 @@ public class SimpleInferencer implements Approximation<Set<Resource>, PataExcept
 
     public void stepRelated(final SailConnection sc,
                             final Resource resource,
-                            final Queue<Resource> resources) throws PataException {
-        Handler<Resource, PataException> h = new Handler<Resource, PataException>() {
-            public boolean handle(final Resource r) throws PataException {
+                            final Queue<Resource> resources) throws HandlerException {
+        Handler<Resource, HandlerException> h = new Handler<Resource, HandlerException>() {
+            public boolean handle(final Resource r) throws HandlerException {
                 addResult(r, resources);
                 return true;
             }
         };
 
         if (0 < inPredicates.length) {
-            TraverserTools.traverseBackward(sc,
+            Ranking.traverseBackward(sc,
                     new KeepResourcesFilter(h),
                     resource,
                     inPredicates);
         }
 
         if (0 < outPredicates.length) {
-            TraverserTools.traverseForward(sc,
+            Ranking.traverseForward(sc,
                     new KeepResourcesFilter(h),
                     resource,
                     outPredicates);

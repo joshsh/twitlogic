@@ -1,8 +1,8 @@
 package edu.rpi.tw.twctwit.query;
 
-import edu.rpi.tw.patadata.RDFSpreadVector;
-import edu.rpi.tw.patadata.ranking.WeightedValue;
-import edu.rpi.tw.patadata.ranking.WeightedVector;
+import net.fortytwo.flow.rdf.ranking.RDFSpreadVector;
+import net.fortytwo.flow.rdf.ranking.WeightedValue;
+import net.fortytwo.flow.rdf.ranking.WeightedVector;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;

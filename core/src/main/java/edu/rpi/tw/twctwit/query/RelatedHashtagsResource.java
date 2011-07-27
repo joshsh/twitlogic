@@ -1,6 +1,6 @@
 package edu.rpi.tw.twctwit.query;
 
-import edu.rpi.tw.patadata.PataException;
+import net.fortytwo.flow.rdf.ranking.HandlerException;
 import net.fortytwo.sesametools.mappingsail.MappingSail;
 import net.fortytwo.sesametools.ldserver.query.QueryResource;
 import org.json.JSONArray;
@@ -94,7 +94,7 @@ public class RelatedHashtagsResource extends QueryResource {
 
     private JSONArray relatedTagsJSON(final Resource resource,
                                       final int limit,
-                                      final int steps) throws SailException, PataException, JSONException {
+                                      final int steps) throws SailException, HandlerException, JSONException {
         Sail baseSail = sail instanceof MappingSail
                 ? ((MappingSail) sail).getBaseSail()
                 : sail;
