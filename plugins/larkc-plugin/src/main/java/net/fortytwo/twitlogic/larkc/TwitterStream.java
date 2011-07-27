@@ -12,7 +12,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
-import net.fortytwo.twitlogic.services.twitter.TweetHandlerException;
+import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
@@ -116,20 +116,20 @@ public class TwitterStream extends StreamingSetOfStatements {
                 Set<User> users = TwitLogic.findFollowList(client);
                 Set<String> terms = TwitLogic.findTrackTerms();
 
-                final Handler<Tweet, TweetHandlerException> annotator
+                final Handler<Tweet> annotator
                         = createAnnotator(store, client);
 
                 final SailConnection c = sail.getConnection();
                 //c.addConnectionListener(listener);
 
                 try {
-                    Handler<Tweet, TweetHandlerException> adder = new Handler<Tweet, TweetHandlerException>() {
-                        public boolean handle(final Tweet tweet) throws TweetHandlerException {
+                    Handler<Tweet> adder = new Handler<Tweet>() {
+                        public boolean handle(final Tweet tweet) throws HandlerException {
                             try {
                                 c.clear();
                                 c.commit();
                             } catch (SailException e) {
-                                throw new TweetHandlerException(e);
+                                throw new HandlerException(e);
                             }
 
                             return !closed && annotator.handle(tweet);
@@ -137,7 +137,7 @@ public class TwitterStream extends StreamingSetOfStatements {
                     };
 
                     // Can't use a deleter here.
-                    NullHandler<Tweet, TweetHandlerException> d = new NullHandler<Tweet, TweetHandlerException>();
+                    NullHandler<Tweet> d = new NullHandler<Tweet>();
 
                     // TODO: optionally gather historical tweets
 
@@ -159,8 +159,8 @@ public class TwitterStream extends StreamingSetOfStatements {
         }
     }
 
-    private static Handler<Tweet, TweetHandlerException> createAnnotator(final TweetStore store,
-                                                                         final TwitterClient client) throws TweetStoreException {
+    private static Handler<Tweet> createAnnotator(final TweetStore store,
+                                                  final TwitterClient client) throws TweetStoreException {
         // Create the tweet persister.
         TweetPersister persister = new TweetPersister(store, client);
 

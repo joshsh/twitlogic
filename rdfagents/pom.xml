@@ -10,6 +10,13 @@
     <packaging>jar</packaging>
     <name>TwitLogic RDFAgents</name>
 
+    <parent>
+        <groupId>net.fortytwo.twitlogic</groupId>
+        <artifactId>twitlogic-all</artifactId>
+        <version>0.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <repositories>
         <repository>
             <id>fortytwo</id>
@@ -32,7 +39,7 @@
         <dependency>
             <groupId>net.fortytwo.twitlogic</groupId>
             <artifactId>twitlogic-core</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>${twitlogic.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

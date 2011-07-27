@@ -18,6 +18,13 @@
         </developer>
     </developers>
 
+    <parent>
+        <groupId>net.fortytwo.twitlogic</groupId>
+        <artifactId>twitlogic-plugins</artifactId>
+        <version>0.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <repositories>
         <repository>
             <id>fortytwo</id>
@@ -35,7 +42,7 @@
         <dependency>
             <groupId>net.fortytwo.twitlogic</groupId>
             <artifactId>twitlogic-core</artifactId>
-            <version>0.8</version>
+            <version>${twitlogic.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.larkc</groupId>
