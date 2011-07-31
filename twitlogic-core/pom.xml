@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.twitlogic</groupId>
     <artifactId>twitlogic-core</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
     <packaging>jar</packaging>
     <name>TwitLogic Core</name>
     <description>Java components for real-time integration of Twitter data with the Semantic Web</description>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>net.fortytwo.twitlogic</groupId>
         <artifactId>twitlogic-all</artifactId>
-        <version>0.9-SNAPSHOT</version>
+        <version>0.9</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -191,7 +191,7 @@
         <dependency>
             <groupId>net.fortytwo</groupId>
             <artifactId>rdfflow</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>${ripple.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
