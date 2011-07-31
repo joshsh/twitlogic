@@ -1,0 +1,48 @@
+import json
+import urllib2
+#from django.utils.encoding import smart_str, smart_unicode
+
+def wikipedia_name(name):
+	w = name.replace(' ', '_')
+	return w
+	
+f = open('/tmp/cities.txt', 'r')
+
+# f.readline()
+
+for line in f:
+        #print line,
+	o = json.loads(line)
+	
+	place_type = o['place_type']
+	name = o['name']
+	full_name = o['full_name']
+	id = o['id']
+	country_code = o['country_code']
+	
+	#if 'US' != country_code:
+	#	print country_code
+		
+	q = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=' + urllib2.quote(name)
+	
+	#print q
+	
+	response = urllib2.urlopen(q)
+	text = response.read()
+	
+	#print html
+	
+	w = json.loads(text)
+	a = w[1]
+	#print a
+	
+	for p in a:
+		wu = 'http://en.wikipedia.org/wiki/' + wikipedia_name(p)
+		out = id + '\t' + place_type + '\t' + full_name + '\t' + p + '\t' + wu
+		try:
+			print out
+		except:
+			# do nothing
+			a = 2
+
+

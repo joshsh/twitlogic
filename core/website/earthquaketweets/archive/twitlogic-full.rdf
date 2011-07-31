@@ -1,0 +1,1372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:rev="http://purl.org/stuff/rev#"
+	xmlns:tl="http://fortytwo.net/2009/10/twitlogic#"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:sioc="http://rdfs.org/sioc/ns#"
+	xmlns:sioct="http://rdfs.org/sioc/types#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfg="http://www.w3.org/2004/03/trix/rdfg-1/"
+	xmlns:void="http://rdfs.org/ns/void#">
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitlogic-void">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+	<rdfs:comment>a named graph containing the VoiD description of the current TwitLogic knowledge base</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/dataset/twitlogic-full">
+	<rdf:type rdf:resource="http://rdfs.org/ns/void#Dataset"/>
+	<rdfs:comment>the current TwitLogic knowledge base described in terms of VoiD</rdfs:comment>
+	<rdfs:comment>The TwitLogic knowledge base is made available under the Public Domain Dedication and License version 1.0 whose full text can be found online at: http://www.opendatacommons.org/licenses/pddl/1.0/</rdfs:comment>
+	<void:exampleResource rdf:resource="http://twitlogic.fortytwo.net/resource/hashtag/twitlogic"/>
+	<void:dataDump rdf:resource="http://twitlogic.fortytwo.net/archive/twitlogic-full.nq.gz"/>
+	<void:uriRegexPattern>http://twitlogic\.fortytwo\.net/resource/.+</void:uriRegexPattern>
+	<void:vocabulary rdf:resource="http://xmlns.com/foaf/0.1/"/>
+	<void:vocabulary rdf:resource="http://www.w3.org/2002/07/owl#"/>
+	<void:vocabulary rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+	<void:vocabulary rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/"/>
+	<void:vocabulary rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+	<void:vocabulary rdf:resource="http://rdfs.org/sioc/ns#"/>
+	<void:vocabulary rdf:resource="http://fortytwo.net/2009/10/twitlogic#"/>
+	<void:vocabulary rdf:resource="http://purl.org/stuff/rev#"/>
+	<void:vocabulary rdf:resource="http://rdfs.org/ns/void#"/>
+	<void:vocabulary rdf:resource="http://www.w3.org/2001/XMLSchema#"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitlogic-metadata">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+	<rdfs:comment>a named graph containing instance-level metadata for TwitLogic's user-generated content</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6221100545">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6221100545"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:03:25.194-05:00</dcterms:created>
+	<sioc:content>Testing earthquake tweet aggregator.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/71631722"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6221100545">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/71631722">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>antijosh</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/71631722"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/71631722">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Just a test account for now. Want to avoid annoying my actual followers while I experiment with #twitlogic formatting.</rdfs:comment>
+	<foaf:name>Joshua Antishinavier</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/434797004"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/400892906/antijosh_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/434797004">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Troy, NY</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/400892906/antijosh_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6221206344">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6221206344"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:07:00.081-05:00</dcterms:created>
+	<sioc:content>What would an earthquake be called on another planet? Why doesn't Mcdonalds sell hotdogs? Are eyebrows considered facial hair?</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/66145396"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6221206344">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/66145396">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>I_Am_Mo_Fo_Sho</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/66145396"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/66145396">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>I love writing, photography, stand up comedy, football, music, movies, and the internet. </rdfs:comment>
+	<foaf:name>Morgan Franchina</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/737937993"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/458654240/images_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.cheddarcheeseandtea.blogspot.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/737937993">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>New York</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.cheddarcheeseandtea.blogspot.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/458654240/images_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6221330479">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6221330479"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:11:14.991-05:00</dcterms:created>
+	<sioc:content>Earthquake:M 5.2, Vanuatu:2009-12-01T01:01:57Z #Pb2 http://ff.im/-cf7CX</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/17110872"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6221330479">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/17110872">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>paipibat</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/17110872"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/17110872">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>ข่าวสารภัยพิบัติ อยากรู้จัก @paipibat ง่าย ๆคลิ๊กที่ Favorites ด้านล่างครับ</rdfs:comment>
+	<foaf:name>ข่าวสารภัยพิบัติ</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1583183342"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/400961461/a4n_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://paipibat.blogspot.com/"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1583183342">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Bangkok, Thailand</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://paipibat.blogspot.com/">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/400961461/a4n_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6221339700">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6221339700"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:11:33.054-05:00</dcterms:created>
+	<sioc:content>As i swallow the pills of happiness, and you watch me fall like New York in an earthquake...(Angela Baker and My Obsession With Fire.)</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/89638481"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6221339700">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/89638481">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>dacookiemonstah</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/89638481"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/89638481">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>BandGleek.</rdfs:comment>
+	<foaf:name>Quentin Bonton</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1531622377"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/524374499/PICT0003_resise__normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1531622377">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Sacramento</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/524374499/PICT0003_resise__normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222325101">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222325101"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:45:01.256-05:00</dcterms:created>
+	<sioc:content>Earthquake 'n' bake.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/71631722"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222325101">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222329438">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222329438"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:45:09.881-05:00</dcterms:created>
+	<sioc:content>RT @OMGFacts: Moths are unable to fly during an earthquake. #omgfacts</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/17911373"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222329438">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/17911373">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>shameka_renee</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/17911373"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/17911373">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment></rdfs:comment>
+	<foaf:name>shameka_renee</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1292422703"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/148974111/30_weeks3_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1292422703">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>ÜT: 29.840775,-95.486759</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/148974111/30_weeks3_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222388431">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222388431"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:47:12.821-05:00</dcterms:created>
+	<sioc:content>Another boring earthquake tweet.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/71631722"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222388431">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222453879">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222453879"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:49:31.410-05:00</dcterms:created>
+	<sioc:content>So as we're driving into san Fran mom says oh I remember in 80 the huge earthquake that the bridge collapse here...</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/18695529"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222453879">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/18695529">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>jenny0125</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/18695529"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/18695529">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>I love candy, rain, cats, and color. I'm a Seattle girl living in SoCal for the time being. My favorite word is bubble, it's fun.</rdfs:comment>
+	<foaf:name>Jenny Nelson</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1485600382"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/476723813/Photo_93_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.kjennynelson.blogspot.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1485600382">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Claremont, CA</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.kjennynelson.blogspot.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/476723813/Photo_93_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222476318">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222476318"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:50:19.428-05:00</dcterms:created>
+	<sioc:content>@mpoppel was prob from ur mpoppel acct. Will miss all the earthquake tweets. Yep, I paid attn 2 those. Will b subscribing 2morrow :)</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/14885083"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222476318">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/14885083">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>kattykyt</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/14885083"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/14885083">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>CA girl that moved to Branson, MO for love. Performer,Cycling fan, CTMH and Watkins consultant and mom to 2 kitties.</rdfs:comment>
+	<foaf:name>Vikki Hughes</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/867259072"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/409046861/ls_3051_IMG_0294_normal.JPG"/>
+	<foaf:homepage rdf:resource="http://vikkihughes.blogspot.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/867259072">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>iPhone: 36.612442,-93.285049</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://vikkihughes.blogspot.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/409046861/ls_3051_IMG_0294_normal.JPG">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222622269">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222622269"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:55:18.985-05:00</dcterms:created>
+	<sioc:content>And then as we're actually on the gg bridge she's all so now do you wanna hear the earthquake story? NO! Lol. Oh mothers.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/18695529"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222622269">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222638318">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222638318"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:55:50.222-05:00</dcterms:created>
+	<sioc:content>Porn causes tsunami and earthquake? Klo gt gw mo pndh k glodok ah.. Krn yg kena kan serambi mekah.. Klo glodok pastinya far away from mekah!</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/87705772"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222638318">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/87705772">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>c_stephanie</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/87705772"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/87705772">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<foaf:name>cassandra stephanie</foaf:name>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/510914369/28062007175_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/510914369/28062007175_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222661198">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222661198"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:56:36.742-05:00</dcterms:created>
+	<sioc:content>@IdolFanatic Yay c i tweeted quicker ;D vibrate is awesome! Although mine sounds like a freakin earthquake lol!</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/72426358"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222661198">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/72426358">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>KenUhhDee</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/72426358"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/72426358">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>I'm one of those Twilight ppl! :P Read the books and love em! Im very sarcastic and love making ppl laugh! I can also be random and times! :P</rdfs:comment>
+	<foaf:name>Kinnidi</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/46819241"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/549008773/twitterProfilePhoto_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.myspace.com/ken-uh-dee"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/46819241">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Azusa</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.myspace.com/ken-uh-dee">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/549008773/twitterProfilePhoto_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222705134">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222705134"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T21:58:07.377-05:00</dcterms:created>
+	<sioc:content>Love is a temporary madness. It erupts like an earthquake and then subsides - St. Augustine. very true... http://uurl.in/6jACt</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/43487550"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222705134">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/43487550">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>ChristmasC</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/43487550"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/43487550">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>It is Christmas in the heart that puts Christmas in the air. Celebrate Christmas with us!!! Ho Ho Ho Merry Christmas :)</rdfs:comment>
+	<foaf:name>Christmas Carnivals</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1735496371"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/484001294/carnivals_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.christmascarnivals.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1735496371">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>USA</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.christmascarnivals.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/484001294/carnivals_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222792373">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222792373"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:01:01.961-05:00</dcterms:created>
+	<sioc:content>@deelestari By this logic, my PC should've been crushed by earthquake a long time ago,ROTFLMAO, stupid! ,and he's our minister?deep sigh...</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/55241792"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222792373">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/55241792">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>Rz_AP</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/55241792"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/55241792">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Ordinary boy,A Fresh Graduate Physician/Bathroom Singer/DreamCatcher/Survivor/Translator of Life/Reader and Watcher.</rdfs:comment>
+	<foaf:name>RizaAdriansyahPutra</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/668959361"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/541593365/16135_1164313904346_1122831855_30405372_1488555_n_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/668959361">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>ÜT: -6.270316,106.922488</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/541593365/16135_1164313904346_1122831855_30405372_1488555_n_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222960742">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222960742"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:06:41.516-05:00</dcterms:created>
+	<sioc:content>I could of sworn I just felt an earthquake. Or is my bunk bed just shaking...?</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/34127539"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222960742">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/34127539">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>heyavery</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/34127539"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/34127539">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Member of the Hey Monday Street Team, TOMS Campus Program, Element Advertising Team &amp; an aspiring musician.</rdfs:comment>
+	<foaf:name>Avery Anderson</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/539992164"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/539289546/TOMS_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.youtube.com/user/AveryCaren"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/539992164">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Hollywood interpretation of OC</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.youtube.com/user/AveryCaren">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/539289546/TOMS_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6222976300">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6222976300"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:07:14.743-05:00</dcterms:created>
+	<sioc:content>@Halkaniin u felt the earthquake last night?</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/33711160"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6222976300">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/33711160">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>kb24_lakers</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/33711160"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/33711160">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Kobe Kim Kardashian,Matt Kemp=My 3 favorite persons</rdfs:comment>
+	<foaf:name>JUAN</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1348323124"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/423707571/twitterProfilePhoto_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1348323124">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>inglewood california</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/423707571/twitterProfilePhoto_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223019339">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223019339"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:08:48.024-05:00</dcterms:created>
+	<sioc:content>@MelissaIsakh here's the article.(Re:porn causes tsunami and earthquake) http://bit.ly/8OvQ2B</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/35489564"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223019339">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/35489564">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>ozaludaya</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/35489564"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/35489564">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>always adore how words can create our theater of mind. </rdfs:comment>
+	<foaf:name>Ozal Udaya</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1792659503"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/544327831/ONT_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1792659503">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>ÜT: -6.191087,106.82308</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/544327831/ONT_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223023505">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223023505"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:08:58.076-05:00</dcterms:created>
+	<sioc:content>earthquake?</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/6009232"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223023505">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/6009232">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>kana1</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/6009232"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/6009232">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>I'm kana also known as @kana1, id:ka-nacht, whileimautomaton. / “Pfui!  It must not make sense.  It must ...” / #doll #emacs #iidx #kinesis #python #scheme #vim</rdfs:comment>
+	<foaf:name>kana</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1305980381"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/547816061/avatar-sasara-and-me_normal.png"/>
+	<foaf:homepage rdf:resource="http://whileimautomaton.net/"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1305980381">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Tokyo, Japan</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://whileimautomaton.net/">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/547816061/avatar-sasara-and-me_normal.png">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223081197">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223081197"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:11:02.339-05:00</dcterms:created>
+	<sioc:content>[震源地] 和歌山県北部　[最大震度] 震度1　（2009年12月1日 12時4分頃発生） - goo 天気 http://weather.goo.ne.jp/earthquake/09120112040.html</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/15943543"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223081197">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/15943543">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>jisin</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/15943543"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/15943543">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>地震用コミュニティ。このアカウントは、コミュニティー・サービス「ついっこ」に登録してあります。ご利用に当たっては上のリンクの先にある利用規約をお読みください。</rdfs:comment>
+	<foaf:name>地震</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1966232368"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/63727285/Earth_48_normal.png"/>
+	<foaf:homepage rdf:resource="http://twicco.jp/tos"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1966232368">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment></rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twicco.jp/tos">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/63727285/Earth_48_normal.png">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223098769">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223098769"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:11:40.875-05:00</dcterms:created>
+	<sioc:content>[気象庁] 1日12時04分頃 和歌山県北部にてM2.6の地震が発生。最大震度1です。 #saigai #eqjp #earthquake</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/4104111"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223098769">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/4104111">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>earthquake_jp</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/4104111"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/4104111">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>最新地震情報をお知らせしています(BOT) 詳しくは@ariela もしくはhttp://www.transrain.net/にどうぞ。気象庁とHi-netの情報を利用しています。(AQUAは速報系/気象庁が正式情報となっています。)</rdfs:comment>
+	<foaf:name>地震速報</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1604796081"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/368358807/eqjp_normal.png"/>
+	<foaf:homepage rdf:resource="http://bit.ly/7uHI6t"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1604796081">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment></rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://bit.ly/7uHI6t">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/368358807/eqjp_normal.png">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223124084">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223124084"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:12:37.129-05:00</dcterms:created>
+	<sioc:content>@tifsembiring pak,is it true that u said porn causes earthquake?what's ur reason?people all over d world mocking Indo cos of that statement.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/71161339"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223124084">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/71161339">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>ilsoed</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/71161339"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/71161339">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>emaknya gavin</rdfs:comment>
+	<foaf:name>ilda soedirman</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/758528851"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/541168737/iu_3562_0_986222240l_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/758528851">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>jakarta</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/541168737/iu_3562_0_986222240l_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223213936">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223213936"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:15:56.573-05:00</dcterms:created>
+	<sioc:content>@jokoanwar so, forget volcanic and tectonic. there are different types of earthquake now: bondic, fetic, sadic, oric, anic...</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/57318059"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223213936">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/57318059">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>hendrojoewono</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/57318059"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/57318059">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment></rdfs:comment>
+	<foaf:name>Hendro Joewono</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/414754993"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/319615844/n1031436320_30096060_3935_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/414754993">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>ÜT: -6.223939,106.815192</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/319615844/n1031436320_30096060_3935_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223218256">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223218256"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:16:04.956-05:00</dcterms:created>
+	<sioc:content>God and the Earthquake What religious person does not feel traumatized at such a moment?</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/73951652"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223218256">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/73951652">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>Lekishashmte</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/73951652"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/73951652">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment></rdfs:comment>
+	<foaf:name>Gayla Argandona</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/731268874"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/416709882/0014_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/731268874">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment></rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/416709882/0014_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223342309">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223342309"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:20:33.835-05:00</dcterms:created>
+	<sioc:content>it's beyond irritating how my dad finds ways to act like an obnoxious 5 year old douche. It feels almost like...a domestic earthquake.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/15224506"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223342309">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/15224506">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>saintremix</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/15224506"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/15224506">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>ohaidere</rdfs:comment>
+	<foaf:name>saintremix</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1056462832"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/340664542/clang_as_snowmenz_normal.PNG"/>
+	<foaf:homepage rdf:resource="http://asthmatic.tumblr.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1056462832">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>I'm happy up here.</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://asthmatic.tumblr.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/340664542/clang_as_snowmenz_normal.PNG">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223347863">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223347863"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:20:46.183-05:00</dcterms:created>
+	<sioc:content>Ima go eat b4 I pass out and cause an earthquake. LOL</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/16281260"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223347863">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/16281260">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>poprah</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/16281260"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/16281260">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Tv Host/Actress/Vh1 Reality Star/Tv Producer &amp; So Blessed!</rdfs:comment>
+	<foaf:name>poprah</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/910147286"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/253345511/poprah_pic_square_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/910147286">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Everywhere...</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/253345511/poprah_pic_square_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223358863">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223358863"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:21:10.088-05:00</dcterms:created>
+	<sioc:content>Love is like an earthquake...scary and u predictable but when the hard part is over you realize how lucky you are</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/71112410"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223358863">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/71112410">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>gail81493</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/71112410"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/71112410">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment></rdfs:comment>
+	<foaf:name>Abigail Eschmann</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1431103798"/>
+	<foaf:depiction rdf:resource="http://s.twimg.com/a/1259091217/images/default_profile_5_normal.png"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1431103798">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment></rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://s.twimg.com/a/1259091217/images/default_profile_5_normal.png">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223413411">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223413411"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:23:10.044-05:00</dcterms:created>
+	<sioc:content>Cafe' in earthquake  &#xD;
+Topples then burns then explodes ~ &#xD;
+After her last sip.  &#xD;
+#haiku #poetry</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/47863138"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223413411">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/47863138">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>gtcronin</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/47863138"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/47863138">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Born at an Early Age</rdfs:comment>
+	<foaf:name>Gerard Cronin</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1133761127"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/479167489/Snapshot_2009-10-18_22-09-34_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1133761127">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Marin</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/479167489/Snapshot_2009-10-18_22-09-34_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223436207">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223436207"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:24:00.915-05:00</dcterms:created>
+	<sioc:content>@lifeontheocean have u been thru a earthquake? me and grown girls thinking of taking a trip to Cali not 2010 but prob 2011..not sure yet</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/33953058"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223436207">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/33953058">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>SMHatLibs</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/33953058"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/33953058">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Wife,Mom,Grandma and a FLORIDA GATOR FAN! I love my country and the principles it was founded on. TY to those in the Military. God Bless America :o)</rdfs:comment>
+	<foaf:name>Jacqueline L.</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/721017310"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/545557143/099_normal.JPG"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/721017310">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>The Swamp</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/545557143/099_normal.JPG">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223481972">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223481972"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:25:41.051-05:00</dcterms:created>
+	<sioc:content>Predicting an earthquake... I just feel like the boxes I stacked 10 feet high in my storage room will come down tonight!  Calling for a 3.2</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/24583480"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223481972">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/24583480">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>JackLawrenceXXX</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/24583480"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/24583480">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Porn Star Jack Lawrence from JackLawrenceXXX.com keeping intouch with my peeps!  Pictures of my Race Car, Cycling adventures, etc!</rdfs:comment>
+	<foaf:name>Jack Lawrence XXX</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1431814236"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/252694171/8x10big_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.JackLawrenceXXX.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1431814236">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Woodland Hills, CA </rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.JackLawrenceXXX.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/252694171/8x10big_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223512019">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223512019"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:26:47.306-05:00</dcterms:created>
+	<sioc:content>*voice over* All harddisks contain porn will self-destruct in 3..2..1.. RT Rz_AP: My PC should've been crushed by earthquake a long time ago</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/59427618"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223512019">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/59427618">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>deelestari</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/59427618"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/59427618">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>A writer, singer, singer-songwriter, heavy day dreamer.</rdfs:comment>
+	<foaf:name>Dewi 'Dee' Lestari</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1926122781"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/328388679/P1010747_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.dee-idea.blogspot.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1926122781">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>ÜT: -6.324844,106.674353</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.dee-idea.blogspot.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/328388679/P1010747_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223560971">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223560971"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:28:35.492-05:00</dcterms:created>
+	<sioc:content>Magnitude 5.2 earthquake, Vanuatu http://bit.ly/7g9UO4</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/84232331"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223560971">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/84232331">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>QuakeTracker</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/84232331"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/84232331">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>Live earthquake and tsunami reports.</rdfs:comment>
+	<foaf:name>Quake Tracker</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/865967428"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/486705554/twitter_avatar_normal.gif"/>
+	<foaf:homepage rdf:resource="http://www.quaketracker.com"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/865967428">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>All over!</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.quaketracker.com">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/486705554/twitter_avatar_normal.gif">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223562750">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223562750"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:28:39.791-05:00</dcterms:created>
+	<sioc:content>Magnitude 4.9 earthquake, Mid-Indian Ridge http://bit.ly/7SdAXd</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/84232331"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223562750">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223621884">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223621884"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:30:47.541-05:00</dcterms:created>
+	<sioc:content>Which arnie arrow does Tifatul Sembiring read? I know orgasm they said is like volcano erruption, but EARTHQUAKE? What kind of porn is that?</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/34546920"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223621884">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/34546920">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>iyansusanto</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/34546920"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/34546920">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment></rdfs:comment>
+	<foaf:name>iyan susanto</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1464636004"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/420531887/n616274570_2021_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1464636004">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>ÜT: -6.266085,106.827607</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/420531887/n616274570_2021_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6223643320">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6223643320"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-11-30T22:31:33.074-05:00</dcterms:created>
+	<sioc:content>@Kirlia_ YES IT IS! YAY FOR EARTHQUAKE! OH NO! It looks like that old man who I may or may not have killed fell in the chasm!</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/62996700"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6223643320">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/62996700">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>hoennmudkip</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/62996700"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/62996700">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>A powerful Mudkip in search of nothing in particular.</rdfs:comment>
+	<foaf:name>Mud Kipper</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/734360237"/>
+	<foaf:depiction rdf:resource="http://a1.twimg.com/profile_images/488977340/35888k8_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://twitterdex.net/Hoennmudkip"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/734360237">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Viridian City</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitterdex.net/Hoennmudkip">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a1.twimg.com/profile_images/488977340/35888k8_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6366324562">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6366324562"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-12-05T05:22:44.079-05:00</dcterms:created>
+	<sioc:content>bahahaha tripped over my shoe to go to the bathroom, fell, and mom woke up thinking there was a earthquake. AHAHAHAHHAAHA</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/29502581"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6366324562">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/29502581">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>imxedward</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/29502581"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/29502581">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>follow meee</rdfs:comment>
+	<foaf:name>edwardd gonzaless</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/2140052482"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/293405619/l_5235ac5a98d49ed216501a747ea23457_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.myspace.com/sourskittles2"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/2140052482">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>eagle rock</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.myspace.com/sourskittles2">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/293405619/l_5235ac5a98d49ed216501a747ea23457_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6366328732">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6366328732"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-12-05T05:23:04.634-05:00</dcterms:created>
+	<sioc:content>RT @inerds: The second floor neighbours just almost caused an earthquake.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/23173291"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6366328732">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/23173291">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>fulhi</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/23173291"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/23173291">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>A learner... + photographer...</rdfs:comment>
+	<foaf:name>Shimal Ahmed</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/2033722442"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/342851099/twitterProfilePhoto_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://www.flickr.com/schimaul"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/2033722442">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Male', Maldives</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.flickr.com/schimaul">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/342851099/twitterProfilePhoto_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6366337150">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6366337150"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-12-05T05:23:45.183-05:00</dcterms:created>
+	<sioc:content>RT @inerds: The second floor neighbours just almost caused an earthquake.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/16288154"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6366337150">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/16288154">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>draconiams</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/16288154"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/16288154">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>OperaMini user, Designer, Twitter Addict, Explorer &amp; Promoter, Emma Watson fan, Music + Soft toy &amp; Nimbus Lover, Mythology Enthusiast.</rdfs:comment>
+	<foaf:name>Oppo</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/1074697980"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/480129071/20102009286_normal.jpg"/>
+	<foaf:homepage rdf:resource="http://twitter.com/"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/1074697980">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Male', Maldives</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitter.com/">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/480129071/20102009286_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/post/twitter/6366339305">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/types#MicroblogPost"/>
+	<sioc:embedsKnowledge rdf:resource="http://twitlogic.fortytwo.net/resource/graph/twitter/6366339305"/>
+	<dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2009-12-05T05:23:55.526-05:00</dcterms:created>
+	<sioc:content>#footballcrazy lol RT @inerds: The second floor neighbours just almost caused an earthquake.</sioc:content>
+	<sioc:has_creator rdf:resource="http://twitlogic.fortytwo.net/resource/user/twitter/59834004"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/graph/twitter/6366339305">
+	<rdf:type rdf:resource="http://www.w3.org/2004/03/trix/rdfg-1/Graph"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/user/twitter/59834004">
+	<rdf:type rdf:resource="http://rdfs.org/sioc/ns#User"/>
+	<sioc:id>joebillie</sioc:id>
+	<sioc:account_of rdf:resource="http://twitlogic.fortytwo.net/resource/person/twitter/59834004"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/person/twitter/59834004">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
+	<rdfs:comment>just an other guy ....... \m/ ........</rdfs:comment>
+	<foaf:name>billie joe</foaf:name>
+	<foaf:based_near rdf:resource="http://twitlogic.fortytwo.net/resource/location/132607468"/>
+	<foaf:depiction rdf:resource="http://a3.twimg.com/profile_images/546768777/me_normal.jpg"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://twitlogic.fortytwo.net/resource/location/132607468">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/SpatialThing"/>
+	<rdfs:comment>Maldives</rdfs:comment>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://a3.twimg.com/profile_images/546768777/me_normal.jpg">
+	<rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Image"/>
+</rdf:Description>
+
+</rdf:RDF>
