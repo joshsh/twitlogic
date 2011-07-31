@@ -19,7 +19,7 @@
     </parent>
 
     <modules>
-        <module>larkc-plugin</module>
+        <module>twitlogic-larkc-plugin</module>
     </modules>
 
     <build>

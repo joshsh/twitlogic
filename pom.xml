@@ -20,9 +20,9 @@
     </developers>
 
     <modules>
-        <module>core</module>
-        <module>plugins</module>
-        <module>rdfagents</module>
+        <module>twitlogic-core</module>
+        <module>twitlogic-plugins</module>
+        <module>twitlogic-rdfagents</module>
     </modules>
 
     <properties>
