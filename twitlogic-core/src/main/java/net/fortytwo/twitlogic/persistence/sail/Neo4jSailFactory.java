@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 public class Neo4jSailFactory extends SailFactory {
 
     private static final Logger LOGGER = TwitLogic.getLogger(Neo4jSailFactory.class);
+    private static final long CHUNK_SIZE = 1000;
 
     public Neo4jSailFactory(final TypedProperties config) {
         super(config);
@@ -74,6 +75,7 @@ public class Neo4jSailFactory extends SailFactory {
 
     private static class StatementAdder implements RDFHandler {
         private final SailConnection c;
+        private long count = 0;
 
         public StatementAdder(SailConnection c) {
             this.c = c;
@@ -83,6 +85,11 @@ public class Neo4jSailFactory extends SailFactory {
         }
 
         public void endRDF() throws RDFHandlerException {
+            try {
+                c.commit();
+            } catch (SailException e) {
+                throw new RDFHandlerException(e);
+            }
         }
 
         public void handleNamespace(String s, String s1) throws RDFHandlerException {
@@ -91,6 +98,9 @@ public class Neo4jSailFactory extends SailFactory {
         public void handleStatement(Statement s) throws RDFHandlerException {
             try {
                 c.addStatement(s.getSubject(), s.getPredicate(), s.getObject(), s.getContext());
+                if (0 == ++count % CHUNK_SIZE) {
+                    c.commit();
+                }
             } catch (SailException e) {
                 throw new RDFHandlerException(e);
             }
