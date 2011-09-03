@@ -2,6 +2,11 @@ package net.fortytwo.twitlogic.persistence;
 
 import edu.rpi.tw.twctwit.query.RelatedHashtagsResource;
 import edu.rpi.tw.twctwit.query.RelatedTweetsResource;
+import net.fortytwo.sesametools.ldserver.GraphResource;
+import net.fortytwo.sesametools.ldserver.LinkedDataServer;
+import net.fortytwo.sesametools.ldserver.ServerException;
+import net.fortytwo.sesametools.ldserver.WebResource;
+import net.fortytwo.sesametools.ldserver.query.SparqlResource;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.beans.AdministrativeDivision;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
@@ -19,12 +24,8 @@ import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.User;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
+import net.fortytwo.twitlogic.persistence.sail.Neo4jSailFactory;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
-import net.fortytwo.sesametools.ldserver.GraphResource;
-import net.fortytwo.sesametools.ldserver.LinkedDataServer;
-import net.fortytwo.sesametools.ldserver.ServerException;
-import net.fortytwo.sesametools.ldserver.WebResource;
-import net.fortytwo.sesametools.ldserver.query.SparqlResource;
 import net.fortytwo.twitlogic.util.Factory;
 import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
@@ -383,6 +384,8 @@ public class TweetStore {
         } else if (sailType.equals("com.knowledgereefsystems.agsail.AllegroSail")) {
             //factory = new AllegroSailFactory(props);
             factory = new NewAllegroSailFactory(props, false);
+        } else if (sailType.equals("com.tinkerpop.blueprints.pgm.oupls.sail.GraphSail")) {
+            factory = new Neo4jSailFactory(props);
         } else {
             throw new TweetStoreException("unhandled Sail type: " + sailType);
         }

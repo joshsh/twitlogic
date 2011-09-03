@@ -19,9 +19,7 @@ import java.io.FileOutputStream;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Jul 9, 2010
- * Time: 8:39:35 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class NewAllegroSailFactory extends SailFactory {
     private static final Logger LOGGER = TwitLogic.getLogger(NewAllegroSailFactory.class);

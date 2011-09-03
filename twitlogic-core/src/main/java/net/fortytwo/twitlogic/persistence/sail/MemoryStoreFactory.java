@@ -11,9 +11,7 @@ import org.openrdf.sail.memory.MemoryStore;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: May 18, 2010
- * Time: 5:26:36 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class MemoryStoreFactory extends SailFactory {
 

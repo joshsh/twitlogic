@@ -51,6 +51,7 @@ public class TwitLogic {
             FOLLOWUSER = "net.fortytwo.twitlogic.followUser",
             NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
             NATIVESTORE_INDEXES = "net.fortytwo.twitlogic.persistence.nativeStoreIndexes",
+            NEO4J_DIRECTORY = "net.fortytwo.twitlogic.persistence.neo4jDirectory",
             RDFAGENTS_PLATFORM_NAME = "net.fortytwo.twitlogic.rdfagents.platformName",
             RDFAGENTS_PLATFORM_PORT = "net.fortytwo.twitlogic.rdfagents.platformPort",
             RDFAGENTS_AGENT_NAME = "net.fortytwo.twitlogic.rdfagents.agentName",

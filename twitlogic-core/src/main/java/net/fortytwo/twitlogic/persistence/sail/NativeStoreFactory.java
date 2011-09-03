@@ -12,9 +12,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: May 18, 2010
- * Time: 5:26:47 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class NativeStoreFactory extends SailFactory {
 
