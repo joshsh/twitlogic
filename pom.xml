@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.twitlogic</groupId>
     <artifactId>twitlogic-all</artifactId>
-    <version>0.9</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>TwitLogic</name>
     <description>Real-time #SemanticWeb in &lt;= 140 chars</description>
@@ -26,10 +26,11 @@
     </modules>
 
     <properties>
-        <twitlogic.version>0.9</twitlogic.version>
-        <sesame.version>2.4.2</sesame.version>
+        <twitlogic.version>1.0-SNAPSHOT</twitlogic.version>
+        <sesame.version>2.5.0</sesame.version>
+        <blueprints.version>0.9</blueprints.version>
         <ripple.version>0.7</ripple.version>
-        <sesametools.version>1.4</sesametools.version>
+        <sesametools.version>1.5</sesametools.version>
         <rdfagents.version>0.2</rdfagents.version>
         <junit.version>4.5</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

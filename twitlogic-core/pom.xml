@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.twitlogic</groupId>
     <artifactId>twitlogic-core</artifactId>
-    <version>0.9</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>TwitLogic Core</name>
     <description>Java components for real-time integration of Twitter data with the Semantic Web</description>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>net.fortytwo.twitlogic</groupId>
         <artifactId>twitlogic-all</artifactId>
-        <version>0.9</version>
+        <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
