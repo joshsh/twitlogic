@@ -10,10 +10,8 @@ import java.util.logging.Logger;
 
 /**
  * This class enforces a rate-limiting policy on HTTP requests to a single host (Twitter's).
- * <p/>
- * User: josh
- * Date: Apr 3, 2010
- * Time: 6:37:10 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RateLimiter {
     private static final Logger LOGGER = TwitLogic.getLogger(RateLimiter.class);

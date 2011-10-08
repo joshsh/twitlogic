@@ -6,6 +6,7 @@ import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import twitter4j.Status;
 
 import java.text.ParseException;
 import java.util.Collection;
@@ -23,6 +24,7 @@ public class Tweet implements Resource {
 
     private User user;
 
+    //private final Object activities;
     // private final List<User> contributors;
     private Date createdAt;
     private Entities entities;
@@ -33,8 +35,9 @@ public class Tweet implements Resource {
     private Tweet inReplyToTweet;
     //private String newId;
     private Place place;
-    // private boolean retweetCount;
-    // private boolean retweeted;
+    //private boolean possiblySensitive;
+    //private boolean retweetCount;
+    //private boolean retweeted;
     private Tweet retweetOf;
     //private final String source;
     //private Set<...> states;
@@ -58,6 +61,36 @@ public class Tweet implements Resource {
         return null == value || value.equals("null")
                 ? null
                 : value;
+    }
+
+    public Tweet(final Status status) {
+        user = new User(status.getUser());
+        createdAt = status.getCreatedAt();
+
+        // TODO: user mention entities and media entities
+        entities = new Entities(status.getHashtagEntities(), status.getURLEntities());
+
+        if (null != status.getGeoLocation()) {
+            geo = new Point(status.getGeoLocation());
+        }
+
+        id = ((Long) status.getId()).toString();
+
+        if (status.getInReplyToStatusId() > 0) {
+            inReplyToTweet = new Tweet("" + status.getInReplyToStatusId());
+        }
+
+        if (null != status.getPlace()) {
+            place = new Place(status.getPlace());
+        }
+
+        if (null != status.getRetweetedStatus()) {
+            retweetOf = new Tweet(status.getRetweetedStatus());
+        }
+
+        text = status.getText();
+
+        // TODO: find annotations
     }
 
     /**
@@ -217,7 +250,7 @@ public class Tweet implements Resource {
     public String describe() {
         return "tweet " + this.getId()
                 + (null != this.getGeo() ? (" at \"" + this.getGeo() + "\"") : "")
-                + " by @" + this.getUser().getScreenName()
+                + " by @" + (null == this.getUser() ? "[unknown]" : this.getUser().getScreenName())
                 + ": " + this.getText();
     }
 

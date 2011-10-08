@@ -22,7 +22,6 @@ import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.ElmoManager;
 import org.openrdf.elmo.Entity;
-import org.openrdf.sail.Sail;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;

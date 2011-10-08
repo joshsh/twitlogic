@@ -2,25 +2,23 @@ package net.fortytwo.twitlogic.services.twitter;
 
 /**
  * See http://apiwiki.twitter.com/Streaming-API-Documentation#statuses/filter
- * <p/>
- * User: josh
- * Date: Aug 5, 2010
- * Time: 11:59:45 AM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public abstract class TwitterAPILimits {
 
-    abstract int getTimelinePageCountLimit();
+    public abstract int getTimelinePageCountLimit();
 
-    abstract int getTrackKeywordsLimit();
+    public abstract int getTrackKeywordsLimit();
 
-    abstract int getFollowUserIdsLimit();
+    public abstract int getFollowUserIdsLimit();
 
-    abstract int getRestApiRequestsPerHourLimit();
+    public abstract int getRestApiRequestsPerHourLimit();
 
     /**
      * @return at most this many statuses may be retrieved from a timeline via the 'page' and 'count' REST parameters.
      */
-    abstract int getStatusesLimit();
+    public abstract int getStatusesLimit();
 
     public static final TwitterAPILimits
             DEFAULT_LIMITS,

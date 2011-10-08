@@ -1,36 +1,48 @@
 package net.fortytwo.twitlogic.services.twitter.twitter4j;
 
+import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.services.twitter.TwitterCredentials;
 import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.StatusListener;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
+import twitter4j.conf.ConfigurationBuilder;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+import java.util.Properties;
 
 /**
- * User: josh
- * Date: 3/30/11
- * Time: 4:46 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class Twitter4jPlay {
     public static void main(final String[] args) throws Exception {
-        // The factory instance is re-useable and thread safe.
-        StatusListener l = new StatusListener() {
-            public void onStatus(final Status s) {
-                System.out.println(s.getUser().getName() + " : " + s.getText());
-            }
+        Properties props = new Properties();
+        props.load(new FileInputStream(new File("/tmp/twitlogic.props")));
+        TwitLogic.setConfiguration(props);
 
-            public void onDeletionNotice(final StatusDeletionNotice n) {
-            }
+        TwitterCredentials cred = new TwitterCredentials();
 
-            public void onTrackLimitationNotice(final int n) {
-            }
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey(cred.getConsumerKey())
+                .setOAuthConsumerSecret(cred.getConsumerSecret())
+                .setOAuthAccessToken(cred.getAccessToken())
+                .setOAuthAccessTokenSecret(cred.getTokenSecret());
 
-            public void onException(final Exception e) {
-                e.printStackTrace();
-            }
-        };
-        TwitterStream twitterStream = new TwitterStreamFactory(l).getInstance();
-        // sample() method internally creates a thread which manipulates TwitterStream and calls these adequate listener methods continuously.
-        twitterStream.sample();
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        Twitter twitter = tf.getInstance();
+
+        List<Status> statuses = twitter.getHomeTimeline();
+
+        System.out.println("Showing friends timeline.");
+        for (Status status : statuses) {
+            System.out.println(status.getUser().getName() + ":" +
+                    status.getText());
+        }
+
+
     }
 }

@@ -12,11 +12,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Jul 1, 2010
- * Time: 3:21:08 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class PlaceMappingQueue<E extends Exception> {
+public class PlaceMappingQueue {
     protected static final Logger LOGGER = TwitLogic.getLogger(PlaceMappingQueue.class);
 
     // Don't monopolize the Twitter API request quota.
@@ -29,7 +27,7 @@ public class PlaceMappingQueue<E extends Exception> {
     private boolean closed = false;
 
     public PlaceMappingQueue(final TwitterClient client,
-                             final Handler<Place> resultHandler) {
+                             final Handler<Place> resultHandler) throws TwitterClientException {
         capacity = client.getLimits().getRestApiRequestsPerHourLimit() / 2;
         this.inQueue = new LinkedBlockingQueue<String>(capacity);
         this.placeIdsSet = Collections.synchronizedSet(new HashSet<String>());

@@ -55,8 +55,8 @@
         <!-- New, experimental Twitter4j dependency -->
         <dependency>
             <groupId>org.twitter4j</groupId>
-            <artifactId>twitter4j-core</artifactId>
-            <version>2.1.1</version>
+            <artifactId>twitter4j-stream</artifactId>
+            <version>2.2.5-SNAPSHOT</version>
         </dependency>
 
         <!-- Formatting and parsing -->

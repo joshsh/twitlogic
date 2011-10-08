@@ -13,7 +13,7 @@ import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
 import net.fortytwo.twitlogic.persistence.UserRegistry;
 import net.fortytwo.twitlogic.services.twitter.CommandListener;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 import org.openrdf.model.Literal;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -84,7 +84,7 @@ public class EarthquakeTweets {
                 //store.dump(System.out);
                 dumpTabSeparatedFile(store, new File("/tmp/earthquaketweets.txt"));
 
-                TwitterClient client = new TwitterClient();
+                CustomTwitterClient client = new CustomTwitterClient();
                 UserRegistry userRegistry = new UserRegistry(client);
 
                 TweetPersister baseStatusHandler = new TweetPersister(store, client);

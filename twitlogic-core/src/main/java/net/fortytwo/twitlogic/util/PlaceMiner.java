@@ -7,7 +7,7 @@ import net.fortytwo.twitlogic.persistence.PlacePersistenceHelper;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreConnection;
 import net.fortytwo.twitlogic.persistence.beans.Feature;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -56,7 +56,7 @@ public class PlaceMiner {
     }
 
     private static void mine(final Collection<String> ids) throws Exception {
-        TwitterClient client = new TwitterClient();
+        CustomTwitterClient client = new CustomTwitterClient();
 
         TweetStore store = new TweetStore();
         store.initialize();

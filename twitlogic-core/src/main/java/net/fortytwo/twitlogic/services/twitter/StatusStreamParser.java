@@ -15,9 +15,7 @@ import java.net.SocketException;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Sep 4, 2009
- * Time: 12:14:37 AM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class StatusStreamParser {
     public enum ExitReason {

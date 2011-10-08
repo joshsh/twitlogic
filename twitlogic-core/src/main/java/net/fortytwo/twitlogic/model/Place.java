@@ -21,6 +21,7 @@ public class Place {
     private static final Logger LOGGER = TwitLogic.getLogger(Place.class);
 
     private final JSONObject json;
+    private final twitter4j.Place place;
 
     private String countryCode;
     private String fullName;
@@ -33,12 +34,33 @@ public class Place {
     // Note: this is a simplified data member; Twitter provides a *bounding polygon*
     private Point centroid;
 
+    public Place(final twitter4j.Place p) {
+        json = null;
+        place = p;
+
+        countryCode = p.getCountryCode();
+        fullName = p.getFullName();
+        name = p.getName();
+        url = p.getURL();
+        id = p.getId();
+        placeType = PlaceType.lookup(p.getPlaceType());
+
+        containedWithin = new LinkedList<Place>();
+        if (null != p.getContainedWithIn()) {
+            for (twitter4j.Place other : p.getContainedWithIn()) {
+                containedWithin.add(new Place(other));
+            }
+        }
+    }
+
     public Place(final String id) {
         this.id = id;
         json = null;
+        place = null;
     }
 
     public Place(final JSONObject json) throws TweetParseException {
+        this.place = null;
         this.json = json;
 
         // id is required, as it determines the URI of the place
@@ -91,10 +113,6 @@ public class Place {
             }
             centroid = p.findCentroid();
         }
-    }
-
-    public JSONObject getJson() {
-        return json;
     }
 
     public String getId() {
@@ -163,5 +181,14 @@ public class Place {
 
     public Point getCentroid() {
         return centroid;
+    }
+
+    @Override
+    public String toString() {
+        if (null != json) {
+            return json.toString();
+        } else {
+            return place.toString();
+        }
     }
 }

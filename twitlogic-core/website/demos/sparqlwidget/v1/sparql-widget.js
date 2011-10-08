@@ -400,7 +400,7 @@ TwitLogic.SparqlWidget = function(settings) {
         errorLink.setAttribute("class", "tl-error-link");
         errorLink.setAttribute("href", "#");
         errorLink.onclick = function() {
-            alert("Error response " + request.status + " from server.\n\n" + request.responseText);
+            alert("Error response " + request.status + " from server (" + textStatus + ").\n\n" + request.responseText);
         };
         errorLink.appendChild(document.createTextNode("click for details"));
 

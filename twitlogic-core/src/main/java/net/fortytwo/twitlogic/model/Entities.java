@@ -4,6 +4,8 @@ import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import twitter4j.HashtagEntity;
+import twitter4j.URLEntity;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -18,6 +20,17 @@ public class Entities {
     private final Collection<URIReference> links = new LinkedList<URIReference>();
 
     public Entities() {
+    }
+
+    public Entities(final HashtagEntity[] hashtagEntities,
+                    final URLEntity[] urlEntities) {
+        for (HashtagEntity e : hashtagEntities) {
+            topics.add(new Hashtag(e.getText()));
+        }
+
+        for (URLEntity e : urlEntities) {
+            links.add(new URIReference(e.getURL().toString()));
+        }
     }
 
     public Entities(final JSONObject json) throws JSONException {

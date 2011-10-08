@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.services.twitter;
 
 /**
- * User: josh
- * Date: Mar 12, 2010
- * Time: 8:32:12 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class TwitterAPIException extends TwitterClientException {
     public TwitterAPIException() {

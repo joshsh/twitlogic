@@ -51,7 +51,7 @@ public class TweetPersister implements Handler<Tweet> {
      * @throws TweetStoreException if something goes awry
      */
     public TweetPersister(final TweetStore store,
-                          final TwitterClient client) throws TweetStoreException {
+                          final TwitterClient client) throws TweetStoreException, TwitterClientException {
         this.storeConnection = store.createConnection();
         this.valueFactory = store.getSail().getValueFactory();
         try {
@@ -69,107 +69,127 @@ public class TweetPersister implements Handler<Tweet> {
         storeConnection.close();
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
-        //LOGGER.fine(tweet.describe());
+    // Note: synchronization may be necessary for use with Twitter4j
+    public synchronized boolean handle(final Tweet tweet) throws HandlerException {
+        LOGGER.fine(tweet.describe());
 
-        //System.out.println("beginning transaction...");
         storeConnection.begin();
-
-        // begin Elmo operations
-
-        if (null != placeHelper) {
-            // Since Elmo is not thread-safe, Elmo operations to be carried out by
-            // placeHelper are queued until they can be executed here, in the main
-            // transaction.
-            placeHelper.flush();
-        }
-
-        boolean hasAnnotations = 0 < tweet.getAnnotations().size();
-
-        MicroblogPost currentMicroblogPost = persistenceContext.persist(tweet, hasAnnotations);
-
-        persistenceContext.persist(tweet.getUser());
-
-        if (null != tweet.getGeo()) {
-            Point p = persistenceContext.persist(tweet.getGeo());
-
-            Set<SpatialThing> s = currentMicroblogPost.getLocation();
-            s.add(p);
-            currentMicroblogPost.setLocation(s);
-        }
-
-        if (null != tweet.getPlace()) {
-            Feature f = persistenceContext.persist(tweet.getPlace());
-            if (null != placeHelper) {
-                try {
-                    placeHelper.submit(tweet.getPlace(), f);
-                } catch (TwitterClientException e) {
-                    throw new HandlerException(e);
-                }
-            }
-
-            Set<SpatialThing> s = currentMicroblogPost.getLocation();
-            s.add(f);
-            currentMicroblogPost.setLocation(s);
-        }
-
-        // end Elmo operations
+        boolean finished = false;
 
         try {
-            storeConnection.commit();
-        } catch (TweetStoreException e) {
-            throw new HandlerException(e);
-        }
+            // begin Elmo operations
 
-        // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
-        // of replies and/or retweets.
-        // Note: these tweets are persisted in their own transactions.
-        if (null != tweet.getInReplyToTweet()) {
-            this.handle(tweet.getInReplyToTweet());
-        }
-        if (null != tweet.getRetweetOf()) {
-            this.handle(tweet.getRetweetOf());
-        }
+            if (null != placeHelper) {
+                // Since Elmo is not thread-safe, Elmo operations to be carried out by
+                // placeHelper are queued until they can be executed here, in the main
+                // transaction.
+                placeHelper.flush();
+            }
 
-        //System.out.println("    ...ending transaction");
+            boolean hasAnnotations = 0 < tweet.getAnnotations().size();
 
-        // Note: these Sail operations are performed outside of the Elmo transaction.  If they were to be
-        // carried out inside the transaction, apparently Sesame would kill the thread without throwing
-        // an exception or logging an error.
-        if (hasAnnotations) {
-            for (Triple triple : tweet.getAnnotations()) {
-                System.out.println("\t (" + triple.getWeight() + ")\t" + triple);
-                Statement st;
+            MicroblogPost currentMicroblogPost = persistenceContext.persist(tweet, hasAnnotations);
 
-                try {
-                    st = toRDF(triple, uriOf(currentMicroblogPost.getEmbedsKnowledge()));
-                } catch (TwitterClientException e) {
-                    throw new HandlerException(e);
-                }
+            if (null != tweet.getUser()) {
+                persistenceContext.persist(tweet.getUser());
+            } else {
+                LOGGER.fine("null user for tweet: " + tweet);
+            }
 
-                if (null != st) {
-                    // FIXME: creating a statement and then breaking it into parts is wasty
+            if (null != tweet.getGeo()) {
+                Point p = persistenceContext.persist(tweet.getGeo());
+
+                Set<SpatialThing> s = currentMicroblogPost.getLocation();
+                s.add(p);
+                currentMicroblogPost.setLocation(s);
+            }
+
+            if (null != tweet.getPlace()) {
+                Feature f = persistenceContext.persist(tweet.getPlace());
+                if (null != placeHelper) {
                     try {
-                        //System.out.println("subject: " + st.getSubject());
-                        //System.out.println("predicate: " + st.getPredicate());
-                        //System.out.println("object: " + st.getObject());
-                        //System.out.println("context: " + st.getContext());
-                        storeConnection.getSailConnection()
-                                .addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
-                    } catch (SailException e) {
+                        placeHelper.submit(tweet.getPlace(), f);
+                    } catch (TwitterClientException e) {
                         throw new HandlerException(e);
                     }
                 }
+
+                Set<SpatialThing> s = currentMicroblogPost.getLocation();
+                s.add(f);
+                currentMicroblogPost.setLocation(s);
             }
+
+            // end Elmo operations
 
             try {
-                storeConnection.getSailConnection().commit();
-            } catch (SailException e) {
+                storeConnection.commit();
+            } catch (TweetStoreException e) {
                 throw new HandlerException(e);
             }
-        }
 
-        // TODO: roll back changes when an exception has been thrown
+            // Note: we assume that Twitter and any other services which supply these posts will not allow a cycle
+            // of replies and/or retweets.
+            // Note: these tweets are persisted in their own transactions.
+            if (null != tweet.getInReplyToTweet()) {
+                this.handle(tweet.getInReplyToTweet());
+            }
+            if (null != tweet.getRetweetOf()) {
+                this.handle(tweet.getRetweetOf());
+            }
+
+            //System.out.println("    ...ending transaction");
+
+            // Note: these Sail operations are performed outside of the Elmo transaction.  If they were to be
+            // carried out inside the transaction, apparently Sesame would kill the thread without throwing
+            // an exception or logging an error.
+            if (hasAnnotations) {
+                for (Triple triple : tweet.getAnnotations()) {
+                    System.out.println("\t (" + triple.getWeight() + ")\t" + triple);
+                    Statement st;
+
+                    try {
+                        st = toRDF(triple, uriOf(currentMicroblogPost.getEmbedsKnowledge()));
+                    } catch (TwitterClientException e) {
+                        throw new HandlerException(e);
+                    }
+
+                    if (null != st) {
+                        // FIXME: creating a statement and then breaking it into parts is wasty
+                        try {
+                            //System.out.println("subject: " + st.getSubject());
+                            //System.out.println("predicate: " + st.getPredicate());
+                            //System.out.println("object: " + st.getObject());
+                            //System.out.println("context: " + st.getContext());
+                            storeConnection.getSailConnection()
+                                    .addStatement(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
+                        } catch (SailException e) {
+                            throw new HandlerException(e);
+                        }
+                    }
+                }
+
+                try {
+                    storeConnection.getSailConnection().commit();
+                } catch (SailException e) {
+                    throw new HandlerException(e);
+                }
+            }
+
+            finished = true;
+        } catch (HandlerException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new HandlerException(t);
+        } finally {
+            if (!finished) {
+                try {
+                    LOGGER.info("rolling back failed transaction");
+                    storeConnection.rollback();
+                } catch (TweetStoreException e) {
+                    throw new HandlerException(e);
+                }
+            }
+        }
 
         return true;
     }

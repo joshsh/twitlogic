@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Sep 3, 2009
- * Time: 10:07:42 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class TwitterAPI {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitterAPI.class);
@@ -29,8 +27,8 @@ public class TwitterAPI {
             OAUTH_ACCESS_TOKEN_URL = "http://twitter.com/oauth/access_token",
             OAUTH_AUTHORIZE_URL = "http://twitter.com/oauth/authorize",
             SEARCH_URL = "http://search.twitter.com/search",
-            STREAM_STATUSES_FILTER_URL = "http://stream.twitter.com/1/statuses/filter.json",
-            STREAM_STATUSES_SAMPLE_URL = "http://stream.twitter.com/1/statuses/sample.json",
+            STREAM_STATUSES_FILTER_URL = "https://stream.twitter.com/1/statuses/filter.json",
+            STREAM_STATUSES_SAMPLE_URL = "https://stream.twitter.com/1/statuses/sample.json",
             STATUSES_USER_TIMELINE_URL = "http://twitter.com/statuses/user_timeline",
             STATUSES_UPDATE_URL = "http://twitter.com/statuses/update",
             STATUSES_FRIENDS_URL = "http://api.twitter.com/1/statuses/friends",
@@ -168,6 +166,7 @@ public class TwitterAPI {
     }
 
     public enum Field {
+        ACTIVITIES("activities"),
         ANNOTATIONS("annotations"),
         CONTRIBUTORS("contributors"),
         CONTRIBUTORS_ENABLED("contributors_enabled"),
@@ -210,10 +209,13 @@ public class TwitterAPI {
         NEW_ID_STR("new_id_str"),
         NOTIFICATIONS("notifications"),
         PLACE("place"),
+        POSSIBLY_SENSITIVE("possibly_sensitive"),
         PROFILE_BACKGROUND_COLOR("profile_background_color"),
         PROFILE_BACKGROUND_IMAGE_URL("profile_background_image_url"),
+        PROFILE_BACKGROUND_IMAGE_URL_HTTPS("profile_background_image_url_https"),
         PROFILE_BACKGROUND_TILE("profile_background_tile"),
         PROFILE_IMAGE_URL("profile_image_url"),
+        PROFILE_IMAGE_URL_HTTPS("profile_image_url_https"),
         PROFILE_LINK_COLOR("profile_link_color"),
         PROFILE_SIDEBAR_BORDER_COLOR("profile_sidebar_border_color"),
         PROFILE_SIDEBAR_COLOR("profile_sidebar_fill_color"),

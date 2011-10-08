@@ -10,7 +10,7 @@ import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
@@ -97,7 +97,7 @@ sum(g[,2])/length(g[,2])
                         final TweetPersister persister = new TweetPersister(store, null);
 
                         try {
-                            TwitterClient client = new TwitterClient();
+                            CustomTwitterClient client = new CustomTwitterClient();
 
                             TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
 

@@ -10,7 +10,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,7 +59,7 @@ public class PlacesDemo {
         store.startServer();
 
         try {
-            TwitterClient client = new TwitterClient();
+            CustomTwitterClient client = new CustomTwitterClient();
 
             TweetPersister persister = new TweetPersister(store, client);
             TweetDeleter d = new TweetDeleter(store);

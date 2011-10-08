@@ -24,19 +24,19 @@ public class PlacePersistenceHelper {
     private static final Logger LOGGER = TwitLogic.getLogger(PlacePersistenceHelper.class);
 
     private final Handler<Place> placeMappingHandler;
-    private final PlaceMappingQueue<TweetStoreException> placeMappingQueue;
+    private final PlaceMappingQueue placeMappingQueue;
     private final ConcurrentBuffer<Place> buffer;
     private final TwitterClient client;
     private final boolean asynchronous;
 
     public PlacePersistenceHelper(final PersistenceContext pContext,
-                                  final TwitterClient client) throws TweetStoreException {
+                                  final TwitterClient client) throws TweetStoreException, TwitterClientException {
         this(pContext, client, true);
     }
 
     public PlacePersistenceHelper(final PersistenceContext pContext,
                                   final TwitterClient client,
-                                  final boolean asynchronous) throws TweetStoreException {
+                                  final boolean asynchronous) throws TweetStoreException, TwitterClientException {
         this.client = client;
         this.asynchronous = asynchronous;
 
@@ -71,7 +71,7 @@ public class PlacePersistenceHelper {
 
         buffer = new ConcurrentBuffer<Place>(placeMappingHandler);
         placeMappingQueue = asynchronous
-                ? new PlaceMappingQueue<TweetStoreException>(client, buffer)
+                ? new PlaceMappingQueue(client, buffer)
                 : null;
     }
 
@@ -81,7 +81,7 @@ public class PlacePersistenceHelper {
         if (0 == f.getParentFeature().size() && PlaceType.COUNTRY != p.getPlaceType()) {
             //if (0 == f.getOwlSameAs().size()
             //        && 0 == f.getParentFeature().size()) {
-            LOGGER.info("queueing unknown " + p.getPlaceType() + ": " + p.getJson());
+            LOGGER.info("queueing unknown " + p.getPlaceType() + ": " + p);
             client.getStatistics().placeQueued(p);
 
             if (asynchronous) {
@@ -91,7 +91,7 @@ public class PlacePersistenceHelper {
                 return placeMappingHandler.handle(p2);
             }
         } else {
-            LOGGER.fine("familiar " + p.getPlaceType() + ": " + p.getJson());
+            LOGGER.fine("familiar " + p.getPlaceType() + ": " + p);
             return true;
         }
     }

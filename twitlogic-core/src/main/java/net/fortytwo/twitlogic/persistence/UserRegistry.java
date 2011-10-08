@@ -4,7 +4,7 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 
 import java.util.HashMap;
@@ -19,9 +19,9 @@ import java.util.Map;
  */
 public class UserRegistry {
     private final Map<String, User> usersByScreenName;
-    private final TwitterClient client;
+    private final CustomTwitterClient client;
 
-    public UserRegistry(final TwitterClient client) {
+    public UserRegistry(final CustomTwitterClient client) {
         this.client = client;
         usersByScreenName = new HashMap<String, User>();
     }

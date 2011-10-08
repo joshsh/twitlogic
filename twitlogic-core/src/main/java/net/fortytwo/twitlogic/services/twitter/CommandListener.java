@@ -11,9 +11,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 8:21:54 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class CommandListener implements Handler<Tweet> {
     private static final Logger LOGGER = TwitLogic.getLogger(CommandListener.class);

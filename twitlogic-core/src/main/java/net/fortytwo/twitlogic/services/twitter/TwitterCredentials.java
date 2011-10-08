@@ -21,20 +21,22 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Aug 10, 2009
- * Time: 5:38:51 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class TwitterCredentials {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitterCredentials.class);
-
-    private final boolean useOAuth;
 
     private final OAuthConsumer consumer;
     private final OAuthProvider provider;
 
     private final String userName;
     private final String password;
+
+    private final String consumerKey;
+    private final String consumerSecret;
+
+    private final String accessToken;
+    private final String tokenSecret;
 
     public static void main(final String[] args) throws Exception {
         Properties props = new Properties();
@@ -46,38 +48,49 @@ public class TwitterCredentials {
     }
 
     public TwitterCredentials() throws TwitterClientException {
-        String consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY, null);
-        String consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET, null);
+        consumerKey = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_KEY, null);
+        consumerSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_CONSUMER_SECRET, null);
 
         if (null == consumerKey || null == consumerSecret) {
-            LOGGER.warning("no Twitter OAuth credentials have been supplied. Attempting to use basic authentication.");
-            useOAuth = false;
-            consumer = null;
-            provider = null;
-            Properties props = TwitLogic.getConfiguration();
-            userName = props.getProperty(TwitLogic.TWITTER_USERNAME);
-            password = props.getProperty(TwitLogic.TWITTER_PASSWORD);
-        } else {
-            useOAuth = true;
-            consumer = new CommonsHttpOAuthConsumer(
-                    consumerKey,
-                    consumerSecret);
-            provider = new DefaultOAuthProvider(
-                    TwitterAPI.OAUTH_REQUEST_TOKEN_URL,
-                    TwitterAPI.OAUTH_ACCESS_TOKEN_URL,
-                    TwitterAPI.OAUTH_AUTHORIZE_URL);
-            userName = null;
-            password = null;
+            throw new TwitterClientException("missing OAuth credentials");
         }
+
+        consumer = new CommonsHttpOAuthConsumer(
+                consumerKey,
+                consumerSecret);
+        provider = new DefaultOAuthProvider(
+                TwitterAPI.OAUTH_REQUEST_TOKEN_URL,
+                TwitterAPI.OAUTH_ACCESS_TOKEN_URL,
+                TwitterAPI.OAUTH_AUTHORIZE_URL);
+        userName = null;
+        password = null;
+
+        accessToken = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN).trim();
+        tokenSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN_SECRET).trim();
+
+        // if not yet done, load the token and token secret for
+        // the current user and set them
+        consumer.setTokenWithSecret(accessToken, tokenSecret);
+    }
+
+    public String getConsumerSecret() {
+        return consumerSecret;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getConsumerKey() {
+        return consumerKey;
+    }
+
+    public String getTokenSecret() {
+        return tokenSecret;
     }
 
     public void sign(final HttpUriRequest request) throws OAuthExpectationFailedException, OAuthMessageSignerException, OAuthCommunicationException {
-        //request.getParams().s
-        if (useOAuth) {
-            consumer.sign(request);
-        } else {
-            useBasicAuthentication(request);
-        }
+        consumer.sign(request);
     }
 
     private void showInfo() {
@@ -105,17 +118,6 @@ public class TwitterCredentials {
         // for the current user, e.g. in a relational database
         // or a flat file
         showInfo();
-    }
-
-    public void loadCredentials() {
-        if (useOAuth) {
-            String accessToken = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN).trim();
-            String tokenSecret = TwitLogic.getConfiguration().getProperty(TwitLogic.TWITTER_ACCESS_TOKEN_SECRET).trim();
-
-            // if not yet done, load the token and token secret for
-            // the current user and set them
-            consumer.setTokenWithSecret(accessToken, tokenSecret);
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////

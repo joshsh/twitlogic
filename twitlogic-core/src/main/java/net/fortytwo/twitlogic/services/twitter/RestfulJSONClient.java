@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.net.SocketException;
 
 /**
- * User: josh
- * Date: Aug 20, 2010
- * Time: 4:49:04 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RestfulJSONClient extends CommonHttpClient {
     protected final RequestExecutor restAPIClient;

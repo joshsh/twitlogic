@@ -2,7 +2,7 @@ package net.fortytwo.twitlogic.util.misc;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.model.User;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.services.twitter.errors.NotFoundException;
 import net.fortytwo.twitlogic.services.twitter.errors.UnauthorizedException;
@@ -45,7 +45,7 @@ public class FriendFetcher {
         Properties props = new Properties();
         props.load(new FileInputStream("/tmp/friendfetcher.properties"));
         TwitLogic.setConfiguration(props);
-        TwitterClient client = new TwitterClient();
+        CustomTwitterClient client = new CustomTwitterClient();
 
         String name = reverse ? "followers.txt" : "following.txt";
 

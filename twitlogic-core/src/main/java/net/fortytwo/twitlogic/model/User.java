@@ -36,8 +36,10 @@ public class User implements Resource {
     //private final String notifications; // Appropriate data type unknown.
     private final String profileBackgroundColor;
     //private final String profileBackgroundImageUrl;
+    //private final String profileBackgroundImageUrlHttps;
     //private final Boolean backgroundTile;
     private final String profileImageUrl;
+    //private final String profileImageUrlHttps;
     //private final String profileLinkColor;
     //private final String profileSidebarBorderColor;
     //private final String profileSidebarFillColor;
@@ -54,6 +56,22 @@ public class User implements Resource {
     //private final Boolean verified;
 
     private final Person heldBy;
+
+    public User(final twitter4j.User u) {
+        //System.out.println("user: " + u);
+        description = u.getDescription();
+        geoEnabled = u.isGeoEnabled();
+        id = (int) u.getId();
+        location = u.getLocation();
+        name = u.getName();
+        profileBackgroundColor = u.getProfileBackgroundColor();
+        profileImageUrl = u.getProfileImageURL().toString();
+        profileTextColor = u.getProfileTextColor();
+        screenName = u.getScreenName();
+        url = null == u.getURL() ? null : u.getURL().toString();
+
+        heldBy = new Person(this);
+    }
 
     public User(final String screenName) {
         this.screenName = screenName;

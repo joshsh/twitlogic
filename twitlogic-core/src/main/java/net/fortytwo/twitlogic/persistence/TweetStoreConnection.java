@@ -53,10 +53,6 @@ public class TweetStoreConnection {
         //    elmoManager.getTransaction().begin();
     }
 
-    private void closeElmoManager() {
-        elmoManager.close();
-    }
-
     public SailConnection getSailConnection() {
         return sailConnection;
     }
@@ -95,11 +91,12 @@ public class TweetStoreConnection {
     }
 
     public void close() throws TweetStoreException {
+        System.out.println("closing tweet store connection!!!!!");  System.exit(1);
         if (!closed) {
             closed = true;
 
             try {
-                closeElmoManager();
+                elmoManager.close();
             } finally {
                 try {
                     sailConnection.close();

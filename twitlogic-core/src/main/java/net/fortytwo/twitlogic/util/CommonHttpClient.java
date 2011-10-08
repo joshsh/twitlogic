@@ -2,7 +2,7 @@ package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPIException;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.services.twitter.TwitterConnectionResetException;
 import net.fortytwo.twitlogic.services.twitter.errors.BadGatewayException;
@@ -282,7 +282,7 @@ public abstract class CommonHttpClient {
     }
 
     public static void main(final String[] args) throws Exception {
-        CommonHttpClient client = new TwitterClient();
+        CommonHttpClient client = new CustomTwitterClient();
 
         String before = "http://bit.ly/1xkuDX";
         //String before = "http://twitlogic.fortytwo.net/hashtag/sdow2009";

@@ -6,7 +6,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.persistence.PersistenceContext;
 import net.fortytwo.twitlogic.services.bitly.BitlyClient;
 import net.fortytwo.twitlogic.services.bitly.BitlyClientException;
-import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
 
@@ -20,10 +20,10 @@ public class TwitLogicAgent {
     // is likely that users will mistakenly tweet at it.
     public final static String ASPIRATIONAL_SCREENNAME = "twitlogic";
 
-    private final TwitterClient twitterClient;
+    private final CustomTwitterClient twitterClient;
     private final BitlyClient bitlyClient;
 
-    public TwitLogicAgent(final TwitterClient twitterClient) throws BitlyClientException {
+    public TwitLogicAgent(final CustomTwitterClient twitterClient) throws BitlyClientException {
         this.twitterClient = twitterClient;
         bitlyClient = new BitlyClient();
     }
