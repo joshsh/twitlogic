@@ -14,6 +14,7 @@ import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
+import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
@@ -160,7 +161,7 @@ public class TwitterStream extends StreamingSetOfStatements {
     }
 
     private static Handler<Tweet> createAnnotator(final TweetStore store,
-                                                  final CustomTwitterClient client) throws TweetStoreException {
+                                                  final CustomTwitterClient client) throws TweetStoreException, TwitterClientException {
         // Create the tweet persister.
         TweetPersister persister = new TweetPersister(store, client);
 
