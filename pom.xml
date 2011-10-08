@@ -28,7 +28,7 @@
     <properties>
         <twitlogic.version>1.0-SNAPSHOT</twitlogic.version>
         <sesame.version>2.5.0</sesame.version>
-        <blueprints.version>0.9</blueprints.version>
+        <blueprints.version>1.0</blueprints.version>
         <ripple.version>0.7</ripple.version>
         <sesametools.version>1.5</sesametools.version>
         <rdfagents.version>0.2</rdfagents.version>
