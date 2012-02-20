@@ -302,5 +302,13 @@ public class Tweet implements Resource {
     public void setPlace(Place place) {
         this.place = place;
     }
+
+    public void setRetweetOf(Tweet retweetOf) {
+        this.retweetOf = retweetOf;
+    }
+
+    public void setTwannotations(JSONArray twannotations) {
+        this.twannotations = twannotations;
+    }
 }
 

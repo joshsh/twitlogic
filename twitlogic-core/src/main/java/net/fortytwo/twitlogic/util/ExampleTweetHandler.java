@@ -8,11 +8,6 @@ import net.fortytwo.twitlogic.model.Triple;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
-import net.fortytwo.twitlogic.syntax.Matcher;
-import net.fortytwo.twitlogic.syntax.MatcherException;
-import net.fortytwo.twitlogic.syntax.MultiMatcher;
-import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
-import net.fortytwo.twitlogic.syntax.twiple.TwipleMatcher;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,12 +19,12 @@ import java.util.List;
  * Date: Sep 8, 2009
  * Time: 10:37:05 PM
  */
-class ExampleTweetHandler implements Handler<Tweet> {
-    private final Matcher matcher;
+public class ExampleTweetHandler implements Handler<Tweet> {
+//    private final Matcher matcher;
 
     public ExampleTweetHandler() {
-        matcher = new MultiMatcher(new TwipleMatcher(),
-                new DemoAfterthoughtMatcher());
+  //      matcher = new MultiMatcher(new TwipleMatcher(),
+    //            new DemoAfterthoughtMatcher());
     }
 
     public boolean handle(final Tweet tweet) throws HandlerException {
@@ -74,12 +69,12 @@ class ExampleTweetHandler implements Handler<Tweet> {
             }
         };
 
-        try {
+ /*       try {
             matcher.match(tweet.getText(), handler, tweetContext);
         } catch (MatcherException e) {
             throw new HandlerException(e);
         }
-
+  */
         Comparator<Triple> cmp = new Comparator<Triple>() {
             public int compare(final Triple first,
                                final Triple second) {

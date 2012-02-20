@@ -17,6 +17,7 @@ import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
+import net.fortytwo.twitlogic.util.ExampleTweetHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,7 +85,10 @@ public class TwitLogicClientDemo {
 
             TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), annotator);
             TweetDeleter d = new TweetDeleter(store);
-            client.processFilterStream(users, terms, rLogger, d, 0);
+
+            ExampleTweetHandler h = new ExampleTweetHandler();
+//            client.processFilterStream(users, terms, rLogger, d, 0);
+            client.processFilterStream(users, terms, h, d, 0);
             //client.processSampleStream(rLogger, d);
         } finally {
             store.shutDown();

@@ -23,7 +23,7 @@ public class RDFAgentsProviderDemo {
     public static void main(String[] args) {
         // TODO: remove me
         if (0 == args.length) {
-            args = new String[]{"/Users/josh/projects/fortytwo/twitlogic/rdfagents/config/rdfagents.props"};
+            args = new String[]{"/Users/josh/projects/fortytwo/twitlogic/twitlogic-rdfagents/config/rdfagents.props"};
         }
 
         try {
