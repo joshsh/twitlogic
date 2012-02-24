@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Path to JAR
-JAR=`dirname $0`/target/twitlogic-*-full.jar
-
 # Find Java
 if [ "$JAVA_HOME" = "" ] ; then
         JAVA="java"
@@ -16,7 +13,7 @@ if [ "$JAVA_OPTIONS" = "" ] ; then
 fi
 
 # Launch the application
-$JAVA $JAVA_OPTIONS -cp $JAR net.fortytwo.twitlogic.util.misc.ThroughputTesting $*
+$JAVA $JAVA_OPTIONS -cp target/classes:"target/dependency/*" net.fortytwo.twitlogic.util.misc.ThroughputTesting $*
 
 # Return the program's exit code
 exit $?
