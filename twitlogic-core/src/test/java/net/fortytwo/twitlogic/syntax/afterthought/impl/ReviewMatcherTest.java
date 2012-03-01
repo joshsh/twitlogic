@@ -11,9 +11,7 @@ import net.fortytwo.twitlogic.vocabs.RDF;
 import net.fortytwo.twitlogic.vocabs.Review;
 
 /**
- * User: josh
- * Date: Apr 4, 2010
- * Time: 7:35:09 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ReviewMatcherTest extends MatcherTestBase {
     private static final Resource

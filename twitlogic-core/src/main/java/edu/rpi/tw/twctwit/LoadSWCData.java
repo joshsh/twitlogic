@@ -17,9 +17,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * User: josh
- * Date: Apr 20, 2010
- * Time: 2:45:35 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class LoadSWCData {
     private static final String SWC_DIR = "edu.rpi.tw.twctwit.swcDir";

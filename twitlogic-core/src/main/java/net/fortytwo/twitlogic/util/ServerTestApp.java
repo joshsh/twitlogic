@@ -7,9 +7,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
- * User: josh
- * Date: Apr 14, 2010
- * Time: 7:45:53 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ServerTestApp {
 

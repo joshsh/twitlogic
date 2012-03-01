@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.ranking;
 
 /**
- * Author: josh
- * Date: Feb 1, 2008
- * Time: 12:55:40 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class WeightedValue<T> implements Comparable<WeightedValue<T>> {
     public double weight;

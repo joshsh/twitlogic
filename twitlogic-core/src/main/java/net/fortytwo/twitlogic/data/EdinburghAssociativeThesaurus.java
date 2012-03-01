@@ -17,9 +17,8 @@ import java.util.HashSet;
  * Program to convert the Edinburgh Associative Thesaurus into the N-Triples format.
  * See also: http://www.eat.rl.ac.uk/
  * <p/>
- * User: josh
- * Date: Sep 13, 2009
- * Time: 9:39:51 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class EdinburghAssociativeThesaurus extends FreeAssociationGenerator {
     public static void main(final String[] args) throws Exception {

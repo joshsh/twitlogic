@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Oct 10, 2009
- * Time: 11:49:57 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface Contact {
     public static final String NAMESPACE = "http://www.w3.org/2000/10/swap/pim/contact#";

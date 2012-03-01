@@ -5,9 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 7:38:01 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class MemoizedRandomWalk<T, M> {
     private final Map<T, Alternatives> alternativesByValue;

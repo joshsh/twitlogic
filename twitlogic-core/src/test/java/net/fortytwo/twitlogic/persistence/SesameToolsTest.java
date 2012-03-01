@@ -4,9 +4,7 @@ import junit.framework.TestCase;
 import org.openrdf.rio.RDFFormat;
 
 /**
- * User: josh
- * Date: Apr 14, 2010
- * Time: 9:10:27 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SesameToolsTest extends TestCase {
     public void testRDFFormatByExtension() throws Exception {

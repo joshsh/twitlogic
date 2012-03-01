@@ -11,9 +11,7 @@ import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 9:14:03 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TwitLogicAgent {
     // TwitLogic doesn't actually own this screen name, but wants to, as it

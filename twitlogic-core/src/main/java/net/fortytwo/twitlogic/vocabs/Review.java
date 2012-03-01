@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Oct 3, 2009
- * Time: 1:37:48 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface Review {
     public static final String NAMESPACE = "http://purl.org/stuff/rev#";

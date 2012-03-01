@@ -9,9 +9,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Jul 19, 2010
- * Time: 2:54:34 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetStatistics {
     protected static final Logger LOGGER = TwitLogic.getLogger(TweetStatistics.class);

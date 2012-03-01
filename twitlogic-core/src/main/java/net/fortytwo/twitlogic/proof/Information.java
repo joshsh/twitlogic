@@ -9,9 +9,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 4:21:18 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Information extends PMLConstruct {
     private final String rawString;

@@ -21,9 +21,7 @@ import org.antlr.runtime.RecognitionException;
 import java.util.List;
 
 /**
- * User: josh
- * Date: Sep 6, 2009
- * Time: 2:29:09 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TwipleMatcher implements Matcher {
     private enum PartOfSpeech {

@@ -5,9 +5,7 @@ import net.fortytwo.twitlogic.flow.Handler;
 import net.fortytwo.twitlogic.TweetContext;
 
 /**
- * User: josh
- * Date: Oct 1, 2009
- * Time: 11:28:31 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class MultiMatcher implements Matcher {
     private final Matcher[] componentMatchers;

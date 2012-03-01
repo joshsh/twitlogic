@@ -4,9 +4,7 @@ import net.fortytwo.twitlogic.vocabs.DBpediaResource;
 import org.openrdf.elmo.annotations.rdf;
 
 /**
- * User: josh
- * Date: Jun 15, 2010
- * Time: 3:44:22 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(DBpediaResource.ADMINISTRATIVE_DIVISION)
 public interface AdministrativeDivision extends Feature {

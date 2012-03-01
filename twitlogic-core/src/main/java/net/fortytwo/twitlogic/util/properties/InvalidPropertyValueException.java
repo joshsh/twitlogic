@@ -2,9 +2,7 @@ package net.fortytwo.twitlogic.util.properties;
 
 
 /**
- * Author: josh
- * Date: Jun 28, 2009
- * Time: 6:09:10 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class InvalidPropertyValueException extends PropertyException {
     public InvalidPropertyValueException(final String propertyName,

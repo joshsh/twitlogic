@@ -6,9 +6,7 @@ import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.User;
 
 /**
- * User: josh
- * Date: Sep 30, 2009
- * Time: 1:46:56 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface TweetContext {
     User thisUser();

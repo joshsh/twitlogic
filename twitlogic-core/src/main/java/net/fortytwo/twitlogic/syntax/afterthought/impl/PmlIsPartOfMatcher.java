@@ -4,9 +4,7 @@ import net.fortytwo.twitlogic.syntax.afterthought.ObjectPropertyAfterthoughtMatc
 import net.fortytwo.twitlogic.vocabs.PML2Relation;
 
 /**
- * User: josh
- * Date: Oct 27, 2009
- * Time: 10:33:25 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PmlIsPartOfMatcher extends ObjectPropertyAfterthoughtMatcher {
     protected String getPropertyURI() {

@@ -8,10 +8,8 @@ import org.json.JSONException;
  * A planar polygon (which approximates a small spherical polygon reasonably well)
  * <p/>
  * Source: http://www.cs.princeton.edu/introcs/35purple/Polygon.java.html
- * <p/>
- * User: josh
- * Date: Aug 20, 2010
- * Time: 7:57:58 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Polygon {
     private final int N;

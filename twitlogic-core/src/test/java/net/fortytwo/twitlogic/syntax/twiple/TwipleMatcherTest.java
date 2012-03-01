@@ -9,9 +9,7 @@ import net.fortytwo.twitlogic.syntax.MatcherTestBase;
 import org.openrdf.model.vocabulary.XMLSchema;
 
 /**
- * User: josh
- * Date: Sep 6, 2009
- * Time: 2:31:34 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TwipleMatcherTest extends MatcherTestBase {
     private static final User

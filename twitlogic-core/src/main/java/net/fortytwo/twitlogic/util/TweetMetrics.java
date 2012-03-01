@@ -32,9 +32,7 @@ import java.io.PrintStream;
 import java.util.Properties;
 
 /**
- * User: josh
- * Date: Aug 23, 2010
- * Time: 12:21:28 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetMetrics {
     /*

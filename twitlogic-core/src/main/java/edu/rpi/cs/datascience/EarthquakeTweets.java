@@ -34,9 +34,7 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Nov 20, 2009
- * Time: 4:17:01 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class EarthquakeTweets {
 

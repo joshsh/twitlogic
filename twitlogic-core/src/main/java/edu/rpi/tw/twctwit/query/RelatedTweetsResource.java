@@ -17,21 +17,17 @@ import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.restlet.Context;
-import org.restlet.data.MediaType;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.data.Status;
-import org.restlet.resource.Representation;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
- * User: josh
- * Date: Apr 18, 2010
- * Time: 2:00:45 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RelatedTweetsResource extends QueryResource {
     private static final String
@@ -87,37 +83,29 @@ public class RelatedTweetsResource extends QueryResource {
             "}\n" +
             "ORDER BY DESC ( ?timestamp )";
 
-    private final String query;
+    @Override
+    public void handle(final Request request,
+                       final Response response) {
 
-    public RelatedTweetsResource(final Context context,
-                                 final Request request,
-                                 final Response response) throws Throwable {
-        super(context, request, response);
-
-        getVariants().add(new Variant(MediaType.APPLICATION_JSON));
-
-        //try {
-        String resource = arguments.get(RESOURCE_PARAM);
-
-        String after = readAfter();
-
-        //System.out.println("resource: " + resource);
-        //System.out.println("after: " + after);
+        Map<String, String> args = getArguments(request);
+        String resource = args.get(RESOURCE_PARAM);
+        String after = readAfter(args);
 
         if (null == resource) {
             throw new IllegalArgumentException("missing '" + RESOURCE_PARAM + "' parameter");
         }
 
-        /*String query = TWEETS_WITH_TOPIC_QUERY
-       .replace(TOPIC_PLACEHOLDER, resource)
-       .replace(MIN_TIMESTAMP_PLACEHOLDER, after);*/
-        query = alternativesQuery(new URIImpl(resource), after);
-        //System.out.println("query = " + query);
+            String query;
 
-        //} catch (Throwable t) {
-        //    t.printStackTrace();
-        //    throw t;
-        //}
+        try {
+             query = alternativesQuery(new URIImpl(resource), after);
+        } catch (SailException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+        } catch (HandlerException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+        }
+
+        response.setEntity(represent(query, args));
     }
 
     private String alternativesQuery(final Resource resource,
@@ -163,7 +151,7 @@ public class RelatedTweetsResource extends QueryResource {
     }
 
     // TODO: bad timestamps could cause SPARQL evaluation errors. It may be better to catch them at a higher level.
-    private String readAfter() {
+    private String readAfter(final Map<String, String> arguments) {
         String after = arguments.get(AFTER_PARAM);
         if (null == after) {
             after = DEFAULT_MIN_TIMESTAMP;
@@ -172,13 +160,15 @@ public class RelatedTweetsResource extends QueryResource {
         return after;
     }
 
-    @Override
-    public Representation represent(final Variant variant) throws ResourceException {
+    public Representation represent(final String query,
+                                    final Map<String, String> args) throws ResourceException {
         try {
-            return new SparqlQueryRepresentation(query, sail, readLimit(), SparqlTools.SparqlResultFormat.JSON.getMediaType());
+            return new SparqlQueryRepresentation(query, sail, readLimit(args), SparqlTools.SparqlResultFormat.JSON.getMediaType());
         } catch (QueryException e) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         } catch (SailException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        } catch (Exception e) {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
         }
     }

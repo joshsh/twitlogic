@@ -17,9 +17,7 @@ import java.io.PrintStream;
 import java.util.Properties;
 
 /**
- * User: josh
- * Date: 2/17/11
- * Time: 6:31 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class FriendFetcher {
     public static void main(final String[] args) {

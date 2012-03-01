@@ -8,9 +8,7 @@ import net.fortytwo.twitlogic.syntax.MatcherException;
 import java.util.Collection;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 10:55:50 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class CompoundAfterthoughtMatcher extends AfterthoughtMatcher {
     private final Collection<AfterthoughtMatcher> parsers;

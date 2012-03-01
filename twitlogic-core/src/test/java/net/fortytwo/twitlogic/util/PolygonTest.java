@@ -6,9 +6,7 @@ import net.fortytwo.twitlogic.model.geo.Polygon;
 import org.json.JSONArray;
 
 /**
- * User: josh
- * Date: Aug 21, 2010
- * Time: 3:15:30 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PolygonTest extends TestCase {
 

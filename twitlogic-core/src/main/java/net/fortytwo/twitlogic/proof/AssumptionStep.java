@@ -7,10 +7,8 @@ import org.openrdf.model.impl.URIImpl;
 /**
  * Note: this class refers to an InferenceStep whose inference rule is
  * assumption, rather than to the Assumption class itself.
- * <p/>
- * User: josh
- * Date: Oct 4, 2009
- * Time: 3:57:24 AM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class AssumptionStep extends InferenceStep {
     private static final Resource ASSUMPTION

@@ -21,9 +21,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Sep 9, 2010
- * Time: 1:14:53 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PlaceMiner {
     private static final Logger LOGGER = TwitLogic.getLogger(PlaceMiner.class);

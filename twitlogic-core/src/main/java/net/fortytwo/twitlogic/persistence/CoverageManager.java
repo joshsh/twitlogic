@@ -21,9 +21,7 @@ import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Oct 2, 2009
- * Time: 4:42:08 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class CoverageManager {
     private final Logger LOGGER = TwitLogic.getLogger(CoverageManager.class);

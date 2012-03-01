@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
- * User: josh
- * Date: Oct 2, 2009
- * Time: 5:52:45 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class IntervalSequence<C extends Comparable<C>> {
     private final List<Interval<C>> consecutiveIntervals;

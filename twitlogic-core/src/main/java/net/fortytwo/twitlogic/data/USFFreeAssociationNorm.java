@@ -18,9 +18,8 @@ import java.util.HashSet;
  * Program to convert the USF Free Association Norms into the N-Triples format.
  * See also: http://w3.usf.edu/FreeAssociation/
  * <p/>
- * User: josh
- * Date: Sep 12, 2009
- * Time: 5:51:08 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class USFFreeAssociationNorm extends FreeAssociationGenerator {
 

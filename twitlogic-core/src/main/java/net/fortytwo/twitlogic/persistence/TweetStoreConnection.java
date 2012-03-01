@@ -11,9 +11,7 @@ import org.openrdf.sail.SailException;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Nov 30, 2009
- * Time: 6:00:43 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetStoreConnection {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetStoreConnection.class);
@@ -39,10 +37,6 @@ public class TweetStoreConnection {
         }
 
         createElmoManager();
-    }
-
-    public void begin() {
-        elmoManager.getTransaction().begin();
     }
 
     private void createElmoManager() {
@@ -91,7 +85,6 @@ public class TweetStoreConnection {
     }
 
     public void close() throws TweetStoreException {
-        System.out.println("closing tweet store connection!!!!!");  System.exit(1);
         if (!closed) {
             closed = true;
 

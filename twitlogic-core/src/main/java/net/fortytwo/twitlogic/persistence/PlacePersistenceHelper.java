@@ -16,9 +16,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Jul 1, 2010
- * Time: 6:48:30 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PlacePersistenceHelper {
     private static final Logger LOGGER = TwitLogic.getLogger(PlacePersistenceHelper.class);

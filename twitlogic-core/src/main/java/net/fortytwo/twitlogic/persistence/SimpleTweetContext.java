@@ -8,9 +8,7 @@ import net.fortytwo.twitlogic.model.URIReference;
 import net.fortytwo.twitlogic.model.User;
 
 /**
- * User: josh
- * Date: Apr 1, 2010
- * Time: 7:29:59 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SimpleTweetContext implements TweetContext {
     private final Tweet tweet;

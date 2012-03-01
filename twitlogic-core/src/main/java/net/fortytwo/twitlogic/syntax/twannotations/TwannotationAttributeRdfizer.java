@@ -8,9 +8,7 @@ import org.json.JSONObject;
  * Note: with the current API, an attribute parser has no awareness of any other attributes in an annotation.
  * This may need to be changed, as it is foreseeable that certain attributes are only meaningful in combination with others.
  *
- * User: josh
- * Date: Jun 5, 2010
- * Time: 4:37:59 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class TwannotationAttributeRdfizer implements Handler<JSONObject> {
     protected final Handler<Triple> tripleHandler;

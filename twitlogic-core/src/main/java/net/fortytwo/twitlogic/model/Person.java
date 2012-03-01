@@ -3,9 +3,7 @@ package net.fortytwo.twitlogic.model;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Oct 6, 2009
- * Time: 6:18:19 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Person implements Resource {
     private final User account;

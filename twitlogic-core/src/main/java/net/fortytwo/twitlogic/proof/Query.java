@@ -12,9 +12,7 @@ import org.openrdf.model.vocabulary.RDF;
 import java.util.Collection;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 3:09:08 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Query extends PMLConstruct {
     private final Information content;

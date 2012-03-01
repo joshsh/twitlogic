@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Author: josh
- * Date: Feb 1, 2008
- * Time: 12:57:06 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class WeightedVector<T> {
     protected Map<T, WeightedValue<T>> valueToWeightedValue;

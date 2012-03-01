@@ -9,9 +9,7 @@ import org.json.JSONObject;
 import java.util.Properties;
 
 /**
- * User: josh
- * Date: Aug 20, 2010
- * Time: 5:37:33 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class CliqsetClient extends RestfulJSONClient {
     public static void main(final String[] args) throws Exception {

@@ -16,9 +16,7 @@ import org.antlr.runtime.RecognitionException;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 9:07:42 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class AfterthoughtMatcher implements Matcher {
     private final Logger LOGGER = TwitLogic.getLogger(AfterthoughtMatcher.class);

@@ -6,9 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 6:22:28 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class WeightedMatrix<A, B> {
     private final Map<A, WeightedVector<B>> map;

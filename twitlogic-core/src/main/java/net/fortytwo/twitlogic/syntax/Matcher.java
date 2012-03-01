@@ -5,9 +5,7 @@ import net.fortytwo.twitlogic.TweetContext;
 import net.fortytwo.twitlogic.model.Triple;
 
 /**
- * User: josh
- * Date: Oct 1, 2009
- * Time: 8:30:00 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface Matcher {
     void match(String expression,

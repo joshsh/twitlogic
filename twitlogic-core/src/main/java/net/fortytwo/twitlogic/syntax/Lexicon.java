@@ -9,11 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Sep 10, 2009
- * Time: 2:53:24 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Lexicon {
     private final Set<String> words;

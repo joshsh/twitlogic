@@ -13,9 +13,7 @@ import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Jun 15, 2010
- * Time: 3:32:11 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Place {
     private static final Logger LOGGER = TwitLogic.getLogger(Place.class);

@@ -11,9 +11,7 @@ import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import java.util.Collection;
 
 /**
- * User: josh
- * Date: Apr 5, 2010
- * Time: 6:08:07 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TopicSniffer implements Handler<Tweet> {
     private final Handler<Tweet> baseHandler;

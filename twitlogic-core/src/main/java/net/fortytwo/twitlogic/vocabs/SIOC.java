@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Oct 3, 2009
- * Time: 3:19:13 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface SIOC {
     public static final String NAMESPACE = "http://rdfs.org/sioc/ns#";

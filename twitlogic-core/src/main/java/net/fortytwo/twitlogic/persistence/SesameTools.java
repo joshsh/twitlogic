@@ -17,9 +17,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * User: josh
- * Date: Oct 2, 2009
- * Time: 10:13:36 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SesameTools {
     private static final Random RANDOM = new Random();

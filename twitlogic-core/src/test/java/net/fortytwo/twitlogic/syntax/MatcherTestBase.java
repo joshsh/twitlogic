@@ -16,9 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Oct 1, 2009
- * Time: 9:12:46 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class MatcherTestBase extends TestCase {
     protected static final String BNODE_URI_BASE = "http://example.org/bnodes/";

@@ -1,11 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Sep 29, 2009
- * Time: 10:52:28 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface RDFS {
     public static final String NAMESPACE = "http://www.w3.org/2000/01/rdf-schema#";

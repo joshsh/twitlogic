@@ -7,9 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Apr 5, 2010
- * Time: 6:51:08 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetSyntaxTest extends TestCase {
     public void testHashtagSyntax() {

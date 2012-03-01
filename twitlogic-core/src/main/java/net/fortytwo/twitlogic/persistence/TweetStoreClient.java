@@ -3,9 +3,7 @@ package net.fortytwo.twitlogic.persistence;
 import net.fortytwo.twitlogic.util.CommonHttpClient;
 
 /**
- * User: josh
- * Date: Oct 26, 2009
- * Time: 10:57:29 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetStoreClient extends CommonHttpClient {
     /*

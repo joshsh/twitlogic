@@ -9,9 +9,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 3:06:13 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class InferenceStep extends PMLConstruct {
     private final Resource inferenceRule;

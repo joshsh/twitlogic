@@ -11,9 +11,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * User: josh
- * Date: Aug 26, 2010
- * Time: 1:42:33 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Entities {
     private final Collection<Resource> topics = new LinkedList<Resource>();

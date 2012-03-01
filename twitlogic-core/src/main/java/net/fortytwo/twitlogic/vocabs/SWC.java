@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Apr 25, 2010
- * Time: 8:07:31 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface SWC {
     public static final String NAMESPACE = "http://data.semanticweb.org/ns/swc/ontology#";

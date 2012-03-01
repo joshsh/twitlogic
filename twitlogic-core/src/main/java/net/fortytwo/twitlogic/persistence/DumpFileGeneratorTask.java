@@ -8,9 +8,7 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Apr 1, 2010
- * Time: 8:11:35 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 // TODO: add support for N-Quads
 public class DumpFileGeneratorTask extends TimerTask {

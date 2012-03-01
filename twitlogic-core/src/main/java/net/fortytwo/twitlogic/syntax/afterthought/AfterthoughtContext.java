@@ -10,9 +10,7 @@ import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
 
 /**
- * User: josh
- * Date: Oct 1, 2009
- * Time: 6:22:53 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class AfterthoughtContext implements TweetContext {
     private final TweetContext baseContext;

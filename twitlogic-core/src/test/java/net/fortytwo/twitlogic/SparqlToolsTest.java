@@ -4,9 +4,7 @@ import net.fortytwo.sesametools.ldserver.query.SparqlTools;
 import junit.framework.TestCase;
 
 /**
- * User: josh
- * Date: Jun 4, 2010
- * Time: 6:30:04 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SparqlToolsTest extends TestCase {
     public void testSparqlResultFormats() throws Exception {

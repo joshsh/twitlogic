@@ -5,9 +5,7 @@ import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.annotations.rdf;
 
 /**
- * User: josh
- * Date: Nov 20, 2009
- * Time: 6:29:36 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(RDFG.GRAPH)
 public interface Graph extends Thing {

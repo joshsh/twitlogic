@@ -5,9 +5,7 @@ import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.annotations.rdf;
 
 /**
- * User: josh
- * Date: Nov 27, 2009
- * Time: 6:56:05 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(FOAF.IMAGE)
 public interface Image extends Thing {

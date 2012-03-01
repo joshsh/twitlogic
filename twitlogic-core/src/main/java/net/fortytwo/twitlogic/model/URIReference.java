@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.model;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 8:06:56 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class URIReference implements Resource {
     private final String value;

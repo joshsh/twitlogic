@@ -9,9 +9,7 @@ import org.openrdf.model.ValueFactory;
 import java.util.Random;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 3:11:45 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class PMLConstruct {
     private static final Random RANDOM = new Random();

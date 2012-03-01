@@ -4,9 +4,7 @@ import net.fortytwo.twitlogic.proof.Query;
 import org.openrdf.rio.RDFHandler;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 4:52:25 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class QueryResult {
     private final Query answeredQuery;

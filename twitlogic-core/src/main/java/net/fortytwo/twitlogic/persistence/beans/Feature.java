@@ -7,9 +7,7 @@ import org.openrdf.elmo.annotations.rdf;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Jun 15, 2010
- * Time: 3:44:22 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(GeoNames.FEATURE)
 public interface Feature extends SpatialThing {

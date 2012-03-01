@@ -15,9 +15,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
- * User: josh
- * Date: 3/15/11
- * Time: 5:24 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class QueryPlay {
     private static final String

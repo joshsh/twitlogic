@@ -5,9 +5,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 /**
- * User: josh
- * Date: Apr 5, 2010
- * Time: 6:45:41 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetSyntax {
     public static final Pattern

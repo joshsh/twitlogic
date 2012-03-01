@@ -15,9 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * User: josh
- * Date: Sep 8, 2009
- * Time: 10:37:05 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ExampleTweetHandler implements Handler<Tweet> {
 //    private final Matcher matcher;

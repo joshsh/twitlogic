@@ -29,9 +29,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Oct 7, 2009
- * Time: 12:21:38 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class CommonHttpClient {
     protected static final Logger LOGGER = TwitLogic.getLogger(CommonHttpClient.class);

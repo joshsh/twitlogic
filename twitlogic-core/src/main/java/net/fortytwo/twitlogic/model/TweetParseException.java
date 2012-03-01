@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.model;
 
 /**
- * User: josh
- * Date: May 10, 2010
- * Time: 8:11:42 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetParseException extends Exception {
     public TweetParseException(final String msg) {

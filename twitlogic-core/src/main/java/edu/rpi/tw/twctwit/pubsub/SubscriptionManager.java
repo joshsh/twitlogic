@@ -5,9 +5,7 @@ import net.fortytwo.twitlogic.TwitLogic;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Apr 17, 2010
- * Time: 5:18:50 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SubscriptionManager<K, V> {
     private static final Logger LOGGER = TwitLogic.getLogger(SubscriptionManager.class);

@@ -12,10 +12,8 @@ import java.util.Map;
 
 /**
  * TODO: make it persistent
- * <p/>
- * User: josh
- * Date: Oct 5, 2009
- * Time: 1:16:55 AM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class UserRegistry {
     private final Map<String, User> usersByScreenName;

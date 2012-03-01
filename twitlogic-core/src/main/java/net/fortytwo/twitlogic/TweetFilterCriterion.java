@@ -6,9 +6,7 @@ import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 
 /**
- * User: josh
- * Date: Jun 29, 2010
- * Time: 5:22:05 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetFilterCriterion implements Filter.Criterion<Tweet> {
     private boolean allowAllTweets = false;

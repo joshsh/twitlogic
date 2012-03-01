@@ -4,9 +4,7 @@ import net.fortytwo.twitlogic.syntax.afterthought.ObjectPropertyAfterthoughtMatc
 import net.fortytwo.twitlogic.vocabs.SKOS;
 
 /**
- * User: josh
- * Date: Oct 27, 2009
- * Time: 2:39:13 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SkosNarrowerMatcher extends ObjectPropertyAfterthoughtMatcher {
     protected String getPropertyURI() {

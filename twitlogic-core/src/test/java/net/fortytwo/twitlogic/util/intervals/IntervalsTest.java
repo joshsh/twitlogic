@@ -3,9 +3,7 @@ package net.fortytwo.twitlogic.util.intervals;
 import junit.framework.TestCase;
 
 /**
- * User: josh
- * Date: Oct 2, 2009
- * Time: 6:11:40 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class IntervalsTest extends TestCase {
     public void testIntervalComparison() {

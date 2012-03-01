@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Jun 5, 2010
- * Time: 4:29:11 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class TwannotationRdfizer implements Handler<JSONObject> {
     private static final Logger LOGGER = TwitLogic.getLogger(TwannotationRdfizer.class);

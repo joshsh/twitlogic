@@ -16,11 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Sep 13, 2009
- * Time: 9:40:13 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class FreeAssociationGenerator {
     private static final Pattern

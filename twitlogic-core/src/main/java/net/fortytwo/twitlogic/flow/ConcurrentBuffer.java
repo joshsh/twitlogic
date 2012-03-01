@@ -8,10 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * A buffered Handler which expects exactly one thread to write to it (via
  * handle) and one thread to read from it (via flush).
- * 
- * User: josh
- * Date: Jul 1, 2010
- * Time: 7:52:21 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ConcurrentBuffer<T> implements Handler<T> {
     private final Queue<T> outQueue;

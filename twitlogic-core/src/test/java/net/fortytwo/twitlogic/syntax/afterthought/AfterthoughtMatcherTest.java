@@ -10,9 +10,7 @@ import net.fortytwo.twitlogic.vocabs.Contact;
 import net.fortytwo.twitlogic.vocabs.FOAF;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 11:05:15 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class AfterthoughtMatcherTest extends MatcherTestBase {
     private static final Resource

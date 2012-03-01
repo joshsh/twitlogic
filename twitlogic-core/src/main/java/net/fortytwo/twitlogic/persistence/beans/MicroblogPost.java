@@ -11,9 +11,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Nov 20, 2009
- * Time: 6:29:01 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(SIOCT.MICROBLOGPOST)
 public interface MicroblogPost extends Thing {

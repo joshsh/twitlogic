@@ -4,9 +4,7 @@ import net.fortytwo.twitlogic.vocabs.FOAF;
 import net.fortytwo.twitlogic.syntax.afterthought.ObjectPropertyAfterthoughtMatcher;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 10:29:09 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class FoafKnowsMatcher extends ObjectPropertyAfterthoughtMatcher {
     protected String getPropertyURI() {

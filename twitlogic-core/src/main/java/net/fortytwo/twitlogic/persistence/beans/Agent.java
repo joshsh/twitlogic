@@ -7,9 +7,7 @@ import org.openrdf.elmo.annotations.rdf;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Nov 20, 2009
- * Time: 6:30:25 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(FOAF.AGENT)
 public interface Agent extends Thing {

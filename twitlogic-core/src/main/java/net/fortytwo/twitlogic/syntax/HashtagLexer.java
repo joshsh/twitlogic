@@ -6,11 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Sep 10, 2009
- * Time: 1:03:46 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class HashtagLexer {
     private final Lexicon lexicon;

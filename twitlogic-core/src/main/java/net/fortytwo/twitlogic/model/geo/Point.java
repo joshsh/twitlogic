@@ -3,10 +3,8 @@ package net.fortytwo.twitlogic.model.geo;
 import twitter4j.GeoLocation;
 
 /**
- * User: josh
-* Date: Aug 20, 2010
-* Time: 7:55:17 PM
-*/
+ * @author Joshua Shinavier (http://fortytwo.net).
+ */
 public class Point {
     private final double longitude;
     private final double latitude;

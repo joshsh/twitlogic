@@ -1,8 +1,8 @@
 package edu.rpi.tw.twctwit.query;
 
 import net.fortytwo.flow.rdf.ranking.HandlerException;
-import net.fortytwo.sesametools.mappingsail.MappingSail;
 import net.fortytwo.sesametools.ldserver.query.QueryResource;
+import net.fortytwo.sesametools.mappingsail.MappingSail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.openrdf.model.Resource;
@@ -10,20 +10,18 @@ import org.openrdf.model.impl.URIImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.restlet.Context;
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.data.MediaType;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import org.restlet.resource.Representation;
-import org.restlet.resource.StringRepresentation;
-import org.restlet.resource.Variant;
+import org.restlet.data.Status;
+import org.restlet.representation.StringRepresentation;
+import org.restlet.resource.ResourceException;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
- * User: josh
- * Date: Apr 18, 2010
- * Time: 2:00:45 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RelatedHashtagsResource extends QueryResource {
     private static final String
@@ -37,19 +35,16 @@ public class RelatedHashtagsResource extends QueryResource {
             DEFAULT_LIMIT = 10,
             MAX_LIMIT = 100;
 
-    private final Representation result;
+    @Override
+    public void handle(final Request request,
+                       final Response response) {
 
-    public RelatedHashtagsResource(final Context context,
-                                   final Request request,
-                                   final Response response) throws Throwable {
-        super(context, request, response);
-
-        getVariants().add(new Variant(MediaType.APPLICATION_JSON));
+        Map<String, String> args = getArguments(request);
 
         //try {
 
         String s;
-        s = arguments.get(LIMIT_PARAM);
+        s = args.get(LIMIT_PARAM);
         int limit;
         if (null == s) {
             limit = DEFAULT_LIMIT;
@@ -61,7 +56,7 @@ public class RelatedHashtagsResource extends QueryResource {
                 limit = MAX_LIMIT;
             }
         }
-        s = arguments.get(STEPS_PARAM);
+        s = args.get(STEPS_PARAM);
         int steps;
         if (null == s) {
             steps = DEFAULT_STEPS;
@@ -74,22 +69,25 @@ public class RelatedHashtagsResource extends QueryResource {
             }
         }
 
-        String resource = arguments.get(RESOURCE_PARAM);
+        String resource = args.get(RESOURCE_PARAM);
         if (null == resource) {
             throw new IllegalArgumentException("missing '" + RESOURCE_PARAM + "' parameter");
         }
 
-        JSONArray a = relatedTagsJSON(new URIImpl(resource), limit, steps);
+        JSONArray a = null;
+        try {
+            a = relatedTagsJSON(new URIImpl(resource), limit, steps);
+        } catch (SailException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+        } catch (HandlerException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+        } catch (JSONException e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
+        }
         //System.out.println("query = " + query);
 
-        //System.out.println("result: " + a);
-
         // TODO
-        result = new StringRepresentation(a.toString(), MediaType.APPLICATION_JSON);
-        //} catch (Throwable t) {
-        //    t.printStackTrace();
-        //    throw t;
-        //}
+        response.setEntity(new StringRepresentation(a.toString(), MediaType.APPLICATION_JSON));
     }
 
     private JSONArray relatedTagsJSON(final Resource resource,
@@ -128,10 +126,5 @@ public class RelatedHashtagsResource extends QueryResource {
         }
 
         return a;
-    }
-
-    @Override
-    public Representation represent(final Variant variant) {
-        return result;
     }
 }

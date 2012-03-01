@@ -6,9 +6,7 @@ import org.json.JSONObject;
 
 
 /**
- * User: josh
- * Date: Sep 3, 2009
- * Time: 10:05:19 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class User implements Resource {
     //provate final Boolean contributorsEnabled;

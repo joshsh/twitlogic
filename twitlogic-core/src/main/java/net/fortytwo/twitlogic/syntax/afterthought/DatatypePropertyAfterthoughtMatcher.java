@@ -8,9 +8,7 @@ import net.fortytwo.twitlogic.syntax.MatcherException;
 import java.util.regex.Pattern;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 9:14:16 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class DatatypePropertyAfterthoughtMatcher extends AfterthoughtMatcher {
 

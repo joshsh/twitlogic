@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 10:52:28 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface FOAF {
     public static final String NAMESPACE = "http://xmlns.com/foaf/0.1/";

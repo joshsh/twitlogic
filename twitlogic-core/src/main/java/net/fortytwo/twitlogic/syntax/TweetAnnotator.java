@@ -7,9 +7,7 @@ import net.fortytwo.twitlogic.persistence.SimpleTweetContext;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
 
 /**
- * User: josh
- * Date: Apr 1, 2010
- * Time: 6:58:27 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetAnnotator implements Handler<Tweet> {
     private final Handler<Tweet> baseHandler;

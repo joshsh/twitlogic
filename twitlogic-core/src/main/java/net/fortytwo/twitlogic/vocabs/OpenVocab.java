@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Oct 6, 2009
- * Time: 5:18:27 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface OpenVocab {
     public static final String NAMESPACE = "http://open.vocab.org/terms/";

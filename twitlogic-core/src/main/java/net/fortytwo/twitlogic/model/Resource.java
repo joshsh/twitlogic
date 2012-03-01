@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.model;
 
 /**
- * User: josh
- * Date: Sep 5, 2009
- * Time: 1:23:07 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface Resource {
     enum Type {

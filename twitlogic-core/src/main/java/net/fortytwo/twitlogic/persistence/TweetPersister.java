@@ -33,9 +33,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Nov 30, 2009
- * Time: 5:39:48 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetPersister implements Handler<Tweet> {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetPersister.class);
@@ -73,7 +71,7 @@ public class TweetPersister implements Handler<Tweet> {
     public synchronized boolean handle(final Tweet tweet) throws HandlerException {
         LOGGER.fine(tweet.describe());
 
-        storeConnection.begin();
+        storeConnection.getElmoManager().getTransaction().begin();
         boolean finished = false;
 
         try {

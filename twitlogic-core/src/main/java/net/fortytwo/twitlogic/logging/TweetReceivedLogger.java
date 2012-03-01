@@ -5,10 +5,8 @@ import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.flow.Handler;
 
 /**
- * User: josh
-* Date: Jul 19, 2010
-* Time: 3:55:52 PM
-*/
+ * @author Joshua Shinavier (http://fortytwo.net).
+ */
 public class TweetReceivedLogger implements Handler<Tweet> {
     private final TweetStatistics statistics;
     private final Handler<Tweet> baseHandler;

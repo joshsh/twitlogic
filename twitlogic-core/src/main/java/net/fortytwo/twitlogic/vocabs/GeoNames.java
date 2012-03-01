@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Jun 15, 2010
- * Time: 3:44:45 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface GeoNames {
     public static final String NAMESPACE = "http://www.geonames.org/ontology#";

@@ -15,9 +15,7 @@ import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Sep 3, 2009
- * Time: 10:04:18 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Tweet implements Resource {
     private static final Logger LOGGER = TwitLogic.getLogger(Tweet.class);

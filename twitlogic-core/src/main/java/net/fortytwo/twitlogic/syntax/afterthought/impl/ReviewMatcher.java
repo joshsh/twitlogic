@@ -14,9 +14,7 @@ import net.fortytwo.twitlogic.vocabs.Review;
 import java.util.regex.Pattern;
 
 /**
- * User: josh
- * Date: Oct 1, 2009
- * Time: 1:42:38 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ReviewMatcher extends AfterthoughtMatcher {
     private final static Pattern RATING_EXPR = Pattern.compile("(0|([1-9][0-9]*))/[1-9][0-9]*");

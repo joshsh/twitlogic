@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Jun 15, 2010
- * Time: 4:00:41 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface DBpediaResource {
     public static final String BASE_URI = "http://dbpedia.org/resource/";

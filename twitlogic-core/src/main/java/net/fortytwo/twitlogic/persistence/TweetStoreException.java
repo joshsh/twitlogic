@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.persistence;
 
 /**
- * User: josh
- * Date: Nov 30, 2009
- * Time: 6:02:43 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetStoreException extends Exception {
     public TweetStoreException(final Throwable cause) {

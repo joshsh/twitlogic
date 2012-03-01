@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.services.cliqset;
 
 /**
- * User: josh
- * Date: Aug 20, 2010
- * Time: 5:38:33 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface CliqsetAPI {
 }

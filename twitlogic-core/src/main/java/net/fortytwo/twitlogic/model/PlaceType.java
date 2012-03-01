@@ -7,9 +7,7 @@ import net.fortytwo.twitlogic.persistence.beans.Neighborhood;
 import net.fortytwo.twitlogic.persistence.beans.PointOfInterest;
 
 /**
- * User: josh
- * Date: Jul 1, 2010
- * Time: 2:57:07 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public enum PlaceType {
     ADMINISTRATIVE_DIVISION("admin", AdministrativeDivision.class),

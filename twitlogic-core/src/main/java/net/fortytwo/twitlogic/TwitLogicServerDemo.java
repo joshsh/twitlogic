@@ -30,9 +30,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Apr 14, 2010
- * Time: 7:45:53 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TwitLogicServerDemo {
     private static final Logger LOGGER = TwitLogic.getLogger(TwitLogicServerDemo.class);

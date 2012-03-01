@@ -5,9 +5,7 @@ import org.openrdf.concepts.owl.Thing;
 import org.openrdf.elmo.annotations.rdf;
 
 /**
- * User: josh
- * Date: Nov 20, 2009
- * Time: 6:30:13 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(SIOC.USERACCOUNT)
 public interface User extends Thing {

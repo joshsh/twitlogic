@@ -6,9 +6,7 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailException;
 
 /**
- * User: josh
- * Date: May 18, 2010
- * Time: 5:23:16 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class SailFactory {
     protected final TypedProperties conf;

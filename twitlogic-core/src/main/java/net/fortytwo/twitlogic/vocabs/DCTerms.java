@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Oct 6, 2009
- * Time: 8:33:46 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface DCTerms {
     public static final String NAMESPACE = "http://purl.org/dc/terms/";

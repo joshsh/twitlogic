@@ -20,9 +20,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
- * User: josh
- * Date: 2/16/11
- * Time: 8:57 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class CSVExporter {
     public static void main(final String[] args) {

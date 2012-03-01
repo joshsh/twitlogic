@@ -34,10 +34,8 @@ import java.util.logging.Logger;
  * replaced, never removed.  So if a user removes its homepage link,
  * TwitLogic will remember the old homepage until the user chooses a new,
  * valid homepage URL.
- * <p/>
- * User: josh
- * Date: Nov 23, 2009
- * Time: 10:31:14 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PersistenceContext {
     private static final Logger LOGGER = TwitLogic.getLogger(PersistenceContext.class);

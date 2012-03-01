@@ -51,8 +51,7 @@ import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
-import org.restlet.Directory;
-import org.restlet.Router;
+import org.restlet.resource.Directory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,9 +68,7 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * User: josh
- * Date: Oct 2, 2009
- * Time: 9:10:17 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TweetStore {
     private static final Logger LOGGER = TwitLogic.getLogger(TweetStore.class);
@@ -452,23 +449,21 @@ public class TweetStore {
                     port,
                     datasetURI);
 
-            Router router = server.getRouter();
-
-            router.attach("/", new Directory(server.getRouter().getContext(), "file://" + staticContentDir + "/"));
+            server.getHost().attach("/", new Directory(server.getContext(), "file://" + staticContentDir + "/"));
 
             for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
                 if (!t.getUriPath().equals("graph")) {
-                    router.attach("/" + t.getUriPath() + "/", WebResource.class);
+                    server.getHost().attach("/" + t.getUriPath() + "/", WebResource.class);
                 }
             }
-            router.attach("/graph/", GraphResource.class);
+            server.getHost().attach("/graph/", GraphResource.class);
 
-            router.attach("/sparql", SparqlResource.class);
-            router.attach("/stream/relatedTweets", RelatedTweetsResource.class);
-            router.attach("/stream/relatedTags", RelatedHashtagsResource.class);
+            server.getHost().attach("/sparql", new SparqlResource());
+            server.getHost().attach("/stream/relatedTweets", new RelatedTweetsResource());
+            server.getHost().attach("/stream/relatedTags", new RelatedHashtagsResource());
 
             server.start();
-        } catch (PropertyException e) {
+        } catch (Throwable e) {
             throw new ServerException(e);
         }
     }

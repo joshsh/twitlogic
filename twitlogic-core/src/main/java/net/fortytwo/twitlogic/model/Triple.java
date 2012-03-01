@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.model;
 
 /**
- * User: josh
- * Date: Sep 5, 2009
- * Time: 1:23:34 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Triple {
     private final Resource subject;

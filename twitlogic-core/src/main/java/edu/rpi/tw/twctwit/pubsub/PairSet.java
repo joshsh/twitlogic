@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Apr 17, 2010
- * Time: 6:33:37 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PairSet<K, V> {
     private final Map<K, Set<V>> keyToValues;

@@ -4,9 +4,7 @@ import net.fortytwo.twitlogic.syntax.afterthought.ObjectPropertyAfterthoughtMatc
 import net.fortytwo.twitlogic.vocabs.OWL;
 
 /**
- * User: josh
- * Date: Oct 26, 2009
- * Time: 6:39:56 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class OwlSameasMatcher  extends ObjectPropertyAfterthoughtMatcher {
     protected String getPropertyURI() {

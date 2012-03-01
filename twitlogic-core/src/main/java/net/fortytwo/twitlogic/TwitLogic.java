@@ -19,9 +19,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
- * Author: josh
- * Date: Sep 3, 2009
- * Time: 1:55:26 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TwitLogic {
 

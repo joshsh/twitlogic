@@ -19,9 +19,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 /**
- * User: josh
- * Date: Apr 25, 2010
- * Time: 8:05:45 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RelatedHashtagsInferencer extends RDFSpreadVector {
     private static final URI[] IN_PREDICATES = new URI[]{

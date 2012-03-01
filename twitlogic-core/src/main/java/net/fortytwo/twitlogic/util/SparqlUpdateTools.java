@@ -17,9 +17,7 @@ import java.io.Writer;
 import java.util.Collection;
 
 /**
- * User: josh
- * Date: Oct 25, 2009
- * Time: 10:45:22 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SparqlUpdateTools {
     private static String formatValue(final Value v) {

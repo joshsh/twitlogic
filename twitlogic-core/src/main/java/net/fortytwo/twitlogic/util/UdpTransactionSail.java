@@ -19,10 +19,8 @@ import java.net.UnknownHostException;
  * <p/>
  * See:
  * http://stackoverflow.com/questions/3396813/message-too-long-for-udp-socket-after-setting-sendbuffersize
- * <p/>
- * User: josh
- * Date: Aug 23, 2010
- * Time: 12:23:24 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class UdpTransactionSail extends RDFTransactionSail {
     private final DatagramSocket socket;

@@ -31,9 +31,7 @@ import net.fortytwo.twitlogic.syntax.afterthought.impl.skos.SkosRelatedMatcher;
 import java.util.Arrays;
 
 /**
- * User: josh
- * Date: Sep 29, 2009
- * Time: 10:59:40 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class DemoAfterthoughtMatcher extends CompoundAfterthoughtMatcher {
     public DemoAfterthoughtMatcher() {

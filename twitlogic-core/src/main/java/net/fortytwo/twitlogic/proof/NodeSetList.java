@@ -9,9 +9,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 
 /**
- * User: josh
- * Date: Oct 4, 2009
- * Time: 4:12:56 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class NodeSetList extends PMLConstruct {
     private final NodeSet first;

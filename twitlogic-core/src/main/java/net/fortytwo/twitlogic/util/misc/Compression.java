@@ -26,9 +26,7 @@ import java.util.zip.ZipOutputStream;
 import java.util.zip.DataFormatException;
 
 /**
- * User: josh
- * Date: Sep 12, 2010
- * Time: 9:42:34 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Compression {
     public enum Algorithm {

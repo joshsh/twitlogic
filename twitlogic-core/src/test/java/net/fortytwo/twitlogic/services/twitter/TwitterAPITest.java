@@ -3,9 +3,7 @@ package net.fortytwo.twitlogic.services.twitter;
 import junit.framework.TestCase;
 
 /**
- * User: josh
- * Date: May 10, 2010
- * Time: 7:52:20 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TwitterAPITest extends TestCase {
     public void testParseTwitterDateString() throws Exception {

@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.util.intervals;
 
 /**
- * User: josh
- * Date: Oct 2, 2009
- * Time: 5:49:54 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Interval<C extends Comparable<C>> {
     public enum IntervalRelation {

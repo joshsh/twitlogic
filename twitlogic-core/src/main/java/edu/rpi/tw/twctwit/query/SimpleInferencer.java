@@ -16,9 +16,7 @@ import java.util.Queue;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Apr 19, 2010
- * Time: 3:01:08 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SimpleInferencer implements Approximation<Set<Resource>, HandlerException> {
 

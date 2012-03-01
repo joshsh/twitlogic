@@ -14,9 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * User: josh
- * Date: Oct 7, 2009
- * Time: 12:03:31 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class BitlyClient extends CommonHttpClient {
     private static final String UTF_8 = "UTF-8";

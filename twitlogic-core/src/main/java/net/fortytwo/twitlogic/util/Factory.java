@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.util;
 
 /**
- * User: josh
- * Date: 1/8/11
- * Time: 6:46 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface Factory<T> {
     T create();

@@ -7,11 +7,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Sep 28, 2009
- * Time: 2:04:53 AM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class TwitLogFormatter extends Formatter {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

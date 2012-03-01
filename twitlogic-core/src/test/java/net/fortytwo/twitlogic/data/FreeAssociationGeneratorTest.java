@@ -3,11 +3,7 @@ package net.fortytwo.twitlogic.data;
 import junit.framework.TestCase;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Sep 13, 2009
- * Time: 10:26:39 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class FreeAssociationGeneratorTest extends TestCase {
     public void testNormalizeTerm() throws Exception {

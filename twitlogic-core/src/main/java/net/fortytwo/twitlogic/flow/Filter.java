@@ -3,9 +3,7 @@ package net.fortytwo.twitlogic.flow;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
 
 /**
- * User: josh
- * Date: Jun 29, 2010
- * Time: 5:26:05 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Filter<T> implements Handler<T> {
     private final Handler<T> baseHandler;

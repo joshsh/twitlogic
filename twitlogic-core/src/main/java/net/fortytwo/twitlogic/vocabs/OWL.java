@@ -1,9 +1,7 @@
 package net.fortytwo.twitlogic.vocabs;
 
 /**
- * User: josh
- * Date: Oct 26, 2009
- * Time: 6:40:22 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public interface OWL {
     public static final String NAMESPACE = "http://www.w3.org/2002/07/owl#";

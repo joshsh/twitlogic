@@ -43,9 +43,7 @@ import java.util.Properties;
 import java.util.Random;
 
 /**
- * User: josh
- * Date: Aug 5, 2010
- * Time: 3:10:06 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ThroughputTesting {
 
