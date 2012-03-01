@@ -103,7 +103,7 @@ public class Twitter4jClient implements TwitterClient {
 
         List<User> result = new LinkedList<User>();
         for (twitter4j.User u : asList(new ListGenerator<twitter4j.User>() {
-            public PagableResponseList<twitter4j.User> getList(long cursor) throws TwitterException {
+            public PagableResponseList getList(long cursor) throws TwitterException {
                 return twitter.getUserListMembers(list.getId(), cursor);
             }
         })) {
@@ -119,7 +119,7 @@ public class Twitter4jClient implements TwitterClient {
     private List<UserList> getUserLists(final User user) throws TwitterClientException {
         LOGGER.info("finding lists of user " + user);
         return asList(new ListGenerator<UserList>() {
-            public PagableResponseList<UserList> getList(long cursor) throws TwitterException {
+            public PagableResponseList getList(long cursor) throws TwitterException {
                 return twitter.getUserLists(user.getScreenName(), cursor);
             }
         });
@@ -254,7 +254,7 @@ public class Twitter4jClient implements TwitterClient {
         List<T> l = new LinkedList<T>();
 
         long cursor = -1;
-        PagableResponseList<T> p;
+        PagableResponseList p;
         do {
             try {
                 p = g.getList(cursor);
@@ -269,6 +269,6 @@ public class Twitter4jClient implements TwitterClient {
     }
 
     private interface ListGenerator<T extends TwitterResponse> {
-        PagableResponseList<T> getList(long cursor) throws TwitterException;
+        PagableResponseList getList(long cursor) throws TwitterException;
     }
 }
