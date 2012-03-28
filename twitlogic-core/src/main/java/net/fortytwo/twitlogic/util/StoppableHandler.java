@@ -9,11 +9,11 @@ import net.fortytwo.twitlogic.services.twitter.HandlerException;
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class StopabbleHandler<T> implements Handler<T> {
+public class StoppableHandler<T> implements Handler<T> {
     private final Handler<T> baseHandler;
     private boolean stopped = false;
 
-    public StopabbleHandler(Handler<T> baseHandler) {
+    public StoppableHandler(Handler<T> baseHandler) {
         this.baseHandler = baseHandler;
     }
 
