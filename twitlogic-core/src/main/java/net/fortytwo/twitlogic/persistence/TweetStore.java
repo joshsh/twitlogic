@@ -27,7 +27,6 @@ import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.Neo4jSailFactory;
 import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
 import net.fortytwo.twitlogic.util.Factory;
-import net.fortytwo.twitlogic.util.SparqlUpdateTools;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.concepts.owl.ObjectProperty;
@@ -53,7 +52,6 @@ import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
 import org.restlet.resource.Directory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -76,11 +74,9 @@ public class TweetStore {
     private static final int DEFAULT_PORT = 8182;
 
     private final Sail sail;
-    private final TypedProperties configuration;
     private boolean doNotRefreshCoreMetadata = false;
 
     private Repository repository;
-    private ElmoModule adminElmoModule;
     private SesameManagerFactory elmoManagerFactory;
     private boolean initialized = false;
     private Factory<SailConnectionListener> sailConnectionListenerFactory;
@@ -89,14 +85,10 @@ public class TweetStore {
     /**
      * The Sesame storage and inference layer (Sail) will be constructed according to configuration properties.
      *
-     * @throws TweetStoreException
+     * @throws TweetStoreException if construction fails
      */
     public TweetStore() throws TweetStoreException {
-        configuration = TwitLogic.getConfiguration();
-
-        sail = createSail(configuration);
-
-        openConnections = Collections.synchronizedSet(new HashSet<TweetStoreConnection>());
+        this(createSail());
     }
 
     /**
@@ -104,7 +96,6 @@ public class TweetStore {
      */
     public TweetStore(final Sail sail) {
         this.sail = sail;
-        this.configuration = TwitLogic.getConfiguration();
 
         openConnections = Collections.synchronizedSet(new HashSet<TweetStoreConnection>());
     }
@@ -122,7 +113,7 @@ public class TweetStore {
         }
 
         // Elmo setup.
-        adminElmoModule = new ElmoModule();
+        ElmoModule adminElmoModule = new ElmoModule();
         adminElmoModule.setGraph(null);  // for TwitLogic.AUTHORITATIVE_GRAPH
         adminElmoModule.addConcept(Thing.class);
         adminElmoModule.addConcept(ObjectProperty.class);  // Dunno why this is necessary, but Elmo logs warnings without it
@@ -217,14 +208,6 @@ public class TweetStore {
         return repository;
     }
 
-    public ElmoModule getElmoModule() {
-        if (!initialized) {
-            throw new IllegalStateException("not yet initialized");
-        }
-
-        return adminElmoModule;
-    }
-
     public ElmoManagerFactory getElmoManagerFactory() {
         return elmoManagerFactory;
     }
@@ -307,24 +290,6 @@ public class TweetStore {
         }
     }
 
-    public void dumpToSparqlUpdateEndpoint(final String endpointURI) throws TweetStoreException {
-        LOGGER.info("dumping triple store to SPARUL endpoint: " + endpointURI);
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-        try {
-            SparqlUpdateTools.dumpTripleStore(this.getSail(), bos);
-        } catch (SailException e) {
-            throw new TweetStoreException(e);
-        } catch (IOException e) {
-            throw new TweetStoreException(e);
-        }
-
-        String data = bos.toString();
-
-        // TODO
-    }
-
     public void clear() throws TweetStoreException {
         try {
             RepositoryConnection rc = repository.getConnection();
@@ -363,7 +328,9 @@ public class TweetStore {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public static Sail createSail(final TypedProperties props) throws TweetStoreException {
+    public static Sail createSail() throws TweetStoreException {
+        TypedProperties props = TwitLogic.getConfiguration();
+
         String sailType;
         try {
             sailType = props.getString(TwitLogic.SAIL_CLASS);

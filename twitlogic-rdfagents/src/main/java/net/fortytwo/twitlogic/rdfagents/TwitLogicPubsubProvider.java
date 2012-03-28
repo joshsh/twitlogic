@@ -134,7 +134,7 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
                 }
             };
 
-            Sail baseSail = TweetStore.createSail(TwitLogic.getConfiguration());
+            Sail baseSail = TweetStore.createSail();
             NotifyingSail b;
             if (baseSail instanceof NotifyingSail) {
                 b = (NotifyingSail) baseSail;

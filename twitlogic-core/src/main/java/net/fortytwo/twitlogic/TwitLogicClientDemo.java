@@ -9,9 +9,9 @@ import net.fortytwo.twitlogic.persistence.TweetDeleter;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.persistence.TweetStoreException;
-import net.fortytwo.twitlogic.services.twitter.CustomTwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
+import net.fortytwo.twitlogic.services.twitter.twitter4j.Twitter4jClient;
 import net.fortytwo.twitlogic.syntax.Matcher;
 import net.fortytwo.twitlogic.syntax.MultiMatcher;
 import net.fortytwo.twitlogic.syntax.TopicSniffer;
@@ -70,7 +70,7 @@ public class TwitLogicClientDemo {
         try {
             // Create a client for communication with Twitter.
             //TwitterClient client = new Twitter4jClient();
-            TwitterClient client = new CustomTwitterClient();
+            TwitterClient client = new Twitter4jClient();
 
             Handler<Tweet> annotator
                     = createAnnotator(store, client);

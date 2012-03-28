@@ -60,19 +60,19 @@ public class ExampleTweetHandler implements Handler<Tweet> {
             }
         };
         final List<Triple> results = new LinkedList<Triple>();
-        Handler<Triple> handler = new Handler<Triple>() {
-            public boolean handle(final Triple triple) throws HandlerException {
-                results.add(triple);
-                return true;
-            }
-        };
+        /*        Handler<Triple> handler = new Handler<Triple>() {
+                  public boolean handle(final Triple triple) throws HandlerException {
+                      results.add(triple);
+                      return true;
+                  }
+              };
 
- /*       try {
-            matcher.match(tweet.getText(), handler, tweetContext);
-        } catch (MatcherException e) {
-            throw new HandlerException(e);
-        }
-  */
+             try {
+                  matcher.match(tweet.getText(), handler, tweetContext);
+              } catch (MatcherException e) {
+                  throw new HandlerException(e);
+              }
+        */
         Comparator<Triple> cmp = new Comparator<Triple>() {
             public int compare(final Triple first,
                                final Triple second) {
