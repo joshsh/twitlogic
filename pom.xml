@@ -30,7 +30,7 @@
         <sesame.version>2.6.3</sesame.version>
         <blueprints.version>1.2</blueprints.version>
         <ripple.version>0.7</ripple.version>
-        <sesametools.version>1.6</sesametools.version>
+        <sesametools.version>1.7-SNAPSHOT</sesametools.version>
         <rdfagents.version>0.2</rdfagents.version>
         <junit.version>4.5</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

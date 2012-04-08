@@ -234,7 +234,7 @@
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>ldserver</artifactId>
+            <artifactId>linked-data-server</artifactId>
             <version>${sesametools.version}</version>
         </dependency>
         <dependency>

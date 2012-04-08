@@ -34,6 +34,7 @@ public class Tweet implements Resource {
     //private String newId;
     private Place place;
     //private boolean possiblySensitive;
+    //private boolean possiblySensitiveEditable;
     //private boolean retweetCount;
     //private boolean retweeted;
     private Tweet retweetOf;

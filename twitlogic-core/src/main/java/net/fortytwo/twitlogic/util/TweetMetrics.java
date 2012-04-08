@@ -17,6 +17,7 @@ import net.fortytwo.twitlogic.syntax.TopicSniffer;
 import net.fortytwo.twitlogic.syntax.TweetAnnotator;
 import net.fortytwo.twitlogic.syntax.afterthought.DemoAfterthoughtMatcher;
 import net.fortytwo.twitlogic.util.misc.Compression;
+import org.openrdf.http.protocol.transaction.operations.TransactionOperation;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -29,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -157,7 +159,8 @@ sum(g[,2])/length(g[,2])
             }
         }
 
-        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+        public void handleTransaction(final List<TransactionOperation> operations) throws SailException {
+            byte[] bytes = createTransactionEntity(operations);
             int size = bytes.length;
             int zipSize, gzipSize, lzmaSize, minilzoSize, deflateSize;
 

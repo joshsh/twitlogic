@@ -210,6 +210,7 @@ public class TwitterAPI {
         NOTIFICATIONS("notifications"),
         PLACE("place"),
         POSSIBLY_SENSITIVE("possibly_sensitive"),
+        POSSIBLY_SENSITIVE_EDITABLE("possibly_sensitive_editable"),
         PROFILE_BACKGROUND_COLOR("profile_background_color"),
         PROFILE_BACKGROUND_IMAGE_URL("profile_background_image_url"),
         PROFILE_BACKGROUND_IMAGE_URL_HTTPS("profile_background_image_url_https"),

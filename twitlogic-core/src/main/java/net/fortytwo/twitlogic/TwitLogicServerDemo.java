@@ -55,7 +55,7 @@ public class TwitLogicServerDemo {
 
             runDemo();
         } catch (Throwable t) {
-            t.printStackTrace();
+            t.printStackTrace(System.err);
             System.exit(1);
         }
     }

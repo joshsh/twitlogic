@@ -20,6 +20,7 @@ import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openrdf.http.protocol.transaction.operations.TransactionOperation;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
@@ -39,6 +40,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -87,8 +89,8 @@ public class ThroughputTesting {
         baseSail.initialize();
 
         RDFTransactionSail sail = new RDFTransactionSail(baseSail) {
-            public void uploadTransactionEntity(byte[] bytes) throws SailException {
-                System.out.println(new String(bytes));
+            public void handleTransaction(final List<TransactionOperation> operations) throws SailException {
+                System.out.println(new String(createTransactionEntity(operations)));
             }
         };
 
@@ -485,8 +487,8 @@ public class ThroughputTesting {
             this.connection = connection;
         }
 
-        public void uploadTransactionEntity(byte[] bytes) throws SailException {
-            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
+        public void handleTransaction(final List<TransactionOperation> operations) throws SailException {
+            RequestEntity entity = new ByteArrayRequestEntity(createTransactionEntity(operations), "application/x-rdftransaction");
             try {
                 //System.out.println("uploading!");
                 connection.getHttpRepoClient().upload(entity, null, false, null, null, null);
@@ -505,9 +507,9 @@ public class ThroughputTesting {
             super(sail);
         }
 
-        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+        public void handleTransaction(final List<TransactionOperation> operations) throws SailException {
             // Generate the entity, but do nothing with it.
-            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
+            RequestEntity entity = new ByteArrayRequestEntity(createTransactionEntity(operations), "application/x-rdftransaction");
         }
     }
 
@@ -517,9 +519,9 @@ public class ThroughputTesting {
             super(sail);
         }
 
-        public void uploadTransactionEntity(byte[] bytes) throws SailException {
+        public void handleTransaction(final List<TransactionOperation> operations) throws SailException {
             // Generate the entity, but do nothing with it.
-            RequestEntity entity = new ByteArrayRequestEntity(bytes, "application/x-rdftransaction");
+            RequestEntity entity = new ByteArrayRequestEntity(createTransactionEntity(operations), "application/x-rdftransaction");
         }
     }
 

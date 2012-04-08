@@ -444,6 +444,12 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
                                    final Date minTimestamp,
                                    final Date maxTimestamp,
                                    final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
+        final Date min = null == minTimestamp
+                ? new Date(0) : minTimestamp;
+
+        final Date max = null == maxTimestamp
+                ? new Date() : maxTimestamp;
+
         Handler<Tweet> dateFilter = new Handler<Tweet>() {
             private int statuses = 0;
 
@@ -456,8 +462,8 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
                 Date t = tweet.getCreatedAt();
 
                 //System.out.println("\tcreated at: " + tweet.getCreatedAt());
-                return t.compareTo(maxTimestamp) > 0
-                        || (t.compareTo(minTimestamp) >= 0 && handler.handle(tweet));
+                return t.compareTo(max) > 0
+                        || (t.compareTo(min) >= 0 && handler.handle(tweet));
             }
         };
 

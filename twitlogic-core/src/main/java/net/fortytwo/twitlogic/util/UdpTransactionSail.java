@@ -1,6 +1,7 @@
 package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.sesametools.rdftransaction.RDFTransactionSail;
+import org.openrdf.http.protocol.transaction.operations.TransactionOperation;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailException;
 
@@ -10,6 +11,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * Note: typical size of a packet based on one of the test tweets is 6000 bytes.
@@ -43,7 +45,7 @@ public class UdpTransactionSail extends RDFTransactionSail {
         this.ports = ports;
     }
 
-    public void uploadTransactionEntity(byte[] bytes) throws SailException {
+    public void handleTransaction(final List<TransactionOperation> operations) throws SailException {
         //System.out.println(new String(bytes));
         /*
         try {
@@ -54,6 +56,7 @@ public class UdpTransactionSail extends RDFTransactionSail {
         /*/
         //*
         try {
+            byte[] bytes = createTransactionEntity(operations);
             socket.send(new DatagramPacket(bytes, bytes.length, address, ports[portIndex]));
             portIndex = (portIndex + 1) % ports.length;
         } catch (IOException e) {
