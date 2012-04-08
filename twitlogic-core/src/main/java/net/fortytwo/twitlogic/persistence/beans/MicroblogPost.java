@@ -32,9 +32,9 @@ public interface MicroblogPost extends Thing {
     void setContent(String content);
 
     @rdf(SIOC.HAS_CREATOR)
-    User getHasCreator();
+    UserAccount getHasCreator();
 
-    void setHasCreator(User hasCreator);
+    void setHasCreator(UserAccount hasCreator);
 
     @rdf(SIOC.REPLY_OF)
     MicroblogPost getReplyOf();
@@ -42,9 +42,9 @@ public interface MicroblogPost extends Thing {
     void setReplyOf(MicroblogPost replyOf);
 
     @rdf(SIOC.ADDRESSED_TO)
-    User getAddressedTo();
+    UserAccount getAddressedTo();
 
-    void setAddressedTo(User addressedTo);
+    void setAddressedTo(UserAccount addressedTo);
 
     @rdf(SIOC.TOPIC)
     Set<Thing> getTopic();

@@ -21,7 +21,7 @@ import net.fortytwo.twitlogic.persistence.beans.Neighborhood;
 import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.PointOfInterest;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
-import net.fortytwo.twitlogic.persistence.beans.User;
+import net.fortytwo.twitlogic.persistence.beans.UserAccount;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.Neo4jSailFactory;
@@ -132,7 +132,7 @@ public class TweetStore {
         adminElmoModule.addConcept(Point.class);
         adminElmoModule.addConcept(PointOfInterest.class);
         adminElmoModule.addConcept(SpatialThing.class);
-        adminElmoModule.addConcept(User.class);
+        adminElmoModule.addConcept(UserAccount.class);
         adminElmoModule.addConcept(org.openrdf.concepts.rdfs.Class.class);
 
         elmoManagerFactory

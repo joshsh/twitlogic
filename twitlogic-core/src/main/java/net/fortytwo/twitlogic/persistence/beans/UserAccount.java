@@ -8,7 +8,7 @@ import org.openrdf.elmo.annotations.rdf;
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 @rdf(SIOC.USERACCOUNT)
-public interface User extends Thing {
+public interface UserAccount extends Thing {
     @rdf(SIOC.ID)
     String getId();
 

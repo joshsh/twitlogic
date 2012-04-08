@@ -8,6 +8,7 @@ import net.fortytwo.twitlogic.model.Place;
 import net.fortytwo.twitlogic.model.Resource;
 import net.fortytwo.twitlogic.model.Tweet;
 import net.fortytwo.twitlogic.model.URIReference;
+import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.model.geo.Point;
 import net.fortytwo.twitlogic.persistence.beans.Agent;
 import net.fortytwo.twitlogic.persistence.beans.Document;
@@ -16,7 +17,7 @@ import net.fortytwo.twitlogic.persistence.beans.Graph;
 import net.fortytwo.twitlogic.persistence.beans.Image;
 import net.fortytwo.twitlogic.persistence.beans.MicroblogPost;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
-import net.fortytwo.twitlogic.persistence.beans.User;
+import net.fortytwo.twitlogic.persistence.beans.UserAccount;
 import net.fortytwo.twitlogic.syntax.TweetSyntax;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import org.openrdf.concepts.owl.Thing;
@@ -67,8 +68,8 @@ public class PersistenceContext {
         }
 
         if (null != tweet.getUser()) {
-            User user = userForUser(tweet.getUser());
-            post.setHasCreator(user);
+            UserAccount userAccount = userForUser(tweet.getUser());
+            post.setHasCreator(userAccount);
         }
 
         if (null != tweet.getInReplyToTweet()) {
@@ -120,18 +121,18 @@ public class PersistenceContext {
         return post;
     }
 
-    public User persist(final net.fortytwo.twitlogic.model.User tweetUser) {
-        User user = userForUser(tweetUser);
+    public UserAccount persist(final User tweetUser) {
+        UserAccount userAccount = userForUser(tweetUser);
 
         if (null != tweetUser.getScreenName()) {
-            user.setId(tweetUser.getScreenName());
+            userAccount.setId(tweetUser.getScreenName());
         }
 
-        Agent agent = user.getAccountOf();
+        Agent agent = userAccount.getAccountOf();
 
         if (null == agent) {
             agent = agentForUser(tweetUser);
-            user.setAccountOf(agent);
+            userAccount.setAccountOf(agent);
         }
 
         Set<Thing> equivalentAgents = new HashSet<Thing>();
@@ -179,7 +180,7 @@ public class PersistenceContext {
             agent.setDepiction(depiction);
         }
 
-        return user;
+        return userAccount;
     }
 
     public Thing persist(final Dollartag tag) {
@@ -195,9 +196,9 @@ public class PersistenceContext {
     }
 
     public Agent persist(final net.fortytwo.twitlogic.model.Person tweetPerson) {
-        net.fortytwo.twitlogic.model.User tweetUser = tweetPerson.getAccount();
-        User user = persist(tweetUser);
-        return user.getAccountOf();
+        User tweetUser = tweetPerson.getAccount();
+        UserAccount userAccount = persist(tweetUser);
+        return userAccount.getAccountOf();
     }
 
     public net.fortytwo.twitlogic.persistence.beans.Point persist(final Point point) {
@@ -274,11 +275,11 @@ public class PersistenceContext {
     //    return designate(type.getUri(), org.openrdf.concepts.rdfs.Class.class);
     //}
 
-    private User userForUser(final net.fortytwo.twitlogic.model.User user) {
-        return designate(uriOf(user), User.class);
+    private UserAccount userForUser(final User user) {
+        return designate(uriOf(user), UserAccount.class);
     }
 
-    private Agent agentForUser(final net.fortytwo.twitlogic.model.User user) {
+    private Agent agentForUser(final User user) {
         return designate(uriOf(user.getHeldBy()), Agent.class);
     }
 
@@ -324,7 +325,7 @@ public class PersistenceContext {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public static String uriOf(final net.fortytwo.twitlogic.model.User user) {
+    public static String uriOf(final User user) {
         return TwitLogic.USERS_BASEURI + user.getId();
     }
 
