@@ -173,13 +173,13 @@ public class Twitter4jClient implements TwitterClient {
         query.track(track);
 
         TwitterStream stream = streamFactory.getInstance();
-        stream.addListener(new InnerStatusHandler(addHandler, deleteHandler));
+        stream.addListener(new InnerStatusHandler(stream, addHandler, deleteHandler));
         stream.filter(query);
     }
 
     public void processSampleStream(Handler<Tweet> addHandler, Handler<Tweet> deleteHandler) throws TwitterClientException {
         TwitterStream stream = streamFactory.getInstance();
-        stream.addListener(new InnerStatusHandler(addHandler, deleteHandler));
+        stream.addListener(new InnerStatusHandler(stream, addHandler, deleteHandler));
         stream.sample();
     }
 
@@ -207,16 +207,29 @@ public class Twitter4jClient implements TwitterClient {
         return statistics;
     }
 
+    public void stop() {
+        twitter.shutdown();
+    }
+
     private static class InnerStatusHandler implements StatusListener {
+        private final TwitterStream stream;
         private final Handler<Tweet> addHandler;
         private final Handler<Tweet> deleteHandler;
 
-        public InnerStatusHandler(Handler<Tweet> addHandler, Handler<Tweet> deleteHandler) {
+        public InnerStatusHandler(final TwitterStream stream,
+                                  final Handler<Tweet> addHandler,
+                                  final Handler<Tweet> deleteHandler) {
+            this.stream = stream;
             this.addHandler = addHandler;
             this.deleteHandler = deleteHandler;
         }
 
         public void onStatus(Status status) {
+            if (!addHandler.isOpen()) {
+                stream.shutdown();
+                return;
+            }
+
             try {
                 addHandler.handle(new Tweet(status));
             } catch (HandlerException e) {
@@ -226,6 +239,11 @@ public class Twitter4jClient implements TwitterClient {
         }
 
         public void onDeletionNotice(StatusDeletionNotice notice) {
+            if (!deleteHandler.isOpen()) {
+                stream.shutdown();
+                return;
+            }
+
             Tweet d = new Tweet("" + notice.getStatusId());
             try {
                 deleteHandler.handle(d);

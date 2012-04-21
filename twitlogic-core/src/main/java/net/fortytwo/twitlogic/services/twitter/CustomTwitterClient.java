@@ -136,6 +136,10 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
         return statistics;
     }
 
+    public void stop() {
+        // TODO
+    }
+
     public Place fetchPlace(final String id) throws TwitterClientException {
         HttpGet request = new HttpGet(TwitterAPI.API_PLACES_URL + id + ".json");
 
@@ -254,9 +258,10 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
                     throw new TwitterClientException(e);
                 }
                 try {
-                    if (!handler.handle(t)) {
+                    if (!handler.isOpen()) {
                         return;
                     }
+                    handler.handle(t);
                 } catch (HandlerException e) {
                     throw new TwitterClientException(e);
                 }
@@ -432,9 +437,11 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
                 throw new TwitterClientException(e);
             }
 
-            if (!handler.handle(t)) {
+            if (!handler.isOpen()) {
                 return false;
             }
+
+            handler.handle(t);
         }
 
         return 0 < array.length();
@@ -452,8 +459,13 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
 
         Handler<Tweet> dateFilter = new Handler<Tweet>() {
             private int statuses = 0;
+            private boolean open = true;
 
-            public boolean handle(final Tweet tweet) throws HandlerException {
+            public boolean isOpen() {
+                return open;
+            }
+
+            public void handle(final Tweet tweet) throws HandlerException {
                 if (++statuses >= limits.getStatusesLimit()) {
                     LOGGER.warning("maximum number (" + limits.getStatusesLimit()
                             + ") of statuses retrieved for user " + user.getScreenName());
@@ -462,8 +474,15 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
                 Date t = tweet.getCreatedAt();
 
                 //System.out.println("\tcreated at: " + tweet.getCreatedAt());
-                return t.compareTo(max) > 0
-                        || (t.compareTo(min) >= 0 && handler.handle(tweet));
+                if (t.compareTo(max) > 0) {
+                    return;
+                }
+
+                open = t.compareTo(min) >= 0 && handler.isOpen();
+
+                if (open) {
+                    handler.handle(tweet);
+                }
             }
         };
 
@@ -518,9 +537,10 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
                     throw new TwitterClientException(e);
                 }
 
-                if (!handler.handle(u)) {
-                    return;
+                if (!handler.isOpen()) {
+                    break;
                 }
+                handler.handle(u);
             }
 
             cursor = users.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
@@ -613,9 +633,10 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
             for (int i = 0; i < length; i++) {
                 try {
                     JSONObject obj = (JSONObject) array.get(i);
-                    if (!handler.handle(new Tweet(obj))) {
+                    if (!handler.isOpen()) {
                         break;
                     }
+                    handler.handle(new Tweet(obj));
                 } catch (Exception e) {
                     throw new TwitterClientException(e);
                 }

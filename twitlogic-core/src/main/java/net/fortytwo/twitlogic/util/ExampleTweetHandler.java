@@ -25,7 +25,11 @@ public class ExampleTweetHandler implements Handler<Tweet> {
     //            new DemoAfterthoughtMatcher());
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
+    public boolean isOpen() {
+        return true;
+    }
+
+    public void handle(final Tweet tweet) throws HandlerException {
         System.out.println("" + tweet.getUser().getScreenName()
                 + " [" + tweet.getId() + "]"
                 + ": " + tweet.getText());
@@ -88,7 +92,5 @@ public class ExampleTweetHandler implements Handler<Tweet> {
                 System.out.println("\t (" + t.getWeight() + ")\t" + t);
             }
         }
-
-        return true;
     }
 }

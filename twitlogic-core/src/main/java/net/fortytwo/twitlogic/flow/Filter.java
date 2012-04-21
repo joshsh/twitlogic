@@ -15,10 +15,16 @@ public class Filter<T> implements Handler<T> {
         this.baseHandler = baseHandler;
     }
 
-    public boolean handle(T t) throws HandlerException {
-        return !criterion.allow(t) || baseHandler.handle(t);
+    public boolean isOpen() {
+        return baseHandler.isOpen();
     }
-        
+
+    public void handle(T t) throws HandlerException {
+        if (criterion.allow(t)) {
+            baseHandler.handle(t);
+        }
+    }
+
     public interface Criterion<S> {
         boolean allow(S s);
     }

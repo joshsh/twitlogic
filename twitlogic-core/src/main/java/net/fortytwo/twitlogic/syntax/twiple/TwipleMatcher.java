@@ -233,9 +233,11 @@ public class TwipleMatcher implements Matcher {
 
                 Triple st = new Triple(subject, predicate, object, weight);
                 try {
-                    if (!resultHandler.handle(st)) {
+                    if (!resultHandler.isOpen()) {
                         break;
                     }
+
+                    resultHandler.handle(st);
                 } catch (HandlerException e) {
                     throw new MatcherException(e);
                 }

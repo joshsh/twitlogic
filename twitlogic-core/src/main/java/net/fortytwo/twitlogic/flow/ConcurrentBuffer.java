@@ -20,18 +20,22 @@ public class ConcurrentBuffer<T> implements Handler<T> {
         outQueue = new ConcurrentLinkedQueue<T>();
     }
 
-    public boolean handle(final T t) throws HandlerException {
-        outQueue.add(t);
+    public boolean isOpen() {
         return true;
+    }
+
+    public void handle(final T t) throws HandlerException {
+        outQueue.add(t);
     }
 
     public boolean flush() throws HandlerException {
         int size = outQueue.size();
 
         for (int i = 0; i < size; i++) {
-            if (!handler.handle(outQueue.remove())) {
-                return false;
+            if (!handler.isOpen()) {
+                break;
             }
+            handler.handle(outQueue.remove());
         }
 
         return true;

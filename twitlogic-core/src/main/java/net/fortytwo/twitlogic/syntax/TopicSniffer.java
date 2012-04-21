@@ -20,7 +20,11 @@ public class TopicSniffer implements Handler<Tweet> {
         this.baseHandler = baseHandler;
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
+    public boolean isOpen() {
+        return baseHandler.isOpen();
+    }
+
+    public void handle(final Tweet tweet) throws HandlerException {
         if (null == tweet.getEntities() && null != tweet.getText()) {
             Entities entities = new Entities();
 
@@ -39,6 +43,6 @@ public class TopicSniffer implements Handler<Tweet> {
             tweet.setEntities(entities);
         }
 
-        return baseHandler.handle(tweet);
+        baseHandler.handle(tweet);
     }
 }

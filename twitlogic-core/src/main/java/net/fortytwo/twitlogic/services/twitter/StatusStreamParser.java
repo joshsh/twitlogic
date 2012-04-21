@@ -147,7 +147,13 @@ public class StatusStreamParser {
                 throw new TweetParseException(e);
             }
 
-            return deleteHandler.handle(status);
+            boolean b = deleteHandler.isOpen();
+
+            if (b) {
+                deleteHandler.handle(status);
+            }
+
+            return b;
         }
     }
 
@@ -166,6 +172,12 @@ public class StatusStreamParser {
         // check on the generated JSON object to see whether it is
         // an "interesting" status update (and discarding it if not)
         // before going on to parse all of its fields.
-        return addHandler.handle(new Tweet(el));
+        boolean b = addHandler.isOpen();
+
+        if (b) {
+            addHandler.handle(new Tweet(el));
+        }
+
+        return b;
     }
 }

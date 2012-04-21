@@ -30,7 +30,12 @@ public class CommandListener implements Handler<Tweet> {
         selfScreenNames.add(TwitLogicAgent.ASPIRATIONAL_SCREENNAME);
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
+    @Override
+    public boolean isOpen() {
+        return baseHandler.isOpen();
+    }
+
+    public void handle(final Tweet tweet) throws HandlerException {
         if (null != getReplyTo(tweet)) {
             LOGGER.info("received a command from " + tweet.getUser() + ": " + tweet.getText());
             try {
@@ -41,7 +46,7 @@ public class CommandListener implements Handler<Tweet> {
             System.out.println("woo");
         }
 
-        return baseHandler.handle(tweet);
+        baseHandler.handle(tweet);
     }
 
     private String getReplyTo(final Tweet tweet) {

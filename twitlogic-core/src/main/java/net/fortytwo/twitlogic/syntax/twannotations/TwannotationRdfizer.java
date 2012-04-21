@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  */
 public abstract class TwannotationRdfizer implements Handler<JSONObject> {
     private static final Logger LOGGER = TwitLogic.getLogger(TwannotationRdfizer.class);
+    private boolean open = true;
 
     protected final Handler<Triple> tripleHandler;
     private final Map<String, TwannotationAttributeRdfizer> attributeRdfizersByFormat;
@@ -39,7 +40,11 @@ public abstract class TwannotationRdfizer implements Handler<JSONObject> {
         attributeRdfizersByFormat.put(rdfizer.getFormat(), rdfizer);
     }
 
-    public boolean handle(final JSONObject json) throws HandlerException {
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void handle(final JSONObject json) throws HandlerException {
         Iterator keys = json.keys();
         while (keys.hasNext()) {
             String key = (String) keys.next();
@@ -54,12 +59,12 @@ public abstract class TwannotationRdfizer implements Handler<JSONObject> {
                 } catch (JSONException e) {
                     throw new HandlerException(e);
                 }
-                if (!rdfizer.handle(obj)) {
-                    return false;
+                if (!rdfizer.isOpen()) {
+                    open = false;
+                    break;
                 }
+                rdfizer.handle(obj);
             }
         }
-
-        return true;
     }
 }

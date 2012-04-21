@@ -28,7 +28,11 @@ public class HashtagLexer {
                              final Handler<List<String>> resultHandler,
                              final List<String> completed) throws Exception {
         if (hashtag.length() == startIndex) {
-            return resultHandler.handle(completed);
+            boolean b = resultHandler.isOpen();
+            if (b) {
+                resultHandler.handle(completed);
+            }
+            return b;
         } else {
             for (int i = startIndex + 1; i <= hashtag.length(); i++) {
                 String s = hashtag.substring(startIndex, i);

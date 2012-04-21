@@ -44,9 +44,12 @@ public class HashtagLexerTest extends TestCase {
         final Set<String> actualResults = new HashSet<String>();
 
         Handler<List<String>> resultHandler = new Handler<List<String>>() {
-            public boolean handle(List<String> result) throws HandlerException {
-                actualResults.add(commaDelimit(result));
+            public boolean isOpen() {
                 return true;
+            }
+
+            public void handle(List<String> result) throws HandlerException {
+                actualResults.add(commaDelimit(result));
             }
         };
 

@@ -19,12 +19,19 @@ public class TweetAnnotator implements Handler<Tweet> {
         this.baseHandler = baseHandler;
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
+    public boolean isOpen() {
+        return baseHandler.isOpen();
+    }
+
+    public void handle(final Tweet tweet) throws HandlerException {
         Handler<Triple> tripleHandler = new Handler<Triple>() {
-            public boolean handle(final Triple triple) throws HandlerException {
+            public boolean isOpen() {
+                return true;
+            }
+
+            public void handle(final Triple triple) throws HandlerException {
                 //System.out.println("got an annotation: " + triple);
                 tweet.getAnnotations().add(triple);
-                return true;
             }
         };
 
@@ -34,6 +41,6 @@ public class TweetAnnotator implements Handler<Tweet> {
             throw new HandlerException(e);
         }
 
-        return baseHandler.handle(tweet);
+        baseHandler.handle(tweet);
     }
 }

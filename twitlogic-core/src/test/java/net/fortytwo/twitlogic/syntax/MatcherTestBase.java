@@ -60,9 +60,12 @@ public abstract class MatcherTestBase extends TestCase {
     protected final Set<Triple> results = new HashSet<Triple>();
 
     protected final Handler<Triple> handler = new Handler<Triple>() {
-        public boolean handle(final Triple triple) throws HandlerException {
-            results.add(triple);
+        public boolean isOpen() {
             return true;
+        }
+
+        public void handle(final Triple triple) throws HandlerException {
+            results.add(triple);
         }
     };
 

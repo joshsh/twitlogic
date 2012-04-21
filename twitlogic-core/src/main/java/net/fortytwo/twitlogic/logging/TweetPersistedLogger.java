@@ -17,9 +17,12 @@ public class TweetPersistedLogger implements Handler<Tweet> {
         this.baseHandler = baseHandler;
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
-        boolean b = baseHandler.handle(tweet);
+    public boolean isOpen() {
+        return baseHandler.isOpen();
+    }
+
+    public void handle(final Tweet tweet) throws HandlerException {
+        baseHandler.handle(tweet);
         statistics.tweetPersisted(tweet);
-        return b;
     }
 }

@@ -118,7 +118,11 @@ public class FirehoseDemo {
                                     = new TweetAnnotator(matcher, topicSniffer);
 
                             Handler<Tweet> adder = new Handler<Tweet>() {
-                                public boolean handle(final Tweet tweet) throws HandlerException {
+                                public boolean isOpen() {
+                                    return annotator.isOpen();
+                                }
+
+                                public void handle(final Tweet tweet) throws HandlerException {
                                     try {
                                         c.clear();
                                         c.commit();
@@ -126,7 +130,7 @@ public class FirehoseDemo {
                                         throw new HandlerException(e);
                                     }
 
-                                    return annotator.handle(tweet);
+                                     annotator.handle(tweet);
                                 }
                             };
                             Handler<Tweet> deleter = new TweetDeleter(store);

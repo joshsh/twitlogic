@@ -51,9 +51,13 @@ public class UserRegistry {
     public Handler<Tweet> createUserRegistryFilter(
             final Handler<Tweet> baseHandler) {
         return new Handler<Tweet>() {
-            public boolean handle(final Tweet tweet) throws HandlerException {
+            public boolean isOpen() {
+                return baseHandler.isOpen();
+            }
+
+            public void handle(final Tweet tweet) throws HandlerException {
                 add(tweet.getUser());
-                return baseHandler.handle(tweet);
+                baseHandler.handle(tweet);
             }
         };
     }

@@ -43,7 +43,11 @@ public class TweetDeleter implements Handler<Tweet> {
         storeConnection.close();
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
+    public boolean isOpen() {
+        return true;
+    }
+
+    public void handle(final Tweet tweet) throws HandlerException {
         MicroblogPost p = persistenceContext.find(tweet);
 
         if (null != p) {
@@ -63,8 +67,6 @@ public class TweetDeleter implements Handler<Tweet> {
                 throw new HandlerException(e);
             }
         }
-
-        return true;
     }
 
     private URI uriOf(final Entity e) {

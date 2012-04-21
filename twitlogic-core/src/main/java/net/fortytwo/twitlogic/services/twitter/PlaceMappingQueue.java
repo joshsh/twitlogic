@@ -51,9 +51,11 @@ public class PlaceMappingQueue {
                             Place p = client.fetchPlace(id);
 
                             // Handle the result
-                            if (!resultHandler.handle(p)) {
+                            if (!resultHandler.isOpen()) {
                                 LOGGER.fine("closing place mapping queue");
                                 closed = true;
+                            }  else {
+                                resultHandler.handle(p);
                             }
                         } catch (TwitterClientException e) {
                             LOGGER.warning("caught Twitter client error, will attempt to recover. Stack trace follows.");

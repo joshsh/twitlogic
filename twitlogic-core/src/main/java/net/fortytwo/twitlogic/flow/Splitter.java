@@ -12,14 +12,14 @@ public class Splitter<T> implements Handler<T> {
         this.handlers = handlers;
     }
 
-    public boolean handle(final T t) throws HandlerException {
-        for (Handler<T> handler : handlers) {
-            // halt if any child handler halts
-            if (!handler.handle(t)) {
-                return false;
-            }
-        }
-
+    public boolean isOpen() {
+        // TODO
         return true;
+    }
+
+    public void handle(final T t) throws HandlerException {
+        for (Handler<T> handler : handlers) {
+            handler.handle(t);
+        }
     }
 }

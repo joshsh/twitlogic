@@ -149,14 +149,18 @@ public class ThroughputTesting {
                     final TweetPersister p = new TweetPersister(store, null);
 
                     Handler<Tweet> h = new Handler<Tweet>() {
-                        public boolean handle(final Tweet tweet) throws HandlerException {
+                        public boolean isOpen() {
+                            return p.isOpen();
+                        }
+
+                        public void handle(final Tweet tweet) throws HandlerException {
                             try {
                                 sc.clear();
                                 sc.commit();
                             } catch (SailException e) {
                                 throw new HandlerException(e);
                             }
-                            return p.handle(tweet);
+                            p.handle(tweet);
                         }
                     };
 
@@ -191,14 +195,18 @@ public class ThroughputTesting {
                     final TweetPersister p = new TweetPersister(store, null);
 
                     Handler<Tweet> h = new Handler<Tweet>() {
-                        public boolean handle(final Tweet tweet) throws HandlerException {
+                        public boolean isOpen() {
+                            return p.isOpen();
+                        }
+
+                        public void handle(final Tweet tweet) throws HandlerException {
                             try {
                                 sc.clear();
                                 sc.commit();
                             } catch (SailException e) {
                                 throw new HandlerException(e);
                             }
-                            return p.handle(tweet);
+                            p.handle(tweet);
                         }
                     };
 
@@ -239,7 +247,11 @@ public class ThroughputTesting {
                                 final TweetPersister p = new TweetPersister(store, null);
 
                                 Handler<Tweet> h = new Handler<Tweet>() {
-                                    public boolean handle(final Tweet tweet) throws HandlerException {
+                                    public boolean isOpen() {
+                                        return p.isOpen();
+                                    }
+
+                                    public void handle(final Tweet tweet) throws HandlerException {
                                         try {
                                             tc.clear();
                                             tc.commit();
@@ -247,7 +259,7 @@ public class ThroughputTesting {
                                             throw new HandlerException(e);
                                         }
 
-                                        return p.handle(tweet);
+                                        p.handle(tweet);
                                     }
                                 };
 
@@ -292,14 +304,18 @@ public class ThroughputTesting {
                         final TweetPersister p = new TweetPersister(store, null);
 
                         Handler<Tweet> h = new Handler<Tweet>() {
-                            public boolean handle(final Tweet tweet) throws HandlerException {
+                            public boolean isOpen() {
+                                return p.isOpen();
+                            }
+
+                            public void handle(final Tweet tweet) throws HandlerException {
                                 try {
                                     tc.clear();
                                     tc.commit();
                                 } catch (SailException e) {
                                     throw new HandlerException(e);
                                 }
-                                return p.handle(tweet);
+                                p.handle(tweet);
                             }
                         };
 
@@ -445,7 +461,11 @@ public class ThroughputTesting {
 
                         try {
                             Handler<Tweet> h = new Handler<Tweet>() {
-                                public boolean handle(final Tweet tweet) throws HandlerException {
+                                public boolean isOpen() {
+                                    return p.isOpen();
+                                }
+
+                                public void handle(final Tweet tweet) throws HandlerException {
                                     try {
                                         c.clear();
                                         c.commit();
@@ -453,7 +473,7 @@ public class ThroughputTesting {
                                         throw new HandlerException(e);
                                     }
 
-                                    return p.handle(tweet);
+                                    p.handle(tweet);
                                 }
                             };
 
@@ -644,9 +664,10 @@ public class ThroughputTesting {
             long before = new Date().getTime();
             for (long i = 0; i < chunkSize; i++) {
                 Tweet t = randomTweet();
-                if (!handler.handle(t)) {
+                if (!handler.isOpen()) {
                     return;
                 }
+                handler.handle(t);
             }
             long duration = new Date().getTime() - before;
             System.out.println("" + chunkSize + " tweets in " + duration + "ms (" + (chunkSize * 1000 / duration) + " tweets/s)");

@@ -39,7 +39,11 @@ public class PlacePersistenceHelper {
         this.asynchronous = asynchronous;
 
         placeMappingHandler = new Handler<Place>() {
-            public boolean handle(final Place p) throws HandlerException {
+            public boolean isOpen() {
+                return true;
+            }
+
+            public void handle(final Place p) throws HandlerException {
                 //System.out.println("received this place: " + p.getJson());
                 client.getStatistics().placeDereferenced(p);
 
@@ -62,8 +66,6 @@ public class PlacePersistenceHelper {
 
                     f.setParentFeature(parents);
                 }
-
-                return true;
             }
         };
 
@@ -86,7 +88,12 @@ public class PlacePersistenceHelper {
                 return placeMappingQueue.offer(p.getId());
             } else {
                 Place p2 = client.fetchPlace(p.getId());
-                return placeMappingHandler.handle(p2);
+                boolean b = placeMappingHandler.isOpen();
+                if (b) {
+                    placeMappingHandler.handle(p2);
+                }
+
+                return b;
             }
         } else {
             LOGGER.fine("familiar " + p.getPlaceType() + ": " + p);

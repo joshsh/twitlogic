@@ -27,10 +27,13 @@ public class CompoundAfterthoughtMatcher extends AfterthoughtMatcher {
         matched.value = false;
 
         Handler<Triple> singleMatchHandler = new Handler<Triple>() {
-            public boolean handle(final Triple triple) throws HandlerException {
+            public boolean isOpen() {
+                return true;
+            }
+
+            public void handle(final Triple triple) throws HandlerException {
                 context.handle(triple);
                 matched.value = true;
-                return true;
             }
         };
 

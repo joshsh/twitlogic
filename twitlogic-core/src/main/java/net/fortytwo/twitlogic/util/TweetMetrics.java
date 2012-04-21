@@ -112,7 +112,11 @@ sum(g[,2])/length(g[,2])
                                     = new TweetAnnotator(matcher, topicSniffer);
 
                             Handler<Tweet> adder = new Handler<Tweet>() {
-                                public boolean handle(final Tweet tweet) throws HandlerException {
+                                public boolean isOpen() {
+                                    return annotator.isOpen();
+                                }
+
+                                public void handle(final Tweet tweet) throws HandlerException {
                                     try {
                                         c.clear();
                                         c.commit();
@@ -120,7 +124,7 @@ sum(g[,2])/length(g[,2])
                                         throw new HandlerException(e);
                                     }
 
-                                    return annotator.handle(tweet);
+                                     annotator.handle(tweet);
                                 }
                             };
                             Handler<Tweet> deleter = new TweetDeleter(store);

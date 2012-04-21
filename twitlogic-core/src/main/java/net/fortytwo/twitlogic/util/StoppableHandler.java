@@ -17,8 +17,12 @@ public class StoppableHandler<T> implements Handler<T> {
         this.baseHandler = baseHandler;
     }
 
-    public boolean handle(T t) throws HandlerException {
-        return !stopped && baseHandler.handle(t);
+    public boolean isOpen() {
+        return !stopped && baseHandler.isOpen();
+    }
+
+    public void handle(T t) throws HandlerException {
+        baseHandler.handle(t);
     }
 
     public void stop() {

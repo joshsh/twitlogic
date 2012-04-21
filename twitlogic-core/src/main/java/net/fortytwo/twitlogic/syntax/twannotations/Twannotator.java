@@ -20,11 +20,11 @@ public class Twannotator implements Handler<Tweet> {
     private final Map<String, TwannotationRdfizer> rdfizersByFormat;
 
     public Twannotator() {
-         rdfizersByFormat = new HashMap<String, TwannotationRdfizer>();
+        rdfizersByFormat = new HashMap<String, TwannotationRdfizer>();
     }
 
     public void registerTwannotationRdfizer(final TwannotationRdfizer rdfizer) {
-         TwannotationRdfizer pre = rdfizersByFormat.get(rdfizer.getFormat());
+        TwannotationRdfizer pre = rdfizersByFormat.get(rdfizer.getFormat());
         if (null != pre) {
             LOGGER.warning("An rdfizer for type '"
                     + rdfizer.getFormat()
@@ -34,7 +34,12 @@ public class Twannotator implements Handler<Tweet> {
         rdfizersByFormat.put(rdfizer.getFormat(), rdfizer);
     }
 
-    public boolean handle(final Tweet tweet) throws HandlerException {
+    public boolean isOpen() {
+        // TODO
+        return true;
+    }
+
+    public void handle(final Tweet tweet) throws HandlerException {
         try {
             if (null != tweet.getTwannotations()) {
                 for (int i = 0; i < tweet.getTwannotations().length(); i++) {
@@ -46,16 +51,15 @@ public class Twannotator implements Handler<Tweet> {
                         LOGGER.warning("no rdfizer has been registered for type '" + key + "'");
                     } else {
                         JSONObject obj = json.getJSONObject(key);
-                        if (!rdfizer.handle(obj)) {
-                            return false;
+                        if (!rdfizer.isOpen()) {
+                            break;
                         }
+                        rdfizer.handle(obj);
                     }
                 }
             }
         } catch (JSONException e) {
             throw new HandlerException(e);
         }
-
-        return true;
     }
 }

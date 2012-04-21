@@ -67,8 +67,12 @@ public class TweetPersister implements Handler<Tweet> {
         storeConnection.close();
     }
 
+    public boolean isOpen() {
+        return true;
+    }
+
     // Note: synchronization may be necessary for use with Twitter4j
-    public synchronized boolean handle(final Tweet tweet) throws HandlerException {
+    public synchronized void handle(final Tweet tweet) throws HandlerException {
         LOGGER.fine(tweet.describe());
 
         storeConnection.getElmoManager().getTransaction().begin();
@@ -188,8 +192,6 @@ public class TweetPersister implements Handler<Tweet> {
                 }
             }
         }
-
-        return true;
     }
 
     private Statement toRDF(final Triple triple,

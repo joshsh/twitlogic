@@ -67,4 +67,7 @@ public interface TwitterClient {
     TwitterAPILimits getLimits() throws TwitterClientException;
 
     TweetStatistics getStatistics();
+
+    // Close any Twitter streams currently open.
+    void stop();
 }
