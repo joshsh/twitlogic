@@ -67,15 +67,16 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
         TwitLogic.setConfiguration(config);
 
         final Handler<Dataset> handler = new Handler<Dataset>() {
-            @Override
-            public boolean handle(Dataset dataset) throws HandlerException {
+            public boolean isOpen() {
+                return true;
+            }
+
+            public void handle(Dataset dataset) throws HandlerException {
                 try {
                     handleDataset(dataset);
                 } catch (LocalFailure e) {
                     throw new HandlerException(e);
                 }
-
-                return true;
             }
         };
 
@@ -155,21 +156,22 @@ public class TwitLogicPubsubProvider extends PubsubProvider<Value, Dataset> {
                 try {
                     Handler<Tweet> handler = new Handler<Tweet>() {
                         @Override
-                        public boolean handle(final Tweet tweet) throws HandlerException {
+                        public boolean isOpen() {
+                            return persister.isOpen() && datasetHandler.isOpen();
+                        }
+
+                        @Override
+                        public void handle(final Tweet tweet) throws HandlerException {
                             System.out.println("got this tweet: " + tweet);
 
                             buffer.clear();
-                            boolean b = persister.handle(tweet);
+                            persister.handle(tweet);
 
                             if (0 < buffer.size()) {
                                 Collection<Statement> c = new LinkedList<Statement>();
                                 c.addAll(buffer);
-                                if (!datasetHandler.handle(new Dataset(c))) {
-                                    return false;
-                                }
+                                datasetHandler.handle(new Dataset(c));
                             }
-
-                            return b;
                         }
                     };
 

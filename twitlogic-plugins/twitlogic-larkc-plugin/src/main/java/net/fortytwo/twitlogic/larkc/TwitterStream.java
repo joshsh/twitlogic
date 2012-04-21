@@ -125,7 +125,11 @@ public class TwitterStream extends StreamingSetOfStatements {
 
                 try {
                     Handler<Tweet> adder = new Handler<Tweet>() {
-                        public boolean handle(final Tweet tweet) throws HandlerException {
+                        public boolean isOpen() {
+                            return !closed && annotator.isOpen();
+                        }
+
+                        public void handle(final Tweet tweet) throws HandlerException {
                             try {
                                 c.clear();
                                 c.commit();
@@ -133,7 +137,7 @@ public class TwitterStream extends StreamingSetOfStatements {
                                 throw new HandlerException(e);
                             }
 
-                            return !closed && annotator.handle(tweet);
+                            annotator.handle(tweet);
                         }
                     };
 
