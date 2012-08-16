@@ -175,12 +175,28 @@ public class Twitter4jClient implements TwitterClient {
         TwitterStream stream = streamFactory.getInstance();
         stream.addListener(new InnerStatusHandler(stream, addHandler, deleteHandler));
         stream.filter(query);
+
+        waitIndefinitely();
+    }
+
+    private final Object m = "";
+
+    private void waitIndefinitely() throws TwitterClientException {
+        synchronized (m) {
+            try {
+                m.wait();
+            } catch (InterruptedException e) {
+                throw new TwitterClientException(e);
+            }
+        }
     }
 
     public void processSampleStream(Handler<Tweet> addHandler, Handler<Tweet> deleteHandler) throws TwitterClientException {
         TwitterStream stream = streamFactory.getInstance();
         stream.addListener(new InnerStatusHandler(stream, addHandler, deleteHandler));
         stream.sample();
+
+        waitIndefinitely();
     }
 
     public void requestUserTimeline(User user, Handler<Tweet> handler) throws TwitterClientException {

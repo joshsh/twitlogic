@@ -229,11 +229,15 @@ public class TweetStore {
             c.close();
         }
 
+        LOGGER.info("shutting down triple store");
+
         try {
             sail.shutDown();
         } catch (SailException e) {
             throw new TweetStoreException(e);
         }
+
+        LOGGER.info("done with shutdown");
     }
 
     ////////////////////////////////////////////////////////////////////////////

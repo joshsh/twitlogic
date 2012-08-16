@@ -71,6 +71,8 @@ public class TwitLogicServerDemo {
         TweetStore store = new TweetStore();
         store.initialize();
 
+        boolean exitedNormally = false;
+
         try {
             // Launch linked data server.
             store.startServer();
@@ -101,7 +103,13 @@ public class TwitLogicServerDemo {
             TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), annotator);
             TweetDeleter d = new TweetDeleter(store);
             client.processFilterStream(users, terms, rLogger, d, 0);
+
+            exitedNormally = true;
         } finally {
+            if (!exitedNormally) {
+                LOGGER.warning("exited abnormally");
+            }
+
             store.shutDown();
         }
     }

@@ -1,6 +1,5 @@
 package net.fortytwo.twitlogic.util.misc;
 
-import net.fortytwo.sesametools.nquads.NQuadsFormat;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -11,6 +10,7 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.nativerdf.NativeStore;
 
@@ -60,7 +60,7 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
                 rc.clear();
                 rc.commit();
 
-                rc.add(new File("/tmp/twitlogic-dump.nq"), "", NQuadsFormat.NQUADS);
+                rc.add(new File("/tmp/twitlogic-dump.nq"), "", RDFFormat.NQUADS);
                 rc.commit();
 
                 ////////////////////////////////////////////////////////////////
