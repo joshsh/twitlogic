@@ -1,7 +1,7 @@
 package net.fortytwo.twitlogic.persistence.sail;
 
-import com.tinkerpop.blueprints.pgm.impls.neo4j.Neo4jGraph;
-import com.tinkerpop.blueprints.pgm.oupls.sail.GraphSail;
+import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
+import com.tinkerpop.blueprints.oupls.sail.GraphSail;
 import net.fortytwo.sesametools.nquads.NQuadsParser;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.SailFactory;
@@ -37,7 +37,7 @@ public class Neo4jSailFactory extends SailFactory {
 
         LOGGER.info("instantiating GraphSail-on-Neo4j in directory: " + dir);
         Neo4jGraph graph = new Neo4jGraph(dir.getAbsolutePath());
-        graph.setMaxBufferSize(1);
+        //graph.setMaxBufferSize(1);
         Sail sail = new GraphSail(graph);
         sail.initialize();
 

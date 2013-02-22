@@ -4,18 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.fortytwo.twitlogic</groupId>
     <artifactId>twitlogic-larkc-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>TwitLogic LarKC Plugin</name>
+    <name>TwitLogic LarKC plugin</name>
     <description>LarKC plugin for the TwitLogic syndication tool</description>
 
     <parent>
         <groupId>net.fortytwo.twitlogic</groupId>
         <artifactId>twitlogic-plugins</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <repositories>

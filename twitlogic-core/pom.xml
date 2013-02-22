@@ -4,9 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.fortytwo.twitlogic</groupId>
     <artifactId>twitlogic-core</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>TwitLogic Core</name>
     <description>Java components for real-time integration of Twitter data with the Semantic Web</description>
@@ -14,8 +12,7 @@
     <parent>
         <groupId>net.fortytwo.twitlogic</groupId>
         <artifactId>twitlogic-all</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <repositories>
@@ -56,7 +53,7 @@
         <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-stream</artifactId>
-            <version>2.2.5-SNAPSHOT</version>
+            <version>2.2.5</version>
         </dependency>
 
         <!-- Formatting and parsing -->
@@ -145,12 +142,12 @@
         <dependency>
             <groupId>org.openrdf.elmo</groupId>
             <artifactId>elmo-api</artifactId>
-            <version>1.5</version>
+            <version>${elmo.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.elmo</groupId>
             <artifactId>elmo-sesame</artifactId>
-            <version>1.5</version>
+            <version>${elmo.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -161,34 +158,34 @@
         <dependency>
             <groupId>org.openrdf.elmo</groupId>
             <artifactId>elmo-owl</artifactId>
-            <version>1.5</version>
+            <version>${elmo.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.6.1</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
+            <version>${log4j.version}</version>
         </dependency>
 
         <!-- Additional Sails -->
         <dependency>
             <groupId>com.tinkerpop.blueprints</groupId>
             <artifactId>blueprints-graph-sail</artifactId>
-            <version>${blueprints.version}</version>
+            <version>${tinkerpop.version}</version>
         </dependency>
         <dependency>
             <groupId>com.tinkerpop.blueprints</groupId>
             <artifactId>blueprints-neo4j-graph</artifactId>
-            <version>${blueprints.version}</version>
+            <version>${tinkerpop.version}</version>
         </dependency>
         <!--<dependency>
             <groupId>com.franz.ag</groupId>
@@ -202,34 +199,34 @@
         </dependency>
 
         <!-- temporary -->
-        <dependency>
+        <!--<dependency>
             <groupId>net.contrapunctus</groupId>
             <artifactId>lzma</artifactId>
             <version>4.63-jio-0.94</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>net.fortytwo</groupId>
             <artifactId>sparql-osc</artifactId>
-            <version>0.2</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>net.fortytwo</groupId>
-            <artifactId>rdfflow</artifactId>
+            <groupId>net.fortytwo.ripple</groupId>
+            <artifactId>ripple-flow-rdf</artifactId>
             <version>${ripple.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>reposail</artifactId>
+            <artifactId>repository-sail</artifactId>
             <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>replay</artifactId>
+            <artifactId>replay-sail</artifactId>
             <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>rdftransaction</artifactId>
+            <artifactId>rdf-transaction-sail</artifactId>
             <version>${sesametools.version}</version>
         </dependency>
         <dependency>

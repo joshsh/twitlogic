@@ -1,9 +1,11 @@
 package net.fortytwo.twitlogic.util.misc;
 
+/*
 import net.contrapunctus.lzma.LzmaInputStream;
 import net.contrapunctus.lzma.LzmaOutputStream;
 import org.jvcompress.lzo.MiniLZO;
 import org.jvcompress.util.MInt;
+*/
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -197,28 +199,33 @@ public class Compression {
 
     public static byte[] compress(final byte[] input,
                                   final Algorithm algo) throws IOException {
-        if (Algorithm.MINILZO == algo) {
-            MInt mint = new MInt();
-            byte[] out = new byte[input.length];
-            int[] dict = new int[128 * 1024];
-            Arrays.fill(dict, 0);
-            MiniLZO.lzo1x_1_compress(input, input.length, out, mint, dict);
-            return Arrays.copyOfRange(out, 0, mint.v);
-        } else if (Algorithm.DEFLATE == algo) {
+
+        if (Algorithm.DEFLATE == algo) {
             byte[] output = new byte[input.length];
             Deflater compresser = new Deflater();
             compresser.setInput(input);
             compresser.finish();
             int compressedDataLength = compresser.deflate(output);
             return Arrays.copyOfRange(output, 0, compressedDataLength);
+            /*
+        } else if (Algorithm.MINILZO == algo) {
+            MInt mint = new MInt();
+            byte[] out = new byte[input.length];
+            int[] dict = new int[128 * 1024];
+            Arrays.fill(dict, 0);
+            MiniLZO.lzo1x_1_compress(input, input.length, out, mint, dict);
+            return Arrays.copyOfRange(out, 0, mint.v);
+            */
         } else {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try {
                 OutputStream os;
                 switch (algo) {
-                    case LZMA:
-                        os = new LzmaOutputStream(bos);
+                    /*
+                case LZMA:
+                    os = new LzmaOutputStream(bos);
                         break;
+                    */
                     case GZIP:
                         os = new GZIPOutputStream(bos);
                         break;
@@ -241,12 +248,8 @@ public class Compression {
 
     public static byte[] decompress(final byte[] input,
                                     final Algorithm algo) throws IOException {
-        if (Algorithm.MINILZO == algo) {
-            byte[] out = new byte[10 * input.length];
-            MInt mint = new MInt();
-            MiniLZO.lzo1x_decompress(input, input.length, out, mint);
-            return Arrays.copyOfRange(out, 0, mint.v);
-        } else if (Algorithm.DEFLATE == algo) {
+
+         if (Algorithm.DEFLATE == algo) {
             // Decompress the bytes
             Inflater decompresser = new Inflater();
             decompresser.setInput(input, 0, input.length);
@@ -259,15 +262,24 @@ public class Compression {
             }
             decompresser.end();
             return Arrays.copyOfRange(result, 0, resultLength);
+             /*
+         } else if (Algorithm.MINILZO == algo) {
+             byte[] out = new byte[10 * input.length];
+             MInt mint = new MInt();
+             MiniLZO.lzo1x_decompress(input, input.length, out, mint);
+             return Arrays.copyOfRange(out, 0, mint.v);
+             */
         } else {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try {
                 ByteArrayInputStream bis = new ByteArrayInputStream(input);
                 InputStream is;
                 switch (algo) {
+                    /*
                     case LZMA:
                         is = new LzmaInputStream(bis);
                         break;
+                    */
                     case GZIP:
                         is = new GZIPInputStream(bis);
                         break;
