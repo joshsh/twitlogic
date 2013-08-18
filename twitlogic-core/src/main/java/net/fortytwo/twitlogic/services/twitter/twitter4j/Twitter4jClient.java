@@ -12,6 +12,7 @@ import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.services.twitter.TwitterCredentials;
 import twitter4j.FilterQuery;
 import twitter4j.PagableResponseList;
+import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
@@ -118,11 +119,20 @@ public class Twitter4jClient implements TwitterClient {
 
     private List<UserList> getUserLists(final User user) throws TwitterClientException {
         LOGGER.info("finding lists of user " + user);
+
+        try {
+            return twitter.getUserLists(user.getScreenName());
+        } catch (TwitterException e) {
+            throw new TwitterClientException(e);
+        }
+
+        /*
         return asList(new ListGenerator<UserList>() {
             public PagableResponseList getList(long cursor) throws TwitterException {
+                twitter.getUserLists)
                 return twitter.getUserLists(user.getScreenName(), cursor);
             }
-        });
+        });*/
     }
 
     public void addToList(User user, String listId, String userId) throws TwitterClientException {
@@ -275,6 +285,10 @@ public class Twitter4jClient implements TwitterClient {
 
         public void onScrubGeo(long l, long l1) {
             LOGGER.warning("geo-scrubbing is not yet supported");
+        }
+
+        public void onStallWarning(StallWarning stallWarning) {
+            LOGGER.warning("stall warning; Twitter client may be disconnected");
         }
 
         public void onException(Exception e) {

@@ -37,17 +37,6 @@
 			<enabled>true</enabled>
 		</snapshots>
 	</repository>
-        <repository>
-            <id>twitter4j.org</id>
-            <name>twitter4j.org Repository</name>
-            <url>http://twitter4j.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -55,7 +44,7 @@
         <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-stream</artifactId>
-            <version>2.2.5</version>
+            <version>3.0.3</version>
         </dependency>
 
         <!-- Formatting and parsing -->
