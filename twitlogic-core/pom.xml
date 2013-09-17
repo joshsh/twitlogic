@@ -68,7 +68,13 @@
         <dependency>
             <groupId>oauth.signpost</groupId>
             <artifactId>signpost-commonshttp4</artifactId>
-            <version>1.2.1.1</version>
+            <version>1.2.1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--<dependency>
             <groupId>net.fortytwo.rdfagents</groupId>
