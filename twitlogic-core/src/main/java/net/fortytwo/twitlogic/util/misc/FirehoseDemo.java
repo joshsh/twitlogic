@@ -141,7 +141,7 @@ public class FirehoseDemo {
                             Set<String> terms = TwitLogic.findTrackTerms();
 
                             if (0 < users.size() || 0 < terms.size()) {
-                                client.processFilterStream(users, terms, rLogger, deleter, 0);
+                                client.processFilterStream(users, terms, null, rLogger, deleter, 0);
                             } else {
                                 client.processSampleStream(rLogger, deleter);
                             }

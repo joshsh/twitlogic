@@ -52,6 +52,7 @@ public interface TwitterClient {
 
     void processFilterStream(Collection<User> users,
                              Collection<String> terms,
+                             double[][] locations,
                              Handler<Tweet> addHandler,
                              Handler<Tweet> deleteHandler,
                              int previousStatusCount) throws TwitterClientException;

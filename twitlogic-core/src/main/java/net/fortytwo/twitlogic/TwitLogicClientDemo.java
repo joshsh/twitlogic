@@ -77,6 +77,7 @@ public class TwitLogicClientDemo {
 
             Set<User> users = TwitLogic.findFollowList(client);
             Set<String> terms = TwitLogic.findTrackTerms();
+            double [][]locations = TwitLogic.findLocations();
 
 //            GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
 //            //gatherHistoricalTweets(store, client, users, cal.getTime());
@@ -86,7 +87,7 @@ public class TwitLogicClientDemo {
 
             ExampleTweetHandler h = new ExampleTweetHandler();
 //            client.processFilterStream(users, terms, rLogger, d, 0);
-            client.processFilterStream(users, terms, h, d, 0);
+            client.processFilterStream(users, terms, locations, h, d, 0);
             //client.processSampleStream(rLogger, d);
         } finally {
             store.shutDown();

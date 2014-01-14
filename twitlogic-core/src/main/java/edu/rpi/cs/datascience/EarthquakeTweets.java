@@ -98,7 +98,7 @@ public class EarthquakeTweets {
                 Set<User> users = new HashSet<User>();
                 Set<String> terms = new HashSet<String>();
                 terms.add("earthquake");
-                client.processFilterStream(users, terms, statusHandler, d, 0);
+                client.processFilterStream(users, terms, null, statusHandler, d, 0);
 
                 System.out.println("Done.");
             } finally {

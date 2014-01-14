@@ -59,6 +59,7 @@ public class TwitLogic {
             SERVER_STATICCONTENTDIRECTORY = "net.fortytwo.twitlogic.server.staticContentDirectory",
             LOGGING_STATSINTERVAL = "net.fortytwo.twitlogic.logging.statsInterval",
             TRACKTERMS = "net.fortytwo.twitlogic.trackTerms",
+            LOCATIONS = "net.fortytwo.twitlogic.locations",
             TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitter.accessToken",
             TWITTER_ACCESS_TOKEN_SECRET = "net.fortytwo.twitlogic.twitter.accessTokenSecret",
             TWITTER_CONSUMER_KEY = "net.fortytwo.twitlogic.twitter.consumerKey",
@@ -221,6 +222,42 @@ public class TwitLogic {
         }
 
         return terms;
+    }
+
+    public static double[][] findLocations() throws PropertyException {
+        TypedProperties props = TwitLogic.getConfiguration();
+
+        Set<String> matches = new LinkedHashSet<String>();
+        for (String key : props.stringPropertyNames()) {
+            if (key.startsWith(TwitLogic.LOCATIONS)) {
+                String listVal = props.getString(key);
+                String[] these = listVal.split(",");
+                for (String t : these) {
+                    t = t.trim();
+                    if (0 < t.length()) {
+                        matches.add(t);
+                    }
+                }
+            }
+        }
+
+        if (matches.size() > 0) {
+            double[][] results = new double[matches.size()][2];
+            int i = 0;
+            for (String s : matches) {
+                String[] a = s.split(";");
+                if (2 != a.length) {
+                    throw new PropertyException("location value '" + s + "' does not have the format long;lat");
+                }
+                results[i][0] = Double.valueOf(a[0]);
+                results[i][1] = Double.valueOf(a[1]);
+                i++;
+            }
+
+            return results;
+        } else {
+            return new double[][]{};
+        }
     }
 
     // Note: for now, lists are not persisted in any way

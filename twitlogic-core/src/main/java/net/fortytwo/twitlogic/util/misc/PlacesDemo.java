@@ -71,7 +71,7 @@ public class PlacesDemo {
             Set<String> terms = TwitLogic.findTrackTerms();
 
             if (0 < users.size() || 0 < terms.size()) {
-                client.processFilterStream(users, terms, rLogger, d, 0);
+                client.processFilterStream(users, terms, null, rLogger, d, 0);
             } else {
                 client.processSampleStream(rLogger, d);
             }

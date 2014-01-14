@@ -157,6 +157,7 @@ public class Twitter4jClient implements TwitterClient {
 
     public void processFilterStream(final Collection<User> users,
                                     final Collection<String> terms,
+                                    final double[][] locations,
                                     final Handler<Tweet> addHandler,
                                     final Handler<Tweet> deleteHandler,
                                     final int previousStatusCount) throws TwitterClientException {
@@ -164,23 +165,50 @@ public class Twitter4jClient implements TwitterClient {
             throw new UnsupportedOperationException("gathering of historical tweets is not yet supported in the Twitter4j client");
         }
 
+        int i;
+
         FilterQuery query = new FilterQuery();
 
-        long[] follow = new long[users.size()];
-        int i = 0;
-        for (User u : users) {
-            follow[i] = u.getId();
-            i++;
+        if (users.size() > 0) {
+            long[] follow = new long[users.size()];
+            i = 0;
+            for (User u : users) {
+                follow[i] = u.getId();
+                i++;
+            }
+            query.follow(follow);
         }
-        query.follow(follow);
 
-        String[] track = new String[terms.size()];
-        i = 0;
-        for (String s : terms) {
-            track[i] = s;
-            i++;
+        if (terms.size() > 0) {
+            String[] track = new String[terms.size()];
+            i = 0;
+            for (String s : terms) {
+                track[i] = s;
+                i++;
+            }
+            query.track(track);
         }
-        query.track(track);
+
+        if (null != locations) {
+            //query.locations(locations);
+
+            /*
+            double[][] loc = new double[1][2];
+            loc[0][0] = 40.714623d;
+            loc[0][1] = -74.006605d;
+            */
+            //double[][] loc = { { 51.5072d, 0.1275d } };
+            //double[][] loc = { { 40.714623d, -74.006605d } };
+            //double[][] loc = { { 40.714623d, -74.006605d },  { 42.3583d, -71.0603d } };
+
+            // London: 51.280430;-0.563160, 51.683979;0.278970
+            // England: 49.871159;-6.379880, 55.811741;1.768960
+
+//            double [][] loc = {{ 51.280430, -0.563160 },{ 51.683979, 0.278970 }}; // london
+            double[][] loc = {{49.871159, -6.379880}, {55.811741, 1.768960}}; // england
+
+            query.locations(loc);
+        }
 
         TwitterStream stream = streamFactory.getInstance();
         stream.addListener(new InnerStatusHandler(stream, addHandler, deleteHandler));
@@ -251,6 +279,10 @@ public class Twitter4jClient implements TwitterClient {
         }
 
         public void onStatus(Status status) {
+            if (null == addHandler) {
+                return;
+            }
+
             if (!addHandler.isOpen()) {
                 stream.shutdown();
                 return;
@@ -265,6 +297,10 @@ public class Twitter4jClient implements TwitterClient {
         }
 
         public void onDeletionNotice(StatusDeletionNotice notice) {
+            if (null == deleteHandler) {
+                return;
+            }
+
             if (!deleteHandler.isOpen()) {
                 stream.shutdown();
                 return;

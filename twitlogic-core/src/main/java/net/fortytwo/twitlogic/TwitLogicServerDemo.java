@@ -102,7 +102,7 @@ public class TwitLogicServerDemo {
 
             TweetReceivedLogger rLogger = new TweetReceivedLogger(client.getStatistics(), annotator);
             TweetDeleter d = new TweetDeleter(store);
-            client.processFilterStream(users, terms, rLogger, d, 0);
+            client.processFilterStream(users, terms, null, rLogger, d, 0);
 
             exitedNormally = true;
         } finally {

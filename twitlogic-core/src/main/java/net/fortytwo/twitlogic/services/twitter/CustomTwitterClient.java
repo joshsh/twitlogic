@@ -186,6 +186,7 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
 
     public void processFilterStream(final Collection<User> users,
                                     final Collection<String> terms,
+                                    final double[][] location,
                                     final Handler<Tweet> addHandler,
                                     final Handler<Tweet> deleteHandler,
                                     final int previousStatusCount) throws TwitterClientException {
