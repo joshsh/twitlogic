@@ -15,6 +15,8 @@ import java.util.Set;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public interface TwitterClient {
+    static final int MAX_SEARCH_COUNT = 100;
+
     void processFollowers(User user,
                           Handler<User> handler) throws TwitterClientException, HandlerException;
 
@@ -39,16 +41,17 @@ public interface TwitterClient {
     List<User> getListMembers(User user,
                               String listId) throws TwitterClientException;
 
-    void addToList(final User user,
-                   final String listId,
-                   final String userId) throws TwitterClientException;
+    void addToList(User user,
+                   String listId,
+                   String userId) throws TwitterClientException;
 
-    User findUserInfo(final String screenName) throws TwitterClientException;
+    User findUserInfo(String screenName) throws TwitterClientException;
 
-    void updateStatus(final Tweet tweet) throws TwitterClientException;
+    void updateStatus(Tweet tweet) throws TwitterClientException;
 
-    void search(final String term,
-                final Handler<Tweet> handler) throws TwitterClientException;
+    void search(String term,
+                GeoDisc geo,
+                Handler<Tweet> handler) throws TwitterClientException, HandlerException;
 
     void processFilterStream(Collection<User> users,
                              Collection<String> terms,
@@ -57,13 +60,13 @@ public interface TwitterClient {
                              Handler<Tweet> deleteHandler,
                              int previousStatusCount) throws TwitterClientException;
 
-    void processSampleStream(final Handler<Tweet> addHandler,
-                             final Handler<Tweet> deleteHandler) throws TwitterClientException;
+    void processSampleStream(Handler<Tweet> addHandler,
+                             Handler<Tweet> deleteHandler) throws TwitterClientException;
 
-    void requestUserTimeline(final User user,
-                             final Handler<Tweet> handler) throws TwitterClientException;
+    void requestUserTimeline(User user,
+                             Handler<Tweet> handler) throws TwitterClientException, HandlerException;
 
-    Place fetchPlace(final String id) throws TwitterClientException;
+    Place fetchPlace(String id) throws TwitterClientException;
 
     TwitterAPILimits getLimits() throws TwitterClientException;
 
@@ -71,4 +74,47 @@ public interface TwitterClient {
 
     // Close any Twitter streams currently open.
     void stop();
+
+    public class GeoDisc {
+        private final double latitude;
+        private final double longitude;
+        private final double radius;
+
+        public GeoDisc(double latitude, double longitude, double radius) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.radius = radius;
+        }
+
+        public GeoDisc(final String geoStr) {
+            String[] a = geoStr.split(",");
+            if (3 != a.length) {
+                throw new IllegalArgumentException("badly-formatted geo disk: " + geoStr);
+            }
+
+            try {
+                latitude = Double.valueOf(a[0].trim());
+                longitude = Double.valueOf(a[1].trim());
+                radius = Double.valueOf(a[2].trim());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("badly-formatted geo disk: " + geoStr);
+            }
+
+            if (latitude > 90 || latitude < -90 || longitude < -180 || longitude > 180 || radius < 0 || radius > 20038) {
+                throw new IllegalArgumentException("badly-formatted geo disk: " + geoStr);
+            }
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public double getRadius() {
+            return radius;
+        }
+    }
 }

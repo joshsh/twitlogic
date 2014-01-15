@@ -77,7 +77,7 @@ public class TwitLogicClientDemo {
 
             Set<User> users = TwitLogic.findFollowList(client);
             Set<String> terms = TwitLogic.findTrackTerms();
-            double [][]locations = TwitLogic.findLocations();
+            double [][]locations = TwitLogic.findGeoBoxes();
 
 //            GregorianCalendar cal = new GregorianCalendar(2010, GregorianCalendar.MAY, 1);
 //            //gatherHistoricalTweets(store, client, users, cal.getTime());

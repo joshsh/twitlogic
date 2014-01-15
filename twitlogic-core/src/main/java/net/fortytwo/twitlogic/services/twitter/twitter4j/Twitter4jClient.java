@@ -11,7 +11,10 @@ import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.services.twitter.TwitterCredentials;
 import twitter4j.FilterQuery;
+import twitter4j.GeoLocation;
 import twitter4j.PagableResponseList;
+import twitter4j.Query;
+import twitter4j.QueryResult;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
@@ -151,8 +154,42 @@ public class Twitter4jClient implements TwitterClient {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public void search(String term, Handler<Tweet> handler) throws TwitterClientException {
-        throw new UnsupportedOperationException("not yet implemented");
+    public void search(final String term,
+                       final GeoDisc geo,
+                       final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
+        Query query = new Query(term);
+        query.setCount(MAX_SEARCH_COUNT);
+
+        if (null != geo) {
+            GeoLocation loc = new GeoLocation(geo.getLatitude(), geo.getLongitude());
+            query.setGeoCode(loc, geo.getRadius(), Query.KILOMETERS);
+        }
+
+        QueryResult result = null;
+
+        do {
+            query = null == result ? query : result.nextQuery();
+            try {
+                LOGGER.info("requesting search results");
+                result = twitter.search(query);
+            } catch (TwitterException e) {
+                throw new TwitterClientException(e);
+            }
+
+            for (Status status : result.getTweets()) {
+                if (!handler.isOpen()) {
+                    LOGGER.info("handler closed");
+                    return;
+                }
+
+                handler.handle(new Tweet(status));
+            }
+            if (result.hasNext()) {
+                System.out.println("there are more results!");
+            } else {
+                System.out.println("no more results");
+            }
+        } while (result.hasNext());
     }
 
     public void processFilterStream(final Collection<User> users,
@@ -190,24 +227,14 @@ public class Twitter4jClient implements TwitterClient {
         }
 
         if (null != locations) {
-            //query.locations(locations);
+            query.locations(locations);
 
             /*
-            double[][] loc = new double[1][2];
-            loc[0][0] = 40.714623d;
-            loc[0][1] = -74.006605d;
-            */
-            //double[][] loc = { { 51.5072d, 0.1275d } };
-            //double[][] loc = { { 40.714623d, -74.006605d } };
-            //double[][] loc = { { 40.714623d, -74.006605d },  { 42.3583d, -71.0603d } };
-
-            // London: 51.280430;-0.563160, 51.683979;0.278970
-            // England: 49.871159;-6.379880, 55.811741;1.768960
-
-//            double [][] loc = {{ 51.280430, -0.563160 },{ 51.683979, 0.278970 }}; // london
+            double [][] loc = {{ 51.280430, -0.563160 },{ 51.683979, 0.278970 }}; // london
             double[][] loc = {{49.871159, -6.379880}, {55.811741, 1.768960}}; // england
 
             query.locations(loc);
+            */
         }
 
         TwitterStream stream = streamFactory.getInstance();
@@ -237,8 +264,22 @@ public class Twitter4jClient implements TwitterClient {
         waitIndefinitely();
     }
 
-    public void requestUserTimeline(User user, Handler<Tweet> handler) throws TwitterClientException {
-        throw new UnsupportedOperationException("not yet implemented");
+    public void requestUserTimeline(final User user,
+                                    final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
+        List<Status> statuses;
+        try {
+            statuses = twitter.getUserTimeline(user.getScreenName());
+        } catch (TwitterException e) {
+            throw new TwitterClientException(e);
+        }
+
+        for (Status status : statuses) {
+            if (!handler.isOpen()) {
+                break;
+            }
+
+            handler.handle(new Tweet(status));
+        }
     }
 
     public Place fetchPlace(String id) throws TwitterClientException {

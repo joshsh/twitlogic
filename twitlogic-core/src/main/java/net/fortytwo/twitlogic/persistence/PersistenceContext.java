@@ -269,6 +269,16 @@ public class PersistenceContext {
                 : null;
     }
 
+    public UserAccount find(final User user) {
+        Entity e = manager.find(new QName(uriOf(user)));
+        return null == e
+                ? null
+
+                : e instanceof UserAccount
+                ? (UserAccount) e
+                : null;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     //private org.openrdf.concepts.rdfs.Class classForPlaceType(final PlaceType type) {

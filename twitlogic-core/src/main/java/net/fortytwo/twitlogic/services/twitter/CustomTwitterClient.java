@@ -242,7 +242,12 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
     // TODO: paging
 
     public void search(final String term,
+                       final GeoDisc geo,
                        final Handler<Tweet> handler) throws TwitterClientException {
+        if (null != geo) {
+            throw new UnsupportedOperationException("sorry, geocodes are not supported in the custom Twitter client");
+        }
+
         HttpGet request = new HttpGet(TwitterAPI.SEARCH_URL + ".json"
                 + "?q=" + term);
 

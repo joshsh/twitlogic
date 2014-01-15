@@ -59,7 +59,8 @@ public class TwitLogic {
             SERVER_STATICCONTENTDIRECTORY = "net.fortytwo.twitlogic.server.staticContentDirectory",
             LOGGING_STATSINTERVAL = "net.fortytwo.twitlogic.logging.statsInterval",
             TRACKTERMS = "net.fortytwo.twitlogic.trackTerms",
-            LOCATIONS = "net.fortytwo.twitlogic.locations",
+            GEOBOX = "net.fortytwo.twitlogic.geobox",
+            GEODISC = "net.fortytwo.twitlogic.geodisc",
             TWITTER_ACCESS_TOKEN = "net.fortytwo.twitlogic.twitter.accessToken",
             TWITTER_ACCESS_TOKEN_SECRET = "net.fortytwo.twitlogic.twitter.accessTokenSecret",
             TWITTER_CONSUMER_KEY = "net.fortytwo.twitlogic.twitter.consumerKey",
@@ -224,12 +225,20 @@ public class TwitLogic {
         return terms;
     }
 
-    public static double[][] findLocations() throws PropertyException {
+    public static TwitterClient.GeoDisc findGeoDisc() throws PropertyException {
+        TypedProperties props = TwitLogic.getConfiguration();
+
+        String s = props.getString(TwitLogic.GEODISC, null);
+
+        return null == s ? null : new TwitterClient.GeoDisc(s);
+    }
+
+    public static double[][] findGeoBoxes() throws PropertyException {
         TypedProperties props = TwitLogic.getConfiguration();
 
         Set<String> matches = new LinkedHashSet<String>();
         for (String key : props.stringPropertyNames()) {
-            if (key.startsWith(TwitLogic.LOCATIONS)) {
+            if (key.startsWith(TwitLogic.GEOBOX)) {
                 String listVal = props.getString(key);
                 String[] these = listVal.split(",");
                 for (String t : these) {
