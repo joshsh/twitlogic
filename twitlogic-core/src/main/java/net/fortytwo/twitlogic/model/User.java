@@ -4,6 +4,8 @@ import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
@@ -54,6 +56,9 @@ public class User implements Resource {
     //private final Boolean verified;
 
     private final Person heldBy;
+
+    private Collection<User> followers;
+    private Collection<User> followees;
 
     public User(final twitter4j.User u) {
         //System.out.println("user: " + u);
@@ -196,6 +201,22 @@ public class User implements Resource {
 
     public Person getHeldBy() {
         return heldBy;
+    }
+
+    public Collection<User> getFollowers() {
+        return followers;
+    }
+
+    public Collection<User> getFollowees() {
+        return followees;
+    }
+
+    public void setFollowers(final Collection<User> followers) {
+        this.followers = followers;
+    }
+
+    public void setFollowees(final Collection<User> followees) {
+        this.followees = followees;
     }
 
     public String toString() {

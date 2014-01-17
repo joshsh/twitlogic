@@ -34,7 +34,7 @@ public interface TwitterClient {
                                      int page,
                                      Handler<Tweet> handler) throws TwitterClientException, HandlerException;
 
-    List<User> getFollowedUsers(User user) throws TwitterClientException;
+    List<User> getFollowees(User user) throws TwitterClientException;
 
     List<User> getFollowers(User user) throws TwitterClientException;
 

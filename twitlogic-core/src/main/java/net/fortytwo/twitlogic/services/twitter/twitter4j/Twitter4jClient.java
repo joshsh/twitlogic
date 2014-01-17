@@ -10,8 +10,10 @@ import net.fortytwo.twitlogic.services.twitter.TwitterAPILimits;
 import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.services.twitter.TwitterCredentials;
+import net.fortytwo.twitlogic.util.CommonHttpClient;
 import twitter4j.FilterQuery;
 import twitter4j.GeoLocation;
+import twitter4j.IDs;
 import twitter4j.PagableResponseList;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -48,6 +50,8 @@ public class Twitter4jClient implements TwitterClient {
     private final TwitterStreamFactory streamFactory;
     private final TweetStatistics statistics = new TweetStatistics();
 
+    private final Twitter4jRateLimiter rateLimiter;
+
     public Twitter4jClient() throws TwitterClientException {
         TwitterCredentials cred = new TwitterCredentials();
 
@@ -64,6 +68,8 @@ public class Twitter4jClient implements TwitterClient {
         twitter = tf.getInstance();
 
         streamFactory = new TwitterStreamFactory(conf);
+
+        rateLimiter = new Twitter4jRateLimiter();
     }
 
     public void processFollowers(User user, Handler<User> handler) throws TwitterClientException, HandlerException {
@@ -84,12 +90,58 @@ public class Twitter4jClient implements TwitterClient {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public List<User> getFollowedUsers(User user) throws TwitterClientException {
-        throw new UnsupportedOperationException("not yet implemented");
+    public List<User> getFollowees(final User user) throws TwitterClientException {
+        List<User> users = new LinkedList<User>();
+
+        IDs ids;
+        long cursor = -1;
+
+        do {
+            LOGGER.info("finding followees of user " + user + " (cursor = " + cursor + ")");
+
+            ids = null;
+            while (null == ids) {
+                try {
+                    ids = twitter.friendsFollowers().getFollowersIDs(user.getId(), cursor);
+                } catch (TwitterException e) {
+                    rateLimiter.handle(e);
+                }
+            }
+
+            for (long id : ids.getIDs()) {
+                // TODO: User ids should really be longs
+                users.add(new User((int) id));
+            }
+        } while ((cursor = ids.getNextCursor()) != 0);
+
+        return users;
     }
 
-    public List<User> getFollowers(User user) throws TwitterClientException {
-        throw new UnsupportedOperationException("not yet implemented");
+    public List<User> getFollowers(final User user) throws TwitterClientException {
+        List<User> users = new LinkedList<User>();
+
+        IDs ids;
+        long cursor = -1;
+
+        do {
+            LOGGER.info("finding followers of user " + user + " (cursor = " + cursor + ")");
+
+            ids = null;
+            while (null == ids) {
+                try {
+                    ids = twitter.friendsFollowers().getFriendsIDs(user.getId(), cursor);
+                } catch (TwitterException e) {
+                    rateLimiter.handle(e);
+                }
+            }
+
+            for (long id : ids.getIDs()) {
+                // TODO: User ids should really be longs
+                users.add(new User((int) id));
+            }
+        } while ((cursor = ids.getNextCursor()) != 0);
+
+        return users;
     }
 
     public List<User> getListMembers(final User user,
@@ -268,7 +320,9 @@ public class Twitter4jClient implements TwitterClient {
                                     final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
         List<Status> statuses;
         try {
-            statuses = twitter.getUserTimeline(user.getScreenName());
+            statuses = null == user.getScreenName()
+                    ? twitter.getUserTimeline(user.getId())
+                    : twitter.getUserTimeline(user.getScreenName());
         } catch (TwitterException e) {
             throw new TwitterClientException(e);
         }
@@ -374,7 +428,6 @@ public class Twitter4jClient implements TwitterClient {
         }
     }
 
-
     private static <T extends TwitterResponse> List<T> asList(ListGenerator<T> g) throws TwitterClientException {
         List<T> l = new LinkedList<T>();
 
@@ -391,6 +444,50 @@ public class Twitter4jClient implements TwitterClient {
         } while (p.hasNext());
 
         return l;
+    }
+
+    private static final int RATE_LIMIT_EXCEEDED = 88;
+
+    private class Twitter4jRateLimiter {
+        private long lastWait = 0;
+        private long timeOfLastRequest = 0;
+
+        public void handle(final TwitterException ex) throws TwitterClientException {
+            long wait;
+
+            int code = ex.getErrorCode();
+            if (RATE_LIMIT_EXCEEDED == code) {
+                wait = 1000 * ex.getRateLimitStatus().getSecondsUntilReset();
+
+                // apparently, this happens...
+                if (0 == wait) {
+                    wait = CommonHttpClient.nextWait(lastWait, timeOfLastRequest, false);
+                }
+
+                // TODO: change to LOGGER.fine
+                LOGGER.info("rate limit exceeded; waiting " + wait + "ms before next request");
+            } else if (TwitterException.ENHANCE_YOUR_CLAIM == code) {
+                wait = CommonHttpClient.nextWait(lastWait, timeOfLastRequest, false);
+
+                LOGGER.info("enhancing calm; waiting " + wait + "ms before next request");
+            } else if (TwitterException.TOO_MANY_REQUESTS == code) {
+                wait = 1000 * ex.getRateLimitStatus().getSecondsUntilReset();
+
+                // TODO: change to LOGGER.fine
+                LOGGER.info("too many requests; waiting " + wait + "ms before next request");
+            } else {
+                throw new TwitterClientException(ex);
+            }
+
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {
+                throw new TwitterClientException(e);
+            }
+
+            lastWait = wait;
+            timeOfLastRequest = System.currentTimeMillis();
+        }
     }
 
     private interface ListGenerator<T extends TwitterResponse> {

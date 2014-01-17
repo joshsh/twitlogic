@@ -226,9 +226,9 @@ public abstract class CommonHttpClient {
         }
     }
 
-    protected long nextWait(final long lastWait,
-                            final long timeOfLastRequest,
-                            final boolean beExtraPatient) {
+    public static long nextWait(final long lastWait,
+                                final long timeOfLastRequest,
+                                final boolean beExtraPatient) {
         long minWait = beExtraPatient ? MIN_WAIT * PATIENCE_FACTOR : MIN_WAIT;
         long maxWait = beExtraPatient ? MAX_WAIT * PATIENCE_FACTOR : MAX_WAIT;
 

@@ -64,7 +64,7 @@ public class FriendFetcher {
                             ps.println(follower.getId() + "\t" + id);
                         }
                     } else {
-                        for (User followed : client.getFollowedUsers(user)) {
+                        for (User followed : client.getFollowees(user)) {
                             ps.println(id + "\t" + followed.getId());
                         }
                     }

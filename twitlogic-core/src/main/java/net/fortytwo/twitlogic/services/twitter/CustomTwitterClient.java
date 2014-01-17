@@ -390,7 +390,7 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
         return users;
     }
 
-    public List<User> getFollowedUsers(final User user) throws TwitterClientException {
+    public List<User> getFollowees(final User user) throws TwitterClientException {
         List<User> users = new LinkedList<User>();
 
         String cursor = "-1";
@@ -744,7 +744,7 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
         CustomTwitterClient client = new CustomTwitterClient();
         //client.processSampleStream(new NullHandler<Tweet, TweetHandlerException>());
 
-        List<User> l = client.getFollowedUsers(new User("joshsh", 7083182));
+        List<User> l = client.getFollowees(new User("joshsh", 7083182));
         for (User u : l) {
             System.out.println("" + u);
         }

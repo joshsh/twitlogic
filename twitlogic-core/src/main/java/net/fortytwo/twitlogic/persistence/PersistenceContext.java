@@ -68,7 +68,7 @@ public class PersistenceContext {
         }
 
         if (null != tweet.getUser()) {
-            UserAccount userAccount = userForUser(tweet.getUser());
+            UserAccount userAccount = accountForUser(tweet.getUser());
             post.setHasCreator(userAccount);
         }
 
@@ -121,19 +121,26 @@ public class PersistenceContext {
         return post;
     }
 
-    public UserAccount persist(final User tweetUser) {
-        UserAccount userAccount = userForUser(tweetUser);
-
-        if (null != tweetUser.getScreenName()) {
-            userAccount.setId(tweetUser.getScreenName());
+    private Agent agentForUser(final User user,
+                               final UserAccount account) {
+        if (null != user.getScreenName()) {
+            account.setId(user.getScreenName());
         }
 
-        Agent agent = userAccount.getAccountOf();
+        Agent agent = account.getAccountOf();
 
         if (null == agent) {
-            agent = agentForUser(tweetUser);
-            userAccount.setAccountOf(agent);
+            agent = agentForUser(user);
+            account.setAccountOf(agent);
         }
+
+        return agent;
+    }
+
+    public UserAccount persist(final User tweetUser) {
+        UserAccount userAccount = accountForUser(tweetUser);
+
+        Agent agent = agentForUser(tweetUser, userAccount);
 
         Set<Thing> equivalentAgents = new HashSet<Thing>();
         String semanticTweetUri
@@ -178,6 +185,28 @@ public class PersistenceContext {
 
             Image depiction = designate(tweetUser.getProfileImageUrl(), Image.class);
             agent.setDepiction(depiction);
+        }
+
+        if (null != tweetUser.getFollowers()) {
+            Set<Agent> agents = new HashSet<Agent>();
+            for (User u : tweetUser.getFollowers()) {
+                UserAccount ua = accountForUser(u);
+                Agent ag = agentForUser(u, ua);
+                agents.add(ag);
+            }
+
+            agent.setKnows(agents);
+        }
+
+        if (null != tweetUser.getFollowees()) {
+            Set<Agent> agents = new HashSet<Agent>();
+            for (User u : tweetUser.getFollowers()) {
+                UserAccount ua = accountForUser(u);
+                Agent ag = agentForUser(u, ua);
+                agents.add(ag);
+            }
+
+            agent.setKnownBy(agents);
         }
 
         return userAccount;
@@ -285,7 +314,7 @@ public class PersistenceContext {
     //    return designate(type.getUri(), org.openrdf.concepts.rdfs.Class.class);
     //}
 
-    private UserAccount userForUser(final User user) {
+    private UserAccount accountForUser(final User user) {
         return designate(uriOf(user), UserAccount.class);
     }
 
