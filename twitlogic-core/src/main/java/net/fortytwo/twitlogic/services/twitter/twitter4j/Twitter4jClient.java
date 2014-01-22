@@ -72,12 +72,6 @@ public class Twitter4jClient implements TwitterClient {
         rateLimiter = new Twitter4jRateLimiter();
     }
 
-    public void processFollowers(User user, Handler<User> handler) throws TwitterClientException, HandlerException {
-        //IDs ids = twitter.getFollowersIDs(user.getId());
-
-        throw new UnsupportedOperationException("not yet implemented");
-    }
-
     public void processTimelineFrom(Set<User> users, Date minTimestamp, Date maxTimestamp, Handler<Tweet> handler) throws TwitterClientException, HandlerException {
         throw new UnsupportedOperationException("not yet implemented");
     }
@@ -90,11 +84,13 @@ public class Twitter4jClient implements TwitterClient {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public List<User> getFollowees(final User user) throws TwitterClientException {
+    public List<User> getFollowees(final User user,
+                                   final int limit) throws TwitterClientException {
         List<User> users = new LinkedList<User>();
 
         IDs ids;
         long cursor = -1;
+        int total = 0;
 
         do {
             LOGGER.info("finding followees of user " + user + " (cursor = " + cursor + ")");
@@ -111,17 +107,24 @@ public class Twitter4jClient implements TwitterClient {
             for (long id : ids.getIDs()) {
                 // TODO: User ids should really be longs
                 users.add(new User((int) id));
+
+                if (limit > 0 && ++total >= limit) {
+                    // if the limit is reached, exit early
+                    return users;
+                }
             }
         } while ((cursor = ids.getNextCursor()) != 0);
 
         return users;
     }
 
-    public List<User> getFollowers(final User user) throws TwitterClientException {
+    public List<User> getFollowers(final User user,
+                                   final int limit) throws TwitterClientException {
         List<User> users = new LinkedList<User>();
 
         IDs ids;
         long cursor = -1;
+        int total = 0;
 
         do {
             LOGGER.info("finding followers of user " + user + " (cursor = " + cursor + ")");
@@ -138,6 +141,11 @@ public class Twitter4jClient implements TwitterClient {
             for (long id : ids.getIDs()) {
                 // TODO: User ids should really be longs
                 users.add(new User((int) id));
+
+                if (limit > 0 && ++total >= limit) {
+                    // if the limit is reached, exit early
+                    return users;
+                }
             }
         } while ((cursor = ids.getNextCursor()) != 0);
 
@@ -318,13 +326,16 @@ public class Twitter4jClient implements TwitterClient {
 
     public void requestUserTimeline(final User user,
                                     final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
-        List<Status> statuses;
-        try {
-            statuses = null == user.getScreenName()
-                    ? twitter.getUserTimeline(user.getId())
-                    : twitter.getUserTimeline(user.getScreenName());
-        } catch (TwitterException e) {
-            throw new TwitterClientException(e);
+        List<Status> statuses = null;
+
+        while (null == statuses) {
+            try {
+                statuses = null == user.getScreenName()
+                        ? twitter.getUserTimeline(user.getId())
+                        : twitter.getUserTimeline(user.getScreenName());
+            } catch (TwitterException e) {
+                rateLimiter.handle(e);
+            }
         }
 
         for (Status status : statuses) {

@@ -307,7 +307,7 @@ public class TwitLogic {
                 // Twitter requires user IDs (as opposed to screen names) for follow filters.
                 User u = client.findUserInfo(screenName);
 
-                List<User> l = client.getFollowees(u);
+                List<User> l = client.getFollowees(u, -1);
                 users.addAll(l);
             }
         }

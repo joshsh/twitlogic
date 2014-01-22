@@ -17,9 +17,6 @@ import java.util.Set;
 public interface TwitterClient {
     static final int MAX_SEARCH_COUNT = 100;
 
-    void processFollowers(User user,
-                          Handler<User> handler) throws TwitterClientException, HandlerException;
-
     void processTimelineFrom(Set<User> users,
                              Date minTimestamp,
                              Date maxTimestamp,
@@ -34,9 +31,23 @@ public interface TwitterClient {
                                      int page,
                                      Handler<Tweet> handler) throws TwitterClientException, HandlerException;
 
-    List<User> getFollowees(User user) throws TwitterClientException;
+    /**
+     * Retrieve the users who follow a given user
+     * @param user the reference user
+     * @param limit the maximum number of users to retrieve.  Use -1 for no limit
+     * @return a list of users who follow the given user
+     * @throws TwitterClientException if a communication error occurs
+     */
+    List<User> getFollowees(User user, int limit) throws TwitterClientException;
 
-    List<User> getFollowers(User user) throws TwitterClientException;
+    /**
+     * Retrieve the users whom the given user follows
+     * @param user the reference user
+     * @param limit the maximum number of users to retrieve.  Use -1 for no limit
+     * @return a list of users whom the given user follows
+     * @throws TwitterClientException if a communication error occurs
+     */
+    List<User> getFollowers(User user, int limit) throws TwitterClientException;
 
     List<User> getListMembers(User user,
                               String listId) throws TwitterClientException;

@@ -60,11 +60,11 @@ public class FriendFetcher {
                 User user = new User(id);
                 try {
                     if (reverse) {
-                        for (User follower : client.getFollowers(user)) {
+                        for (User follower : client.getFollowers(user, -1)) {
                             ps.println(follower.getId() + "\t" + id);
                         }
                     } else {
-                        for (User followed : client.getFollowees(user)) {
+                        for (User followed : client.getFollowees(user, -1)) {
                             ps.println(id + "\t" + followed.getId());
                         }
                     }

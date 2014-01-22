@@ -361,7 +361,12 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
         return users;
     }
 
-    public List<User> getFollowers(final User user) throws TwitterClientException {
+    public List<User> getFollowers(final User user,
+                                   final int limit) throws TwitterClientException {
+        if (-1 != limit) {
+            throw new UnsupportedOperationException("limit not supported");
+        }
+
         List<User> users = new LinkedList<User>();
 
         String cursor = "-1";
@@ -390,7 +395,12 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
         return users;
     }
 
-    public List<User> getFollowees(final User user) throws TwitterClientException {
+    public List<User> getFollowees(final User user,
+                                   final int limit) throws TwitterClientException {
+        if (-1 != limit) {
+            throw new UnsupportedOperationException("limit not supported");
+        }
+
         List<User> users = new LinkedList<User>();
 
         String cursor = "-1";
@@ -508,48 +518,6 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
             } catch (UnauthorizedException e) { // Soft fail here
                 LOGGER.warning("not authorized to get " + u.getScreenName() + "'s timeline");
             }
-        }
-    }
-
-    public void processFollowers(final User user,
-                                 final Handler<User> handler) throws TwitterClientException, HandlerException {
-        String cursor = "-1";
-
-        // Note: a null cursor doesn't appear to occur, but just to be safe...
-        while (null != cursor && !cursor.equals("0")) {
-            HttpGet request = new HttpGet(TwitterAPI.STATUSES_FRIENDS_URL
-                    + ".json"
-                    + (null == user.getId() ? "?screen_name=" + user.getScreenName() : "?id=" + user.getId())
-                    + "&cursor=" + cursor);
-            sign(request);
-
-            JSONObject users = requestJSONObject(request);
-            JSONArray array;
-            try {
-                array = users.getJSONArray("users");
-            } catch (JSONException e) {
-                throw new TwitterClientException(e);
-            }
-            //JSONArray array = requestJSONArray(request);
-            //System.out.println(json);
-
-            for (int i = 0; i < array.length(); i++) {
-                User u;
-                try {
-                    u = new User(array.getJSONObject(i));
-                } catch (TweetParseException e) {
-                    throw new TwitterClientException(e);
-                } catch (JSONException e) {
-                    throw new TwitterClientException(e);
-                }
-
-                if (!handler.isOpen()) {
-                    break;
-                }
-                handler.handle(u);
-            }
-
-            cursor = users.optString((TwitterAPI.UserListField.NEXT_CURSOR.toString()));
         }
     }
 
@@ -744,7 +712,7 @@ public class CustomTwitterClient extends RestfulJSONClient implements TwitterCli
         CustomTwitterClient client = new CustomTwitterClient();
         //client.processSampleStream(new NullHandler<Tweet, TweetHandlerException>());
 
-        List<User> l = client.getFollowees(new User("joshsh", 7083182));
+        List<User> l = client.getFollowees(new User("joshsh", 7083182), -1);
         for (User u : l) {
             System.out.println("" + u);
         }
