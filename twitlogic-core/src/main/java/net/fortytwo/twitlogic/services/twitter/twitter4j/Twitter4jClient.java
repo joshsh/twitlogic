@@ -102,7 +102,7 @@ public class Twitter4jClient implements TwitterClient {
             ids = null;
             while (null == ids) {
                 try {
-                    ids = twitter.friendsFollowers().getFollowersIDs(user.getId(), cursor);
+                    ids = twitter.friendsFollowers().getFriendsIDs(user.getId(), cursor);
                 } catch (TwitterException e) {
                     rateLimiter.handle(e);
                 }
@@ -129,7 +129,7 @@ public class Twitter4jClient implements TwitterClient {
             ids = null;
             while (null == ids) {
                 try {
-                    ids = twitter.friendsFollowers().getFriendsIDs(user.getId(), cursor);
+                    ids = twitter.friendsFollowers().getFollowersIDs(user.getId(), cursor);
                 } catch (TwitterException e) {
                     rateLimiter.handle(e);
                 }

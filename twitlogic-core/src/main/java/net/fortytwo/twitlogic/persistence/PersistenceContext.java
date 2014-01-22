@@ -195,18 +195,18 @@ public class PersistenceContext {
                 agents.add(ag);
             }
 
-            agent.setKnows(agents);
+            agent.setKnownBy(agents);
         }
 
         if (null != tweetUser.getFollowees()) {
             Set<Agent> agents = new HashSet<Agent>();
-            for (User u : tweetUser.getFollowers()) {
+            for (User u : tweetUser.getFollowees()) {
                 UserAccount ua = accountForUser(u);
                 Agent ag = agentForUser(u, ua);
                 agents.add(ag);
             }
 
-            agent.setKnownBy(agents);
+            agent.setKnows(agents);
         }
 
         return userAccount;
