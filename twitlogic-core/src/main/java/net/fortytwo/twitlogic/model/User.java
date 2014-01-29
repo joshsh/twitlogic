@@ -11,7 +11,7 @@ import java.util.Collection;
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class User implements Resource {
-    //provate final Boolean contributorsEnabled;
+    //private final Boolean contributorsEnabled;
     //private final Date createdAt;
     //private final boolean defaultProfile;
     //private final boolean defaultProfileImage;
@@ -26,7 +26,7 @@ public class User implements Resource {
     //private final Integer followRequestSent;
     //private final Integer friendsCount;
     private final boolean geoEnabled;
-    private final Integer id;
+    private final Long id;
     //private final boolean isTranslator;  // TODO: what is the significance of this field?
     //private final String language;
     //private final String listedCount;
@@ -64,7 +64,7 @@ public class User implements Resource {
         //System.out.println("user: " + u);
         description = u.getDescription();
         geoEnabled = u.isGeoEnabled();
-        id = (int) u.getId();
+        id = u.getId();
         location = u.getLocation();
         name = u.getName();
         profileBackgroundColor = u.getProfileBackgroundColor();
@@ -74,6 +74,8 @@ public class User implements Resource {
         url = null == u.getURL() ? null : u.getURL().toString();
 
         heldBy = new Person(this);
+
+        validate();
     }
 
     public User(final String screenName) {
@@ -91,9 +93,11 @@ public class User implements Resource {
         url = null;
 
         heldBy = new Person(this);
+
+        validate();
     }
 
-    public User(final int id) {
+    public User(final long id) {
         this.id = id;
 
         screenName = null;
@@ -108,9 +112,11 @@ public class User implements Resource {
         url = null;
 
         heldBy = new Person(this);
+
+        validate();
     }
 
-    public User(final String screenName, final int id) {
+    public User(final String screenName, final long id) {
         this.id = id;
         this.screenName = screenName;
 
@@ -125,15 +131,17 @@ public class User implements Resource {
         url = null;
 
         heldBy = new Person(this);
+
+        validate();
     }
 
     public User(final JSONObject json) throws TweetParseException {
         try {
             TwitterAPI.checkJSON(json, TwitterAPI.FieldContext.USER);
 
-            Integer id0 = json.getInt(TwitterAPI.Field.ID.toString());
+            Long id0 = json.getLong(TwitterAPI.Field.ID.toString());
             if (null == id0) {
-                id0 = Integer.valueOf(json.getString(TwitterAPI.Field.ID_STR.toString()));
+                id0 = Long.valueOf(json.getString(TwitterAPI.Field.ID_STR.toString()));
             }
             id = id0;
 
@@ -157,13 +165,15 @@ public class User implements Resource {
         } catch (JSONException e) {
             throw new TweetParseException(e);
         }
+
+        validate();
     }
 
     public boolean getGeoEnabled() {
         return geoEnabled;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -249,32 +259,10 @@ public class User implements Resource {
                 ? id.hashCode()
                 : 0;
     }
-}
 
-/*
-        "created_at":"Sat Dec 20 04:35:52 +0000 2008",
-        "description":"Writing and Painting are my main two loves. I have a lot of things in my head. A lot that no one gets. They just stare and ask what I've been smoking.",
-        "favourites_count":12,
-        "followers_count":78,
-        "following":null,
-        "friends_count":150,
-        "id":18261195,
-        "location":"Pennsylvania.",
-        "name":"Sarah Gyle",
-        "notifications":null,
-        "profile_background_color":"ffffff",
-        "profile_background_image_url":"http:\/\/a1.twimg.com\/profile_background_images\/32524998\/surrealism.jpg",
-        "profile_background_tile":true,
-        "profile_image_url":"http:\/\/a1.twimg.com\/profile_images\/68846220\/l_cff071ff78d454e3acd0ad5a01ea3a92_normal.jpg",
-        "profile_link_color":"dbb963",
-        "profile_sidebar_border_color":"782b73",
-        "profile_sidebar_fill_color":"8fa374"
-        "profile_text_color":"ebaae1",
-        "protected":false,
-        "screen_name":"MyEgoBeckons",
-        "statuses_count":582,
-        "time_zone":"Eastern Time (US & Canada)",
-        "url":"http:\/\/www.myspace.com\/purpleelephantsarekewl",
-        "utc_offset":-18000,
-        "verified":false,
-*/
+    private void validate() {
+        if (null != id && id <= 0) {
+            throw new IllegalArgumentException("invalid user id");
+        }
+    }
+}

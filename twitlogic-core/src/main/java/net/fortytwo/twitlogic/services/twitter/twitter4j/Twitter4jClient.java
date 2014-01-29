@@ -105,8 +105,7 @@ public class Twitter4jClient implements TwitterClient {
             }
 
             for (long id : ids.getIDs()) {
-                // TODO: User ids should really be longs
-                users.add(new User((int) id));
+                users.add(new User(id));
 
                 if (limit > 0 && ++total >= limit) {
                     // if the limit is reached, exit early
@@ -139,8 +138,7 @@ public class Twitter4jClient implements TwitterClient {
             }
 
             for (long id : ids.getIDs()) {
-                // TODO: User ids should really be longs
-                users.add(new User((int) id));
+                users.add(new User(id));
 
                 if (limit > 0 && ++total >= limit) {
                     // if the limit is reached, exit early

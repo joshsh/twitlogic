@@ -37,7 +37,7 @@ public class UserRegistry {
         }
     }
 
-    public Integer resolveUserId(final String screenName) throws TwitterClientException {
+    public Long resolveUserId(final String screenName) throws TwitterClientException {
         User user = usersByScreenName.get(screenName);
 
         if (null == user) {
