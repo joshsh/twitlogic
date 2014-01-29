@@ -100,7 +100,11 @@ public class Twitter4jClient implements TwitterClient {
                 try {
                     ids = twitter.friendsFollowers().getFriendsIDs(user.getId(), cursor);
                 } catch (TwitterException e) {
-                    rateLimiter.handle(e);
+                    if (isProtected(user, e)) {
+                        return users;
+                    } else {
+                        rateLimiter.handle(e);
+                    }
                 }
             }
 
@@ -133,7 +137,11 @@ public class Twitter4jClient implements TwitterClient {
                 try {
                     ids = twitter.friendsFollowers().getFollowersIDs(user.getId(), cursor);
                 } catch (TwitterException e) {
-                    rateLimiter.handle(e);
+                    if (isProtected(user, e)) {
+                        return users;
+                    } else {
+                        rateLimiter.handle(e);
+                    }
                 }
             }
 
@@ -176,6 +184,18 @@ public class Twitter4jClient implements TwitterClient {
             LOGGER.info("\tfound: " + u);
         }
         return result;
+    }
+
+    // note: the purpose of this method is to abort an operation when a protected user is encountered,
+    // although there are other causes of 401 errors from Twitter.
+    private boolean isProtected(final User u,
+                                final TwitterException e) {
+        if (TwitterException.UNAUTHORIZED == e.getErrorCode()) {
+            LOGGER.info("skipping protected user " + u);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private List<UserList> getUserLists(final User user) throws TwitterClientException {
