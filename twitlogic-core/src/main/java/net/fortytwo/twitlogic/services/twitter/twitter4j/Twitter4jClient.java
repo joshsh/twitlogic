@@ -190,7 +190,7 @@ public class Twitter4jClient implements TwitterClient {
     // although there are other causes of 401 errors from Twitter.
     private boolean isProtected(final User u,
                                 final TwitterException e) {
-        if (TwitterException.UNAUTHORIZED == e.getErrorCode()) {
+        if (TwitterException.UNAUTHORIZED == e.getStatusCode()) {
             LOGGER.info("skipping protected user " + u);
             return true;
         } else {
