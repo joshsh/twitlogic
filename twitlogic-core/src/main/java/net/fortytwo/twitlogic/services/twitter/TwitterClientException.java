@@ -20,4 +20,10 @@ public class TwitterClientException extends Exception {
                                   final Throwable cause) {
         super(message, cause);
     }
+
+    public static class UnauthorizedException extends TwitterClientException {
+        public UnauthorizedException(final Throwable cause) {
+            super(cause);
+        }
+    }
 }

@@ -100,11 +100,9 @@ public class Twitter4jClient implements TwitterClient {
                 try {
                     ids = twitter.friendsFollowers().getFriendsIDs(user.getId(), cursor);
                 } catch (TwitterException e) {
-                    if (isProtected(user, e)) {
-                        return users;
-                    } else {
-                        rateLimiter.handle(e);
-                    }
+                    checkProtected(user, e);
+
+                    rateLimiter.handle(e);
                 }
             }
 
@@ -137,11 +135,9 @@ public class Twitter4jClient implements TwitterClient {
                 try {
                     ids = twitter.friendsFollowers().getFollowersIDs(user.getId(), cursor);
                 } catch (TwitterException e) {
-                    if (isProtected(user, e)) {
-                        return users;
-                    } else {
-                        rateLimiter.handle(e);
-                    }
+                    checkProtected(user, e);
+
+                    rateLimiter.handle(e);
                 }
             }
 
@@ -186,15 +182,13 @@ public class Twitter4jClient implements TwitterClient {
         return result;
     }
 
-    // note: the purpose of this method is to abort an operation when a protected user is encountered,
-    // although there are other causes of 401 errors from Twitter.
-    private boolean isProtected(final User u,
-                                final TwitterException e) {
+    private void checkProtected(final User u,
+                                final TwitterException e) throws TwitterClientException.UnauthorizedException {
         if (TwitterException.UNAUTHORIZED == e.getStatusCode()) {
+            // note: the purpose of this method is to abort an operation when a protected user is encountered,
+            // although there are other causes of 401 errors from Twitter.
             LOGGER.info("skipping protected user " + u);
-            return true;
-        } else {
-            return false;
+            throw new TwitterClientException.UnauthorizedException(e);
         }
     }
 
@@ -352,6 +346,8 @@ public class Twitter4jClient implements TwitterClient {
                         ? twitter.getUserTimeline(user.getId())
                         : twitter.getUserTimeline(user.getScreenName());
             } catch (TwitterException e) {
+                checkProtected(user, e);
+
                 rateLimiter.handle(e);
             }
         }
