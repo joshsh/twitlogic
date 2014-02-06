@@ -8,13 +8,10 @@ import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -130,16 +127,6 @@ public class TwitLogic {
         } catch (IOException e) {
             throw new ExceptionInInitializerError(e);
         }*/
-
-        InputStream resourceAsStream = TwitLogic.class.getResourceAsStream("logging.properties");
-
-        try {
-            LogManager.getLogManager().readConfiguration(resourceAsStream);
-        } catch (SecurityException e) {
-            throw new ExceptionInInitializerError(e);
-        } catch (IOException e) {
-            throw new ExceptionInInitializerError(e);
-        }
 
         LOGGER = getLogger(TwitLogic.class);
         LOGGER.info("initialized logging");
