@@ -187,7 +187,7 @@ public class Twitter4jClient implements TwitterClient {
         if (TwitterException.UNAUTHORIZED == e.getStatusCode()) {
             // note: the purpose of this method is to abort an operation when a protected user is encountered,
             // although there are other causes of 401 errors from Twitter.
-            LOGGER.info("skipping protected user " + u);
+            LOGGER.info("can't retrieve info for protected user " + u);
             throw new TwitterClientException.UnauthorizedException(e);
         }
     }

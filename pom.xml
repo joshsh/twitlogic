@@ -52,8 +52,8 @@
         <ripple.version>1.0-SNAPSHOT</ripple.version>
         <sesametools.version>1.7-SNAPSHOT</sesametools.version>
         <rdfagents.version>1.0-SNAPSHOT</rdfagents.version>
-        <log4j.version>1.2.14</log4j.version>
-        <slf4j.version>1.6.1</slf4j.version>
+        <!--<log4j.version>1.2.14</log4j.version>
+        <slf4j.version>1.6.1</slf4j.version>-->
         <junit.version>4.5</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
