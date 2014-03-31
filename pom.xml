@@ -76,7 +76,7 @@
                         <target>1.6</target>
                     </configuration>
                 </plugin>
-                <!-- TODO: enforce dependency convergence after removing Elmo
+                <!-- TODO: enforce dependency convergence after removing Elmo -->
                 <plugin>
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>1.3.1</version>
@@ -93,7 +93,7 @@
                             </configuration>
                         </execution>
                     </executions>
-                </plugin>-->
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
