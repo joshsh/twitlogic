@@ -55,14 +55,21 @@ public class TweetDeleter implements Handler<Tweet> {
 
             try {
                 SailConnection c = storeConnection.getSailConnection();
-                // TODO: remove only from the authoritative graph
-                c.removeStatements(uriOf(p), null, null);
+                try {
+                    c.begin();
+                    // TODO: remove only from the authoritative graph
+                    c.removeStatements(uriOf(p), null, null);
 
-                Graph g = p.getEmbedsKnowledge();
-                if (null != g) {
-                    c.removeStatements(null, null, null, uriOf(g));
+                    Graph g = p.getEmbedsKnowledge();
+                    if (null != g) {
+                        c.removeStatements(null, null, null, uriOf(g));
+                    }
+
+                    c.commit();
+                } finally {
+                    c.rollback();
+                    c.close();
                 }
-                c.commit();
             } catch (SailException e) {
                 throw new HandlerException(e);
             }

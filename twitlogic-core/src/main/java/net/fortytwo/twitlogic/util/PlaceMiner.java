@@ -74,6 +74,7 @@ public class PlaceMiner {
                     c.commit();
                 }
             } finally {
+                c.rollback();
                 c.close();
             }
         } finally {

@@ -93,6 +93,7 @@ sum(g[,2])/length(g[,2])
                     final SailConnection c = workingSail.getConnection();
 
                     try {
+                        c.begin();
                         // Offline persister
                         final TweetPersister persister = new TweetPersister(store, null);
 
@@ -120,6 +121,7 @@ sum(g[,2])/length(g[,2])
                                     try {
                                         c.clear();
                                         c.commit();
+                                        c.begin();
                                     } catch (SailException e) {
                                         throw new HandlerException(e);
                                     }
@@ -136,6 +138,7 @@ sum(g[,2])/length(g[,2])
                             persister.close();
                         }
                     } finally {
+                        c.rollback();
                         c.close();
                     }
                 } finally {

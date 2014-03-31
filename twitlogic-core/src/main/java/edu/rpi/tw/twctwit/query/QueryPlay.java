@@ -55,8 +55,13 @@ public class QueryPlay {
                 TweetStoreConnection c = store.createConnection();
                 try {
                     SailConnection sc = c.getSailConnection();
-
-                    SparqlTools.executeQuery(GOLD_TWEETS_QUERY, sc, System.out, 100, SparqlTools.SparqlResultFormat.JSON);
+                    try {
+                        sc.begin();
+                        SparqlTools.executeQuery(GOLD_TWEETS_QUERY, sc, System.out, 100, SparqlTools.SparqlResultFormat.JSON);
+                    } finally {
+                        sc.rollback();
+                        sc.close();
+                    }
                     //queryAndWriteJSON(ISWC_STATEMENTS_QUERY, sc, System.out);
                 } finally {
                     c.close();

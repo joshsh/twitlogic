@@ -99,6 +99,7 @@ public class ThroughputTesting {
             sc.removeStatements(RDF.TYPE, null, null, (URI) null);
             sc.commit();
         } finally {
+            sc.rollback();
             sc.close();
         }
 
@@ -157,6 +158,7 @@ public class ThroughputTesting {
                             try {
                                 sc.clear();
                                 sc.commit();
+                                sc.begin();
                             } catch (SailException e) {
                                 throw new HandlerException(e);
                             }
@@ -203,6 +205,7 @@ public class ThroughputTesting {
                             try {
                                 sc.clear();
                                 sc.commit();
+                                sc.begin();
                             } catch (SailException e) {
                                 throw new HandlerException(e);
                             }
@@ -231,6 +234,7 @@ public class ThroughputTesting {
         try {
             AGRepositoryConnection rc = repo.getConnection();
             try {
+                //rc.begin();
                 Sail tSail = new MemoryStore();
                 tSail.initialize();
 
@@ -255,6 +259,7 @@ public class ThroughputTesting {
                                         try {
                                             tc.clear();
                                             tc.commit();
+                                            tc.begin();
                                         } catch (SailException e) {
                                             throw new HandlerException(e);
                                         }
@@ -279,6 +284,7 @@ public class ThroughputTesting {
 
 
             } finally {
+                //rc.rollback();
                 rc.close();
             }
         } finally {
@@ -301,6 +307,7 @@ public class ThroughputTesting {
                     final SailConnection tc = transientSail.getConnection();
 
                     try {
+                        tc.begin();
                         final TweetPersister p = new TweetPersister(store, null);
 
                         Handler<Tweet> h = new Handler<Tweet>() {
@@ -312,6 +319,7 @@ public class ThroughputTesting {
                                 try {
                                     tc.clear();
                                     tc.commit();
+                                    tc.begin();
                                 } catch (SailException e) {
                                     throw new HandlerException(e);
                                 }
@@ -321,6 +329,7 @@ public class ThroughputTesting {
 
                         stressTest(h, 1000);
                     } finally {
+                        tc.rollback();
                         tc.close();
                     }
                 } finally {
@@ -365,6 +374,7 @@ public class ThroughputTesting {
                        try {
                            sc.clear();
                            sc.commit();
+                           sc.begin();
                        } catch (SailException e) {
                            throw new TweetHandlerException(e);
                        }
@@ -469,6 +479,7 @@ public class ThroughputTesting {
                                     try {
                                         c.clear();
                                         c.commit();
+                                        c.begin();
                                     } catch (SailException e) {
                                         throw new HandlerException(e);
                                     }

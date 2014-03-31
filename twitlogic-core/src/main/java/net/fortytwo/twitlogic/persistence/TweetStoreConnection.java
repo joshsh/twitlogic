@@ -28,6 +28,8 @@ public class TweetStoreConnection {
 
         try {
             this.sailConnection = tweetStore.getSail().getConnection();
+            this.sailConnection.begin();
+
             if (null != listenerFactory && sailConnection instanceof NotifyingSailConnection) {
                 SailConnectionListener l = listenerFactory.create();
                 ((NotifyingSailConnection) sailConnection).addConnectionListener(l);
@@ -66,6 +68,7 @@ public class TweetStoreConnection {
         } finally {
             try {
                 sailConnection.commit();
+                sailConnection.begin();
             } catch (SailException e) {
                 throw new TweetStoreException(e);
             }
@@ -92,6 +95,7 @@ public class TweetStoreConnection {
                 elmoManager.close();
             } finally {
                 try {
+                    sailConnection.rollback();
                     sailConnection.close();
                 } catch (SailException e) {
                     throw new TweetStoreException(e);

@@ -58,10 +58,16 @@ public class LoadSWCData {
         try {
             RepositoryConnection rc = store.getRepository().getConnection();
             try {
+                rc.begin();
+
                 rc.clear(SWC_GRAPH);
                 rc.commit();
+		rc.begin();
                 loadFile(dir, rc);
+                rc.commit();
+		rc.begin();
             } finally {
+                rc.rollback();
                 rc.close();
             }
         } finally {
@@ -81,6 +87,7 @@ public class LoadSWCData {
         } else if (file.getName().endsWith("rdf")) {
             rc.add(file, BASE_URI, RDFFormat.RDFXML, SWC_GRAPH);
             rc.commit();
+		rc.begin();
         }
     }
 }

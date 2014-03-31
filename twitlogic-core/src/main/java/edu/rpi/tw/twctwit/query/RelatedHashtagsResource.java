@@ -101,6 +101,7 @@ public class RelatedHashtagsResource extends QueryResource {
 
         SailConnection sc = baseSail.getConnection();
         try {
+            sc.begin();
             //System.out.println("resource (really): " + resource);
             RelatedHashtagsInferencer inf = new RelatedHashtagsInferencer(sc, resource);
             int used = inf.compute(steps);
@@ -108,6 +109,7 @@ public class RelatedHashtagsResource extends QueryResource {
             results = inf.currentHashtagResults(limit);
 
         } finally {
+            sc.rollback();
             sc.close();
         }
         /*

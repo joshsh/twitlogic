@@ -120,22 +120,28 @@ public class EarthquakeTweets {
                 ParsedQuery q = parseQuery(SELECT_DUMP_FIELDS);
                 BindingSet bs = new MapBindingSet();
                 SailConnection sc = c.getSailConnection();
-                CloseableIteration<? extends BindingSet, QueryEvaluationException> results
-                        = sc.evaluate(q.getTupleExpr(), q.getDataset(), bs, false);
                 try {
-                    while (results.hasNext()) {
-                        BindingSet r = results.next();
-                        String timestamp = ((Literal) r.getBinding(TIMESTAMP).getValue()).getLabel().replaceAll("\t", " ");
-                        String location = ((Literal) r.getBinding(LOCATION).getValue()).getLabel().replaceAll("\t", " ");
-                        String text = ((Literal) r.getBinding(TEXT).getValue()).getLabel()
-                                .replaceAll("\t", " ")
-                                .replaceAll("\n", " ")
-                                .replaceAll("\r", " ");
+                    sc.begin();
+                    CloseableIteration<? extends BindingSet, QueryEvaluationException> results
+                            = sc.evaluate(q.getTupleExpr(), q.getDataset(), bs, false);
+                    try {
+                        while (results.hasNext()) {
+                            BindingSet r = results.next();
+                            String timestamp = ((Literal) r.getBinding(TIMESTAMP).getValue()).getLabel().replaceAll("\t", " ");
+                            String location = ((Literal) r.getBinding(LOCATION).getValue()).getLabel().replaceAll("\t", " ");
+                            String text = ((Literal) r.getBinding(TEXT).getValue()).getLabel()
+                                    .replaceAll("\t", " ")
+                                    .replaceAll("\n", " ")
+                                    .replaceAll("\r", " ");
 
-                        ps.println(timestamp + "\t" + location + "\t" + text);
+                            ps.println(timestamp + "\t" + location + "\t" + text);
+                        }
+                    } finally {
+                        results.close();
                     }
                 } finally {
-                    results.close();
+                    sc.rollback();
+                    sc.close();
                 }
             } finally {
                 c.close();

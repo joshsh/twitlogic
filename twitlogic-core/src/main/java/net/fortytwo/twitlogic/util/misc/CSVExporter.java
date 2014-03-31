@@ -57,11 +57,14 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
             Repository repo = new SailRepository(sail);
             RepositoryConnection rc = repo.getConnection();
             try {
+                rc.begin();
                 rc.clear();
                 rc.commit();
+                rc.begin();
 
                 rc.add(new File("/tmp/twitlogic-dump.nq"), "", RDFFormat.NQUADS);
                 rc.commit();
+                rc.begin();
 
                 ////////////////////////////////////////////////////////////////
 
@@ -182,6 +185,7 @@ SELECT DISTINCT ?tweet ?screenName ?replyTo ?createdAt ?text WHERE {
                 ////////////////////////////////////////////////////////////////
 
             } finally {
+                rc.rollback();
                 rc.close();
             }
         } finally {

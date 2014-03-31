@@ -249,8 +249,10 @@ public class TweetStore {
         RDFHandler h = Rio.createWriter(format, out);
         RepositoryConnection rc = getRepository().getConnection();
         try {
+            rc.begin();
             rc.export(h);
         } finally {
+            rc.rollback();
             rc.close();
         }
     }
@@ -298,9 +300,11 @@ public class TweetStore {
         try {
             RepositoryConnection rc = repository.getConnection();
             try {
+                rc.begin();
                 rc.clear();
                 rc.commit();
             } finally {
+                rc.rollback();
                 rc.close();
             }
         } catch (RepositoryException e) {
@@ -313,6 +317,8 @@ public class TweetStore {
         try {
             RepositoryConnection rc = repository.getConnection();
             try {
+                rc.begin();
+
                 try {
                     rc.add(file, "http://example.org/baseURI", format);
                 } catch (IOException e) {
@@ -323,6 +329,7 @@ public class TweetStore {
 
                 rc.commit();
             } finally {
+                rc.rollback();
                 rc.close();
             }
         } catch (RepositoryException e) {
@@ -373,6 +380,7 @@ public class TweetStore {
         try {
             RepositoryConnection rc = repository.getConnection();
             try {
+                rc.begin();
 
                 rc.remove((Resource) null, null, null, TwitLogic.CORE_GRAPH);
                 rc.clearNamespaces();
@@ -387,6 +395,7 @@ public class TweetStore {
 
                 rc.commit();
             } finally {
+                rc.rollback();
                 rc.close();
             }
         } catch (IOException e) {

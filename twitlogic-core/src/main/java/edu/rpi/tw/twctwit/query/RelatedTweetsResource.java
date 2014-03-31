@@ -117,6 +117,7 @@ public class RelatedTweetsResource extends QueryResource {
         //SailConnection sc = sail.getConnection();
         SailConnection sc = baseSail.getConnection();
         try {
+            sc.begin();
             //System.out.println("resource (really): " + resource);
             ConferenceInferencer inf = new ConferenceInferencer(sc, resource);
             int steps = 150;
@@ -146,6 +147,7 @@ public class RelatedTweetsResource extends QueryResource {
                     .replace(ALTERNATIVE_TOPICS_PLACEHOLDER, sb.toString())
                     .replace(MIN_TIMESTAMP_PLACEHOLDER, after);
         } finally {
+            sc.rollback();
             sc.close();
         }
     }

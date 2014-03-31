@@ -97,6 +97,8 @@ public class FirehoseDemo {
                     final SailConnection c = workingSail.getConnection();
 
                     try {
+                        c.begin();
+
                         // Offline persister
                         final TweetPersister persister = new TweetPersister(store, null);
 
@@ -126,6 +128,7 @@ public class FirehoseDemo {
                                     try {
                                         c.clear();
                                         c.commit();
+                                        c.begin();
                                     } catch (SailException e) {
                                         throw new HandlerException(e);
                                     }
@@ -149,6 +152,7 @@ public class FirehoseDemo {
                             persister.close();
                         }
                     } finally {
+                        c.rollback();
                         c.close();
                     }
                 } finally {

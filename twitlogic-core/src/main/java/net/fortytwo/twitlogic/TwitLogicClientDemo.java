@@ -35,7 +35,7 @@ public class TwitLogicClientDemo {
         try {
             String file;
             if (0 == args.length) {
-                file = "/tmp/twitlogic.props";
+                file = "/tmp/twitlogic.properties";
             } else if (1 == args.length) {
                 file = args[0];
             } else {

@@ -2,15 +2,16 @@ package net.fortytwo.twitlogic.persistence.sail;
 
 import com.tinkerpop.blueprints.impls.neo4j.Neo4jGraph;
 import com.tinkerpop.blueprints.oupls.sail.GraphSail;
-import net.fortytwo.sesametools.nquads.NQuadsParser;
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.SailFactory;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
 import org.openrdf.model.Statement;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.Rio;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -48,7 +49,8 @@ public class Neo4jSailFactory extends SailFactory {
             try {
                 SailConnection sc = sail.getConnection();
                 try {
-                    RDFParser parser = new NQuadsParser();
+                    sc.begin();
+                    RDFParser parser = Rio.createParser(RDFFormat.NQUADS);
                     parser.setRDFHandler(new StatementAdder(sc));
                     InputStream is = new FileInputStream(dump);
                     try {
@@ -56,8 +58,10 @@ public class Neo4jSailFactory extends SailFactory {
                     } finally {
                         is.close();
                     }
-
+                    sc.commit();
+		sc.begin();
                 } finally {
+                    sc.rollback();
                     sc.close();
                 }
             } catch (Throwable t) {
@@ -86,6 +90,7 @@ public class Neo4jSailFactory extends SailFactory {
         public void endRDF() throws RDFHandlerException {
             try {
                 c.commit();
+		c.begin();
             } catch (SailException e) {
                 throw new RDFHandlerException(e);
             }
@@ -99,6 +104,7 @@ public class Neo4jSailFactory extends SailFactory {
                 c.addStatement(s.getSubject(), s.getPredicate(), s.getObject(), s.getContext());
                 if (0 == ++count % CHUNK_SIZE) {
                     c.commit();
+		    c.begin();
                 }
             } catch (SailException e) {
                 throw new RDFHandlerException(e);

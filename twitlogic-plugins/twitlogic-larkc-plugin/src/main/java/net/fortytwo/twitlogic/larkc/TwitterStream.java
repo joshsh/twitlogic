@@ -133,6 +133,7 @@ public class TwitterStream extends StreamingSetOfStatements {
                             try {
                                 c.clear();
                                 c.commit();
+                                c.begin();
                             } catch (SailException e) {
                                 throw new HandlerException(e);
                             }

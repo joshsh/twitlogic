@@ -74,6 +74,7 @@ public class SparqlUpdateTools {
         try {
             SailConnection sc = sail.getConnection();
             try {
+                sc.begin();
                 // TODO: one insert statement per statement is a bit verbose (when many statements share the same graph)
                 CloseableIteration<? extends Statement, SailException> iter
                         = sc.getStatements(null, null, null, false);
@@ -85,6 +86,7 @@ public class SparqlUpdateTools {
                     iter.close();
                 }
             } finally {
+                sc.rollback();
                 sc.close();
             }
         } finally {
