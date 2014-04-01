@@ -10,7 +10,6 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import java.io.BufferedReader;
@@ -185,9 +184,4 @@ public class TwitterCredentials {
 
         System.out.println("got status code: " + statusCode);
     }*/
-
-    private void useBasicAuthentication(final HttpUriRequest request) {
-        String auth = new String(Base64.encodeBase64((userName + ":" + password).getBytes()));
-        request.setHeader("Authorization", "Basic " + auth);
-    }
 }
