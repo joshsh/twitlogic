@@ -11,7 +11,7 @@
 
     <groupId>net.fortytwo.twitlogic</groupId>
     <artifactId>twitlogic-all</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>pom</packaging>
     <name>TwitLogic</name>
     <description>Real-time #SemanticWeb in &lt;= 140 chars</description>
@@ -45,13 +45,14 @@
     </developers>
 
     <properties>
-        <twitlogic.version>1.1-SNAPSHOT</twitlogic.version>
+        <twitlogic.version>1.1</twitlogic.version>
         <elmo.version>1.5</elmo.version>
         <junit.version>4.5</junit.version>
-        <rdfagents.version>1.0</rdfagents.version>
+        <rdfagents.version>1.1</rdfagents.version>
         <ripple.version>1.1</ripple.version>
         <sesame.version>2.7.10</sesame.version>
         <sesametools.version>1.8</sesametools.version>
+        <sparql-osc.version>1.1</sparql-osc.version>
         <tinkerpop.version>2.4.0</tinkerpop.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -233,30 +234,6 @@
                     <exclusion>
                         <groupId>org.openrdf.sesame</groupId>
                         <artifactId>sesame-sail-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>net.fortytwo</groupId>
-                <artifactId>sparql-osc</artifactId>
-                <version>1.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>net.fortytwo.sesametools</groupId>
-                        <artifactId>common</artifactId>
-                    </exclusion>
-                    <!-- temporary; next SPARQL-OSC release will be in sync with TwitLogic -->
-                    <exclusion>
-                        <groupId>org.openrdf.sesame</groupId>
-                        <artifactId>sesame-sail-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.openrdf.sesame</groupId>
-                        <artifactId>sesame-repository-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.openrdf.sesame</groupId>
-                        <artifactId>sesame-queryparser-sparql</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

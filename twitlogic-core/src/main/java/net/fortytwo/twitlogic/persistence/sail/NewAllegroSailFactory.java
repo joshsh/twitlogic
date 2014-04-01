@@ -42,8 +42,7 @@ public class NewAllegroSailFactory extends SailFactory {
             throw new SailException(e);
         }
 
-        boolean autoCommit = false;
-        RepositorySail sail = new RepositorySail(repo, autoCommit);
+        RepositorySail sail = new RepositorySail(repo);
         sail.disableInference();
 
         if (enableLogging) {
