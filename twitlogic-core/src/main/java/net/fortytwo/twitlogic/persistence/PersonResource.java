@@ -38,13 +38,15 @@ public class PersonResource extends WebResource {
 
     @Override
     public void preprocessingHook() throws Exception {
-        URI personURI = sail.getValueFactory().createURI(this.selfURI);
-
         TweetStore store = TweetStore.getInstance();
         TweetStoreConnection c = store.createConnection();
         try {
             ValueFactory vf = store.getSail().getValueFactory();
             SailConnection sc = c.getSailConnection();
+
+            long id = Long.valueOf(selfURI.substring(selfURI.lastIndexOf('/') + 1, selfURI.lastIndexOf('.')));
+            User user = new User(id);
+            URI personURI = vf.createURI(PersistenceContext.uriOf(new Person(user)));
 
             // check timestamp
             long lastUpdate = 0;
@@ -64,8 +66,6 @@ public class PersonResource extends WebResource {
 
                 // fetch followees
                 TwitterClient client = store.getTwitterClient();
-                long id = Long.valueOf(selfURI.substring(selfURI.lastIndexOf('/') + 1));
-                User user = new User(id);
                 List<User> followees = client.getFollowees(user, FOLLOWEES_LIMIT);
 
                 URI foafKnows = vf.createURI(FOAF.KNOWS);

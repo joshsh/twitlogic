@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-stream</artifactId>
-            <version>3.0.5</version>
+            <version>4.0.2</version>
         </dependency>
 
         <!-- Formatting and parsing -->

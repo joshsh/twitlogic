@@ -382,7 +382,6 @@ public class Twitter4jClient implements TwitterClient {
     }
 
     public void stop() {
-        twitter.shutdown();
     }
 
     private static class InnerStatusHandler implements StatusListener {
@@ -489,16 +488,14 @@ public class Twitter4jClient implements TwitterClient {
                     wait = CommonHttpClient.nextWait(lastWait, timeOfLastRequest, false);
                 }
 
-                // TODO: change to LOGGER.fine
                 LOGGER.info("rate limit exceeded; waiting " + wait + "ms before next request");
-            } else if (TwitterException.ENHANCE_YOUR_CLAIM == code) {
+            } else if (TwitterException.ENHANCE_YOUR_CLAIM == code) { // [sic]
                 wait = CommonHttpClient.nextWait(lastWait, timeOfLastRequest, false);
 
                 LOGGER.info("enhancing calm; waiting " + wait + "ms before next request");
             } else if (TwitterException.TOO_MANY_REQUESTS == code) {
                 wait = 1000 * ex.getRateLimitStatus().getSecondsUntilReset();
 
-                // TODO: change to LOGGER.fine
                 LOGGER.info("too many requests; waiting " + wait + "ms before next request");
             } else {
                 throw new TwitterClientException(ex);

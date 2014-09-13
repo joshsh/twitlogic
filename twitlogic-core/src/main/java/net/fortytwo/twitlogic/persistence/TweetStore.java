@@ -447,7 +447,9 @@ public class TweetStore {
                     datasetURI);
 
             Component component = new Component();
+            server.setInboundRoot(component);
             component.getServers().add(Protocol.HTTP, port);
+            component.getServers().add(Protocol.FILE, port);
 
             component.getDefaultHost().attach("/", new Directory(server.getContext(), "file://" + staticContentDir + "/"));
 
@@ -464,7 +466,6 @@ public class TweetStore {
             component.getDefaultHost().attach("/stream/relatedTweets", new RelatedTweetsResource());
             component.getDefaultHost().attach("/stream/relatedTags", new RelatedHashtagsResource());
 
-            server.setInboundRoot(component);
             server.start();
         } catch (Throwable e) {
             throw new ServerException(e);
