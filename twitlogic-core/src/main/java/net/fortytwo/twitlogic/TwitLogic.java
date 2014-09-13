@@ -74,16 +74,6 @@ public class TwitLogic {
             XMPP_REPORTER_USERNAME = "net.fortytwo.twitlogic.xmpp.reporterUsername",
             XMPP_SERVER = "net.fortytwo.twitlogic.xmpp.server";
 
-    public static final String
-            NAMESPACE = "http://fortytwo.net/2009/10/twitlogic#";
-
-    public static final URI
-            ASSOCIATION = new URIImpl(NAMESPACE + "Association"),
-            SUBJECT = new URIImpl(NAMESPACE + "subject"),
-            OBJECT = new URIImpl(NAMESPACE + "object"),
-            WORD = new URIImpl(NAMESPACE + "Word"),
-            WEIGHT = new URIImpl(NAMESPACE + "weight");
-
     // Note: keep these in agreement with the ResourceType enum.
     public static final String
             BASE_URI = "http://twitlogic.fortytwo.net/",
@@ -94,7 +84,7 @@ public class TwitLogic {
             HASHTAGS_BASEURI = BASE_URI + "hashtag/",
             LOCATIONS_BASEURI = BASE_URI + "location/",
             MISCELLANEOUS_BASEURI = BASE_URI + "miscellaneous/",
-            PERSONS_BASEURI = BASE_URI + "person/",
+            PERSONS_BASEURI = BASE_URI + "person/twitter/",
             TWEETS_BASEURI = BASE_URI + "post/twitter/",
             TWITTER_PLACE_BASEURI = BASE_URI + "location/twitter/",
             USERS_BASEURI = BASE_URI + "user/twitter/";

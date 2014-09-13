@@ -54,10 +54,10 @@ public class PlacesDemo {
 
         //store.dumpToFile(new File("/tmp/places-demo-dump.nt"), RDFFormat.NTRIPLES);
 
-        store.startServer();
-
         try {
             CustomTwitterClient client = new CustomTwitterClient();
+
+            store.startServer(client);
 
             TweetPersister persister = new TweetPersister(store, client);
             TweetDeleter d = new TweetDeleter(store);

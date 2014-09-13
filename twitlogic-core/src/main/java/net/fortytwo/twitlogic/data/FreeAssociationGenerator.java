@@ -1,5 +1,6 @@
 package net.fortytwo.twitlogic.data;
 
+import net.fortytwo.twitlogic.vocabs.TwitlogicVocabulary;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.model.URI;
@@ -66,19 +67,19 @@ public abstract class FreeAssociationGenerator {
         Literal w = VALUE_FACTORY.createLiteral(weight);
 
         if (!wordAlreadyDefined(normSubjectWord)) {
-            writer.handleStatement(VALUE_FACTORY.createStatement(subject, RDF.TYPE, TwitLogic.WORD));
+            writer.handleStatement(VALUE_FACTORY.createStatement(subject, RDF.TYPE, TwitlogicVocabulary.WORD));
             writer.handleStatement(VALUE_FACTORY.createStatement(subject, RDFS.LABEL, subjectLabel));
         }
 
         if (!wordAlreadyDefined(normObjectWord)) {
-            writer.handleStatement(VALUE_FACTORY.createStatement(object, RDF.TYPE, TwitLogic.WORD));
+            writer.handleStatement(VALUE_FACTORY.createStatement(object, RDF.TYPE, TwitlogicVocabulary.WORD));
             writer.handleStatement(VALUE_FACTORY.createStatement(object, RDFS.LABEL, objectLabel));
         }
 
-        writer.handleStatement(VALUE_FACTORY.createStatement(association, RDF.TYPE, TwitLogic.ASSOCIATION));
-        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.SUBJECT, subject));
-        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.OBJECT, object));
-        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitLogic.WEIGHT, w));
+        writer.handleStatement(VALUE_FACTORY.createStatement(association, RDF.TYPE, TwitlogicVocabulary.ASSOCIATION));
+        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitlogicVocabulary.SUBJECT, subject));
+        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitlogicVocabulary.OBJECT, object));
+        writer.handleStatement(VALUE_FACTORY.createStatement(association, TwitlogicVocabulary.WEIGHT, w));
     }
 
 

@@ -32,8 +32,7 @@ public class TweetDeleter implements Handler<Tweet> {
         this.storeConnection = store.createConnection();
         this.valueFactory = store.getSail().getValueFactory();
         try {
-            this.persistenceContext = new PersistenceContext(
-                    storeConnection.getElmoManager());
+            this.persistenceContext = new PersistenceContext(storeConnection);
         } catch (PropertyException e) {
             throw new TweetStoreException(e);
         }

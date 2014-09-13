@@ -2,6 +2,8 @@ package net.fortytwo.twitlogic.util;
 
 import net.fortytwo.twitlogic.persistence.TweetStore;
 import net.fortytwo.twitlogic.TwitLogic;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.twitter4j.Twitter4jClient;
 
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -22,8 +24,10 @@ public class ServerTestApp {
             store.initialize();
 
             try {
+                TwitterClient client = new Twitter4jClient();
+
                 // Launch linked data server.
-                store.startServer();
+                store.startServer(client);
 
                 Object mutex = "";
                 synchronized (mutex) {

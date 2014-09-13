@@ -64,7 +64,7 @@ public class PlaceMiner {
 
             try {
                 PersistenceContext pc
-                        = new PersistenceContext(c.getElmoManager());
+                        = new PersistenceContext(c);
 
                 PlacePersistenceHelper ph = new PlacePersistenceHelper(pc, client, false);
                 for (String id : ids) {

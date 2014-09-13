@@ -22,13 +22,6 @@ import java.util.Random;
 public class SesameTools {
     private static final Random RANDOM = new Random();
 
-    public static final URI
-            COVERED_INTERVAL = new URIImpl(TwitLogic.NAMESPACE + "converedInterval"),
-            TIMESTAMP = new URIImpl(TwitLogic.NAMESPACE + "timeStamp"),
-            START_DATE = new URIImpl(TwitLogic.NAMESPACE + "startDate"),
-            END_DATE = new URIImpl(TwitLogic.NAMESPACE + "endDate"),
-            INTERVAL = new URIImpl(TwitLogic.NAMESPACE + "Interval");
-
     private static final Map<String, RDFFormat> RDF_FORMAT_BY_EXTENSION;
 
     // Note: the implementation of this class is assumed to be thread-safe.

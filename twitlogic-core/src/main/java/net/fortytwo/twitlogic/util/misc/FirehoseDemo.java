@@ -89,9 +89,6 @@ public class FirehoseDemo {
                 store.doNotRefreshCoreMetadata();
                 store.initialize();
 
-                // Note: this is only for serving local files.
-                store.startServer();
-
                 try {
                     // A connection with which to repeatedly clear the working store
                     final SailConnection c = workingSail.getConnection();
@@ -104,6 +101,9 @@ public class FirehoseDemo {
 
                         try {
                             CustomTwitterClient client = new CustomTwitterClient();
+
+                            // Note: this is only for serving local files.
+                            store.startServer(client);
 
                             TweetPersistedLogger pLogger = new TweetPersistedLogger(client.getStatistics(), persister);
                             TweetFilterCriterion crit = new TweetFilterCriterion(TwitLogic.getConfiguration());

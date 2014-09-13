@@ -2,6 +2,8 @@ package edu.rpi.tw.twctwit;
 
 import net.fortytwo.twitlogic.TwitLogic;
 import net.fortytwo.twitlogic.persistence.TweetStore;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
+import net.fortytwo.twitlogic.services.twitter.twitter4j.Twitter4jClient;
 
 import java.io.FileInputStream;
 import java.io.File;
@@ -43,11 +45,13 @@ public class TWCTwitDemo {
         store.initialize();
 
         try {
+            TwitterClient client = new Twitter4jClient();
+
             //store.dump(System.out);
             //store.dumpToFile(new File("/tmp/twitlogic-tmp-dump.trig"), RDFFormat.TRIG);
 
             // Launch linked data server.
-            store.startServer();
+            store.startServer(client);
 
             Object mutex = "";
             synchronized (mutex) {

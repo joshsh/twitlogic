@@ -74,12 +74,12 @@ public class TwitLogicServerDemo {
         boolean exitedNormally = false;
 
         try {
-            // Launch linked data server.
-            store.startServer();
-
             // Create a client for communication with Twitter.
             TwitterClient client = new Twitter4jClient();
             //TwitterClient client = new CustomTwitterClient();
+
+            // Launch linked data server.
+            store.startServer(client);
 
             Handler<Tweet> annotator
                     = createAnnotator(store, client);

@@ -6,6 +6,7 @@ import net.fortytwo.twitlogic.services.twitter.TwitterClientException;
 import net.fortytwo.twitlogic.model.User;
 import net.fortytwo.twitlogic.util.intervals.Interval;
 import net.fortytwo.twitlogic.util.intervals.IntervalSequence;
+import net.fortytwo.twitlogic.vocabs.TwitlogicVocabulary;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -43,7 +44,7 @@ public class CoverageManager {
             Date start, end;
 
             CloseableIteration<? extends Statement, SailException> iter
-                    = sc.getStatements(r, SesameTools.START_DATE, null, false, TwitLogic.CORE_GRAPH);
+                    = sc.getStatements(r, TwitlogicVocabulary.START_DATE, null, false, TwitLogic.CORE_GRAPH);
             try {
                 start = dateFromLiteral((Literal) iter.next().getObject());
             } finally {
@@ -51,7 +52,7 @@ public class CoverageManager {
             }
 
             CloseableIteration<? extends Statement, SailException> iter2
-                    = sc.getStatements(r, SesameTools.END_DATE, null, false, TwitLogic.CORE_GRAPH);
+                    = sc.getStatements(r, TwitlogicVocabulary.END_DATE, null, false, TwitLogic.CORE_GRAPH);
             try {
                 end = dateFromLiteral((Literal) iter2.next().getObject());
             } finally {
@@ -72,14 +73,14 @@ public class CoverageManager {
         for (Resource r : findIntervalResources(userURI, sc)) {
             sc.removeStatements(r, null, null, TwitLogic.CORE_GRAPH);
         }
-        sc.removeStatements(userURI, SesameTools.COVERED_INTERVAL, null, TwitLogic.CORE_GRAPH);
+        sc.removeStatements(userURI, TwitlogicVocabulary.COVERED_INTERVAL, null, TwitLogic.CORE_GRAPH);
 
         for (Interval<Date> interval : coverage.getIntervals()) {
             Resource r = valueFactory.createBNode();
-            sc.addStatement(r, RDF.TYPE, SesameTools.INTERVAL, TwitLogic.CORE_GRAPH);
-            sc.addStatement(r, SesameTools.START_DATE, SesameTools.createLiteral(interval.getStart(), valueFactory), TwitLogic.CORE_GRAPH);
-            sc.addStatement(r, SesameTools.END_DATE, SesameTools.createLiteral(interval.getEnd(), valueFactory), TwitLogic.CORE_GRAPH);
-            sc.addStatement(userURI, SesameTools.COVERED_INTERVAL, r, TwitLogic.CORE_GRAPH);
+            sc.addStatement(r, RDF.TYPE, TwitlogicVocabulary.INTERVAL, TwitLogic.CORE_GRAPH);
+            sc.addStatement(r, TwitlogicVocabulary.START_DATE, SesameTools.createLiteral(interval.getStart(), valueFactory), TwitLogic.CORE_GRAPH);
+            sc.addStatement(r, TwitlogicVocabulary.END_DATE, SesameTools.createLiteral(interval.getEnd(), valueFactory), TwitLogic.CORE_GRAPH);
+            sc.addStatement(userURI, TwitlogicVocabulary.COVERED_INTERVAL, r, TwitLogic.CORE_GRAPH);
         }
     }
 
@@ -87,7 +88,7 @@ public class CoverageManager {
                                                        final SailConnection sc) throws SailException {
         Collection<Resource> resources = new LinkedList<Resource>();
         CloseableIteration<? extends Statement, SailException> iter
-                = sc.getStatements(userURI, SesameTools.COVERED_INTERVAL, null, false, TwitLogic.CORE_GRAPH);
+                = sc.getStatements(userURI, TwitlogicVocabulary.COVERED_INTERVAL, null, false, TwitLogic.CORE_GRAPH);
         try {
             resources.add(iter.next().getSubject());
         } finally {

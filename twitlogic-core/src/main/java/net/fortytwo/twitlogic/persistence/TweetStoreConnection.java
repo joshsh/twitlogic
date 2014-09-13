@@ -49,6 +49,10 @@ public class TweetStoreConnection {
         //    elmoManager.getTransaction().begin();
     }
 
+    public TweetStore getTweetStore() {
+        return tweetStore;
+    }
+
     public SailConnection getSailConnection() {
         return sailConnection;
     }

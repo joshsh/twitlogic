@@ -26,6 +26,7 @@ import net.fortytwo.twitlogic.persistence.sail.AGRepositorySailFactory;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.Neo4jSailFactory;
+import net.fortytwo.twitlogic.services.twitter.TwitterClient;
 import net.fortytwo.twitlogic.util.Factory;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
@@ -84,6 +85,14 @@ public class TweetStore {
     private Factory<SailConnectionListener> sailConnectionListenerFactory;
     final Set<TweetStoreConnection> openConnections;
 
+    private TwitterClient twitterClient;
+
+    private static TweetStore INSTANCE;
+
+    public static TweetStore getInstance() {
+        return INSTANCE;
+    }
+
     /**
      * The Sesame storage and inference layer (Sail) will be constructed according to configuration properties.
      *
@@ -91,6 +100,8 @@ public class TweetStore {
      */
     public TweetStore() throws TweetStoreException {
         this(createSail());
+
+        INSTANCE = this;
     }
 
     /**
@@ -100,6 +111,10 @@ public class TweetStore {
         this.sail = sail;
 
         openConnections = Collections.synchronizedSet(new HashSet<TweetStoreConnection>());
+    }
+
+    public TwitterClient getTwitterClient() {
+        return twitterClient;
     }
 
     public void initialize() throws TweetStoreException {
@@ -416,7 +431,9 @@ public class TweetStore {
         this.sailConnectionListenerFactory = sailConnectionListenerFactory;
     }
 
-    public void startServer() throws ServerException {
+    public void startServer(final TwitterClient client) throws ServerException {
+        twitterClient = client;
+
         try {
             String internalBaseURI = TwitLogic.getConfiguration().getURI(TwitLogic.SERVER_BASEURI).toString();
             String externalBaseURI = TwitLogic.BASE_URI;
@@ -440,7 +457,7 @@ public class TweetStore {
                     component.getDefaultHost().attach("/" + p + "/", WebResource.class);
                 }
             }
-            component.getDefaultHost().attach("/person/twitter/", WebResource.class);
+            component.getDefaultHost().attach("/person/twitter/", PersonResource.class);
             component.getDefaultHost().attach("/graph/", GraphResource.class);
 
             component.getDefaultHost().attach("/sparql", new SparqlResource());

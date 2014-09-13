@@ -44,8 +44,8 @@ public class PersistenceContext {
     private final ElmoManager manager;
     private final boolean avoidRedundantTypeDesignation;
 
-    public PersistenceContext(final ElmoManager manager) throws PropertyException {
-        this.manager = manager;
+    public PersistenceContext(final TweetStoreConnection sc) throws PropertyException {
+        this.manager = sc.getElmoManager();
         avoidRedundantTypeDesignation = TwitLogic.getConfiguration().getBoolean(
                 TwitLogic.AVOID_REDUNDANT_TYPE_DESIGNATION, false);
     }
@@ -369,7 +369,7 @@ public class PersistenceContext {
     }
 
     public static String uriOf(final Person person) {
-        return TwitLogic.PERSONS_BASEURI + "twitter/" + person.getAccount().getId();
+        return TwitLogic.PERSONS_BASEURI + person.getAccount().getId();
     }
 
     public static String uriOf(final Tweet tweet) {
