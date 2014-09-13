@@ -22,10 +22,10 @@ import net.fortytwo.twitlogic.persistence.beans.Point;
 import net.fortytwo.twitlogic.persistence.beans.PointOfInterest;
 import net.fortytwo.twitlogic.persistence.beans.SpatialThing;
 import net.fortytwo.twitlogic.persistence.beans.UserAccount;
+import net.fortytwo.twitlogic.persistence.sail.AGRepositorySailFactory;
 import net.fortytwo.twitlogic.persistence.sail.MemoryStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.NativeStoreFactory;
 import net.fortytwo.twitlogic.persistence.sail.Neo4jSailFactory;
-import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
 import net.fortytwo.twitlogic.util.Factory;
 import net.fortytwo.twitlogic.util.properties.PropertyException;
 import net.fortytwo.twitlogic.util.properties.TypedProperties;
@@ -50,6 +50,8 @@ import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
+import org.restlet.Component;
+import org.restlet.data.Protocol;
 import org.restlet.resource.Directory;
 
 import java.io.File;
@@ -357,8 +359,7 @@ public class TweetStore {
         } else if (sailType.equals(NativeStore.class.getName())) {
             factory = new NativeStoreFactory(props);
         } else if (sailType.equals("com.knowledgereefsystems.agsail.AllegroSail")) {
-            //factory = new AllegroSailFactory(props);
-            factory = new NewAllegroSailFactory(props, false);
+            factory = new AGRepositorySailFactory(props, false);
         } else if (sailType.equals("com.tinkerpop.blueprints.pgm.oupls.sail.GraphSail")) {
             factory = new Neo4jSailFactory(props);
         } else {
@@ -426,22 +427,27 @@ public class TweetStore {
             LinkedDataServer server = new LinkedDataServer(this.getSail(),
                     internalBaseURI,
                     externalBaseURI,
-                    port,
                     datasetURI);
 
-            server.getHost().attach("/", new Directory(server.getContext(), "file://" + staticContentDir + "/"));
+            Component component = new Component();
+            component.getServers().add(Protocol.HTTP, port);
+
+            component.getDefaultHost().attach("/", new Directory(server.getContext(), "file://" + staticContentDir + "/"));
 
             for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
-                if (!t.getUriPath().equals("graph")) {
-                    server.getHost().attach("/" + t.getUriPath() + "/", WebResource.class);
+                String p = t.getUriPath();
+                if (!p.equals("graph") && !p.equals("person")) {
+                    component.getDefaultHost().attach("/" + p + "/", WebResource.class);
                 }
             }
-            server.getHost().attach("/graph/", GraphResource.class);
+            component.getDefaultHost().attach("/person/twitter/", WebResource.class);
+            component.getDefaultHost().attach("/graph/", GraphResource.class);
 
-            server.getHost().attach("/sparql", new SparqlResource());
-            server.getHost().attach("/stream/relatedTweets", new RelatedTweetsResource());
-            server.getHost().attach("/stream/relatedTags", new RelatedHashtagsResource());
+            component.getDefaultHost().attach("/sparql", new SparqlResource());
+            component.getDefaultHost().attach("/stream/relatedTweets", new RelatedTweetsResource());
+            component.getDefaultHost().attach("/stream/relatedTags", new RelatedHashtagsResource());
 
+            server.setInboundRoot(component);
             server.start();
         } catch (Throwable e) {
             throw new ServerException(e);

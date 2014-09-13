@@ -21,15 +21,15 @@ import java.util.logging.Logger;
 /**
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class NewAllegroSailFactory extends SailFactory {
-    private static final Logger LOGGER = TwitLogic.getLogger(NewAllegroSailFactory.class);
+public class AGRepositorySailFactory extends SailFactory {
+    private static final Logger LOGGER = TwitLogic.getLogger(AGRepositorySailFactory.class);
     private final boolean enableLogging;
 
     /**
      * @param conf configuration properties for the Sail
      */
-    public NewAllegroSailFactory(final TypedProperties conf,
-                                 final boolean enableLogging) {
+    public AGRepositorySailFactory(final TypedProperties conf,
+                                   final boolean enableLogging) {
         super(conf);
         this.enableLogging = enableLogging;
     }

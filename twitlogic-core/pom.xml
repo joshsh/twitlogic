@@ -7,32 +7,13 @@
     <parent>
         <groupId>net.fortytwo.twitlogic</groupId>
         <artifactId>twitlogic-all</artifactId>
-        <version>1.1</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>twitlogic-core</artifactId>
     <packaging>jar</packaging>
     <name>TwitLogic Core</name>
     <description>Java components for real-time integration of Twitter data with the Semantic Web</description>
-
-    <repositories>
-        <repository>
-            <id>fortytwo</id>
-            <name>fortytwo.net Maven repository</name>
-            <url>http://fortytwo.net/maven2</url>
-        </repository>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -128,15 +109,10 @@
             <groupId>com.tinkerpop.blueprints</groupId>
             <artifactId>blueprints-neo4j-graph</artifactId>
         </dependency>
-        <!--<dependency>
-            <groupId>com.franz.ag</groupId>
-            <artifactId>agsail</artifactId>
-            <version>3.3</version>
-        </dependency>-->
         <dependency>
-            <groupId>com.franz.ag</groupId>
-            <artifactId>agrepo</artifactId>
-            <version>4.0.5</version>
+            <groupId>com.franz</groupId>
+            <artifactId>agraph-repository</artifactId>
+            <version>4.14</version>
         </dependency>
 
         <dependency>

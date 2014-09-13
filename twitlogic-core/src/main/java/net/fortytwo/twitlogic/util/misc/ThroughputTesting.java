@@ -12,7 +12,7 @@ import net.fortytwo.twitlogic.model.TweetParseException;
 import net.fortytwo.twitlogic.persistence.SailFactory;
 import net.fortytwo.twitlogic.persistence.TweetPersister;
 import net.fortytwo.twitlogic.persistence.TweetStore;
-import net.fortytwo.twitlogic.persistence.sail.NewAllegroSailFactory;
+import net.fortytwo.twitlogic.persistence.sail.AGRepositorySailFactory;
 import net.fortytwo.twitlogic.services.twitter.HandlerException;
 import net.fortytwo.twitlogic.services.twitter.TwitterAPI;
 import net.fortytwo.twitlogic.util.UdpTransactionSail;
@@ -229,7 +229,7 @@ public class ThroughputTesting {
     //     1 trans/upload -- 60 t/s
     //     100 trans/upload -- 160 t/s
     private void testRdfTransactionPersister(final int commitsPerUpload) throws Exception {
-        AGRepository repo = new NewAllegroSailFactory(TwitLogic.getConfiguration(), false).makeAGRepository();
+        AGRepository repo = new AGRepositorySailFactory(TwitLogic.getConfiguration(), false).makeAGRepository();
         repo.initialize();
         try {
             AGRepositoryConnection rc = repo.getConnection();
@@ -422,7 +422,7 @@ public class ThroughputTesting {
     // Over the LAN: 6 t/s
     // Locally: 7 t/s
     private void testAllegroGraphPersister() throws Exception {
-        SailFactory f = new NewAllegroSailFactory(TwitLogic.getConfiguration(), false);
+        SailFactory f = new AGRepositorySailFactory(TwitLogic.getConfiguration(), false);
         Sail sail = f.makeSail();
         sail.initialize();
 
@@ -523,10 +523,6 @@ public class ThroughputTesting {
             try {
                 //System.out.println("uploading!");
                 connection.getHttpRepoClient().upload(entity, null, false, null, null, null);
-            } catch (IOException e) {
-                throw new SailException(e);
-            } catch (RDFParseException e) {
-                throw new SailException(e);
             } catch (RepositoryException e) {
                 throw new SailException(e);
             }
