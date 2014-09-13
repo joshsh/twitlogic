@@ -448,6 +448,7 @@ public class TweetStore {
 
             Component component = new Component();
             component.getServers().add(Protocol.HTTP, port);
+            component.getServers().add(Protocol.FILE, port);
 
             component.getDefaultHost().attach("/", new Directory(server.getContext(), "file://" + staticContentDir + "/"));
 
