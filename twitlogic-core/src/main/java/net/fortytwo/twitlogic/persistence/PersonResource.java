@@ -15,6 +15,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -32,6 +33,16 @@ public class PersonResource extends WebResource {
 
     // TODO: make this configurable
     private static final int FOLLOWEES_LIMIT = 1000;
+
+    private static final DatatypeFactory DATATYPE_FACTORY;
+
+    static {
+        try {
+            DATATYPE_FACTORY = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     public PersonResource() throws Exception {
     }
@@ -80,7 +91,7 @@ public class PersonResource extends WebResource {
                 GregorianCalendar cal = new GregorianCalendar();
                 cal.setTime(new Date(now));
                 Literal obj = sail.getValueFactory().createLiteral(
-                        DatatypeFactory.newInstance().newXMLGregorianCalendar(cal));
+                        DATATYPE_FACTORY.newXMLGregorianCalendar(cal));
                 sc.removeStatements(personURI, TwitlogicVocabulary.lastUpdatedAt, null);
                 sc.addStatement(personURI, TwitlogicVocabulary.lastUpdatedAt, obj);
 
@@ -89,5 +100,9 @@ public class PersonResource extends WebResource {
         } finally {
             c.close();
         }
+    }
+
+    private void refreshFollowees() {
+
     }
 }

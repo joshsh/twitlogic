@@ -84,8 +84,8 @@ public class Twitter4jClient implements TwitterClient {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public List<User> getFollowees(final User user,
-                                   final int limit) throws TwitterClientException {
+    public synchronized List<User> getFollowees(final User user,
+                                                final int limit) throws TwitterClientException {
         List<User> users = new LinkedList<User>();
 
         IDs ids;
@@ -119,8 +119,8 @@ public class Twitter4jClient implements TwitterClient {
         return users;
     }
 
-    public List<User> getFollowers(final User user,
-                                   final int limit) throws TwitterClientException {
+    public synchronized List<User> getFollowers(final User user,
+                                                final int limit) throws TwitterClientException {
         List<User> users = new LinkedList<User>();
 
         IDs ids;
@@ -154,8 +154,8 @@ public class Twitter4jClient implements TwitterClient {
         return users;
     }
 
-    public List<User> getListMembers(final User user,
-                                     final String listId) throws TwitterClientException {
+    public synchronized List<User> getListMembers(final User user,
+                                                  final String listId) throws TwitterClientException {
         LOGGER.info("getting members of list " + listId + " owned by " + user);
         // TODO: this is inefficient
         Map<String, UserList> lists = new HashMap<String, UserList>();
@@ -182,39 +182,13 @@ public class Twitter4jClient implements TwitterClient {
         return result;
     }
 
-    private void checkProtected(final User u,
-                                final TwitterException e) throws TwitterClientException.UnauthorizedException {
-        if (TwitterException.UNAUTHORIZED == e.getStatusCode()) {
-            // note: the purpose of this method is to abort an operation when a protected user is encountered,
-            // although there are other causes of 401 errors from Twitter.
-            LOGGER.info("can't retrieve info for protected user " + u);
-            throw new TwitterClientException.UnauthorizedException(e);
-        }
-    }
-
-    private List<UserList> getUserLists(final User user) throws TwitterClientException {
-        LOGGER.info("finding lists of user " + user);
-
-        try {
-            return twitter.getUserLists(user.getScreenName());
-        } catch (TwitterException e) {
-            throw new TwitterClientException(e);
-        }
-
-        /*
-        return asList(new ListGenerator<UserList>() {
-            public PagableResponseList getList(long cursor) throws TwitterException {
-                twitter.getUserLists)
-                return twitter.getUserLists(user.getScreenName(), cursor);
-            }
-        });*/
-    }
-
-    public void addToList(User user, String listId, String userId) throws TwitterClientException {
+    public synchronized void addToList(final User user,
+                                       final String listId,
+                                       final String userId) throws TwitterClientException {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public User findUserInfo(String screenName) throws TwitterClientException {
+    public synchronized User findUserInfo(final String screenName) throws TwitterClientException {
         try {
             return new User(twitter.showUser(screenName));
         } catch (TwitterException e) {
@@ -222,13 +196,61 @@ public class Twitter4jClient implements TwitterClient {
         }
     }
 
-    public void updateStatus(Tweet tweet) throws TwitterClientException {
+    public synchronized void updateStatus(final Tweet tweet) throws TwitterClientException {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public void search(final String term,
-                       final GeoDisc geo,
-                       final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
+    public synchronized void requestUserTimeline(final User user,
+                                                 final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
+        List<Status> statuses = null;
+
+        while (null == statuses) {
+            try {
+                statuses = null == user.getScreenName()
+                        ? twitter.getUserTimeline(user.getId())
+                        : twitter.getUserTimeline(user.getScreenName());
+            } catch (TwitterException e) {
+                checkProtected(user, e);
+
+                rateLimiter.handle(e);
+            }
+        }
+
+        for (Status status : statuses) {
+            if (!handler.isOpen()) {
+                break;
+            }
+
+            handler.handle(new Tweet(status));
+        }
+    }
+
+    public synchronized Place fetchPlace(String id) throws TwitterClientException {
+        try {
+            return new Place(twitter.getGeoDetails(id));
+        } catch (TwitterException e) {
+            throw new TwitterClientException(e);
+        }
+    }
+
+    public synchronized TwitterAPILimits getLimits() throws TwitterClientException {
+        try {
+            return new Twitter4jLimits(twitter.getRateLimitStatus());
+        } catch (TwitterException e) {
+            throw new TwitterClientException(e);
+        }
+    }
+
+    public TweetStatistics getStatistics() {
+        return statistics;
+    }
+
+    public void stop() {
+    }
+
+    public synchronized void search(final String term,
+                                    final GeoDisc geo,
+                                    final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
         Query query = new Query(term);
         query.setCount(MAX_SEARCH_COUNT);
 
@@ -264,6 +286,7 @@ public class Twitter4jClient implements TwitterClient {
         } while (result.hasNext());
     }
 
+    // note: streaming methods are not synchronized
     public void processFilterStream(final Collection<User> users,
                                     final Collection<String> terms,
                                     final double[][] locations,
@@ -316,6 +339,43 @@ public class Twitter4jClient implements TwitterClient {
         waitIndefinitely();
     }
 
+    // note: streaming methods are not synchronized
+    public void processSampleStream(Handler<Tweet> addHandler, Handler<Tweet> deleteHandler) throws TwitterClientException {
+        TwitterStream stream = streamFactory.getInstance();
+        stream.addListener(new InnerStatusHandler(stream, addHandler, deleteHandler));
+        stream.sample();
+
+        waitIndefinitely();
+    }
+
+    private void checkProtected(final User u,
+                                final TwitterException e) throws TwitterClientException.UnauthorizedException {
+        if (TwitterException.UNAUTHORIZED == e.getStatusCode()) {
+            // note: the purpose of this method is to abort an operation when a protected user is encountered,
+            // although there are other causes of 401 errors from Twitter.
+            LOGGER.info("can't retrieve info for protected user " + u);
+            throw new TwitterClientException.UnauthorizedException(e);
+        }
+    }
+
+    private List<UserList> getUserLists(final User user) throws TwitterClientException {
+        LOGGER.info("finding lists of user " + user);
+
+        try {
+            return twitter.getUserLists(user.getScreenName());
+        } catch (TwitterException e) {
+            throw new TwitterClientException(e);
+        }
+
+        /*
+        return asList(new ListGenerator<UserList>() {
+            public PagableResponseList getList(long cursor) throws TwitterException {
+                twitter.getUserLists)
+                return twitter.getUserLists(user.getScreenName(), cursor);
+            }
+        });*/
+    }
+
     private final Object m = "";
 
     private void waitIndefinitely() throws TwitterClientException {
@@ -326,62 +386,6 @@ public class Twitter4jClient implements TwitterClient {
                 throw new TwitterClientException(e);
             }
         }
-    }
-
-    public void processSampleStream(Handler<Tweet> addHandler, Handler<Tweet> deleteHandler) throws TwitterClientException {
-        TwitterStream stream = streamFactory.getInstance();
-        stream.addListener(new InnerStatusHandler(stream, addHandler, deleteHandler));
-        stream.sample();
-
-        waitIndefinitely();
-    }
-
-    public void requestUserTimeline(final User user,
-                                    final Handler<Tweet> handler) throws TwitterClientException, HandlerException {
-        List<Status> statuses = null;
-
-        while (null == statuses) {
-            try {
-                statuses = null == user.getScreenName()
-                        ? twitter.getUserTimeline(user.getId())
-                        : twitter.getUserTimeline(user.getScreenName());
-            } catch (TwitterException e) {
-                checkProtected(user, e);
-
-                rateLimiter.handle(e);
-            }
-        }
-
-        for (Status status : statuses) {
-            if (!handler.isOpen()) {
-                break;
-            }
-
-            handler.handle(new Tweet(status));
-        }
-    }
-
-    public Place fetchPlace(String id) throws TwitterClientException {
-        try {
-            return new Place(twitter.getGeoDetails(id));
-        } catch (TwitterException e) {
-            throw new TwitterClientException(e);
-        }
-    }
-
-    public TwitterAPILimits getLimits() throws TwitterClientException {
-        try {
-            return new Twitter4jLimits(twitter.getRateLimitStatus());
-        } catch (TwitterException e) {
-            throw new TwitterClientException(e);
-        }
-    }
-
-    public TweetStatistics getStatistics() {
-        return statistics;
-    }
-
-    public void stop() {
     }
 
     private static class InnerStatusHandler implements StatusListener {
