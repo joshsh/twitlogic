@@ -47,6 +47,8 @@ public class TwitLogic {
             NATIVESTORE_DIRECTORY = "net.fortytwo.twitlogic.persistence.nativeStoreDirectory",
             NATIVESTORE_INDEXES = "net.fortytwo.twitlogic.persistence.nativeStoreIndexes",
             NEO4J_DIRECTORY = "net.fortytwo.twitlogic.persistence.neo4jDirectory",
+            METADATA_EXPIRE_TIME = "net.fortytwo.twitlogic.persistence.metadataExpireTime",
+            METADATA_FOLLOWEE_LIMIT = "net.fortytwo.twitlogic.persistence.metadataFolloweeLimit",
             RDFAGENTS_PLATFORM_NAME = "net.fortytwo.twitlogic.rdfagents.platformName",
             RDFAGENTS_PLATFORM_PORT = "net.fortytwo.twitlogic.rdfagents.platformPort",
             RDFAGENTS_AGENT_NAME = "net.fortytwo.twitlogic.rdfagents.agentName",

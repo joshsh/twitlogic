@@ -28,11 +28,9 @@ import java.util.logging.Logger;
 public class PersonResource extends WebResource {
     private static final Logger LOGGER = TwitLogic.getLogger(PersonResource.class);
 
-    // TODO: make this configurable
-    private static final long UPDATE_THRESHOLD = 24 * 60 * 60 * 1000;
+    private static final long DEFAULT_EXPIRE_TIME = 24 * 60 * 60 * 1000;
 
-    // TODO: make this configurable
-    private static final int FOLLOWEES_LIMIT = 1000;
+    private static final int DEFAULT_FOLLOWEE_LIMIT = 1000;
 
     private static final DatatypeFactory DATATYPE_FACTORY;
 
@@ -44,7 +42,12 @@ public class PersonResource extends WebResource {
         }
     }
 
+    private final long expireTime;
+    private final int followeeLimit;
+
     public PersonResource() throws Exception {
+        expireTime = TwitLogic.getConfiguration().getLong(TwitLogic.METADATA_EXPIRE_TIME, DEFAULT_EXPIRE_TIME);
+        followeeLimit = TwitLogic.getConfiguration().getInt(TwitLogic.METADATA_FOLLOWEE_LIMIT, DEFAULT_FOLLOWEE_LIMIT);
     }
 
     @Override
@@ -72,12 +75,12 @@ public class PersonResource extends WebResource {
             }
 
             long now = System.currentTimeMillis();
-            if (now - lastUpdate > UPDATE_THRESHOLD) {
+            if (expireTime > 0 && now - lastUpdate > expireTime) {
                 LOGGER.info((0 == lastUpdate ? "setting" : "updating") + " followees of " + personURI);
 
                 // fetch followees
                 TwitterClient client = store.getTwitterClient();
-                List<User> followees = client.getFollowees(user, FOLLOWEES_LIMIT);
+                List<User> followees = client.getFollowees(user, followeeLimit);
 
                 URI foafKnows = vf.createURI(FOAF.KNOWS);
 
@@ -100,9 +103,5 @@ public class PersonResource extends WebResource {
         } finally {
             c.close();
         }
-    }
-
-    private void refreshFollowees() {
-
     }
 }
