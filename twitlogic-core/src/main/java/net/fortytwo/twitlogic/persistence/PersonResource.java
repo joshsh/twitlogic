@@ -63,7 +63,7 @@ public class PersonResource extends WebResource {
             URI personURI = vf.createURI(PersistenceContext.uriOf(new Person(user)));
 
             // check timestamp
-            long lastUpdate = 0;
+            long lastUpdate = -1;
             CloseableIteration<? extends Statement, SailException> iter
                     = sc.getStatements(personURI, TwitlogicVocabulary.lastUpdatedAt, null, false);
             try {
@@ -75,7 +75,7 @@ public class PersonResource extends WebResource {
             }
 
             long now = System.currentTimeMillis();
-            if (expireTime > 0 && now - lastUpdate > expireTime) {
+            if (-1 == lastUpdate || (expireTime > 0 && now - lastUpdate > expireTime)) {
                 LOGGER.info((0 == lastUpdate ? "setting" : "updating") + " followees of " + personURI);
 
                 // fetch followees
